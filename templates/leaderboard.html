@@ -11,58 +11,36 @@
 </section>
 
 {% if rows|length >= 3 %}
-
-<section class="podium enhanced-podium">
-
+<section class="podium">
   <div class="podium-card second">
     <div class="medal">🥈</div>
-    <div class="podium-rank">المركز الثاني</div>
     <h3>{{ rows[1].name }}</h3>
     <div class="podium-points">{{ rows[1].points }} نقطة</div>
-
-```
-{% if rows[1].champion_bonus %}
-  <div class="champion-bonus">🏆 +10 بطل البطولة</div>
-{% endif %}
-
-<div class="muted">نتائج دقيقة: {{ rows[1].exact }}</div>
-```
-
+    {% if rows[1].champion_bonus %}
+      <div class="champion-bonus">🏆 +10</div>
+    {% endif %}
+    <div class="muted">نتائج دقيقة: {{ rows[1].exact }}</div>
   </div>
 
-  <div class="podium-card first champion-card-rank">
-    <div class="crown">👑</div>
+  <div class="podium-card first">
     <div class="medal">🥇</div>
-    <div class="podium-rank">المتصدر</div>
     <h3>{{ rows[0].name }}</h3>
     <div class="podium-points">{{ rows[0].points }} نقطة</div>
-
-```
-{% if rows[0].champion_bonus %}
-  <div class="champion-bonus">🏆 +10 بطل البطولة</div>
-{% endif %}
-
-<div class="muted">نتائج دقيقة: {{ rows[0].exact }}</div>
-```
-
+    {% if rows[0].champion_bonus %}
+      <div class="champion-bonus">🏆 +10</div>
+    {% endif %}
+    <div class="muted">نتائج دقيقة: {{ rows[0].exact }}</div>
   </div>
 
   <div class="podium-card third">
     <div class="medal">🥉</div>
-    <div class="podium-rank">المركز الثالث</div>
     <h3>{{ rows[2].name }}</h3>
     <div class="podium-points">{{ rows[2].points }} نقطة</div>
-
-```
-{% if rows[2].champion_bonus %}
-  <div class="champion-bonus">🏆 +10 بطل البطولة</div>
-{% endif %}
-
-<div class="muted">نتائج دقيقة: {{ rows[2].exact }}</div>
-```
-
+    {% if rows[2].champion_bonus %}
+      <div class="champion-bonus">🏆 +10</div>
+    {% endif %}
+    <div class="muted">نتائج دقيقة: {{ rows[2].exact }}</div>
   </div>
-
 </section>
 {% endif %}
 
@@ -74,78 +52,50 @@
       <th>#</th>
       <th>الاسم</th>
       <th>النقاط</th>
-      <th>🏆 البطل</th>
+      <th>البطل</th>
       <th>نتائج دقيقة</th>
     </tr>
 
-```
-{% for r in rows %}
-<tr>
-  <td>
-    {% if loop.index == 1 %}🥇
-    {% elif loop.index == 2 %}🥈
-    {% elif loop.index == 3 %}🥉
-    {% else %}{{ loop.index }}
-    {% endif %}
-  </td>
-
-  <td><b>{{ r.name }}</b></td>
-
-  <td><b>{{ r.points }}</b></td>
-
-  <td>
-    {% if r.champion_bonus %}
-      <b>🏆 +10</b>
-    {% else %}
-      -
-    {% endif %}
-  </td>
-
-  <td>{{ r.exact }}</td>
-</tr>
-{% endfor %}
-```
-
+    {% for r in rows %}
+    <tr>
+      <td>
+        {% if loop.index == 1 %}🥇
+        {% elif loop.index == 2 %}🥈
+        {% elif loop.index == 3 %}🥉
+        {% else %}{{ loop.index }}
+        {% endif %}
+      </td>
+      <td><b>{{ r.name }}</b></td>
+      <td><b>{{ r.points }}</b></td>
+      <td>{% if r.champion_bonus %}🏆 +10{% else %}-{% endif %}</td>
+      <td>{{ r.exact }}</td>
+    </tr>
+    {% endfor %}
   </table>
 
   <div class="mobile-cards">
     {% for r in rows %}
-    <div class="rank-card {% if loop.index == 1 %}rank-first{% elif loop.index == 2 %}rank-second{% elif loop.index == 3 %}rank-third{% endif %}">
-
-```
-  <div class="rank-no">
-    {% if loop.index == 1 %}🥇
-    {% elif loop.index == 2 %}🥈
-    {% elif loop.index == 3 %}🥉
-    {% else %}{{ loop.index }}
-    {% endif %}
-  </div>
-
-  <div>
-    <b>{{ r.name }}</b>
-
-    {% if r.champion_bonus %}
-      <div class="champion-bonus">
-        🏆 +10 بطل البطولة
+    <div class="rank-card">
+      <div class="rank-no">
+        {% if loop.index == 1 %}🥇
+        {% elif loop.index == 2 %}🥈
+        {% elif loop.index == 3 %}🥉
+        {% else %}{{ loop.index }}
+        {% endif %}
       </div>
-    {% endif %}
 
-    <div class="muted">
-      نتائج دقيقة: {{ r.exact }}
+      <div>
+        <b>{{ r.name }}</b>
+        <div class="muted">
+          نتائج دقيقة: {{ r.exact }}
+          {% if r.champion_bonus %} | 🏆 +10{% endif %}
+        </div>
+      </div>
+
+      <div class="points">{{ r.points }}</div>
     </div>
+    {% endfor %}
   </div>
-
-  <div class="points">
-    {{ r.points }}
-    <small>نقطة</small>
-  </div>
-
-</div>
-{% endfor %}
-```
-
-  </div>
-
 </section>
 
 {% endblock %}
