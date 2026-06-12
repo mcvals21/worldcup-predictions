@@ -712,8 +712,13 @@ code{
 }
 
 .champion-bonus{
-  margin-top:6px;
-  font-weight:900;
+  margin:6px auto;
+  display:inline-block;
+  background:#fffbeb;
   color:#b54708;
-  font-size:.9rem;
+  border:1px solid #fdb022;
+  padding:4px 10px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:.85rem;
 }
