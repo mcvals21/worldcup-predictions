@@ -284,7 +284,8 @@ def participant_page(token):
         champion=champion,
         teams=teams,
         stage_labels=STAGE_LABELS,
-        knockout=KNOCKOUT_STAGES
+        knockout=KNOCKOUT_STAGES,
+        flag=flag
     )
 
 
