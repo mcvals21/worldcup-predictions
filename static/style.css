@@ -710,3 +710,10 @@ code{
 .admin-match{
   border-right:5px solid var(--brand);
 }
+
+.champion-bonus{
+  margin-top:6px;
+  font-weight:900;
+  color:#b54708;
+  font-size:.9rem;
+}
