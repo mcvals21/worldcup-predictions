@@ -13,7 +13,7 @@ PARTICIPANT_NAMES = [
     'بو براك','بو ضاري','بو صقر','حمني','الحميدي','الخالدي','شافعي','الرشود',
     'العربيد','العومي','عيسى','الفزيع','فواز','القعود','ناصر','الوهيب'
 ]
-ADMIN_CODE = 'admin-2026'
+ADMIN_CODE = 'wc-admin-9Kx72LmQp2026-private'
 
 class Tournament(db.Model):
     id = db.Column(db.Integer, primary_key=True)
