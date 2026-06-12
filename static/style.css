@@ -418,3 +418,70 @@ code{
     padding:8px;
   }
 }
+
+.leaderboard-hero{
+  background:linear-gradient(135deg,#0b1f4d,#155eef);
+  color:white;
+  border:0;
+}
+
+.leaderboard-hero .muted{
+  color:#dbeafe;
+}
+
+.podium{
+  display:grid;
+  grid-template-columns:1fr 1.15fr 1fr;
+  gap:12px;
+  align-items:end;
+  margin:16px 0;
+}
+
+.podium-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px 12px;
+  text-align:center;
+  box-shadow:0 12px 28px #10182818;
+}
+
+.podium-card.first{
+  padding-top:28px;
+  padding-bottom:28px;
+  border-color:#fdb022;
+  background:linear-gradient(135deg,#fffbeb,#ffffff);
+}
+
+.podium-card.second{
+  border-color:#d0d5dd;
+}
+
+.podium-card.third{
+  border-color:#d08b5b;
+  background:linear-gradient(135deg,#fff7ed,#ffffff);
+}
+
+.medal{
+  font-size:2rem;
+}
+
+.podium-card h3{
+  margin:8px 0 4px;
+}
+
+.podium-points{
+  font-size:1.25rem;
+  font-weight:900;
+  color:var(--brand);
+}
+
+@media (max-width:700px){
+  .podium{
+    grid-template-columns:1fr;
+  }
+
+  .podium-card.first{
+    order:-1;
+  }
+}
