@@ -247,11 +247,28 @@ def leaderboard():
 
     rows = []
 
+    final_match = Match.query.filter_by(
+        tournament_id=t.id,
+        stage='final'
+    ).filter(
+        Match.home_score.isnot(None),
+        Match.away_score.isnot(None)
+    ).first()
+
+    champion_team = None
+
+    if final_match:
+        if final_match.home_score > final_match.away_score:
+            champion_team = final_match.home_team
+        elif final_match.away_score > final_match.home_score:
+            champion_team = final_match.away_team
+
     for p in participants:
         preds = Prediction.query.filter_by(participant_id=p.id).all()
 
         pts = 0
         exact = 0
+        champion_bonus = 0
 
         for pred in preds:
             match = Match.query.get(pred.match_id)
@@ -268,16 +285,25 @@ def leaderboard():
             ):
                 exact += 1
 
+        champion_pick = ChampionPick.query.filter_by(
+            participant_id=p.id,
+            tournament_id=t.id
+        ).first()
+
+        if champion_team and champion_pick and champion_pick.team_name == champion_team:
+            champion_bonus = 10
+            pts += champion_bonus
+
         rows.append({
             'name': p.name,
             'points': pts,
-            'exact': exact
+            'exact': exact,
+            'champion_bonus': champion_bonus
         })
 
-    rows.sort(key=lambda r: (r['points'], r['exact']), reverse=True)
+    rows.sort(key=lambda r: (r['points'], r['exact'], r['champion_bonus']), reverse=True)
 
     return render_template('leaderboard.html', rows=rows, t=t)
-
 
 @app.route('/match/<int:match_id>')
 def match_view(match_id):
