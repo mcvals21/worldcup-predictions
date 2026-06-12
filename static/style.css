@@ -621,3 +621,68 @@ code{
     font-size:.92rem;
   }
 }
+.match-result-hero{
+  text-align:center;
+  background:linear-gradient(135deg,#0b1f4d,#155eef);
+  color:white;
+  border:0;
+}
+
+.match-result-hero .muted{
+  color:#dbeafe;
+}
+
+.big-score{
+  font-size:3rem;
+  font-weight:900;
+  margin:10px 0;
+  letter-spacing:2px;
+}
+
+.pending-score{
+  font-size:1.4rem;
+  color:#fedf89;
+}
+
+.prediction-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:14px;
+  margin:10px 0;
+  box-shadow:0 8px 20px #1018280d;
+}
+
+.prediction-card.double-selected{
+  border-color:#fdb022;
+  background:linear-gradient(135deg,#fffbeb,#ffffff);
+}
+
+.prediction-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+}
+
+.prediction-score{
+  font-size:1.4rem;
+  font-weight:900;
+  color:var(--brand);
+  direction:ltr;
+}
+
+.prediction-status{
+  margin-top:10px;
+  font-weight:800;
+}
+
+.prediction-points{
+  margin-top:8px;
+  display:inline-flex;
+  background:#eef4ff;
+  color:#1849a9;
+  border-radius:999px;
+  padding:6px 12px;
+  font-weight:900;
+}
