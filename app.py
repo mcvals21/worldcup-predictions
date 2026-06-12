@@ -328,31 +328,6 @@ def admin(code):
             flash('تمت إضافة المباراة.')
 
         elif action == 'result':
-            elif action == 'delete_match':
-    m = Match.query.get_or_404(int(request.form['match_id']))
-
-    Prediction.query.filter_by(match_id=m.id).delete()
-
-    db.session.delete(m)
-    db.session.commit()
-
-    flash('تم حذف المباراة.')
-
-elif action == 'edit_match':
-    m = Match.query.get_or_404(int(request.form['match_id']))
-
-    m.home_team = request.form['home_team'].strip()
-    m.away_team = request.form['away_team'].strip()
-    m.stage = request.form['stage']
-
-    m.start_time = datetime.strptime(
-        request.form['start_time'],
-        '%Y-%m-%dT%H:%M'
-    )
-
-    db.session.commit()
-
-    flash('تم تحديث المباراة.')
             m = Match.query.get_or_404(int(request.form['match_id']))
 
             m.home_score = int(request.form['home_score'])
@@ -361,6 +336,32 @@ elif action == 'edit_match':
             db.session.commit()
 
             flash('تم حفظ النتيجة وتحديث النقاط.')
+
+        elif action == 'edit_match':
+            m = Match.query.get_or_404(int(request.form['match_id']))
+
+            m.home_team = request.form['home_team'].strip()
+            m.away_team = request.form['away_team'].strip()
+            m.stage = request.form['stage']
+
+            m.start_time = datetime.strptime(
+                request.form['start_time'],
+                '%Y-%m-%dT%H:%M'
+            )
+
+            db.session.commit()
+
+            flash('تم تحديث المباراة.')
+
+        elif action == 'delete_match':
+            m = Match.query.get_or_404(int(request.form['match_id']))
+
+            Prediction.query.filter_by(match_id=m.id).delete()
+
+            db.session.delete(m)
+            db.session.commit()
+
+            flash('تم حذف المباراة.')
 
         elif action == 'champion_deadline':
             t.champion_pick_deadline = datetime.strptime(
@@ -385,7 +386,6 @@ elif action == 'edit_match':
         code=code,
         stage_labels=STAGE_LABELS
     )
-
 
 @app.cli.command('init-db')
 def init_db():
