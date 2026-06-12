@@ -491,3 +491,133 @@ code{
     order:-1;
   }
 }
+
+.player-hero{
+  background:linear-gradient(135deg,#eef4ff,#ffffff);
+}
+
+.champion-card{
+  border-right:5px solid var(--gold);
+}
+
+.section-title{
+  margin:20px 4px 10px;
+}
+
+.match-card{
+  position:relative;
+  overflow:hidden;
+}
+
+.match-card.double-selected{
+  border-color:#fdb022;
+  background:linear-gradient(135deg,#fffbeb,#ffffff);
+}
+
+.match-card.double-selected:before{
+  content:"⭐";
+  position:absolute;
+  top:12px;
+  left:14px;
+  font-size:1.5rem;
+  opacity:.35;
+}
+
+.match-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  margin-bottom:12px;
+}
+
+.double-badge{
+  background:#fffbeb;
+  color:#b54708;
+  border:1px solid #fdb022;
+  padding:7px 12px;
+  border-radius:999px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.open{
+  color:#067647;
+  background:#ecfdf3;
+}
+
+.countdown{
+  background:#eef4ff;
+  color:#1849a9;
+  border:1px solid #d1e0ff;
+  border-radius:14px;
+  padding:10px 12px;
+  margin:12px 0;
+  font-weight:900;
+  text-align:center;
+}
+
+.double-check{
+  border-color:#fdb022;
+  background:#fffbeb;
+  color:#92400e;
+}
+
+.prediction-summary{
+  background:#f8fafc;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+  margin-top:14px;
+  text-align:center;
+}
+
+.summary-label{
+  color:var(--muted);
+  font-weight:800;
+}
+
+.summary-score{
+  font-size:2rem;
+  font-weight:900;
+  color:var(--brand);
+}
+
+.double-note{
+  margin-top:8px;
+  color:#b54708;
+  font-weight:900;
+}
+
+.final-result{
+  margin-top:14px;
+  background:#ecfdf3;
+  border:1px solid #abefc6;
+  color:#067647;
+  padding:12px;
+  border-radius:16px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+  font-weight:800;
+}
+
+@media (max-width:700px){
+  .match-top{
+    display:block;
+  }
+
+  .double-badge{
+    display:inline-flex;
+    margin-top:10px;
+  }
+
+  .summary-score{
+    font-size:1.7rem;
+  }
+
+  .countdown{
+    font-size:.92rem;
+  }
+}
