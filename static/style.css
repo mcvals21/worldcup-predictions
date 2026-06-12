@@ -266,18 +266,24 @@ tr:nth-child(3) td{
   box-shadow:0 8px 20px #1018280d;
 }
 
-.rank-card:nth-child(1){
-  border-color:#fdb022;
-  background:linear-gradient(135deg,#fffbeb,#ffffff);
+.desktop-table tr:nth-child(2) td{
+  background:#fffbeb;
 }
 
-.rank-card:nth-child(2){
-  border-color:#d0d5dd;
+.desktop-table tr:nth-child(3) td{
+  background:#f9fafb;
 }
 
-.rank-card:nth-child(3){
-  border-color:#d08b5b;
-  background:linear-gradient(135deg,#fff7ed,#ffffff);
+.desktop-table tr:nth-child(4) td{
+  background:#fff7ed;
+}
+
+.desktop-table td{
+  font-weight:500;
+}
+
+.desktop-table td b{
+  font-weight:800;
 }
 
 .rank-no{
