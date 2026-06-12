@@ -36,11 +36,21 @@
 
 {% for m in matches %}
   {% set pred=predictions.get(m.id) %}
+  {% set is_double = pred and pred.is_double %}
 
-  <section class="card match-card {% if pred and pred.is_double %}double-selected{% endif %}">
+  <section class="card match-card {% if is_double %}double-selected{% endif %}">
+
+    {% if is_double %}
+      <div class="double-banner">
+        <span>⭐ مباراة مضاعفة</span>
+        <small>النقاط ×2 لهذه المباراة</small>
+      </div>
+    {% endif %}
+
     <div class="match-top">
       <div>
-        <h3>{{ m.home_team }} × {{ m.away_team }}</h3>
+        <h3 class="match-title">{{ m.home_team }} × {{ m.away_team }}</h3>
+
         <div class="match-meta">
           <span class="pill">🏟 {{ stage_labels.get(m.stage,m.stage) }}</span>
           <span class="pill">⏰ {{ m.start_time.strftime('%Y-%m-%d %H:%M') }}</span>
@@ -54,10 +64,6 @@
           {% endif %}
         </div>
       </div>
-
-      {% if pred and pred.is_double %}
-        <div class="double-badge">⭐ مضاعفة</div>
-      {% endif %}
     </div>
 
     {% if not locked(m) %}
@@ -67,12 +73,15 @@
     {% endif %}
 
     {% if locked(m) %}
-      <div class="prediction-summary">
+      <div class="prediction-summary compact-summary">
         {% if pred %}
           <div class="summary-label">توقعك</div>
           <div class="summary-score">{{pred.home_score}} - {{pred.away_score}}</div>
+
           {% if pred.is_double %}
-            <div class="double-note">⭐ هذه كانت مباراة المضاعفة</div>
+            <div class="double-note-clean">
+              ⭐ هذه كانت مباراة المضاعفة
+            </div>
           {% endif %}
         {% else %}
           <div class="muted">لم تقم بإدخال توقع لهذه المباراة</div>
@@ -115,9 +124,13 @@
         </div>
 
         {% if m.stage in knockout %}
-          <label class="check double-check">
+          <label class="double-option">
             <input type="checkbox" name="is_double" {% if pred and pred.is_double %}checked{% endif %}>
-            <span>⭐ اختيار هذه المباراة كمباراة مضاعفة لهذا الدور</span>
+
+            <div>
+              <strong>⭐ اجعلها مباراة مضاعفة</strong>
+              <span>نتيجة دقيقة = 6 نقاط، توقع الفائز = نقطتان</span>
+            </div>
           </label>
         {% endif %}
 
@@ -138,7 +151,6 @@
 
 <script>
 function parseKuwaitTime(value) {
-  // value format: YYYY-MM-DDTHH:MM:SS
   const parts = value.split(/[-T:]/).map(Number);
   return new Date(
     parts[0],
