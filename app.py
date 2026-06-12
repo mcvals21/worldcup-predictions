@@ -152,7 +152,10 @@ def participant_page(token):
     return render_template('participant.html', p=p, t=t, matches=matches, predictions=predictions,
                            locked=match_locked, points_for=points_for, champion=champion,
                            teams=teams, stage_labels=STAGE_LABELS, knockout=KNOCKOUT_STAGES)
-
+@app.route('/rules')
+def rules():
+    t = tournament()
+    return render_template('rules.html', t=t)
 @app.route('/leaderboard')
 def leaderboard():
     t = tournament()
