@@ -1,196 +1,36 @@
-{% extends 'base.html' %}
-
-{% block content %}
-
-<section class="card admin-hero">
-  <h2>🏆 لوحة إدارة كأس العالم</h2>
-  <p class="muted">إدارة المباريات والنتائج وروابط المشاركين</p>
-</section>
-
+{% extends 'base.html' %}{% block content %}
+<h2>لوحة الإدارة</h2>
 <section class="card">
-  <h3>👥 المشاركون</h3>
+  <h3>روابط المشاركين</h3>
 
-  <div class="participants-grid">
+  <ul class="admin-links">
     {% for p in participants %}
-      <div class="participant-card">
-        <div class="participant-name">
-          👤 {{p.name}}
-        </div>
+    <li>
+      <b>{{p.name}}</b>
 
-```
-    <code id="link{{p.id}}" style="display:none;">
-```
+      <code id="link{{p.id}}">
+https://worldcup-predictions-isey.onrender.com/p/{{p.token}}
+      </code>
 
-https://worldcup-predictions-isey.onrender.com/p/{{p.token}} </code>
-
-```
-    <button
-      type="button"
-      onclick="copyLink('link{{p.id}}')">
-      📋 نسخ الرابط
-    </button>
-  </div>
-{% endfor %}
-```
-
-  </div>
-</section>
-
-<section class="card">
-  <h3>⚽ إضافة مباراة</h3>
-
-  <form method="post" class="form-grid">
-
-```
-<input type="hidden" name="action" value="add_match">
-
-<input
-  name="home_team"
-  placeholder="الفريق الأول"
-  required
->
-
-<input
-  name="away_team"
-  placeholder="الفريق الثاني"
-  required
->
-
-<input
-  type="datetime-local"
-  name="start_time"
-  required
->
-
-<select name="stage">
-  {% for k,v in stage_labels.items() %}
-    <option value="{{k}}">
-      {{v}}
-    </option>
-  {% endfor %}
-</select>
-
-<button class="full">
-  ➕ إضافة المباراة
-</button>
-```
-
-  </form>
-</section>
-
-<section class="card">
-  <h3>🏆 موعد إغلاق توقع البطل</h3>
-
-  <form method="post">
-
-```
-<input
-  type="hidden"
-  name="action"
-  value="champion_deadline"
->
-
-<input
-  type="datetime-local"
-  name="deadline"
-  required
->
-
-<button>
-  💾 حفظ الموعد
-</button>
-```
-
-  </form>
-</section>
-
-<section class="card">
-  <h3>📅 المباريات الحالية</h3>
-
-{% if matches %}
-
-```
-{% for m in matches %}
-  <div class="admin-match-card">
-
-    <div class="admin-match-header">
-      <strong>
-        {{m.home_team}} × {{m.away_team}}
-      </strong>
-
-      <span class="pill">
-        {{ stage_labels.get(m.stage,m.stage) }}
-      </span>
-    </div>
-
-    <div class="muted">
-      ⏰ {{m.start_time.strftime('%Y-%m-%d %H:%M')}}
-    </div>
-
-    <form method="post" class="form-grid">
-
-      <input
-        type="hidden"
-        name="action"
-        value="result"
-      >
-
-      <input
-        type="hidden"
-        name="match_id"
-        value="{{m.id}}"
-      >
-
-      <input
-        type="number"
-        min="0"
-        name="home_score"
-        value="{{m.home_score if m.home_score is not none else 0}}"
-        inputmode="numeric"
-      >
-
-      <input
-        type="number"
-        min="0"
-        name="away_score"
-        value="{{m.away_score if m.away_score is not none else 0}}"
-        inputmode="numeric"
-      >
-
-      <button class="full">
-        💾 حفظ النتيجة
+      <button
+        type="button"
+        onclick="copyLink('link{{p.id}}')">
+        📋 نسخ الرابط
       </button>
-
-    </form>
-
-  </div>
-{% endfor %}
-```
-
-{% else %}
-
-```
-<p class="muted">
-  لا توجد مباريات حتى الآن.
-</p>
-```
-
-{% endif %}
-
+    </li>
+    {% endfor %}
+  </ul>
 </section>
-
+<section class="card"><h3>إضافة مباراة</h3><form method="post" class="form-grid"><input type="hidden" name="action" value="add_match"><input name="home_team" placeholder="الفريق الأول" required><input name="away_team" placeholder="الفريق الثاني" required><input type="datetime-local" name="start_time" required><select name="stage">{% for k,v in stage_labels.items() %}<option value="{{k}}">{{v}}</option>{% endfor %}</select><button class="full">إضافة</button></form></section>
+<section class="card"><h3>موعد إغلاق توقع البطل</h3><form method="post"><input type="hidden" name="action" value="champion_deadline"><input type="datetime-local" name="deadline" required><button>حفظ</button></form></section>
+<h3>إدخال النتائج</h3>{% for m in matches %}<section class="card"><p><b>{{m.home_team}} × {{m.away_team}}</b></p><p class="muted">{{m.start_time.strftime('%Y-%m-%d %H:%M')}}</p><form method="post" class="form-grid"><input type="hidden" name="action" value="result"><input type="hidden" name="match_id" value="{{m.id}}"><input type="number" min="0" name="home_score" value="{{m.home_score if m.home_score is not none else 0}}" inputmode="numeric"><input type="number" min="0" name="away_score" value="{{m.away_score if m.away_score is not none else 0}}" inputmode="numeric"><button class="full">حفظ النتيجة</button></form></section>{% endfor %}
 <script>
 function copyLink(id) {
-
-  const text =
-    document.getElementById(id)
-    .innerText
-    .trim();
+  const text = document.getElementById(id).innerText.trim();
 
   navigator.clipboard.writeText(text);
 
-  alert("✅ تم نسخ الرابط");
+  alert("تم نسخ الرابط");
 }
 </script>
-
 {% endblock %}
