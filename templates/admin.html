@@ -1,5 +1,9 @@
-{% extends 'base.html' %}{% block content %}
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h2>لوحة الإدارة</h2>
+
 <section class="card">
   <h3>روابط المشاركين</h3>
 
@@ -21,9 +25,153 @@ https://worldcup-predictions-isey.onrender.com/p/{{p.token}}
     {% endfor %}
   </ul>
 </section>
-<section class="card"><h3>إضافة مباراة</h3><form method="post" class="form-grid"><input type="hidden" name="action" value="add_match"><input name="home_team" placeholder="الفريق الأول" required><input name="away_team" placeholder="الفريق الثاني" required><input type="datetime-local" name="start_time" required><select name="stage">{% for k,v in stage_labels.items() %}<option value="{{k}}">{{v}}</option>{% endfor %}</select><button class="full">إضافة</button></form></section>
-<section class="card"><h3>موعد إغلاق توقع البطل</h3><form method="post"><input type="hidden" name="action" value="champion_deadline"><input type="datetime-local" name="deadline" required><button>حفظ</button></form></section>
-<h3>إدخال النتائج</h3>{% for m in matches %}<section class="card"><p><b>{{m.home_team}} × {{m.away_team}}</b></p><p class="muted">{{m.start_time.strftime('%Y-%m-%d %H:%M')}}</p><form method="post" class="form-grid"><input type="hidden" name="action" value="result"><input type="hidden" name="match_id" value="{{m.id}}"><input type="number" min="0" name="home_score" value="{{m.home_score if m.home_score is not none else 0}}" inputmode="numeric"><input type="number" min="0" name="away_score" value="{{m.away_score if m.away_score is not none else 0}}" inputmode="numeric"><button class="full">حفظ النتيجة</button></form></section>{% endfor %}
+
+<section class="card">
+  <h3>إضافة مباراة</h3>
+
+  <form method="post" class="form-grid">
+    <input type="hidden" name="action" value="add_match">
+
+    <input
+      name="home_team"
+      placeholder="الفريق الأول"
+      required
+    >
+
+    <input
+      name="away_team"
+      placeholder="الفريق الثاني"
+      required
+    >
+
+    <input
+      type="datetime-local"
+      name="start_time"
+      required
+    >
+
+    <select name="stage">
+      {% for k,v in stage_labels.items() %}
+        <option value="{{k}}">{{v}}</option>
+      {% endfor %}
+    </select>
+
+    <button class="full">
+      إضافة
+    </button>
+  </form>
+</section>
+
+<section class="card">
+  <h3>موعد إغلاق توقع البطل</h3>
+
+  <form method="post">
+    <input type="hidden" name="action" value="champion_deadline">
+
+    <input
+      type="datetime-local"
+      name="deadline"
+      required
+    >
+
+    <button>
+      حفظ
+    </button>
+  </form>
+</section>
+
+<h3>إدارة المباريات والنتائج</h3>
+
+{% for m in matches %}
+<section class="card admin-match">
+
+  <h3>{{m.home_team}} × {{m.away_team}}</h3>
+
+  <p class="muted">
+    {{m.start_time.strftime('%Y-%m-%d %H:%M')}} |
+    {{ stage_labels.get(m.stage,m.stage) }}
+  </p>
+
+  <form method="post" class="form-grid">
+    <input type="hidden" name="action" value="result">
+    <input type="hidden" name="match_id" value="{{m.id}}">
+
+    <input
+      type="number"
+      min="0"
+      name="home_score"
+      value="{{m.home_score if m.home_score is not none else 0}}"
+      inputmode="numeric"
+    >
+
+    <input
+      type="number"
+      min="0"
+      name="away_score"
+      value="{{m.away_score if m.away_score is not none else 0}}"
+      inputmode="numeric"
+    >
+
+    <button class="full">
+      حفظ النتيجة
+    </button>
+  </form>
+
+  <details class="edit-box">
+    <summary>✏️ تعديل المباراة</summary>
+
+    <form method="post" class="form-grid">
+      <input type="hidden" name="action" value="edit_match">
+      <input type="hidden" name="match_id" value="{{m.id}}">
+
+      <input
+        name="home_team"
+        value="{{m.home_team}}"
+        required
+      >
+
+      <input
+        name="away_team"
+        value="{{m.away_team}}"
+        required
+      >
+
+      <input
+        type="datetime-local"
+        name="start_time"
+        value="{{m.start_time.strftime('%Y-%m-%dT%H:%M')}}"
+        required
+      >
+
+      <select name="stage">
+        {% for k,v in stage_labels.items() %}
+          <option value="{{k}}" {% if m.stage == k %}selected{% endif %}>
+            {{v}}
+          </option>
+        {% endfor %}
+      </select>
+
+      <button class="full">
+        💾 حفظ تعديل المباراة
+      </button>
+    </form>
+  </details>
+
+  <form
+    method="post"
+    onsubmit="return confirm('هل أنت متأكد من حذف هذه المباراة؟ سيتم حذف توقعاتها أيضًا.');"
+  >
+    <input type="hidden" name="action" value="delete_match">
+    <input type="hidden" name="match_id" value="{{m.id}}">
+
+    <button class="danger-btn">
+      🗑️ حذف المباراة
+    </button>
+  </form>
+
+</section>
+{% endfor %}
+
 <script>
 function copyLink(id) {
   const text = document.getElementById(id).innerText.trim();
@@ -33,4 +181,5 @@ function copyLink(id) {
   alert("تم نسخ الرابط");
 }
 </script>
+
 {% endblock %}
