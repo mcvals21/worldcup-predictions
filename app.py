@@ -213,15 +213,19 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
-       if Tournament.query.first() is None:
-    new_tournament = Tournament(name="كأس العالم 2026")
-    db.session.add(new_tournament)
-    db.session.commit()
+        if Tournament.query.first() is None:
+            new_tournament = Tournament(name="كأس العالم 2026")
+            db.session.add(new_tournament)
+            db.session.commit()
 
         if Participant.query.count() == 0:
             for name in PARTICIPANT_NAMES:
-                participant = Participant(name=name, token=secrets.token_urlsafe(12))
+                participant = Participant(
+                    name=name,
+                    token=secrets.token_urlsafe(12)
+                )
                 db.session.add(participant)
+
             db.session.commit()
 
     app.run(host="0.0.0.0")
