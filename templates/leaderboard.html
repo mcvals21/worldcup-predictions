@@ -11,16 +11,20 @@
 </section>
 
 {% if rows|length >= 3 %}
-<section class="podium">
+<section class="podium enhanced-podium">
+
   <div class="podium-card second">
     <div class="medal">🥈</div>
+    <div class="podium-rank">المركز الثاني</div>
     <h3>{{ rows[1].name }}</h3>
     <div class="podium-points">{{ rows[1].points }} نقطة</div>
     <div class="muted">نتائج دقيقة: {{ rows[1].exact }}</div>
   </div>
 
-  <div class="podium-card first">
+  <div class="podium-card first champion-card-rank">
+    <div class="crown">👑</div>
     <div class="medal">🥇</div>
+    <div class="podium-rank">المتصدر</div>
     <h3>{{ rows[0].name }}</h3>
     <div class="podium-points">{{ rows[0].points }} نقطة</div>
     <div class="muted">نتائج دقيقة: {{ rows[0].exact }}</div>
@@ -28,10 +32,12 @@
 
   <div class="podium-card third">
     <div class="medal">🥉</div>
+    <div class="podium-rank">المركز الثالث</div>
     <h3>{{ rows[2].name }}</h3>
     <div class="podium-points">{{ rows[2].points }} نقطة</div>
     <div class="muted">نتائج دقيقة: {{ rows[2].exact }}</div>
   </div>
+
 </section>
 {% endif %}
 
@@ -55,16 +61,25 @@
         {% else %}{{ loop.index }}
         {% endif %}
       </td>
-      <td><b>{{ r.name }}</b></td>
-      <td><b>{{ r.points }}</b></td>
-      <td>{{ r.exact }}</td>
+
+      <td>
+        <b>{{ r.name }}</b>
+      </td>
+
+      <td>
+        <b>{{ r.points }}</b>
+      </td>
+
+      <td>
+        {{ r.exact }}
+      </td>
     </tr>
     {% endfor %}
   </table>
 
   <div class="mobile-cards">
     {% for r in rows %}
-    <div class="rank-card">
+    <div class="rank-card {% if loop.index == 1 %}rank-first{% elif loop.index == 2 %}rank-second{% elif loop.index == 3 %}rank-third{% endif %}">
       <div class="rank-no">
         {% if loop.index == 1 %}🥇
         {% elif loop.index == 2 %}🥈
@@ -78,7 +93,10 @@
         <div class="muted">نتائج دقيقة: {{ r.exact }}</div>
       </div>
 
-      <div class="points">{{ r.points }}</div>
+      <div class="points">
+        {{ r.points }}
+        <small>نقطة</small>
+      </div>
     </div>
     {% endfor %}
   </div>
