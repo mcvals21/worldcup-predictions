@@ -137,9 +137,22 @@
 {% endfor %}
 
 <script>
+function parseKuwaitTime(value) {
+  // value format: YYYY-MM-DDTHH:MM:SS
+  const parts = value.split(/[-T:]/).map(Number);
+  return new Date(
+    parts[0],
+    parts[1] - 1,
+    parts[2],
+    parts[3],
+    parts[4],
+    parts[5] || 0
+  );
+}
+
 function updateCountdowns() {
   document.querySelectorAll('.countdown').forEach(function(el) {
-    const start = new Date(el.dataset.start);
+    const start = parseKuwaitTime(el.dataset.start);
     const now = new Date();
     const diff = start - now;
 
@@ -155,9 +168,17 @@ function updateCountdowns() {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
-    let text = '⏳ يغلق التوقع بعد: ';
-    if (days > 0) text += days + ' يوم و ';
-    text += hours + ' ساعة و ' + minutes + ' دقيقة و ' + seconds + ' ثانية';
+    let text = '⏳ يغلق خلال: ';
+
+    if (days > 0) {
+      text += days + ' يوم و ';
+    }
+
+    if (hours > 0) {
+      text += hours + ' ساعة و ';
+    }
+
+    text += minutes + ' دقيقة و ' + seconds + ' ثانية';
 
     el.textContent = text;
   });
