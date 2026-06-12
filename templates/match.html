@@ -1,6 +1,114 @@
-{% extends 'base.html' %}{% block content %}
-<h2>{{match.home_team}} × {{match.away_team}}</h2>
-<p class="result">النتيجة: {% if match.home_score is not none %}{{match.home_score}}-{{match.away_score}}{% else %}لم تدخل بعد{% endif %}</p>
-<table class="desktop-table"><tr><th>اللاعب</th><th>التوقع</th><th>مضاعفة</th><th>النقاط</th></tr>{% for pred,p in preds %}<tr><td>{{p.name}}</td><td>{{pred.home_score}}-{{pred.away_score}}</td><td>{{'نعم' if pred.is_double else 'لا'}}</td><td>{{points_for(pred,match)}}</td></tr>{% endfor %}</table>
-<div class="mobile-cards">{% for pred,p in preds %}<div class="rank-card"><div class="rank-no">{{loop.index}}</div><div><b>{{p.name}}</b><div class="muted">{{'مضاعفة ⭐' if pred.is_double else 'بدون مضاعفة'}}</div></div><div><div class="points">{{pred.home_score}}-{{pred.away_score}}</div><div class="muted">{{points_for(pred,match)}} نقاط</div></div></div>{% endfor %}</div>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="card match-result-hero">
+  <div class="hero-kicker">توقعات المباراة</div>
+
+  <h2>{{match.home_team}} × {{match.away_team}}</h2>
+
+  {% if match.home_score is not none %}
+    <div class="big-score">
+      {{match.home_score}} - {{match.away_score}}
+    </div>
+    <p class="muted">النتيجة النهائية المعتمدة للمسابقة</p>
+  {% else %}
+    <div class="big-score pending-score">لم تدخل النتيجة بعد</div>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h3>📋 توقعات المشاركين</h3>
+
+  <table class="desktop-table">
+    <tr>
+      <th>اللاعب</th>
+      <th>التوقع</th>
+      <th>الحالة</th>
+      <th>مضاعفة</th>
+      <th>النقاط</th>
+    </tr>
+
+    {% for pred,p in preds %}
+      {% set pts = points_for(pred,match) %}
+
+      <tr>
+        <td><b>{{p.name}}</b></td>
+
+        <td>
+          <b>{{pred.home_score}} - {{pred.away_score}}</b>
+        </td>
+
+        <td>
+          {% if match.home_score is none %}
+            ⏳ بانتظار النتيجة
+          {% elif pts >= 3 and not pred.is_double %}
+            ✅ نتيجة دقيقة
+          {% elif pts >= 6 and pred.is_double %}
+            ⭐ نتيجة دقيقة مضاعفة
+          {% elif pts >= 1 %}
+            ✅ فائز صحيح
+          {% else %}
+            ❌ توقع خاطئ
+          {% endif %}
+        </td>
+
+        <td>
+          {% if pred.is_double %}
+            ⭐ نعم
+          {% else %}
+            لا
+          {% endif %}
+        </td>
+
+        <td>
+          <b>{{pts}}</b>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <div class="mobile-cards">
+    {% for pred,p in preds %}
+      {% set pts = points_for(pred,match) %}
+
+      <div class="prediction-card {% if pred.is_double %}double-selected{% endif %}">
+        <div class="prediction-head">
+          <div>
+            <b>{{p.name}}</b>
+
+            {% if pred.is_double %}
+              <div class="muted">⭐ مباراة مضاعفة</div>
+            {% else %}
+              <div class="muted">بدون مضاعفة</div>
+            {% endif %}
+          </div>
+
+          <div class="prediction-score">
+            {{pred.home_score}} - {{pred.away_score}}
+          </div>
+        </div>
+
+        <div class="prediction-status">
+          {% if match.home_score is none %}
+            ⏳ بانتظار النتيجة
+          {% elif pts >= 3 and not pred.is_double %}
+            ✅ نتيجة دقيقة
+          {% elif pts >= 6 and pred.is_double %}
+            ⭐ نتيجة دقيقة مضاعفة
+          {% elif pts >= 1 %}
+            ✅ فائز صحيح
+          {% else %}
+            ❌ توقع خاطئ
+          {% endif %}
+        </div>
+
+        <div class="prediction-points">
+          {{pts}} نقطة
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
 {% endblock %}
