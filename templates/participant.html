@@ -1,0 +1,48 @@
+{% extends 'base.html' %}{% block content %}
+<h2>أهلًا {{ p.name }}</h2>
+<section class="card">
+  <h3>توقع بطل البطولة</h3>
+  {% if t.champion_pick_deadline and locked(type('obj',(object,),{'start_time':t.champion_pick_deadline})()) %}
+    <p>تم إغلاق توقع البطل. اختيارك: <b>{{ champion.team_name if champion else 'لم يتم الاختيار' }}</b></p>
+  {% else %}
+    <form method="post">
+      <input type="hidden" name="action" value="champion">
+      <select name="team_name" required>
+        <option value="">اختر المنتخب</option>
+        {% for team in teams %}<option value="{{team}}" {% if champion and champion.team_name==team %}selected{% endif %}>{{team}}</option>{% endfor %}
+      </select>
+      <button>حفظ البطل</button>
+    </form>
+  {% endif %}
+</section>
+<h3>المباريات</h3>
+{% for m in matches %}
+<section class="card">
+  <h3>{{ m.home_team }} × {{ m.away_team }}</h3>
+  <div class="match-meta">
+    <span class="pill">الدور: {{ stage_labels.get(m.stage,m.stage) }}</span>
+    <span class="pill">البداية: {{ m.start_time.strftime('%Y-%m-%d %H:%M') }}</span>
+  </div>
+  {% set pred=predictions.get(m.id) %}
+  {% if locked(m) %}
+    <p class="locked">🔒 مغلقة</p>
+    <p>{% if pred %}توقعك: <b>{{pred.home_score}}-{{pred.away_score}}</b>{% if pred.is_double %} ⭐ مضاعفة{% endif %}{% else %}لم تتوقع{% endif %}</p>
+    <p class="card-actions"><a href="/match/{{m.id}}">عرض توقعات الجميع</a></p>
+  {% else %}
+    <form method="post" class="predict">
+      <input type="hidden" name="action" value="predict">
+      <input type="hidden" name="match_id" value="{{m.id}}">
+      <div class="score-row">
+        <div class="team">{{m.home_team}}</div>
+        <input type="number" min="0" name="home_score" value="{{pred.home_score if pred else 0}}" inputmode="numeric" pattern="[0-9]*">
+        <div class="vs">-</div>
+        <input type="number" min="0" name="away_score" value="{{pred.away_score if pred else 0}}" inputmode="numeric" pattern="[0-9]*">
+        <div class="team">{{m.away_team}}</div>
+      </div>
+      {% if m.stage in knockout %}<label class="check"><input type="checkbox" name="is_double" {% if pred and pred.is_double %}checked{% endif %}> ⭐ مباراة مضاعفة لهذا الدور</label>{% endif %}
+      <button>حفظ / تعديل</button>
+    </form>
+  {% endif %}
+  {% if m.home_score is not none %}<p class="result">النتيجة: {{m.home_score}}-{{m.away_score}} | نقاطك: {{ points_for(pred,m) if pred else 0 }}</p>{% endif %}
+</section>
+{% endfor %}{% endblock %}

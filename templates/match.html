@@ -1,0 +1,6 @@
+{% extends 'base.html' %}{% block content %}
+<h2>{{match.home_team}} × {{match.away_team}}</h2>
+<p class="result">النتيجة: {% if match.home_score is not none %}{{match.home_score}}-{{match.away_score}}{% else %}لم تدخل بعد{% endif %}</p>
+<table class="desktop-table"><tr><th>اللاعب</th><th>التوقع</th><th>مضاعفة</th><th>النقاط</th></tr>{% for pred,p in preds %}<tr><td>{{p.name}}</td><td>{{pred.home_score}}-{{pred.away_score}}</td><td>{{'نعم' if pred.is_double else 'لا'}}</td><td>{{points_for(pred,match)}}</td></tr>{% endfor %}</table>
+<div class="mobile-cards">{% for pred,p in preds %}<div class="rank-card"><div class="rank-no">{{loop.index}}</div><div><b>{{p.name}}</b><div class="muted">{{'مضاعفة ⭐' if pred.is_double else 'بدون مضاعفة'}}</div></div><div><div class="points">{{pred.home_score}}-{{pred.away_score}}</div><div class="muted">{{points_for(pred,match)}} نقاط</div></div></div>{% endfor %}</div>
+{% endblock %}

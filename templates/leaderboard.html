@@ -1,0 +1,5 @@
+{% extends 'base.html' %}{% block content %}
+<h2>الترتيب العام</h2>
+<table class="desktop-table"><tr><th>#</th><th>الاسم</th><th>النقاط</th><th>نتائج دقيقة</th></tr>{% for r in rows %}<tr><td>{{loop.index}}</td><td>{{r.name}}</td><td><b>{{r.points}}</b></td><td>{{r.exact}}</td></tr>{% endfor %}</table>
+<div class="mobile-cards">{% for r in rows %}<div class="rank-card"><div class="rank-no">{{loop.index}}</div><div><b>{{r.name}}</b><div class="muted">نتائج دقيقة: {{r.exact}}</div></div><div class="points">{{r.points}}</div></div>{% endfor %}</div>
+{% endblock %}
