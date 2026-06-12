@@ -64,12 +64,14 @@ STAGE_LABELS = {
     'quarter':'ربع النهائي', 'semi':'نصف النهائي', 'final':'النهائي'
 }
 
-def now_utc():
-    return datetime.utcnow()
+from datetime import datetime, timedelta
+
+def now_kw():
+    return datetime.utcnow() + timedelta(hours=3)
 
 def match_locked(match):
-    return now_utc() >= match.start_time
-
+    return now_kw() >= match.start_time
+    
 def winner(score_home, score_away):
     if score_home > score_away: return 'home'
     if score_home < score_away: return 'away'
@@ -137,7 +139,7 @@ def participant_page(token):
             db.session.add(pred); db.session.commit()
             flash('تم حفظ التوقع.')
         elif action == 'champion':
-            if t.champion_pick_deadline and now_utc() >= t.champion_pick_deadline:
+            if t.champion_pick_deadline and now_kw() >= t.champion_pick_deadline:
                 flash('تم إغلاق توقع البطل.')
             else:
                 team = request.form.get('team_name','').strip()
