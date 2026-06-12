@@ -1,5 +1,87 @@
-{% extends 'base.html' %}{% block content %}
-<h2>الترتيب العام</h2>
-<table class="desktop-table"><tr><th>#</th><th>الاسم</th><th>النقاط</th><th>نتائج دقيقة</th></tr>{% for r in rows %}<tr><td>{{loop.index}}</td><td>{{r.name}}</td><td><b>{{r.points}}</b></td><td>{{r.exact}}</td></tr>{% endfor %}</table>
-<div class="mobile-cards">{% for r in rows %}<div class="rank-card"><div class="rank-no">{{loop.index}}</div><div><b>{{r.name}}</b><div class="muted">نتائج دقيقة: {{r.exact}}</div></div><div class="points">{{r.points}}</div></div>{% endfor %}</div>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="card leaderboard-hero">
+  <div>
+    <div class="hero-kicker">لوحة المنافسة</div>
+    <h2>🏅 الترتيب العام</h2>
+    <p class="muted">الترتيب يتحدث تلقائيًا بعد إدخال نتائج المباريات</p>
+  </div>
+</section>
+
+{% if rows|length >= 3 %}
+<section class="podium">
+  <div class="podium-card second">
+    <div class="medal">🥈</div>
+    <h3>{{ rows[1].name }}</h3>
+    <div class="podium-points">{{ rows[1].points }} نقطة</div>
+    <div class="muted">نتائج دقيقة: {{ rows[1].exact }}</div>
+  </div>
+
+  <div class="podium-card first">
+    <div class="medal">🥇</div>
+    <h3>{{ rows[0].name }}</h3>
+    <div class="podium-points">{{ rows[0].points }} نقطة</div>
+    <div class="muted">نتائج دقيقة: {{ rows[0].exact }}</div>
+  </div>
+
+  <div class="podium-card third">
+    <div class="medal">🥉</div>
+    <h3>{{ rows[2].name }}</h3>
+    <div class="podium-points">{{ rows[2].points }} نقطة</div>
+    <div class="muted">نتائج دقيقة: {{ rows[2].exact }}</div>
+  </div>
+</section>
+{% endif %}
+
+<section class="card">
+  <h3>📊 جميع المشاركين</h3>
+
+  <table class="desktop-table">
+    <tr>
+      <th>#</th>
+      <th>الاسم</th>
+      <th>النقاط</th>
+      <th>نتائج دقيقة</th>
+    </tr>
+
+    {% for r in rows %}
+    <tr>
+      <td>
+        {% if loop.index == 1 %}🥇
+        {% elif loop.index == 2 %}🥈
+        {% elif loop.index == 3 %}🥉
+        {% else %}{{ loop.index }}
+        {% endif %}
+      </td>
+      <td><b>{{ r.name }}</b></td>
+      <td><b>{{ r.points }}</b></td>
+      <td>{{ r.exact }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <div class="mobile-cards">
+    {% for r in rows %}
+    <div class="rank-card">
+      <div class="rank-no">
+        {% if loop.index == 1 %}🥇
+        {% elif loop.index == 2 %}🥈
+        {% elif loop.index == 3 %}🥉
+        {% else %}{{ loop.index }}
+        {% endif %}
+      </div>
+
+      <div>
+        <b>{{ r.name }}</b>
+        <div class="muted">نتائج دقيقة: {{ r.exact }}</div>
+      </div>
+
+      <div class="points">{{ r.points }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
 {% endblock %}
