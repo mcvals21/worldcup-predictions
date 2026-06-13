@@ -465,12 +465,12 @@ if __name__ == "__main__":
             db.session.add(new_tournament)
             db.session.commit()
 
-                if Participant.query.count() == 0:             for name in PARTICIPANT_NAMES:                 participant = Participant(                     name=name,                     token=PARTICIPANT_TOKENS[name]                 )                 db.session.add(participant)              db.session.commit()
+        if Participant.query.count() == 0:
             for name in PARTICIPANT_NAMES:
-    participant = Participant(
-        name=name,
-        token=PARTICIPANT_TOKENS[name]
-    )
+                participant = Participant(
+                    name=name,
+                    token=PARTICIPANT_TOKENS[name]
+                )
                 db.session.add(participant)
 
             db.session.commit()
