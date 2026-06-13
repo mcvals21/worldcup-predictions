@@ -13,7 +13,7 @@
 <section class="card champion-card">
   <h3>🏆 توقع بطل البطولة</h3>
 
-  {% if t.champion_pick_deadline and locked(type('obj',(object,),{'start_time':t.champion_pick_deadline})()) %}
+  {% if t.champion_pick_deadline %}
     <p>تم إغلاق توقع البطل.</p>
     <p>اختيارك: <b>{{ champion.team_name if champion else 'لم يتم الاختيار' }}</b></p>
   {% else %}
