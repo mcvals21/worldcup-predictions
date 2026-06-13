@@ -18,6 +18,25 @@ PARTICIPANT_NAMES = [
     'العربيد','العومي','عيسى','الفزيع','فواز','القعود','ناصر','الوهيب'
 ]
 
+PARTICIPANT_TOKENS = {
+    'بو براك': 'bo-brak',
+    'بو ضاري': 'bo-dhari',
+    'بو صقر': 'bo-saqer',
+    'حمني': 'hamni',
+    'الحميدي': 'humaidi',
+    'الخالدي': 'khaldi',
+    'شافعي': 'shafie',
+    'الرشود': 'rashood',
+    'العربيد': 'arbeed',
+    'العومي': 'awmi',
+    'عيسى': 'essa',
+    'الفزيع': 'fazaie',
+    'فواز': 'fawaz',
+    'القعود': 'alqaoud',
+    'ناصر': 'nasser',
+    'الوهيب': 'alwhaib'
+}
+
 ADMIN_CODE = 'wc-admin-9Kx72LmQp2026-private'
 
 
@@ -426,8 +445,7 @@ def init_db():
         db.session.add(
             Participant(
                 name=name,
-                token=secrets.token_urlsafe(8)
-            )
+token=PARTICIPANT_TOKENS[name]            )
         )
 
     db.session.commit()
@@ -447,12 +465,12 @@ if __name__ == "__main__":
             db.session.add(new_tournament)
             db.session.commit()
 
-        if Participant.query.count() == 0:
+                if Participant.query.count() == 0:             for name in PARTICIPANT_NAMES:                 participant = Participant(                     name=name,                     token=PARTICIPANT_TOKENS[name]                 )                 db.session.add(participant)              db.session.commit()
             for name in PARTICIPANT_NAMES:
-                participant = Participant(
-                    name=name,
-                    token=secrets.token_urlsafe(12)
-                )
+    participant = Participant(
+        name=name,
+        token=PARTICIPANT_TOKENS[name]
+    )
                 db.session.add(participant)
 
             db.session.commit()
