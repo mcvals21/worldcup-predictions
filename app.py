@@ -240,18 +240,19 @@ def participant_page(token):
     teams = sorted({m.home_team for m in matches} | {m.away_team for m in matches})
 
     return render_template(
-        'participant.html',
-        p=p,
-        t=t,
-        matches=matches,
-        predictions=predictions,
-        locked=match_locked,
-        points_for=points_for,
-        champion=champion,
-        teams=teams,
-        stage_labels=STAGE_LABELS,
-        knockout=KNOCKOUT_STAGES
-    )
+    'participant.html',
+    p=p,
+    t=t,
+    matches=matches,
+    predictions=predictions,
+    locked=match_locked,
+    points_for=points_for,
+    champion=champion,
+    teams=teams,
+    stage_labels=STAGE_LABELS,
+    knockout=KNOCKOUT_STAGES,
+    champion_locked=(t.champion_pick_deadline is not None and now_kw() >= t.champion_pick_deadline)
+)
 
 
 @app.route('/rules')
