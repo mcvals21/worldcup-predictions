@@ -65,3 +65,4 @@ http://IP-ADDRESS:5000/admin/admin-2026
 ## للاستضافة لاحقًا
 
 يمكن رفعه على Render أو Railway أو PythonAnywhere. عند الاستضافة يجب تغيير `SECRET_KEY` و `ADMIN_CODE`.
+smile
