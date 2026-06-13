@@ -38,6 +38,15 @@ PARTICIPANT_TOKENS = {
     'الوهيب': 'alwhaib'
 }
 
+STARTING_BONUS = {
+    'االرشود': 2,
+    'فواز': 1,
+    'بو براك': 1
+    'بو صقر': 1,
+    'حمني': 1,
+    'العومي': 1
+}
+
 ADMIN_CODE = 'wc-admin-9Kx72LmQp2026-private'
 
 
@@ -287,9 +296,10 @@ def leaderboard():
     for p in participants:
         preds = Prediction.query.filter_by(participant_id=p.id).all()
 
-        pts = 0
-        exact = 0
-        champion_bonus = 0
+        starting_bonus = STARTING_BONUS.get(p.name, 0)
+pts = starting_bonus
+exact = 0
+champion_bonus = 0
 
         for pred in preds:
             match = Match.query.get(pred.match_id)
@@ -319,7 +329,8 @@ def leaderboard():
             'name': p.name,
             'points': pts,
             'exact': exact,
-            'champion_bonus': champion_bonus
+            'champion_bonus': champion_bonusو
+            'starting_bonus': starting_bonus
         })
 
     rows.sort(key=lambda r: (r['points'], r['exact'], r['champion_bonus']), reverse=True)
