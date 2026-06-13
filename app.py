@@ -3,10 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import secrets
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'change-this-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///predictions.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(     'DATABASE_URL',     'sqlite:///predictions.db' )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
