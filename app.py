@@ -297,9 +297,9 @@ def leaderboard():
         preds = Prediction.query.filter_by(participant_id=p.id).all()
 
         starting_bonus = STARTING_BONUS.get(p.name, 0)
-pts = starting_bonus
-exact = 0
-champion_bonus = 0
+        pts = starting_bonus
+        exact = 0
+        champion_bonus = 0
 
         for pred in preds:
             match = Match.query.get(pred.match_id)
@@ -329,11 +329,14 @@ champion_bonus = 0
             'name': p.name,
             'points': pts,
             'exact': exact,
-            'champion_bonus': champion_bonusو
+            'champion_bonus': champion_bonus,
             'starting_bonus': starting_bonus
         })
 
-    rows.sort(key=lambda r: (r['points'], r['exact'], r['champion_bonus']), reverse=True)
+    rows.sort(
+        key=lambda r: (r['points'], r['exact'], r['champion_bonus']),
+        reverse=True
+    )
 
     return render_template('leaderboard.html', rows=rows, t=t)
 
