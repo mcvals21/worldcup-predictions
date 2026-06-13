@@ -49,7 +49,7 @@
 
     <div class="match-top">
       <div>
-        <h3 class="match-title">{{ m.home_team }} × {{ m.away_team }}</h3>
+        <h3 class="match-title">{{ flag(m.home_team) }} {{ m.home_team }} × {{ m.away_team }} {{ flag(m.away_team) }}</h3>
 
         <div class="match-meta">
           <span class="pill">🏟 {{ stage_labels.get(m.stage,m.stage) }}</span>
@@ -98,7 +98,7 @@
         <input type="hidden" name="match_id" value="{{m.id}}">
 
         <div class="score-row">
-          <div class="team">{{m.home_team}}</div>
+          <div class="team">{{ flag(m.home_team) }} {{m.home_team}}</div>
 
           <input
             type="number"
@@ -120,7 +120,7 @@
             pattern="[0-9]*"
           >
 
-          <div class="team">{{m.away_team}}</div>
+          <div class="team">{{m.away_team}} {{ flag(m.away_team) }}</div>
         </div>
 
         {% if m.stage in knockout %}
