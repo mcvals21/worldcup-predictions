@@ -476,6 +476,21 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
+                updates = {
+            'الوهيب': 'سعود',
+            'الفزيع': 'صقر',
+            'شافعي': 'يوسف',
+            'الخالدي': 'الرجيبة'
+        }
+
+        for old_name, new_name in updates.items():
+            participant = Participant.query.filter_by(name=old_name).first()
+
+            if participant:
+                participant.name = new_name
+
+        db.session.commit()
+
         if Tournament.query.first() is None:
             new_tournament = Tournament(name="كأس العالم 2026")
             db.session.add(new_tournament)
