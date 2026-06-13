@@ -461,7 +461,8 @@ def init_db():
         db.session.add(
             Participant(
                 name=name,
-token=PARTICIPANT_TOKENS[name]            )
+                token=PARTICIPANT_TOKENS[name]
+            )
         )
 
     db.session.commit()
@@ -476,7 +477,7 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
-                updates = {
+        updates = {
             'الوهيب': 'سعود',
             'الفزيع': 'صقر',
             'شافعي': 'يوسف',
