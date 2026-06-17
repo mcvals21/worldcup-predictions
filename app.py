@@ -781,6 +781,14 @@ def admin(code):
 
     t = tournament()
 
+    if not t:
+        abort(404)
+
+    selected_filter = request.args.get('filter', 'today')
+
+    if selected_filter not in MATCH_FILTER_LABELS:
+        selected_filter = 'today'
+
     if request.method == 'POST':
         action = request.form.get('action')
 
@@ -849,9 +857,23 @@ def admin(code):
 
             flash('تم حفظ موعد إغلاق توقع البطل.')
 
-        return redirect(url_for('admin', code=code))
+        return redirect(url_for(
+            'admin',
+            code=code,
+            filter=selected_filter
+        ))
 
-    matches = Match.query.filter_by(tournament_id=t.id).order_by(Match.start_time).all()
+    all_matches = Match.query.filter_by(
+        tournament_id=t.id
+    ).order_by(Match.start_time).all()
+
+    matches = filter_matches_for_view(all_matches, selected_filter)
+
+    match_counts = {
+        key: len(filter_matches_for_view(all_matches, key))
+        for key in MATCH_FILTER_LABELS
+    }
+
     participants = Participant.query.order_by(Participant.name).all()
 
     return render_template(
@@ -860,7 +882,10 @@ def admin(code):
         matches=matches,
         participants=participants,
         code=code,
-        stage_labels=STAGE_LABELS
+        stage_labels=STAGE_LABELS,
+        selected_filter=selected_filter,
+        match_filter_labels=MATCH_FILTER_LABELS,
+        match_counts=match_counts
     )
 
 @app.cli.command('init-db')
