@@ -645,6 +645,45 @@ def rules():
     t = tournament()
     return render_template('rules.html', t=t)
 
+@app.route('/matches')
+def matches_page():
+    t = tournament()
+
+    if not t:
+        abort(404)
+
+    selected_filter = request.args.get('filter', 'today')
+
+    if selected_filter not in MATCH_FILTER_LABELS:
+        selected_filter = 'today'
+
+    all_matches = Match.query.filter_by(
+        tournament_id=t.id
+    ).order_by(Match.start_time).all()
+
+    matches = filter_matches_for_view(all_matches, selected_filter)
+
+    match_counts = {
+        key: len(filter_matches_for_view(all_matches, key))
+        for key in MATCH_FILTER_LABELS
+    }
+
+    return render_template(
+        'matches.html',
+        t=t,
+        matches=matches,
+        selected_filter=selected_filter,
+        match_filter_labels=MATCH_FILTER_LABELS,
+        match_counts=match_counts,
+        locked=match_locked,
+        stage_labels=STAGE_LABELS
+    )
+
+
+@app.route('/today')
+def today_page():
+    return redirect(url_for('matches_page', filter='today'))
+
 
 @app.route('/leaderboard')
 def leaderboard():
