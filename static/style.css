@@ -876,3 +876,179 @@ code{
     font-size:.9rem;
   }
 }
+
+.page-hero{
+  text-align:center;
+  margin:18px auto 16px;
+  padding:18px 14px;
+}
+
+.page-hero h1{
+  margin:0 0 8px;
+  font-size:1.7rem;
+  font-weight:900;
+}
+
+.page-hero p{
+  margin:0;
+  color:var(--muted);
+  font-weight:700;
+}
+
+.public-matches-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:14px;
+  margin:18px 0 28px;
+}
+
+.public-match-card{
+  background:#fff;
+  border:1px solid rgba(148,163,184,.35);
+  border-radius:20px;
+  padding:16px;
+  box-shadow:0 8px 22px rgba(16,24,40,.07);
+}
+
+.public-match-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+.stage-pill,
+.time-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:.82rem;
+  font-weight:900;
+}
+
+.stage-pill{
+  background:#eef4ff;
+  color:#3538cd;
+}
+
+.time-pill{
+  background:#f2f4f7;
+  color:#475467;
+}
+
+.public-teams-row{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:10px;
+  margin:12px 0 14px;
+}
+
+.public-team{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-weight:900;
+  text-align:center;
+  min-width:0;
+}
+
+.public-team span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.public-score-box{
+  min-width:58px;
+  height:42px;
+  border-radius:14px;
+  background:#101828;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:1.05rem;
+}
+
+.public-match-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-top:1px solid rgba(148,163,184,.25);
+  padding-top:12px;
+  flex-wrap:wrap;
+}
+
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:.82rem;
+  font-weight:900;
+}
+
+.status-pill.finished{
+  background:#ecfdf3;
+  color:#027a48;
+}
+
+.status-pill.live{
+  background:#fff7ed;
+  color:#c2410c;
+}
+
+.status-pill.upcoming{
+  background:#f2f4f7;
+  color:#475467;
+}
+
+.small-action-link{
+  color:#175cd3;
+  font-weight:900;
+  text-decoration:none;
+  font-size:.88rem;
+}
+
+.small-action-link:hover{
+  text-decoration:underline;
+}
+
+@media (max-width:700px){
+  .public-matches-grid{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .public-match-card{
+    padding:14px;
+    border-radius:18px;
+  }
+
+  .public-teams-row{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+
+  .public-score-box{
+    margin:auto;
+  }
+
+  .public-team span{
+    white-space:normal;
+  }
+
+  .public-match-footer{
+    justify-content:center;
+    text-align:center;
+  }
+}
