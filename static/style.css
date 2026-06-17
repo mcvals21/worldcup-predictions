@@ -1800,3 +1800,169 @@ code{
     margin-bottom:10px;
   }
 }
+/* Premium match info panel */
+.match-info-panel{
+  margin:12px 0 18px;
+  padding:14px;
+  border-radius:20px;
+  background:linear-gradient(180deg,#ffffff,#f8fafc);
+  border:1px solid rgba(148,163,184,.35);
+  box-shadow:0 8px 22px rgba(16,24,40,.06);
+}
+
+.match-status-main{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+
+.status-main-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:9px 15px;
+  font-weight:900;
+  font-size:.92rem;
+}
+
+.status-main-badge.done{
+  background:#ecfdf3;
+  color:#027a48;
+}
+
+.status-main-badge.missing{
+  background:#fff7ed;
+  color:#c2410c;
+}
+
+.status-main-badge.locked{
+  background:#f2f4f7;
+  color:#475467;
+}
+
+.status-score{
+  min-width:58px;
+  height:38px;
+  padding:0 14px;
+  border-radius:14px;
+  background:#101828;
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+}
+
+.match-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:10px;
+}
+
+.match-info-tile{
+  border-radius:16px;
+  padding:11px 8px;
+  background:#f1f5ff;
+  color:#344054;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  min-height:84px;
+}
+
+.match-info-tile .info-icon{
+  font-size:1.2rem;
+  line-height:1;
+}
+
+.match-info-tile .info-label{
+  font-size:.76rem;
+  color:#667085;
+  font-weight:800;
+}
+
+.match-info-tile strong{
+  font-size:.95rem;
+  font-weight:900;
+  color:#1d2939;
+  line-height:1.25;
+}
+
+.match-info-tile small{
+  font-size:.72rem;
+  color:#667085;
+  font-weight:800;
+}
+
+.match-countdown-card{
+  margin:12px 0 0 !important;
+  padding:13px 12px !important;
+  border-radius:16px !important;
+  background:linear-gradient(90deg,#eef4ff,#f5f8ff) !important;
+  color:#2f4eb8 !important;
+  border:1px solid rgba(47,78,184,.18) !important;
+  font-weight:900 !important;
+  text-align:center !important;
+  box-shadow:none !important;
+}
+
+/* Hide old duplicated title if still present */
+.match-card .match-title.teams-title{
+  display:none !important;
+}
+
+@media (max-width:700px){
+  .match-info-panel{
+    padding:12px;
+    border-radius:18px;
+    margin:10px 0 16px;
+  }
+
+  .match-status-main{
+    margin-bottom:10px;
+  }
+
+  .status-main-badge{
+    width:100%;
+    padding:10px 12px;
+    font-size:.9rem;
+  }
+
+  .status-score{
+    height:36px;
+  }
+
+  .match-info-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  .match-info-tile{
+    min-height:76px;
+    padding:10px 7px;
+    border-radius:15px;
+  }
+
+  .match-info-tile:nth-child(3){
+    grid-column:1 / 3;
+    min-height:58px;
+    flex-direction:row;
+    gap:8px;
+  }
+
+  .match-info-tile strong{
+    font-size:.9rem;
+  }
+
+  .match-countdown-card{
+    font-size:.92rem !important;
+    line-height:1.45 !important;
+  }
+}
