@@ -85,20 +85,22 @@
           </span>
         </div>
 
+        <div class="admin-status-row">
+          {% if m.home_score is not none and m.away_score is not none %}
+            <span class="admin-status-badge success">✅ النتيجة محفوظة</span>
+          {% elif locked(m) %}
+            <span class="admin-status-badge warning">⚠️ تحتاج نتيجة</span>
+          {% else %}
+            <span class="admin-status-badge neutral">⏳ لم تبدأ</span>
+          {% endif %}
+        </div>
+
         <div class="admin-teams-row">
           <div class="admin-team-box">
             {% if home_flag %}
               <img class="admin-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
             {% endif %}
             <strong>{{ m.home_team }}</strong>
-          </div>
-
-          <div class="admin-score-preview">
-            {% if m.home_score is not none and m.away_score is not none %}
-              {{ m.home_score }} - {{ m.away_score }}
-            {% else %}
-              ×
-            {% endif %}
           </div>
 
           <div class="admin-team-box">
@@ -140,6 +142,21 @@
           </button>
         </form>
 
+        {% if m.home_score is not none or m.away_score is not none %}
+          <form
+            method="post"
+            class="admin-clear-form"
+            onsubmit="return confirm('هل تريد مسح النتيجة فقط؟ التوقعات ستبقى محفوظة.');"
+          >
+            <input type="hidden" name="action" value="clear_result">
+            <input type="hidden" name="match_id" value="{{ m.id }}">
+
+            <button type="submit">
+              مسح النتيجة
+            </button>
+          </form>
+        {% endif %}
+
         <details class="admin-edit-box">
           <summary>تعديل المباراة</summary>
 
@@ -170,7 +187,7 @@
 
           <form
             method="post"
-            onsubmit="return confirm('هل أنت متأكد من حذف المباراة؟ سيتم حذف توقعاتها أيضًا.');"
+            onsubmit="return confirm('هل أنت متأكد؟ حذف المباراة سيحذف توقعات المشاركين لهذه المباراة أيضًا.');"
             class="admin-delete-form"
           >
             <input type="hidden" name="action" value="delete_match">
@@ -191,11 +208,25 @@
 
   <div class="participants-grid">
     {% for p in participants %}
+      {% set player_url = url_for('participant_page', token=p.token, _external=True) %}
+
       <div class="participant-link-card">
         <strong>{{ p.name }}</strong>
-        <a href="{{ url_for('participant_page', token=p.token, _external=True) }}">
-          فتح الرابط
-        </a>
+
+        <div class="participant-actions">
+          <a href="{{ player_url }}">
+            فتح
+          </a>
+
+          <button
+            type="button"
+            class="copy-link-btn"
+            data-link="{{ player_url }}"
+            onclick="navigator.clipboard.writeText(this.dataset.link); this.textContent='تم النسخ';"
+          >
+            نسخ الرابط
+          </button>
+        </div>
       </div>
     {% endfor %}
   </div>
