@@ -1564,3 +1564,19 @@ code{
     grid-template-columns:1fr;
   }
 }
+/* Admin page: hide duplicated score preview */
+.admin-score-preview{
+  display:none !important;
+}
+
+.admin-teams-row{
+  grid-template-columns:1fr 1fr !important;
+  gap:18px !important;
+}
+
+@media (max-width:700px){
+  .admin-teams-row{
+    grid-template-columns:1fr 1fr !important;
+    gap:10px !important;
+  }
+}
