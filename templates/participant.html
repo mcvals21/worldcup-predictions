@@ -133,44 +133,43 @@
         <input type="hidden" name="action" value="predict">
         <input type="hidden" name="match_id" value="{{m.id}}">
 
-        <div class="score-row">
-          <div class="team">
-  <span class="team-badge">
+        <div class="prediction-score-card">
+  <div class="prediction-team-box">
     {% if home_flag %}
-      <img class="flag-img" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+      <img class="prediction-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
     {% endif %}
-    <span>{{ m.home_team }}</span>
-  </span>
-</div>
-          <input
-            type="number"
-            min="0"
-            name="home_score"
-            value="{{pred.home_score if pred else 0}}"
-            inputmode="numeric"
-            pattern="[0-9]*"
-          >
 
-          <div class="vs">-</div>
+    <div class="prediction-team-name">{{ m.home_team }}</div>
 
-          <input
-            type="number"
-            min="0"
-            name="away_score"
-            value="{{pred.away_score if pred else 0}}"
-            inputmode="numeric"
-            pattern="[0-9]*"
-          >
+    <input
+      type="number"
+      min="0"
+      name="home_score"
+      value="{{ pred.home_score if pred else 0 }}"
+      inputmode="numeric"
+      pattern="[0-9]*"
+    >
+  </div>
 
-          <div class="team">
-  <span class="team-badge">
+  <div class="prediction-separator">-</div>
+
+  <div class="prediction-team-box">
     {% if away_flag %}
-      <img class="flag-img" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+      <img class="prediction-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
     {% endif %}
-    <span>{{ m.away_team }}</span>
-  </span>
+
+    <div class="prediction-team-name">{{ m.away_team }}</div>
+
+    <input
+      type="number"
+      min="0"
+      name="away_score"
+      value="{{ pred.away_score if pred else 0 }}"
+      inputmode="numeric"
+      pattern="[0-9]*"
+    >
+  </div>
 </div>
-        </div>
 
         {% if m.stage in knockout %}
           <label class="double-option">
