@@ -2418,3 +2418,57 @@ code{
     border-color:#1d4ed8;
   }
 }
+/* Mobile match filters as fixed options, not horizontal scroll */
+@media (max-width:700px){
+  .match-tabs{
+    display:grid !important;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    overflow:visible !important;
+    flex-wrap:unset !important;
+    justify-content:stretch !important;
+    margin:16px 0 18px !important;
+    padding:8px !important;
+    border-radius:18px;
+    background:#f8fafc;
+    border:1px solid rgba(148,163,184,.35);
+    box-shadow:0 8px 22px rgba(16,24,40,.05);
+    scroll-snap-type:none !important;
+  }
+
+  .match-tab{
+    width:100% !important;
+    min-width:0 !important;
+    flex:unset !important;
+    scroll-snap-align:unset !important;
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:12px 8px !important;
+    border-radius:15px;
+    font-size:.9rem;
+    background:#fff;
+    border:1px solid rgba(148,163,184,.35);
+    box-shadow:none;
+  }
+
+  .match-tab small{
+    min-width:22px;
+    height:22px;
+    padding:0 7px;
+    font-size:.74rem;
+  }
+
+  .match-tab.active{
+    background:linear-gradient(135deg,#101828,#1d4ed8);
+    color:#fff;
+    border-color:#1d4ed8;
+    box-shadow:0 8px 18px rgba(29,78,216,.20);
+  }
+
+  .match-tab.active small{
+    background:rgba(255,255,255,.18);
+    color:#fff;
+  }
+}
