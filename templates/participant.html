@@ -57,6 +57,33 @@
 
   <section class="card match-card {% if is_double %}double-selected{% endif %}">
 
+    {% set home_flag = team_flag_code(m.home_team) %}
+{% set away_flag = team_flag_code(m.away_team) %}
+
+<div class="match-unified-header">
+  <div class="match-unified-team">
+    {% if home_flag %}
+      <img class="match-unified-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+    {% endif %}
+    <strong>{{ team_label(m.home_team) }}</strong>
+  </div>
+
+  <div class="match-unified-score">
+    {% if m.home_score is not none and m.away_score is not none %}
+      {{ m.home_score }} - {{ m.away_score }}
+    {% else %}
+      VS
+    {% endif %}
+  </div>
+
+  <div class="match-unified-team">
+    {% if away_flag %}
+      <img class="match-unified-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+    {% endif %}
+    <strong>{{ team_label(m.away_team) }}</strong>
+  </div>
+</div>
+
     {% if is_double %}
       <div class="double-banner">
         <span>⭐ مباراة مضاعفة</span>
