@@ -1,101 +1,169 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
 
-<section class="card leaderboard-hero">
+<div class="leaderboard-hero">
   <div>
-    <div class="hero-kicker">لوحة المنافسة</div>
-    <h2>🏅 الترتيب العام</h2>
-    <p class="muted">الترتيب يتحدث تلقائيًا بعد إدخال نتائج المباريات</p>
+    <h1>الترتيب العام 🏆</h1>
+    <p>تابع الصدارة، النقاط، والنتائج الدقيقة بين المشاركين.</p>
   </div>
-</section>
+</div>
 
-{% if rows|length >= 3 %}
-<section class="podium">
-  <div class="podium-card second">
-    <div class="medal">🥈</div>
-    <h3>{{ rows[1].name }}</h3>
-    <div class="podium-points">{{ rows[1].points }} نقطة</div>
-    {% if rows[1].champion_bonus %}
-      <div class="champion-bonus">🏆 +10</div>
-    {% endif %}
-    <div class="muted">نتائج دقيقة: {{ rows[1].exact }}</div>
+{% if rows %}
+
+  <div class="top-podium">
+    {% for r in rows[:3] %}
+      <div class="podium-card rank-{{ loop.index }}">
+        <div class="podium-medal">
+          {% if loop.index == 1 %}
+            🥇
+          {% elif loop.index == 2 %}
+            🥈
+          {% else %}
+            🥉
+          {% endif %}
+        </div>
+
+        <div class="podium-name">{{ r.name }}</div>
+
+        <div class="podium-points">
+          {{ r.points }}
+          <span>نقطة</span>
+        </div>
+
+        <div class="podium-meta">
+          🎯 {{ r.exact }} نتيجة دقيقة
+        </div>
+
+        {% if r.starting_bonus %}
+          <div class="mini-badge bonus">
+            بداية +{{ r.starting_bonus }}
+          </div>
+        {% endif %}
+
+        {% if r.champion_bonus %}
+          <div class="mini-badge champion">
+            🏆 بطل +{{ r.champion_bonus }}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
   </div>
 
-  <div class="podium-card first">
-    <div class="medal">🥇</div>
-    <h3>{{ rows[0].name }}</h3>
-    <div class="podium-points">{{ rows[0].points }} نقطة</div>
-    {% if rows[0].champion_bonus %}
-      <div class="champion-bonus">🏆 +10</div>
-    {% endif %}
-    <div class="muted">نتائج دقيقة: {{ rows[0].exact }}</div>
-  </div>
-
-  <div class="podium-card third">
-    <div class="medal">🥉</div>
-    <h3>{{ rows[2].name }}</h3>
-    <div class="podium-points">{{ rows[2].points }} نقطة</div>
-    {% if rows[2].champion_bonus %}
-      <div class="champion-bonus">🏆 +10</div>
-    {% endif %}
-    <div class="muted">نتائج دقيقة: {{ rows[2].exact }}</div>
-  </div>
-</section>
 {% endif %}
 
-<section class="card">
-  <h3>📊 جميع المشاركين</h3>
+<div class="leaderboard-summary">
+  <div class="summary-box">
+    <span>عدد المشاركين</span>
+    <strong>{{ rows|length }}</strong>
+  </div>
 
-  <table class="desktop-table">
-    <tr>
-      <th>#</th>
-      <th>الاسم</th>
-      <th>النقاط</th>
-      <th>البطل</th>
-      <th>نتائج دقيقة</th>
-    </tr>
+  <div class="summary-box">
+    <span>المتصدر</span>
+    <strong>{{ rows[0].name if rows else '-' }}</strong>
+  </div>
 
-    {% for r in rows %}
-    <tr>
-      <td>
-        {% if loop.index == 1 %}🥇
-        {% elif loop.index == 2 %}🥈
-        {% elif loop.index == 3 %}🥉
-        {% else %}{{ loop.index }}
-        {% endif %}
-      </td>
-      <td><b>{{ r.name }}</b></td>
-      <td><b>{{ r.points }}</b></td>
-      <td>{% if r.champion_bonus %}🏆 +10{% else %}-{% endif %}</td>
-      <td>{{ r.exact }}</td>
-    </tr>
-    {% endfor %}
-  </table>
+  <div class="summary-box">
+    <span>أعلى نقاط</span>
+    <strong>{{ rows[0].points if rows else 0 }}</strong>
+  </div>
+</div>
 
-  <div class="mobile-cards">
-    {% for r in rows %}
-    <div class="rank-card">
-      <div class="rank-no">
-        {% if loop.index == 1 %}🥇
-        {% elif loop.index == 2 %}🥈
-        {% elif loop.index == 3 %}🥉
-        {% else %}{{ loop.index }}
+<div class="mobile-leader-list">
+  {% for r in rows %}
+    <div class="leader-card {% if loop.index <= 3 %}top-three{% endif %}">
+      <div class="leader-rank">
+        {% if loop.index == 1 %}
+          🥇
+        {% elif loop.index == 2 %}
+          🥈
+        {% elif loop.index == 3 %}
+          🥉
+        {% else %}
+          {{ loop.index }}
         {% endif %}
       </div>
 
-      <div>
-        <b>{{ r.name }}</b>
-        <div class="muted">
-          نتائج دقيقة: {{ r.exact }}
-          {% if r.champion_bonus %} | 🏆 +10{% endif %}
+      <div class="leader-info">
+        <strong>{{ r.name }}</strong>
+
+        <div class="leader-stats">
+          <span>🎯 دقيقة: {{ r.exact }}</span>
+
+          {% if r.starting_bonus %}
+            <span>⭐ بداية: +{{ r.starting_bonus }}</span>
+          {% endif %}
+
+          {% if r.champion_bonus %}
+            <span>🏆 بطل: +{{ r.champion_bonus }}</span>
+          {% endif %}
         </div>
       </div>
 
-      <div class="points">{{ r.points }}</div>
+      <div class="leader-points">
+        <strong>{{ r.points }}</strong>
+        <span>نقطة</span>
+      </div>
     </div>
-    {% endfor %}
-  </div>
-</section>
+  {% endfor %}
+</div>
+
+<div class="desktop-leader-table">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>الاسم</th>
+        <th>النقاط</th>
+        <th>نتائج دقيقة</th>
+        <th>نقاط إضافية</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for r in rows %}
+        <tr>
+          <td>
+            {% if loop.index == 1 %}
+              🥇
+            {% elif loop.index == 2 %}
+              🥈
+            {% elif loop.index == 3 %}
+              🥉
+            {% else %}
+              {{ loop.index }}
+            {% endif %}
+          </td>
+
+          <td>
+            <strong>{{ r.name }}</strong>
+          </td>
+
+          <td>
+            <strong>{{ r.points }}</strong>
+          </td>
+
+          <td>
+            {{ r.exact }}
+          </td>
+
+          <td>
+            {% if r.starting_bonus %}
+              <span class="table-badge">⭐ +{{ r.starting_bonus }}</span>
+            {% endif %}
+
+            {% if r.champion_bonus %}
+              <span class="table-badge champion">🏆 +{{ r.champion_bonus }}</span>
+            {% endif %}
+
+            {% if not r.starting_bonus and not r.champion_bonus %}
+              -
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 {% endblock %}
