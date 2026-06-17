@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, abort, flash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import secrets
 import os
@@ -416,6 +416,40 @@ def inject_team_helpers():
     return {
         'team_flag_code': team_flag_code
     }
+
+
+MATCH_FILTER_LABELS = {
+    'today': 'اليوم',
+    'upcoming': 'القادمة',
+    'finished': 'المنتهية',
+    'all': 'كل المباريات'
+}
+
+
+def filter_matches_for_view(matches, selected_filter):
+    now = now_kw()
+    today_start = datetime.combine(now.date(), datetime.min.time())
+    tomorrow_start = today_start + timedelta(days=1)
+
+    if selected_filter == 'today':
+        return [
+            m for m in matches
+            if today_start <= m.start_time < tomorrow_start
+        ]
+
+    if selected_filter == 'upcoming':
+        return [
+            m for m in matches
+            if not match_locked(m)
+        ]
+
+    if selected_filter == 'finished':
+        return [
+            m for m in matches
+            if m.home_score is not None and m.away_score is not None
+        ]
+
+    return matches
 
 
 def now_kw():
