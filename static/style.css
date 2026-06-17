@@ -722,3 +722,78 @@ code{
   font-weight:900;
   font-size:.85rem;
 }
+
+.team-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  vertical-align:middle;
+  white-space:nowrap;
+}
+
+.flag-img{
+  width:26px;
+  height:19px;
+  object-fit:cover;
+  border-radius:5px;
+  background:#fff;
+  box-shadow:
+    0 0 0 1px rgba(16,24,40,.12),
+    0 2px 5px rgba(16,24,40,.10);
+  flex:0 0 auto;
+}
+
+.team-badge.big .flag-img{
+  width:32px;
+  height:24px;
+  border-radius:6px;
+}
+
+.teams-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  line-height:1.6;
+}
+
+.admin-teams-title{
+  justify-content:flex-start;
+}
+
+.versus-symbol{
+  color:var(--muted);
+  font-weight:900;
+  padding:0 2px;
+}
+
+.match-title .team-badge{
+  font-weight:900;
+}
+
+.score-row .team-badge{
+  justify-content:center;
+}
+
+@media (max-width:700px){
+  .teams-title{
+    gap:8px;
+    text-align:center;
+  }
+
+  .team-badge{
+    gap:6px;
+  }
+
+  .flag-img{
+    width:24px;
+    height:18px;
+    border-radius:4px;
+  }
+
+  .team-badge.big .flag-img{
+    width:28px;
+    height:21px;
+  }
+}

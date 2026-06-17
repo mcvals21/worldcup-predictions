@@ -5,7 +5,26 @@
 <section class="card match-result-hero">
   <div class="hero-kicker">توقعات المباراة</div>
 
-  <h2>{{match.home_team}} × {{match.away_team}}</h2>
+  {% set home_flag = team_flag_code(match.home_team) %}
+{% set away_flag = team_flag_code(match.away_team) %}
+
+<h2 class="teams-title center-teams">
+  <span class="team-badge big">
+    {% if home_flag %}
+      <img class="flag-img" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ match.home_team }}</span>
+  </span>
+
+  <span class="versus-symbol">×</span>
+
+  <span class="team-badge big">
+    {% if away_flag %}
+      <img class="flag-img" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ match.away_team }}</span>
+  </span>
+</h2>
 
   {% if match.home_score is not none %}
     <div class="big-score">

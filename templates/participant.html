@@ -49,7 +49,26 @@
 
     <div class="match-top">
       <div>
-        <h3 class="match-title">{{ m.home_team }} × {{ m.away_team }}</h3>
+        {% set home_flag = team_flag_code(m.home_team) %}
+{% set away_flag = team_flag_code(m.away_team) %}
+
+<h3 class="match-title teams-title">
+  <span class="team-badge">
+    {% if home_flag %}
+      <img class="flag-img" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ m.home_team }}</span>
+  </span>
+
+  <span class="versus-symbol">×</span>
+
+  <span class="team-badge">
+    {% if away_flag %}
+      <img class="flag-img" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ m.away_team }}</span>
+  </span>
+</h3>
 
         <div class="match-meta">
           <span class="pill">🏟 {{ stage_labels.get(m.stage,m.stage) }}</span>
@@ -98,8 +117,14 @@
         <input type="hidden" name="match_id" value="{{m.id}}">
 
         <div class="score-row">
-          <div class="team">{{m.home_team}}</div>
-
+          <div class="team">
+  <span class="team-badge">
+    {% if home_flag %}
+      <img class="flag-img" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ m.home_team }}</span>
+  </span>
+</div>
           <input
             type="number"
             min="0"
@@ -120,7 +145,14 @@
             pattern="[0-9]*"
           >
 
-          <div class="team">{{m.away_team}}</div>
+          <div class="team">
+  <span class="team-badge">
+    {% if away_flag %}
+      <img class="flag-img" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ m.away_team }}</span>
+  </span>
+</div>
         </div>
 
         {% if m.stage in knockout %}

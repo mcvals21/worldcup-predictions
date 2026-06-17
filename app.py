@@ -110,6 +110,180 @@ STAGE_LABELS = {
     'final': 'النهائي'
 }
 
+RAW_TEAM_FLAG_CODES = {
+    'أمريكا': 'us',
+    'امريكا': 'us',
+    'الولايات المتحدة': 'us',
+    'USA': 'us',
+    'United States': 'us',
+
+    'المكسيك': 'mx',
+    'Mexico': 'mx',
+    'كندا': 'ca',
+    'Canada': 'ca',
+    'بنما': 'pa',
+    'Panama': 'pa',
+    'كوستاريكا': 'cr',
+    'Costa Rica': 'cr',
+    'جامايكا': 'jm',
+    'Jamaica': 'jm',
+    'هايتي': 'ht',
+    'هاييتي': 'ht',
+    'Haiti': 'ht',
+    'هندوراس': 'hn',
+    'Honduras': 'hn',
+
+    'الأرجنتين': 'ar',
+    'الارجنتين': 'ar',
+    'Argentina': 'ar',
+    'البرازيل': 'br',
+    'Brazil': 'br',
+    'أوروغواي': 'uy',
+    'اورغواي': 'uy',
+    'الأوروغواي': 'uy',
+    'Uruguay': 'uy',
+    'كولومبيا': 'co',
+    'Colombia': 'co',
+    'الإكوادور': 'ec',
+    'الاكوادور': 'ec',
+    'Ecuador': 'ec',
+    'باراغواي': 'py',
+    'Paraguay': 'py',
+
+    'فرنسا': 'fr',
+    'France': 'fr',
+    'إسبانيا': 'es',
+    'اسبانيا': 'es',
+    'Spain': 'es',
+    'البرتغال': 'pt',
+    'Portugal': 'pt',
+    'ألمانيا': 'de',
+    'المانيا': 'de',
+    'Germany': 'de',
+    'هولندا': 'nl',
+    'Netherlands': 'nl',
+    'إنجلترا': 'gb-eng',
+    'انجلترا': 'gb-eng',
+    'England': 'gb-eng',
+    'سويسرا': 'ch',
+    'Switzerland': 'ch',
+    'بلجيكا': 'be',
+    'Belgium': 'be',
+    'كرواتيا': 'hr',
+    'Croatia': 'hr',
+    'الدنمارك': 'dk',
+    'Denmark': 'dk',
+    'النمسا': 'at',
+    'Austria': 'at',
+    'النرويج': 'no',
+    'Norway': 'no',
+    'إيطاليا': 'it',
+    'ايطاليا': 'it',
+    'Italy': 'it',
+    'التشيك': 'cz',
+    'Czechia': 'cz',
+    'صربيا': 'rs',
+    'Serbia': 'rs',
+    'بولندا': 'pl',
+    'Poland': 'pl',
+    'تركيا': 'tr',
+    'Turkey': 'tr',
+    'أوكرانيا': 'ua',
+    'اوكرانيا': 'ua',
+    'Ukraine': 'ua',
+
+    'المغرب': 'ma',
+    'Morocco': 'ma',
+    'مصر': 'eg',
+    'Egypt': 'eg',
+    'تونس': 'tn',
+    'Tunisia': 'tn',
+    'الجزائر': 'dz',
+    'Algeria': 'dz',
+    'السنغال': 'sn',
+    'Senegal': 'sn',
+    'غانا': 'gh',
+    'Ghana': 'gh',
+    'نيجيريا': 'ng',
+    'Nigeria': 'ng',
+    'ساحل العاج': 'ci',
+    'كوت ديفوار': 'ci',
+    'Ivory Coast': 'ci',
+    'جنوب أفريقيا': 'za',
+    'جنوب افريقيا': 'za',
+    'South Africa': 'za',
+    'الرأس الأخضر': 'cv',
+    'الرأس الاخضر': 'cv',
+    'كاب فيردي': 'cv',
+    'Cape Verde': 'cv',
+    'الكاميرون': 'cm',
+    'Cameroon': 'cm',
+
+    'اليابان': 'jp',
+    'Japan': 'jp',
+    'كوريا الجنوبية': 'kr',
+    'كوريا الجنوبيه': 'kr',
+    'South Korea': 'kr',
+    'إيران': 'ir',
+    'ايران': 'ir',
+    'Iran': 'ir',
+    'السعودية': 'sa',
+    'السعوديه': 'sa',
+    'Saudi Arabia': 'sa',
+    'قطر': 'qa',
+    'Qatar': 'qa',
+    'أستراليا': 'au',
+    'استراليا': 'au',
+    'Australia': 'au',
+    'نيوزيلندا': 'nz',
+    'New Zealand': 'nz',
+    'العراق': 'iq',
+    'Iraq': 'iq',
+    'الأردن': 'jo',
+    'الاردن': 'jo',
+    'Jordan': 'jo',
+    'الإمارات': 'ae',
+    'الامارات': 'ae',
+    'UAE': 'ae',
+    'أوزبكستان': 'uz',
+    'اوزبكستان': 'uz',
+    'Uzbekistan': 'uz',
+}
+
+
+def normalize_team_key(name):
+    text = (name or '').strip().lower()
+
+    replacements = {
+        'أ': 'ا',
+        'إ': 'ا',
+        'آ': 'ا',
+        'ى': 'ي',
+        'ة': 'ه'
+    }
+
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+
+    return ' '.join(text.split())
+
+
+TEAM_FLAG_CODES = {
+    normalize_team_key(name): code
+    for name, code in RAW_TEAM_FLAG_CODES.items()
+}
+
+
+def team_flag_code(team_name):
+    return TEAM_FLAG_CODES.get(normalize_team_key(team_name))
+
+
+@app.context_processor
+def inject_team_helpers():
+    return {
+        'team_flag_code': team_flag_code
+    }
+
 
 def now_kw():
     return datetime.now(KUWAIT_TZ).replace(tzinfo=None)
