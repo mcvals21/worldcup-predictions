@@ -35,11 +35,6 @@
           🎯 {{ r.exact }} نتيجة دقيقة
         </div>
 
-        {% if r.starting_bonus %}
-          <div class="mini-badge bonus">
-            بداية +{{ r.starting_bonus }}
-          </div>
-        {% endif %}
 
         {% if r.champion_bonus %}
           <div class="mini-badge champion">
@@ -52,22 +47,6 @@
 
 {% endif %}
 
-<div class="leaderboard-summary">
-  <div class="summary-box">
-    <span>عدد المشاركين</span>
-    <strong>{{ rows|length }}</strong>
-  </div>
-
-  <div class="summary-box">
-    <span>المتصدر</span>
-    <strong>{{ rows[0].name if rows else '-' }}</strong>
-  </div>
-
-  <div class="summary-box">
-    <span>أعلى نقاط</span>
-    <strong>{{ rows[0].points if rows else 0 }}</strong>
-  </div>
-</div>
 
 <div class="mobile-leader-list">
   {% for r in rows %}
@@ -90,9 +69,6 @@
         <div class="leader-stats">
           <span>🎯 دقيقة: {{ r.exact }}</span>
 
-          {% if r.starting_bonus %}
-            <span>⭐ بداية: +{{ r.starting_bonus }}</span>
-          {% endif %}
 
           {% if r.champion_bonus %}
             <span>🏆 بطل: +{{ r.champion_bonus }}</span>
@@ -148,17 +124,11 @@
           </td>
 
           <td>
-            {% if r.starting_bonus %}
-              <span class="table-badge">⭐ +{{ r.starting_bonus }}</span>
-            {% endif %}
-
             {% if r.champion_bonus %}
-              <span class="table-badge champion">🏆 +{{ r.champion_bonus }}</span>
-            {% endif %}
-
-            {% if not r.starting_bonus and not r.champion_bonus %}
-              -
-            {% endif %}
+  <span class="table-badge champion">🏆 +{{ r.champion_bonus }}</span>
+{% else %}
+  -
+{% endif %}
           </td>
         </tr>
       {% endfor %}
