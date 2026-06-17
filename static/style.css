@@ -732,8 +732,8 @@ code{
 }
 
 .flag-img{
-  width:36px;
-  height:28px;
+  width:46px;
+  height:38px;
   object-fit:cover;
   border-radius:5px;
   background:#fff;
@@ -744,8 +744,8 @@ code{
 }
 
 .team-badge.big .flag-img{
-  width:42px;
-  height:32px;
+  width:52px;
+  height:42px;
   border-radius:6px;
 }
 
@@ -787,13 +787,13 @@ code{
   }
 
   .flag-img{
-    width:32px;
-    height:24px;
+    width:42px;
+    height:34px;
     border-radius:4px;
   }
 
   .team-badge.big .flag-img{
-    width:36px;
-    height:27px;
+    width:46px;
+    height:37px;
   }
 }
