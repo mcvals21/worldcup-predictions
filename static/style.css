@@ -2890,3 +2890,45 @@ code{
     margin-right:10px !important;
   }
 }
+/* Remove duplicated teams/flags inside prediction input area */
+.match-card .prediction-score-card .prediction-flag,
+.match-card .prediction-score-card .prediction-team-name{
+  display:none !important;
+}
+
+.match-card .prediction-score-card{
+  padding:18px 14px !important;
+}
+
+.match-card .prediction-team-box{
+  gap:0 !important;
+}
+
+.match-card .prediction-team-box input{
+  margin-top:0 !important;
+}
+
+/* Make the score inputs cleaner since teams are already shown in header */
+.match-card .prediction-score-card{
+  display:grid !important;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:12px;
+}
+
+.match-card .prediction-separator{
+  font-size:1.7rem !important;
+  font-weight:950 !important;
+  color:#475467 !important;
+}
+
+@media (max-width:700px){
+  .match-card .prediction-score-card{
+    gap:9px;
+    padding:15px 10px !important;
+  }
+
+  .match-card .prediction-separator{
+    font-size:1.45rem !important;
+  }
+}
