@@ -1336,3 +1336,14 @@ code{
     font-size:1.25rem;
   }
 }
+/* Remove duplicated teams title inside prediction cards */
+.match-card .match-title.teams-title{
+  display:none !important;
+}
+
+/* Reduce top spacing after hiding duplicated title */
+.match-card .match-meta,
+.match-card .match-info,
+.match-card .match-details{
+  margin-top:0;
+}
