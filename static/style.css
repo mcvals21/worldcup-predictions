@@ -1241,3 +1241,64 @@ code{
     height:36px;
   }
 }
+/* Clean prediction input row: show only score boxes */
+.score-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:18px 10px;
+}
+
+.score-row .team{
+  display:none !important;
+}
+
+.score-row input{
+  width:88px;
+  max-width:88px;
+  text-align:center;
+}
+
+.score-row > span{
+  font-weight:900;
+  color:#667085;
+}
+
+@media (max-width:700px){
+  .score-row{
+    display:grid !important;
+    grid-template-columns:78px 24px 78px !important;
+    grid-template-rows:auto !important;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    padding:16px 8px;
+    overflow:visible;
+  }
+
+  .score-row .team{
+    display:none !important;
+  }
+
+  .score-row input:nth-of-type(1){
+    grid-column:1 !important;
+    grid-row:1 !important;
+    width:78px !important;
+    max-width:78px !important;
+  }
+
+  .score-row > span{
+    grid-column:2 !important;
+    grid-row:1 !important;
+    text-align:center;
+    font-weight:900;
+  }
+
+  .score-row input:nth-of-type(2){
+    grid-column:3 !important;
+    grid-row:1 !important;
+    width:78px !important;
+    max-width:78px !important;
+  }
+}
