@@ -65,8 +65,7 @@
     {% if home_flag %}
       <img class="match-unified-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
     {% endif %}
-    <strong>{{ team_label(m.home_team) }}</strong>
-  </div>
+<strong>{{ m.home_team }}</strong>  </div>
 
   <div class="match-unified-score">
     {% if m.home_score is not none and m.away_score is not none %}
@@ -80,8 +79,7 @@
     {% if away_flag %}
       <img class="match-unified-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
     {% endif %}
-    <strong>{{ team_label(m.away_team) }}</strong>
-  </div>
+<strong>{{ m.away_team }}</strong>  </div>
 </div>
 
     {% if is_double %}
