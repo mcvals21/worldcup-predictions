@@ -419,9 +419,7 @@ def inject_team_helpers():
 
 
 MATCH_FILTER_LABELS = {
-    'today': 'اليوم',
-    'upcoming': 'القادمة',
-    'finished': 'المنتهية',
+    'open': 'المفتوحة',
     'all': 'كل المباريات'
 }
 
@@ -452,16 +450,16 @@ def filter_matches_for_view(matches, selected_filter):
     today_start = datetime.combine(now.date(), datetime.min.time())
     tomorrow_start = today_start + timedelta(days=1)
 
+    if selected_filter in ['open', 'current', 'upcoming']:
+        return [
+            m for m in matches
+            if not match_locked(m)
+        ]
+
     if selected_filter == 'today':
         return [
             m for m in matches
             if today_start <= m.start_time < tomorrow_start
-        ]
-
-    if selected_filter == 'upcoming':
-        return [
-            m for m in matches
-            if not match_locked(m)
         ]
 
     if selected_filter == 'finished':
@@ -541,7 +539,7 @@ def participant_page(token):
     if not t:
         abort(404)
 
-    selected_filter = request.args.get('filter', 'today')
+    selected_filter = request.args.get('filter', 'open')
 
     if selected_filter not in MATCH_FILTER_LABELS:
         selected_filter = 'today'
@@ -673,7 +671,7 @@ def matches_page():
     if not t:
         abort(404)
 
-    selected_filter = request.args.get('filter', 'today')
+    selected_filter = request.args.get('filter', 'open')
 
     if selected_filter not in MATCH_FILTER_LABELS:
         selected_filter = 'today'
@@ -703,8 +701,7 @@ def matches_page():
 
 @app.route('/today')
 def today_page():
-    return redirect(url_for('matches_page', filter='today'))
-
+    return redirect(url_for('matches_page', filter='open'))
 
 @app.route('/leaderboard')
 def leaderboard():
