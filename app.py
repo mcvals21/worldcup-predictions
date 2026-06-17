@@ -522,16 +522,20 @@ def participant_page(token):
 
     selected_filter = request.args.get('filter', 'today')
 
-if selected_filter not in MATCH_FILTER_LABELS:
-    selected_filter = 'today'
+    if selected_filter not in MATCH_FILTER_LABELS:
+        selected_filter = 'today'
 
-all_matches = Match.query.filter_by(tournament_id=t.id).order_by(Match.start_time).all()
-matches = filter_matches_for_view(all_matches, selected_filter)
+    all_matches = Match.query.filter_by(
+        tournament_id=t.id
+    ).order_by(Match.start_time).all()
 
-match_counts = {
-    key: len(filter_matches_for_view(all_matches, key))
-    for key in MATCH_FILTER_LABELS
-}
+    matches = filter_matches_for_view(all_matches, selected_filter)
+
+    match_counts = {
+        key: len(filter_matches_for_view(all_matches, key))
+        for key in MATCH_FILTER_LABELS
+    }
+
     predictions = {
         x.match_id: x
         for x in Prediction.query.filter_by(participant_id=p.id).all()
@@ -550,7 +554,11 @@ match_counts = {
 
             if match_locked(match):
                 flash('تم إغلاق التوقع لهذه المباراة.')
-                return redirect(url_for('participant_page', token=token))
+                return redirect(url_for(
+                    'participant_page',
+                    token=token,
+                    filter=selected_filter
+                ))
 
             hs = int(request.form.get('home_score', 0))
             aw = int(request.form.get('away_score', 0))
@@ -561,7 +569,11 @@ match_counts = {
 
             if is_double and current_double_used(p.id, t.id, match.stage, match.id):
                 flash('لا يمكن اختيار أكثر من مباراة مضاعفة واحدة في نفس الدور.')
-                return redirect(url_for('participant_page', token=token, filter=selected_filter))
+                return redirect(url_for(
+                    'participant_page',
+                    token=token,
+                    filter=selected_filter
+                ))
 
             pred = predictions.get(match.id) or Prediction(
                 participant_id=p.id,
@@ -596,28 +608,37 @@ match_counts = {
 
                     flash('تم حفظ توقع البطل.')
 
-        return redirect(url_for('participant_page', token=token))
+        return redirect(url_for(
+            'participant_page',
+            token=token,
+            filter=selected_filter
+        ))
 
-    teams = sorted({m.home_team for m in all_matches} | {m.away_team for m in all_matches})
+    teams = sorted(
+        {m.home_team for m in all_matches} |
+        {m.away_team for m in all_matches}
+    )
 
     return render_template(
-    'participant.html',
-    p=p,
-    t=t,
-    matches=matches,
-    predictions=predictions,
-    locked=match_locked,
-    points_for=points_for,
-    champion=champion,
-    teams=teams,
-    stage_labels=STAGE_LABELS,
-    knockout=KNOCKOUT_STAGES,
-    selected_filter=selected_filter,
-    match_filter_labels=MATCH_FILTER_LABELS,
-    match_counts=match_counts,
-    champion_locked=(t.champion_pick_deadline is not None and now_kw() >= t.champion_pick_deadline)
-)
-
+        'participant.html',
+        p=p,
+        t=t,
+        matches=matches,
+        predictions=predictions,
+        locked=match_locked,
+        points_for=points_for,
+        champion=champion,
+        teams=teams,
+        stage_labels=STAGE_LABELS,
+        knockout=KNOCKOUT_STAGES,
+        selected_filter=selected_filter,
+        match_filter_labels=MATCH_FILTER_LABELS,
+        match_counts=match_counts,
+        champion_locked=(
+            t.champion_pick_deadline is not None
+            and now_kw() >= t.champion_pick_deadline
+        )
+    )
 
 @app.route('/rules')
 def rules():
