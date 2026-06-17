@@ -34,6 +34,23 @@
 
 <h3 class="section-title">⚽ المباريات</h3>
 
+<div class="match-tabs">
+  {% for key, label in match_filter_labels.items() %}
+    <a
+      class="match-tab {% if selected_filter == key %}active{% endif %}"
+      href="{{ url_for('participant_page', token=p.token, filter=key) }}"
+    >
+      <span>{{ label }}</span>
+      <small>{{ match_counts[key] }}</small>
+    </a>
+  {% endfor %}
+</div>
+
+{% if not matches %}
+  <div class="empty-card">
+    لا توجد مباريات في هذا القسم حاليًا.
+  </div>
+{% endif %}
 {% for m in matches %}
   {% set pred=predictions.get(m.id) %}
   {% set is_double = pred and pred.is_double %}

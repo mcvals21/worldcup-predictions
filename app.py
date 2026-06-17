@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, abort, flash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import secrets
 import os
@@ -418,6 +418,40 @@ def inject_team_helpers():
     }
 
 
+MATCH_FILTER_LABELS = {
+    'today': 'اليوم',
+    'upcoming': 'القادمة',
+    'finished': 'المنتهية',
+    'all': 'كل المباريات'
+}
+
+
+def filter_matches_for_view(matches, selected_filter):
+    now = now_kw()
+    today_start = datetime.combine(now.date(), datetime.min.time())
+    tomorrow_start = today_start + timedelta(days=1)
+
+    if selected_filter == 'today':
+        return [
+            m for m in matches
+            if today_start <= m.start_time < tomorrow_start
+        ]
+
+    if selected_filter == 'upcoming':
+        return [
+            m for m in matches
+            if not match_locked(m)
+        ]
+
+    if selected_filter == 'finished':
+        return [
+            m for m in matches
+            if m.home_score is not None and m.away_score is not None
+        ]
+
+    return matches
+
+
 def now_kw():
     return datetime.now(KUWAIT_TZ).replace(tzinfo=None)
 
@@ -486,7 +520,18 @@ def participant_page(token):
     if not t:
         abort(404)
 
-    matches = Match.query.filter_by(tournament_id=t.id).order_by(Match.start_time).all()
+    selected_filter = request.args.get('filter', 'today')
+
+if selected_filter not in MATCH_FILTER_LABELS:
+    selected_filter = 'today'
+
+all_matches = Match.query.filter_by(tournament_id=t.id).order_by(Match.start_time).all()
+matches = filter_matches_for_view(all_matches, selected_filter)
+
+match_counts = {
+    key: len(filter_matches_for_view(all_matches, key))
+    for key in MATCH_FILTER_LABELS
+}
     predictions = {
         x.match_id: x
         for x in Prediction.query.filter_by(participant_id=p.id).all()
@@ -516,7 +561,7 @@ def participant_page(token):
 
             if is_double and current_double_used(p.id, t.id, match.stage, match.id):
                 flash('لا يمكن اختيار أكثر من مباراة مضاعفة واحدة في نفس الدور.')
-                return redirect(url_for('participant_page', token=token))
+                return redirect(url_for('participant_page', token=token, filter=selected_filter))
 
             pred = predictions.get(match.id) or Prediction(
                 participant_id=p.id,
@@ -553,7 +598,7 @@ def participant_page(token):
 
         return redirect(url_for('participant_page', token=token))
 
-    teams = sorted({m.home_team for m in matches} | {m.away_team for m in matches})
+    teams = sorted({m.home_team for m in all_matches} | {m.away_team for m in all_matches})
 
     return render_template(
     'participant.html',
@@ -567,6 +612,9 @@ def participant_page(token):
     teams=teams,
     stage_labels=STAGE_LABELS,
     knockout=KNOCKOUT_STAGES,
+    selected_filter=selected_filter,
+    match_filter_labels=MATCH_FILTER_LABELS,
+    match_counts=match_counts,
     champion_locked=(t.champion_pick_deadline is not None and now_kw() >= t.champion_pick_deadline)
 )
 
