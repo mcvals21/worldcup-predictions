@@ -2308,3 +2308,113 @@ code{
     font-size:1.25rem;
   }
 }
+/* Premium match filter tabs */
+.match-tabs{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:20px 0 22px;
+  padding:8px;
+  border-radius:22px;
+  background:#f8fafc;
+  border:1px solid rgba(148,163,184,.35);
+  box-shadow:0 8px 22px rgba(16,24,40,.05);
+}
+
+.match-tab{
+  min-width:108px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:16px;
+  border:1px solid transparent;
+  background:transparent;
+  color:#475467;
+  text-decoration:none;
+  font-weight:900;
+  box-shadow:none;
+  transition:.18s ease;
+}
+
+.match-tab span{
+  line-height:1;
+}
+
+.match-tab small{
+  min-width:24px;
+  height:24px;
+  padding:0 8px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#eaecf0;
+  color:#475467;
+  font-size:.78rem;
+  font-weight:900;
+}
+
+.match-tab:hover{
+  background:#fff;
+  border-color:rgba(148,163,184,.35);
+  transform:translateY(-1px);
+}
+
+.match-tab.active{
+  background:linear-gradient(135deg,#101828,#1d4ed8);
+  color:#fff;
+  border-color:rgba(29,78,216,.35);
+  box-shadow:0 8px 18px rgba(29,78,216,.22);
+  transform:translateY(-1px);
+}
+
+.match-tab.active small{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+}
+
+/* Mobile tabs */
+@media (max-width:700px){
+  .match-tabs{
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    gap:8px;
+    padding:8px;
+    margin:16px -2px 18px;
+    border-radius:18px;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .match-tabs::-webkit-scrollbar{
+    display:none;
+  }
+
+  .match-tab{
+    flex:0 0 auto;
+    min-width:auto;
+    scroll-snap-align:start;
+    padding:10px 13px;
+    border-radius:15px;
+    font-size:.9rem;
+    background:#fff;
+    border:1px solid rgba(148,163,184,.35);
+  }
+
+  .match-tab small{
+    min-width:22px;
+    height:22px;
+    font-size:.74rem;
+  }
+
+  .match-tab.active{
+    background:linear-gradient(135deg,#101828,#1d4ed8);
+    border-color:#1d4ed8;
+  }
+}
