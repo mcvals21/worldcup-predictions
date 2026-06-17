@@ -1213,3 +1213,31 @@ code{
     border-radius:7px;
   }
 }
+
+/* Hide repeated team names inside prediction input row */
+.score-row .team-badge span{
+  display:none !important;
+}
+
+.score-row .team-badge{
+  gap:0;
+}
+
+.score-row .team{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.score-row .flag-img{
+  width:56px;
+  height:40px;
+  border-radius:8px;
+}
+
+@media (max-width:700px){
+  .score-row .flag-img{
+    width:52px;
+    height:36px;
+  }
+}
