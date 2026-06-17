@@ -425,6 +425,27 @@ MATCH_FILTER_LABELS = {
     'all': 'كل المباريات'
 }
 
+ADMIN_MATCH_FILTER_LABELS = {
+    'needs_result': 'تحتاج نتيجة',
+    'today': 'اليوم',
+    'upcoming': 'القادمة',
+    'finished': 'المنتهية',
+    'all': 'كل المباريات'
+}
+
+
+def filter_admin_matches_for_view(matches, selected_filter):
+    now = now_kw()
+
+    if selected_filter == 'needs_result':
+        return [
+            m for m in matches
+            if now >= m.start_time
+            and (m.home_score is None or m.away_score is None)
+        ]
+
+    return filter_matches_for_view(matches, selected_filter)
+
 
 def filter_matches_for_view(matches, selected_filter):
     now = now_kw()
@@ -784,10 +805,10 @@ def admin(code):
     if not t:
         abort(404)
 
-    selected_filter = request.args.get('filter', 'today')
+    selected_filter = request.args.get('filter', 'needs_result')
 
-    if selected_filter not in MATCH_FILTER_LABELS:
-        selected_filter = 'today'
+    if selected_filter not in ADMIN_MATCH_FILTER_LABELS:
+        selected_filter = 'needs_result'
 
     if request.method == 'POST':
         action = request.form.get('action')
@@ -820,6 +841,16 @@ def admin(code):
             db.session.commit()
 
             flash('تم حفظ النتيجة وتحديث النقاط.')
+
+        elif action == 'clear_result':
+            m = Match.query.get_or_404(int(request.form['match_id']))
+
+            m.home_score = None
+            m.away_score = None
+
+            db.session.commit()
+
+            flash('تم مسح النتيجة. التوقعات بقيت محفوظة.')
 
         elif action == 'edit_match':
             m = Match.query.get_or_404(int(request.form['match_id']))
@@ -867,11 +898,11 @@ def admin(code):
         tournament_id=t.id
     ).order_by(Match.start_time).all()
 
-    matches = filter_matches_for_view(all_matches, selected_filter)
+    matches = filter_admin_matches_for_view(all_matches, selected_filter)
 
     match_counts = {
-        key: len(filter_matches_for_view(all_matches, key))
-        for key in MATCH_FILTER_LABELS
+        key: len(filter_admin_matches_for_view(all_matches, key))
+        for key in ADMIN_MATCH_FILTER_LABELS
     }
 
     participants = Participant.query.order_by(Participant.name).all()
@@ -884,10 +915,10 @@ def admin(code):
         code=code,
         stage_labels=STAGE_LABELS,
         selected_filter=selected_filter,
-        match_filter_labels=MATCH_FILTER_LABELS,
-        match_counts=match_counts
+        match_filter_labels=ADMIN_MATCH_FILTER_LABELS,
+        match_counts=match_counts,
+        locked=match_locked
     )
-
 @app.cli.command('init-db')
 def init_db():
     db.drop_all()

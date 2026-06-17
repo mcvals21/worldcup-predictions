@@ -68,6 +68,23 @@
       <div>
         {% set home_flag = team_flag_code(m.home_team) %}
 {% set away_flag = team_flag_code(m.away_team) %}
+        {% set current_pred = predictions.get(m.id) %}
+
+<div class="prediction-status-row">
+  {% if current_pred %}
+    <span class="prediction-status-badge done">
+      ✅ تم التوقع: {{ current_pred.home_score }} - {{ current_pred.away_score }}
+    </span>
+  {% elif locked(m) %}
+    <span class="prediction-status-badge locked">
+      🔒 لم يتم التوقع قبل الإغلاق
+    </span>
+  {% else %}
+    <span class="prediction-status-badge missing">
+      ⚠️ لم تسجل توقعك بعد
+    </span>
+  {% endif %}
+</div>
 
 <h3 class="match-title teams-title">
   <span class="team-badge">
