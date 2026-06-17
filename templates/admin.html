@@ -85,8 +85,26 @@ https://worldcup-predictions-isey.onrender.com/p/{{p.token}}
 {% for m in matches %}
 <section class="card admin-match">
 
-  <h3>{{m.home_team}} × {{m.away_team}}</h3>
+ {% set home_flag = team_flag_code(m.home_team) %}
+{% set away_flag = team_flag_code(m.away_team) %}
 
+<h3 class="teams-title admin-teams-title">
+  <span class="team-badge">
+    {% if home_flag %}
+      <img class="flag-img" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ m.home_team }}</span>
+  </span>
+
+  <span class="versus-symbol">×</span>
+
+  <span class="team-badge">
+    {% if away_flag %}
+      <img class="flag-img" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ m.away_team }}</span>
+  </span>
+</h3>
   <p class="muted">
     {{m.start_time.strftime('%Y-%m-%d %H:%M')}} |
     {{ stage_labels.get(m.stage,m.stage) }}
