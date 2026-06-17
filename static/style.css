@@ -1580,3 +1580,94 @@ code{
     gap:10px !important;
   }
 }
+.admin-status-row{
+  display:flex;
+  justify-content:center;
+  margin:10px 0 12px;
+}
+
+.admin-status-badge,
+.prediction-status-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:8px 13px;
+  font-size:.88rem;
+  font-weight:900;
+  text-align:center;
+}
+
+.admin-status-badge.success,
+.prediction-status-badge.done{
+  background:#ecfdf3;
+  color:#027a48;
+}
+
+.admin-status-badge.warning,
+.prediction-status-badge.missing{
+  background:#fff7ed;
+  color:#c2410c;
+}
+
+.admin-status-badge.neutral{
+  background:#f2f4f7;
+  color:#475467;
+}
+
+.prediction-status-badge.locked{
+  background:#f2f4f7;
+  color:#475467;
+}
+
+.prediction-status-row{
+  display:flex;
+  justify-content:center;
+  margin:10px 0 12px;
+}
+
+.admin-clear-form{
+  margin-top:10px;
+}
+
+.admin-clear-form button{
+  width:100%;
+  background:#475467;
+}
+
+.participant-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.copy-link-btn{
+  border:0;
+  border-radius:999px;
+  padding:8px 10px;
+  background:#eef4ff;
+  color:#3538cd;
+  font-weight:900;
+  cursor:pointer;
+}
+
+@media (max-width:700px){
+  .prediction-status-badge{
+    width:100%;
+    font-size:.86rem;
+  }
+
+  .participant-link-card{
+    align-items:flex-start;
+  }
+
+  .participant-actions{
+    width:100%;
+    justify-content:space-between;
+  }
+
+  .copy-link-btn{
+    flex:1;
+  }
+}
