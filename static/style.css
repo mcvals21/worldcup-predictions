@@ -1671,3 +1671,132 @@ code{
     flex:1;
   }
 }
+/* Better match information badges for participant page */
+.match-card .match-meta,
+.match-card .match-info,
+.match-card .match-details{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:14px 0 12px;
+}
+
+.match-card .stage-pill,
+.match-card .time-pill,
+.match-card .status-pill,
+.match-card .open-pill,
+.match-card .closed-pill,
+.match-card .lock-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border-radius:999px;
+  padding:8px 13px;
+  font-size:.9rem;
+  font-weight:900;
+  line-height:1;
+  white-space:nowrap;
+  box-shadow:0 4px 12px rgba(16,24,40,.05);
+}
+
+.match-card .stage-pill{
+  background:#eef4ff;
+  color:#3538cd;
+}
+
+.match-card .time-pill{
+  background:#f2f4f7;
+  color:#344054;
+}
+
+.match-card .status-pill,
+.match-card .open-pill{
+  background:#ecfdf3;
+  color:#027a48;
+}
+
+.match-card .closed-pill,
+.match-card .lock-pill{
+  background:#f2f4f7;
+  color:#475467;
+}
+
+/* Countdown box */
+.match-card .countdown,
+.match-card .countdown-box,
+.match-card .lock-countdown{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  margin:14px auto 16px;
+  padding:13px 14px;
+  border-radius:16px;
+  background:linear-gradient(180deg,#f5f8ff,#eef4ff);
+  color:#2f4eb8;
+  border:1px solid rgba(47,78,184,.18);
+  font-weight:900;
+  text-align:center;
+  line-height:1.5;
+  box-shadow:0 6px 16px rgba(16,24,40,.04);
+}
+
+/* Make participant match cards breathe better */
+.match-card{
+  overflow:hidden;
+}
+
+.match-card .prediction-status-row{
+  margin-top:8px;
+  margin-bottom:12px;
+}
+
+.match-card .prediction-status-badge{
+  box-shadow:0 4px 12px rgba(16,24,40,.05);
+}
+
+/* Mobile polish */
+@media (max-width:700px){
+  .match-card .match-meta,
+  .match-card .match-info,
+  .match-card .match-details{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin:12px 0 10px;
+  }
+
+  .match-card .stage-pill,
+  .match-card .time-pill,
+  .match-card .status-pill,
+  .match-card .open-pill,
+  .match-card .closed-pill,
+  .match-card .lock-pill{
+    width:100%;
+    padding:10px 8px;
+    font-size:.86rem;
+    min-height:40px;
+  }
+
+  .match-card .time-pill{
+    grid-column:1 / 3;
+    font-size:.9rem;
+  }
+
+  .match-card .countdown,
+  .match-card .countdown-box,
+  .match-card .lock-countdown{
+    margin:12px auto 14px;
+    padding:12px 10px;
+    border-radius:15px;
+    font-size:.95rem;
+  }
+
+  .match-card .prediction-status-row{
+    margin-top:6px;
+    margin-bottom:10px;
+  }
+}
