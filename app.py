@@ -773,6 +773,137 @@ def leaderboard():
 
     return render_template('leaderboard.html', rows=rows, t=t)
 
+
+@app.route('/stats')
+def stats():
+    t = tournament()
+
+    if not t:
+        abort(404)
+
+    participants = Participant.query.order_by(Participant.name).all()
+
+    all_matches = Match.query.filter_by(
+        tournament_id=t.id
+    ).order_by(Match.start_time).all()
+
+    match_ids = [m.id for m in all_matches]
+
+    completed_matches = [
+        m for m in all_matches
+        if m.home_score is not None and m.away_score is not None
+    ]
+
+    locked_matches = [
+        m for m in all_matches
+        if match_locked(m)
+    ]
+
+    if match_ids:
+        total_predictions = Prediction.query.filter(
+            Prediction.match_id.in_(match_ids)
+        ).count()
+    else:
+        total_predictions = 0
+
+    player_rows = []
+
+    for p in participants:
+        preds = Prediction.query.filter_by(
+            participant_id=p.id
+        ).all()
+
+        preds_by_match = {
+            pred.match_id: pred
+            for pred in preds
+            if pred.match_id in match_ids
+        }
+
+        exact = 0
+        match_points = 0
+
+        for m in completed_matches:
+            pred = preds_by_match.get(m.id)
+
+            if not pred:
+                continue
+
+            match_points += points_for(pred, m)
+
+            if pred.home_score == m.home_score and pred.away_score == m.away_score:
+                exact += 1
+
+        missed_locked = sum(
+            1 for m in locked_matches
+            if m.id not in preds_by_match
+        )
+
+        player_rows.append({
+            'name': p.name,
+            'exact': exact,
+            'predictions_count': len(preds_by_match),
+            'missed_locked': missed_locked,
+            'match_points': match_points
+        })
+
+    top_exact = sorted(
+        player_rows,
+        key=lambda r: (r['exact'], r['match_points']),
+        reverse=True
+    )[:5]
+
+    top_participation = sorted(
+        player_rows,
+        key=lambda r: (r['predictions_count'], r['match_points']),
+        reverse=True
+    )[:5]
+
+    most_missed = sorted(
+        player_rows,
+        key=lambda r: r['missed_locked'],
+        reverse=True
+    )[:5]
+
+    match_rows = []
+
+    for m in completed_matches:
+        preds = Prediction.query.filter_by(match_id=m.id).all()
+
+        total_points = sum(points_for(pred, m) for pred in preds)
+
+        exact_count = sum(
+            1 for pred in preds
+            if pred.home_score == m.home_score and pred.away_score == m.away_score
+        )
+
+        match_rows.append({
+            'match': m,
+            'total_predictions': len(preds),
+            'total_points': total_points,
+            'exact_count': exact_count
+        })
+
+    top_point_matches = sorted(
+        match_rows,
+        key=lambda r: (r['total_points'], r['exact_count']),
+        reverse=True
+    )[:5]
+
+    return render_template(
+        'stats.html',
+        t=t,
+        total_participants=len(participants),
+        total_matches=len(all_matches),
+        completed_matches_count=len(completed_matches),
+        locked_matches_count=len(locked_matches),
+        total_predictions=total_predictions,
+        top_exact=top_exact,
+        top_participation=top_participation,
+        most_missed=most_missed,
+        top_point_matches=top_point_matches,
+        stage_labels=STAGE_LABELS
+    )
+
 @app.route('/match/<int:match_id>')
 def match_view(match_id):
     match = Match.query.get_or_404(match_id)
