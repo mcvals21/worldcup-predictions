@@ -43,13 +43,29 @@
         </span>
       </div>
 
-      <div class="public-teams-row">
-        <div class="public-team">
-          {% if home_flag %}
-            <img class="flag-img" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
-          {% endif %}
-          <span>{{ m.home_team }}</span>
-        </div>
+      <div class="public-teams-row clean">
+  <div class="public-team-side">
+    {% if home_flag %}
+      <img class="flag-img public-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ m.home_team }}</span>
+  </div>
+
+  <div class="public-score-box">
+    {% if m.home_score is not none and m.away_score is not none %}
+      {{ m.home_score }} - {{ m.away_score }}
+    {% else %}
+      ×
+    {% endif %}
+  </div>
+
+  <div class="public-team-side">
+    {% if away_flag %}
+      <img class="flag-img public-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+    {% endif %}
+    <span>{{ m.away_team }}</span>
+  </div>
+</div>
 
         <div class="public-score-box">
           {% if m.home_score is not none and m.away_score is not none %}
