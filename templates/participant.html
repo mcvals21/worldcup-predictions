@@ -68,62 +68,70 @@
       <div>
         {% set home_flag = team_flag_code(m.home_team) %}
 {% set away_flag = team_flag_code(m.away_team) %}
-        {% set current_pred = predictions.get(m.id) %}
+{% set current_pred = predictions.get(m.id) %}
 
-<div class="prediction-status-row">
-  {% if current_pred %}
-    <span class="prediction-status-badge done">
-      ✅ تم التوقع: {{ current_pred.home_score }} - {{ current_pred.away_score }}
-    </span>
-  {% elif locked(m) %}
-    <span class="prediction-status-badge locked">
-      🔒 لم يتم التوقع قبل الإغلاق
-    </span>
-  {% else %}
-    <span class="prediction-status-badge missing">
-      ⚠️ لم تسجل توقعك بعد
-    </span>
-  {% endif %}
-</div>
+<div class="match-info-panel">
 
-<h3 class="match-title teams-title">
-  <span class="team-badge">
-    {% if home_flag %}
-      <img class="flag-img" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+  <div class="match-status-main">
+    {% if current_pred %}
+      <span class="status-main-badge done">
+        ✅ تم تسجيل توقعك
+      </span>
+      <span class="status-score">
+        {{ current_pred.home_score }} - {{ current_pred.away_score }}
+      </span>
+    {% elif locked(m) %}
+      <span class="status-main-badge locked">
+        🔒 لم يتم التوقع قبل الإغلاق
+      </span>
+    {% else %}
+      <span class="status-main-badge missing">
+        ⚠️ لم تسجل توقعك بعد
+      </span>
     {% endif %}
-    <span>{{ m.home_team }}</span>
-  </span>
+  </div>
 
-  <span class="versus-symbol">×</span>
-
-  <span class="team-badge">
-    {% if away_flag %}
-      <img class="flag-img" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
-    {% endif %}
-    <span>{{ m.away_team }}</span>
-  </span>
-</h3>
-
-        <div class="match-meta">
-          <span class="pill">🏟 {{ stage_labels.get(m.stage,m.stage) }}</span>
-          <span class="pill">⏰ {{ m.start_time.strftime('%Y-%m-%d %H:%M') }}</span>
-
-          {% if m.home_score is not none %}
-            <span class="pill result">✅ منتهية</span>
-          {% elif locked(m) %}
-            <span class="pill locked">🔒 مغلقة</span>
-          {% else %}
-            <span class="pill open">🟢 مفتوحة</span>
-          {% endif %}
-        </div>
-      </div>
+  <div class="match-info-grid">
+    <div class="match-info-tile">
+      <span class="info-icon">🏟</span>
+      <span class="info-label">الدور</span>
+      <strong>{{ stage_labels.get(m.stage, m.stage) }}</strong>
     </div>
 
-    {% if not locked(m) %}
-      <div class="countdown" data-start="{{ m.start_time.strftime('%Y-%m-%dT%H:%M:%S') }}">
-        ⏳ يتم حساب وقت الإغلاق...
+    <div class="match-info-tile">
+      <span class="info-icon">⏰</span>
+      <span class="info-label">الموعد</span>
+      <strong>{{ m.start_time.strftime('%H:%M') }}</strong>
+      <small>{{ m.start_time.strftime('%Y-%m-%d') }}</small>
+    </div>
+
+    <div class="match-info-tile">
+      {% if m.home_score is not none %}
+        <span class="info-icon">✅</span>
+        <span class="info-label">الحالة</span>
+        <strong>منتهية</strong>
+      {% elif locked(m) %}
+        <span class="info-icon">🔒</span>
+        <span class="info-label">الحالة</span>
+        <strong>مغلقة</strong>
+      {% else %}
+        <span class="info-icon">🟢</span>
+        <span class="info-label">الحالة</span>
+        <strong>مفتوحة</strong>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if not locked(m) %}
+    <div class="countdown match-countdown-card" data-start="{{ m.start_time.strftime('%Y-%m-%dT%H:%M:%S') }}">
+      ⏳ يتم حساب وقت الإغلاق...
+    </div>
+  {% endif %}
+
+</div>
+
       </div>
-    {% endif %}
+    </div>
 
     {% if locked(m) %}
       <div class="prediction-summary compact-summary">
