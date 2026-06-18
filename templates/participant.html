@@ -115,7 +115,9 @@
           </label>
         {% endif %}
 
-        <button class="mobile-save-btn">حفظ / تعديل التوقع</button>
+        <button class="mobile-save-btn">
+  {{ 'تعديل التوقع' if pred else 'حفظ التوقع' }}
+</button>
       </form>
 
     {% else %}
