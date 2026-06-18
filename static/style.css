@@ -3464,3 +3464,66 @@ code{
     grid-template-columns:1fr 1fr;
   }
 }
+/* Reduce top space on participant page - mobile */
+@media (max-width:700px){
+
+  .player-hero{
+    margin:12px 0 10px !important;
+    padding:14px 16px !important;
+    border-radius:18px !important;
+  }
+
+  .player-hero .hero-kicker{
+    font-size:.78rem !important;
+    margin-bottom:4px !important;
+  }
+
+  .player-hero h2{
+    font-size:1.25rem !important;
+    margin:0 0 4px !important;
+  }
+
+  .player-hero p{
+    font-size:.82rem !important;
+    margin:0 !important;
+  }
+
+  .champion-card{
+    margin:10px 0 16px !important;
+    padding:14px !important;
+    border-radius:18px !important;
+  }
+
+  .champion-card h3{
+    font-size:1rem !important;
+    margin:0 0 10px !important;
+  }
+
+  .champion-card select{
+    height:48px !important;
+    border-radius:14px !important;
+    font-size:.9rem !important;
+  }
+
+  .champion-card button{
+    height:50px !important;
+    border-radius:15px !important;
+    font-size:.95rem !important;
+    margin-top:10px !important;
+  }
+
+  .section-title{
+    color:#f9fafb !important;
+    font-size:1.05rem !important;
+    margin:18px 0 10px !important;
+    opacity:1 !important;
+  }
+
+  .match-tabs{
+    margin:6px 0 14px !important;
+  }
+
+  .mobile-focus-card:first-of-type{
+    margin-top:10px !important;
+  }
+}
