@@ -11,10 +11,6 @@
 <body>
 <header class="wc-header clean-wc-header">
   <div class="clean-header-row">
-    <div class="clean-title">
-      <div class="clean-kicker">مسابقة الأصدقاء</div>
-      <h1>🏆 {{ t.name if t else 'توقعات المباريات' }}</h1>
-    </div>
 
     <details class="clean-menu">
       <summary>☰ القائمة</summary>
@@ -24,8 +20,50 @@
         <a href="{{ url_for('matches_page', filter='open') }}">⚽ المباريات</a>
         <a href="/rules">📖 القوانين</a>
         <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
+
+        {% if p is defined %}
+          <div class="menu-divider"></div>
+
+          <div class="menu-champion-box">
+            <div class="menu-champion-title">🏆 توقع بطل البطولة</div>
+
+            {% if champion_locked %}
+              <div class="menu-champion-note">
+                تم إغلاق توقع البطل<br>
+                اختيارك: <b>{{ champion.team_name if champion else 'لم يتم الاختيار' }}</b>
+              </div>
+            {% else %}
+              <div class="menu-champion-note">
+                {% if champion %}
+                  اختيارك الحالي: <b>{{ champion.team_name }}</b>
+                {% else %}
+                  لم تختر البطل بعد
+                {% endif %}
+              </div>
+
+              <form method="post" class="menu-champion-form">
+                <input type="hidden" name="action" value="champion">
+
+                <select name="team_name" required>
+                  <option value="">اختر المنتخب</option>
+                  {% for team in teams %}
+                    <option value="{{team}}" {% if champion and champion.team_name==team %}selected{% endif %}>{{team}}</option>
+                  {% endfor %}
+                </select>
+
+                <button>حفظ البطل</button>
+              </form>
+            {% endif %}
+          </div>
+        {% endif %}
       </div>
     </details>
+
+    <div class="clean-title">
+      <div class="clean-kicker">مسابقة الأصدقاء</div>
+      <h1>🏆 {{ t.name if t else 'توقعات المباريات' }}</h1>
+    </div>
+
   </div>
 
   <p class="clean-subtitle">توقع النتائج، اجمع النقاط، ونافس على الصدارة</p>
