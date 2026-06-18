@@ -52,198 +52,160 @@
   </div>
 {% endif %}
 {% for m in matches %}
-  {% set pred=predictions.get(m.id) %}
+  {% set pred = predictions.get(m.id) %}
   {% set is_double = pred and pred.is_double %}
+  {% set home_flag = team_flag_code(m.home_team) %}
+  {% set away_flag = team_flag_code(m.away_team) %}
+  {% set is_locked = locked(m) %}
 
-  <section class="card match-card {% if is_double %}double-selected{% endif %}">
+  <section class="card match-card mobile-focus-card {% if is_double %}double-selected{% endif %}">
 
-    {% set home_flag = team_flag_code(m.home_team) %}
-{% set away_flag = team_flag_code(m.away_team) %}
-
-<div class="match-unified-header">
-  <div class="match-unified-team">
-    {% if home_flag %}
-      <img class="match-unified-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
-    {% endif %}
-<strong>{{ m.home_team }}</strong>  </div>
-
-  <div class="match-unified-score">
-    {% if m.home_score is not none and m.away_score is not none %}
-      {{ m.home_score }} - {{ m.away_score }}
-    {% else %}
-      VS
-    {% endif %}
-  </div>
-
-  <div class="match-unified-team">
-    {% if away_flag %}
-      <img class="match-unified-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
-    {% endif %}
-<strong>{{ m.away_team }}</strong>  </div>
-</div>
-
-    {% if is_double %}
-      <div class="double-banner">
-        <span>⭐ مباراة مضاعفة</span>
-        <small>النقاط ×2 لهذه المباراة</small>
-      </div>
-    {% endif %}
-
-    <div class="match-top">
-      <div>
-        {% set home_flag = team_flag_code(m.home_team) %}
-{% set away_flag = team_flag_code(m.away_team) %}
-{% set current_pred = predictions.get(m.id) %}
-
-<div class="match-info-panel">
-
-  <div class="match-status-main">
-    {% if current_pred %}
-      <span class="status-main-badge done">
-        ✅ تم تسجيل توقعك
-      </span>
-      <span class="status-score">
-        {{ current_pred.home_score }} - {{ current_pred.away_score }}
-      </span>
-    {% elif locked(m) %}
-      <span class="status-main-badge locked">
-        🔒 لم يتم التوقع قبل الإغلاق
-      </span>
-    {% else %}
-      <span class="status-main-badge missing">
-        ⚠️ لم تسجل توقعك بعد
-      </span>
-    {% endif %}
-  </div>
-
-  <div class="match-info-grid">
-    <div class="match-info-tile">
-      <span class="info-icon">🏟</span>
-      <span class="info-label">الدور</span>
-      <strong>{{ stage_labels.get(m.stage, m.stage) }}</strong>
-    </div>
-
-    <div class="match-info-tile">
-      <span class="info-icon">⏰</span>
-      <span class="info-label">الموعد</span>
-      <strong>{{ m.start_time.strftime('%H:%M') }}</strong>
-      <small>{{ m.start_time.strftime('%Y-%m-%d') }}</small>
-    </div>
-
-    <div class="match-info-tile">
-      {% if m.home_score is not none %}
-        <span class="info-icon">✅</span>
-        <span class="info-label">الحالة</span>
-        <strong>منتهية</strong>
-      {% elif locked(m) %}
-        <span class="info-icon">🔒</span>
-        <span class="info-label">الحالة</span>
-        <strong>مغلقة</strong>
+    <div class="mobile-card-topline">
+      {% if not is_locked %}
+        <span class="mobile-status-pill open">مفتوحة</span>
+        <span class="countdown mobile-countdown" data-start="{{ m.start_time.strftime('%Y-%m-%dT%H:%M:%S') }}">
+          ⏳ يتم حساب وقت الإغلاق...
+        </span>
+      {% elif m.home_score is not none and m.away_score is not none %}
+        <span class="mobile-status-pill finished">منتهية</span>
+        <span>النتيجة النهائية محفوظة</span>
       {% else %}
-        <span class="info-icon">🟢</span>
-        <span class="info-label">الحالة</span>
-        <strong>مفتوحة</strong>
+        <span class="mobile-status-pill locked">مغلقة</span>
+        <span>انتهى وقت التوقع</span>
       {% endif %}
     </div>
-  </div>
 
-  {% if not locked(m) %}
-    <div class="countdown match-countdown-card" data-start="{{ m.start_time.strftime('%Y-%m-%dT%H:%M:%S') }}">
-      ⏳ يتم حساب وقت الإغلاق...
-    </div>
-  {% endif %}
-
-</div>
-
-      </div>
-    </div>
-
-    {% if locked(m) %}
-      <div class="prediction-summary compact-summary">
-        {% if pred %}
-          <div class="summary-label">توقعك</div>
-          <div class="summary-score">{{pred.home_score}} - {{pred.away_score}}</div>
-
-          {% if pred.is_double %}
-            <div class="double-note-clean">
-              ⭐ هذه كانت مباراة المضاعفة
-            </div>
-          {% endif %}
-        {% else %}
-          <div class="muted">لم تقم بإدخال توقع لهذه المباراة</div>
-        {% endif %}
-      </div>
-
-      <p class="card-actions">
-        <a href="/match/{{m.id}}">عرض توقعات الجميع</a>
-      </p>
-
-    {% else %}
-      <form method="post" class="predict">
+    {% if not is_locked %}
+      <form method="post" class="mobile-predict-form">
         <input type="hidden" name="action" value="predict">
-        <input type="hidden" name="match_id" value="{{m.id}}">
+        <input type="hidden" name="match_id" value="{{ m.id }}">
 
-        <div class="prediction-score-card">
-  <div class="prediction-team-box">
-    {% if home_flag %}
-      <img class="prediction-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
-    {% endif %}
+        <div class="mobile-match-main">
+          <div class="mobile-team-box">
+            {% if home_flag %}
+              <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+            {% endif %}
+            <strong>{{ m.home_team }}</strong>
+          </div>
 
-    <div class="prediction-team-name">{{ m.home_team }}</div>
+          <div class="mobile-score-inputs">
+            <input
+              type="number"
+              min="0"
+              name="home_score"
+              value="{{ pred.home_score if pred else 0 }}"
+              inputmode="numeric"
+              pattern="[0-9]*"
+            >
 
-    <input
-      type="number"
-      min="0"
-      name="home_score"
-      value="{{ pred.home_score if pred else 0 }}"
-      inputmode="numeric"
-      pattern="[0-9]*"
-    >
-  </div>
+            <span>-</span>
 
-  <div class="prediction-separator">-</div>
+            <input
+              type="number"
+              min="0"
+              name="away_score"
+              value="{{ pred.away_score if pred else 0 }}"
+              inputmode="numeric"
+              pattern="[0-9]*"
+            >
+          </div>
 
-  <div class="prediction-team-box">
-    {% if away_flag %}
-      <img class="prediction-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
-    {% endif %}
+          <div class="mobile-team-box">
+            {% if away_flag %}
+              <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+            {% endif %}
+            <strong>{{ m.away_team }}</strong>
+          </div>
+        </div>
 
-    <div class="prediction-team-name">{{ m.away_team }}</div>
+        <div class="mobile-match-meta">
+          <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
+          <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
+          <span>{{ m.start_time.strftime('%H:%M') }}</span>
+        </div>
 
-    <input
-      type="number"
-      min="0"
-      name="away_score"
-      value="{{ pred.away_score if pred else 0 }}"
-      inputmode="numeric"
-      pattern="[0-9]*"
-    >
-  </div>
-</div>
+        {% if pred %}
+          <div class="mobile-saved-note">
+            ✅ توقعك الحالي: <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
+          </div>
+        {% endif %}
 
         {% if m.stage in knockout %}
-          <label class="double-option">
+          <label class="double-option mobile-double-option">
             <input type="checkbox" name="is_double" {% if pred and pred.is_double %}checked{% endif %}>
 
             <div>
-              <strong>⭐ اجعلها مباراة مضاعفة</strong>
-              <span>نتيجة دقيقة = 6 نقاط، توقع الفائز = نقطتان</span>
+              <strong>⭐ مباراة مضاعفة</strong>
+              <span>نتيجة مطابقة = 6 نقاط، توقع الفائز = نقطتان</span>
             </div>
           </label>
         {% endif %}
 
-        <button>حفظ / تعديل التوقع</button>
+        <button class="mobile-save-btn">حفظ / تعديل التوقع</button>
       </form>
+
+    {% else %}
+
+      <div class="mobile-match-main locked-view">
+        <div class="mobile-team-box">
+          {% if home_flag %}
+            <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+          {% endif %}
+          <strong>{{ m.home_team }}</strong>
+        </div>
+
+        <div class="mobile-score-display">
+          {% if m.home_score is not none and m.away_score is not none %}
+            {{ m.home_score }} - {{ m.away_score }}
+          {% else %}
+            VS
+          {% endif %}
+        </div>
+
+        <div class="mobile-team-box">
+          {% if away_flag %}
+            <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+          {% endif %}
+          <strong>{{ m.away_team }}</strong>
+        </div>
+      </div>
+
+      <div class="mobile-match-meta">
+        <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
+        <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
+        <span>{{ m.start_time.strftime('%H:%M') }}</span>
+      </div>
+
+      <div class="mobile-result-box">
+        {% if pred %}
+          <div>
+            <span>توقعك</span>
+            <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
+          </div>
+
+          <div>
+            <span>نقاطك</span>
+            <b>{{ points_for(pred,m) if m.home_score is not none else 0 }}</b>
+          </div>
+
+          {% if pred.is_double %}
+            <div class="mobile-double-note">
+              ⭐ مباراة مضاعفة
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="mobile-no-prediction">
+            لم تقم بإدخال توقع لهذه المباراة
+          </div>
+        {% endif %}
+      </div>
+
+      <p class="mobile-card-link">
+        <a href="/match/{{m.id}}">عرض توقعات الجميع</a>
+      </p>
+
     {% endif %}
 
-    {% if m.home_score is not none %}
-      <div class="final-result">
-        <span>النتيجة النهائية:</span>
-        <b>{{m.home_score}} - {{m.away_score}}</b>
-        <span>نقاطك:</span>
-        <b>{{ points_for(pred,m) if pred else 0 }}</b>
-      </div>
-    {% endif %}
   </section>
 {% endfor %}
 
