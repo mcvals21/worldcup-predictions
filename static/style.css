@@ -3527,3 +3527,340 @@ code{
     margin-top:10px !important;
   }
 }
+
+/* World Cup premium theme */
+:root{
+  --wc-bg:#071225;
+  --wc-bg-2:#0d1d3d;
+  --wc-blue:#315df3;
+  --wc-blue-dark:#18377f;
+  --wc-gold:#d4af37;
+  --wc-gold-soft:#f5d77a;
+  --wc-card:#f8fafc;
+  --wc-text:#0f172a;
+  --wc-muted:#64748b;
+  --wc-border:rgba(148,163,184,.32);
+  --wc-shadow:0 14px 34px rgba(0,0,0,.18);
+}
+
+body{
+  background:
+    radial-gradient(circle at 85% 4%, rgba(212,175,55,.16), transparent 18%),
+    radial-gradient(circle at 10% 8%, rgba(49,93,243,.20), transparent 22%),
+    linear-gradient(180deg,#071225 0%,#0b1328 48%,#070b14 100%) !important;
+}
+
+/* Main top hero / banner */
+.hero,
+.main-hero,
+.page-hero,
+.site-hero,
+header.hero{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 15% 18%, rgba(255,255,255,.10), transparent 16%),
+    radial-gradient(circle at 82% 22%, rgba(212,175,55,.18), transparent 18%),
+    linear-gradient(135deg,#132657 0%,#2449b8 54%,#315df3 100%) !important;
+  border-bottom:1px solid rgba(255,255,255,.14) !important;
+  box-shadow:0 10px 32px rgba(0,0,0,.25) !important;
+}
+
+.hero::after,
+.main-hero::after,
+.page-hero::after,
+.site-hero::after,
+header.hero::after{
+  content:"";
+  position:absolute;
+  right:0;
+  left:0;
+  bottom:0;
+  height:3px;
+  background:linear-gradient(90deg,transparent,var(--wc-gold),transparent);
+  opacity:.9;
+}
+
+.hero h1,
+.main-hero h1,
+.page-hero h1,
+.site-hero h1,
+header.hero h1{
+  color:#fff !important;
+  font-weight:950 !important;
+  letter-spacing:.2px;
+}
+
+.hero p,
+.main-hero p,
+.page-hero p,
+.site-hero p,
+header.hero p{
+  color:rgba(255,255,255,.88) !important;
+  font-weight:800 !important;
+}
+
+/* Top nav buttons */
+.nav-links a,
+.top-links a,
+.hero-links a,
+nav a{
+  border-radius:18px;
+  font-weight:900;
+}
+
+/* Participant welcome card */
+.player-hero{
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.98),rgba(248,250,252,.96)) !important;
+  border:1px solid rgba(212,175,55,.35) !important;
+  border-right:5px solid var(--wc-gold) !important;
+  border-radius:24px !important;
+  box-shadow:var(--wc-shadow) !important;
+}
+
+.player-hero::before{
+  content:"";
+  position:absolute;
+  inset:auto -30px -55px auto;
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(212,175,55,.16),transparent 65%);
+}
+
+.player-hero .hero-kicker{
+  color:#9a6b00 !important;
+  font-weight:900 !important;
+}
+
+.player-hero h2{
+  color:#102047 !important;
+  font-weight:950 !important;
+}
+
+.player-hero .muted{
+  color:#667085 !important;
+}
+
+/* Champion collapsible card */
+.champion-collapsible{
+  padding:0 !important;
+  overflow:hidden;
+  background:linear-gradient(180deg,#fffdf6,#ffffff) !important;
+  border:1px solid rgba(212,175,55,.38) !important;
+  border-right:5px solid var(--wc-gold) !important;
+  border-radius:24px !important;
+  box-shadow:var(--wc-shadow) !important;
+}
+
+.champion-collapsible summary{
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 18px;
+}
+
+.champion-collapsible summary::-webkit-details-marker{
+  display:none;
+}
+
+.champion-collapsible summary strong{
+  display:block;
+  color:#172554;
+  font-size:1.05rem;
+  font-weight:950;
+  margin-bottom:4px;
+}
+
+.champion-collapsible summary span{
+  display:block;
+  color:#667085;
+  font-size:.85rem;
+  font-weight:800;
+}
+
+.champion-arrow{
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  background:#fff7df;
+  color:#9a6b00;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.35rem;
+  transition:.2s ease;
+}
+
+.champion-collapsible[open] .champion-arrow{
+  transform:rotate(180deg);
+}
+
+.champion-body{
+  padding:0 16px 16px;
+}
+
+.champion-body form{
+  display:grid;
+  gap:10px;
+}
+
+.champion-body select{
+  width:100%;
+  height:52px;
+  border-radius:16px;
+  border:1px solid #dbe3f0;
+  background:#fff;
+  padding:0 14px;
+  color:#111827;
+  font-weight:800;
+}
+
+.champion-body button{
+  height:54px;
+  border-radius:16px;
+  border:0;
+  background:linear-gradient(135deg,#2449b8,#315df3);
+  color:#fff;
+  font-size:1rem;
+  font-weight:950;
+  box-shadow:0 10px 22px rgba(49,93,243,.26);
+}
+
+/* Match section title */
+.section-title{
+  color:#f8fafc !important;
+  font-weight:950 !important;
+}
+
+/* Match tabs with World Cup style */
+.match-tabs{
+  background:rgba(255,255,255,.08) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.18) !important;
+}
+
+.match-tab{
+  color:#eef2ff !important;
+  background:rgba(255,255,255,.08) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+}
+
+.match-tab.active{
+  background:#fff !important;
+  color:#111827 !important;
+  border-color:#fff !important;
+}
+
+.match-tab.active small{
+  background:#111827 !important;
+  color:#fff !important;
+}
+
+/* Mobile World Cup polish */
+@media (max-width:700px){
+
+  .hero,
+  .main-hero,
+  .page-hero,
+  .site-hero,
+  header.hero{
+    padding-top:18px !important;
+    padding-bottom:20px !important;
+  }
+
+  .hero h1,
+  .main-hero h1,
+  .page-hero h1,
+  .site-hero h1,
+  header.hero h1{
+    font-size:1.85rem !important;
+    line-height:1.25 !important;
+    margin-bottom:8px !important;
+  }
+
+  .hero p,
+  .main-hero p,
+  .page-hero p,
+  .site-hero p,
+  header.hero p{
+    font-size:.9rem !important;
+    line-height:1.6 !important;
+  }
+
+  .player-hero{
+    margin:12px 0 10px !important;
+    padding:14px 16px !important;
+    border-radius:20px !important;
+  }
+
+  .player-hero .hero-kicker{
+    font-size:.76rem !important;
+    margin-bottom:4px !important;
+  }
+
+  .player-hero h2{
+    font-size:1.25rem !important;
+    margin:0 0 4px !important;
+  }
+
+  .player-hero p{
+    font-size:.82rem !important;
+    margin:0 !important;
+  }
+
+  .champion-collapsible{
+    margin:10px 0 14px !important;
+    border-radius:20px !important;
+  }
+
+  .champion-collapsible summary{
+    padding:13px 15px !important;
+  }
+
+  .champion-collapsible summary strong{
+    font-size:.98rem !important;
+  }
+
+  .champion-collapsible summary span{
+    font-size:.78rem !important;
+  }
+
+  .champion-arrow{
+    width:30px;
+    height:30px;
+    font-size:1.15rem;
+  }
+
+  .champion-body{
+    padding:0 13px 13px;
+  }
+
+  .champion-body select,
+  .champion-body button{
+    height:48px !important;
+    border-radius:14px !important;
+  }
+
+  .section-title{
+    font-size:1.05rem !important;
+    margin:16px 0 9px !important;
+  }
+
+  .match-tabs{
+    margin:6px 0 14px !important;
+    border-radius:18px !important;
+    padding:7px !important;
+  }
+
+  .match-tab{
+    padding:11px 8px !important;
+    border-radius:14px !important;
+  }
+}
