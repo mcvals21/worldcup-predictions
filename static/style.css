@@ -5306,3 +5306,24 @@ a{
     border-radius:14px !important;
   }
 }
+/* Add match first on admin page */
+.admin-add-first{
+  margin:12px 0 14px !important;
+}
+
+.admin-add-first summary{
+  background:linear-gradient(135deg,#111111,#2a2618);
+  color:#fff7df !important;
+  border-bottom:1px solid rgba(212,175,55,.22);
+}
+
+.admin-add-first summary b{
+  background:#fff7df !important;
+  color:#111827 !important;
+}
+
+@media (max-width:700px){
+  .admin-add-first{
+    margin:10px 0 12px !important;
+  }
+}
