@@ -3864,3 +3864,139 @@ nav a{
     border-radius:14px !important;
   }
 }
+/* Compact World Cup header */
+.wc-header{
+  position:relative;
+  overflow:hidden;
+  padding:22px 18px 20px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.10), transparent 18%),
+    radial-gradient(circle at 84% 18%, rgba(212,175,55,.18), transparent 18%),
+    linear-gradient(135deg,#10204a 0%,#2449b8 58%,#315df3 100%);
+  border-bottom:1px solid rgba(255,255,255,.16);
+  box-shadow:0 12px 32px rgba(0,0,0,.24);
+}
+
+.wc-header::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:3px;
+  background:linear-gradient(90deg,transparent,#d4af37,transparent);
+}
+
+.wc-hero{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  color:#fff;
+  max-width:720px;
+  margin:0 auto 16px;
+}
+
+.wc-kicker{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 12px;
+  margin-bottom:10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.16);
+  color:#f5d77a;
+  font-size:.86rem;
+  font-weight:900;
+}
+
+.wc-hero h1{
+  margin:0 0 10px;
+  color:#fff !important;
+  font-size:2.15rem;
+  font-weight:950;
+  line-height:1.2;
+}
+
+.wc-hero h1 span{
+  margin-left:6px;
+}
+
+.wc-hero p{
+  margin:0;
+  color:rgba(255,255,255,.88) !important;
+  font-weight:850;
+  line-height:1.6;
+}
+
+.wc-nav{
+  position:relative;
+  z-index:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  max-width:760px;
+  margin:0 auto;
+}
+
+.wc-nav a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:46px;
+  padding:10px 16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff !important;
+  text-decoration:none;
+  font-weight:950;
+  box-shadow:0 8px 20px rgba(0,0,0,.14);
+  backdrop-filter:blur(8px);
+}
+
+.wc-nav a:hover{
+  background:rgba(255,255,255,.20);
+}
+
+/* Mobile compact header */
+@media (max-width:700px){
+  .wc-header{
+    padding:18px 14px 16px !important;
+  }
+
+  .wc-hero{
+    margin-bottom:14px;
+  }
+
+  .wc-kicker{
+    font-size:.74rem;
+    padding:5px 10px;
+    margin-bottom:8px;
+  }
+
+  .wc-hero h1{
+    font-size:1.65rem !important;
+    margin-bottom:7px;
+  }
+
+  .wc-hero p{
+    font-size:.82rem !important;
+    line-height:1.55;
+  }
+
+  .wc-nav{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  .wc-nav a{
+    min-height:44px;
+    padding:9px 8px;
+    border-radius:15px;
+    font-size:.9rem;
+  }
+}
