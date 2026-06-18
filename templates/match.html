@@ -4,6 +4,7 @@
 
 {% set home_flag = team_flag_code(match.home_team) %}
 {% set away_flag = team_flag_code(match.away_team) %}
+{% set match_finished = match.home_score is not none and match.away_score is not none %}
 
 <section class="match-view-hero">
   <div class="match-view-kicker">توقعات المباراة</div>
@@ -17,8 +18,8 @@
     </div>
 
     <div class="match-view-score">
-      {% if match.home_score is not none and match.away_score is not none %}
-        {{ match.home_score }} - {{ match.away_score }}
+      {% if match_finished %}
+        {{ match.away_score }} - {{ match.home_score }}
       {% else %}
         VS
       {% endif %}
@@ -32,7 +33,7 @@
     </div>
   </div>
 
-  {% if match.home_score is not none and match.away_score is not none %}
+  {% if match_finished %}
     <p>النتيجة النهائية المعتمدة للمسابقة</p>
   {% else %}
     <p>لم يتم إدخال النتيجة النهائية بعد</p>
@@ -40,9 +41,10 @@
 </section>
 
 <section class="card match-predictions-section">
-  <div class="match-predictions-title">
+
+  <div class="match-predictions-title centered">
     <h3>📋 توقعات المشاركين</h3>
-    <span>{{ preds|length }}</span>
+    <span>{{ preds|length }} مشارك</span>
   </div>
 
   <div class="desktop-table predictions-table">
@@ -51,18 +53,21 @@
         <th>المشارك</th>
         <th>التوقع</th>
         <th>المضاعفة</th>
-        <th>النقاط</th>
+        <th>النتيجة</th>
       </tr>
 
       {% for pred,p in preds %}
         {% set pts = points_for(pred,match) %}
+        {% set exact = match_finished and pred.home_score == match.home_score and pred.away_score == match.away_score %}
 
         <tr>
-          <td><b>{{ p.name }}</b></td>
+          <td>
+            <b>{{ p.name }}</b>
+          </td>
 
           <td>
             <b class="prediction-score-fixed">
-              {{ pred.home_score }} - {{ pred.away_score }}
+              {{ pred.away_score }} - {{ pred.home_score }}
             </b>
           </td>
 
@@ -75,10 +80,12 @@
           </td>
 
           <td>
-            {% if match.home_score is none %}
+            {% if not match_finished %}
               <span class="result-chip pending">⏳ بانتظار النتيجة</span>
+            {% elif exact %}
+              <span class="result-chip exact">✅ +{{ pts }}</span>
             {% elif pts > 0 %}
-              <span class="result-chip success">✅ +{{ pts }} نقطة</span>
+              <span class="result-chip partial">+{{ pts }}</span>
             {% else %}
               <span class="result-chip wrong">❌</span>
             {% endif %}
@@ -91,8 +98,10 @@
   <div class="mobile-cards match-prediction-cards">
     {% for pred,p in preds %}
       {% set pts = points_for(pred,match) %}
+      {% set exact = match_finished and pred.home_score == match.home_score and pred.away_score == match.away_score %}
 
       <div class="match-prediction-card {% if pred.is_double %}double-selected{% endif %}">
+
         <div class="prediction-player-row">
           <div>
             <strong>{{ p.name }}</strong>
@@ -104,10 +113,12 @@
             {% endif %}
           </div>
 
-          {% if match.home_score is none %}
+          {% if not match_finished %}
             <span class="result-chip pending">⏳</span>
+          {% elif exact %}
+            <span class="result-chip exact">✅ +{{ pts }}</span>
           {% elif pts > 0 %}
-            <span class="result-chip success">✅ +{{ pts }}</span>
+            <span class="result-chip partial">+{{ pts }}</span>
           {% else %}
             <span class="result-chip wrong">❌</span>
           {% endif %}
@@ -115,13 +126,16 @@
 
         <div class="prediction-score-line">
           <span>توقعه</span>
+
           <b class="prediction-score-fixed">
-            {{ pred.home_score }} - {{ pred.away_score }}
+            {{ pred.away_score }} - {{ pred.home_score }}
           </b>
         </div>
+
       </div>
     {% endfor %}
   </div>
+
 </section>
 
 {% endblock %}
