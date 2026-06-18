@@ -5115,3 +5115,194 @@ a{
     border-radius:14px !important;
   }
 }
+/* Admin page structure - dark/gold consistent */
+
+.admin-hero{
+  margin-top:14px !important;
+}
+
+.admin-main-section{
+  margin-top:12px !important;
+}
+
+.admin-tools-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:14px 0 24px;
+}
+
+.admin-tool-card{
+  background:#fffdf8;
+  border:1px solid rgba(212,175,55,.30);
+  border-right:5px solid #d4af37;
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 10px 24px rgba(0,0,0,.16);
+}
+
+.admin-tool-card summary{
+  list-style:none;
+  cursor:pointer;
+  padding:15px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  color:#111827;
+  font-weight:950;
+}
+
+.admin-tool-card summary::-webkit-details-marker{
+  display:none;
+}
+
+.admin-tool-card summary b{
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  background:#fff7df;
+  color:#7a560e;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s ease;
+}
+
+.admin-tool-card[open] summary b{
+  transform:rotate(180deg);
+}
+
+.admin-tool-body{
+  padding:0 14px 14px;
+}
+
+.participants-tool{
+  grid-column:1 / -1;
+}
+
+/* Admin filters clearer */
+.admin-filter-tabs{
+  background:rgba(255,255,255,.08) !important;
+  border:1px solid rgba(212,175,55,.25) !important;
+  box-shadow:none !important;
+}
+
+.admin-filter-tabs .match-tab{
+  background:#fff7df !important;
+  color:#4a3510 !important;
+  border:1px solid rgba(212,175,55,.35) !important;
+  opacity:1 !important;
+}
+
+.admin-filter-tabs .match-tab small{
+  background:#111827 !important;
+  color:#fff7df !important;
+}
+
+.admin-filter-tabs .match-tab.active{
+  background:linear-gradient(135deg,#111111,#2a2618) !important;
+  color:#fff7df !important;
+  border-color:rgba(212,175,55,.55) !important;
+}
+
+.admin-filter-tabs .match-tab.active small{
+  background:#fff7df !important;
+  color:#111827 !important;
+}
+
+/* Admin forms inside tools */
+.admin-tool-card input,
+.admin-tool-card select{
+  border-radius:15px !important;
+  border:1px solid rgba(212,175,55,.32) !important;
+  background:#fff !important;
+}
+
+.admin-tool-card button,
+.admin-section button.save-result-btn,
+.admin-add-match-form button,
+.admin-inline-form button{
+  background:linear-gradient(135deg,#111111,#2a2618) !important;
+  color:#fff7df !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  box-shadow:none !important;
+  font-weight:950 !important;
+}
+
+.admin-clear-form button{
+  background:#475467 !important;
+  color:#fff !important;
+  border:0 !important;
+}
+
+.admin-delete-form button{
+  background:#b42318 !important;
+  color:#fff !important;
+  border:0 !important;
+}
+
+/* Admin match cards */
+.admin-match-card{
+  background:#fff !important;
+  border:1px solid rgba(212,175,55,.25) !important;
+  border-radius:20px !important;
+  box-shadow:0 8px 20px rgba(0,0,0,.08) !important;
+}
+
+.admin-score-inputs input{
+  border-color:rgba(212,175,55,.28) !important;
+}
+
+/* Participant links inside dropdown */
+.participant-link-card{
+  background:#fff !important;
+  border:1px solid rgba(212,175,55,.24) !important;
+}
+
+.participant-link-card a{
+  color:#7a560e !important;
+}
+
+.copy-link-btn{
+  background:#fff7df !important;
+  color:#7a560e !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+  box-shadow:none !important;
+}
+
+/* Mobile admin */
+@media (max-width:700px){
+  .admin-tools-grid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .participants-tool{
+    grid-column:auto;
+  }
+
+  .admin-tool-card{
+    border-radius:20px;
+  }
+
+  .admin-tool-card summary{
+    padding:13px 14px;
+    font-size:.95rem;
+  }
+
+  .admin-tool-body{
+    padding:0 12px 12px;
+  }
+
+  .admin-filter-tabs{
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
+  }
+
+  .admin-filter-tabs .match-tab{
+    font-size:.84rem !important;
+    padding:10px 7px !important;
+    border-radius:14px !important;
+  }
+}
