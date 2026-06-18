@@ -4650,3 +4650,62 @@ a{
     margin:0 !important;
   }
 }
+/* Cleaner open match header and save button */
+.clean-topline{
+  background:#fffdf7 !important;
+  border-bottom:1px solid rgba(212,175,55,.22) !important;
+  padding:12px 14px !important;
+}
+
+.clean-close-time{
+  color:#6b5a2a !important;
+  font-size:.82rem !important;
+  font-weight:900 !important;
+  line-height:1.5 !important;
+  text-align:left;
+}
+
+.mobile-status-pill.open{
+  background:#ecfdf3 !important;
+  color:#027a48 !important;
+  border:1px solid rgba(2,122,72,.12);
+}
+
+/* Softer premium save button */
+.mobile-save-btn,
+.match-card button[type="submit"]{
+  background:linear-gradient(135deg,#fff4c7,#d4af37) !important;
+  color:#16130a !important;
+  border:1px solid rgba(122,86,14,.22) !important;
+  box-shadow:0 8px 18px rgba(212,175,55,.20) !important;
+  letter-spacing:.1px;
+}
+
+.mobile-save-btn:hover,
+.match-card button[type="submit"]:hover{
+  filter:brightness(.98);
+}
+
+/* Mobile button polish */
+@media (max-width:700px){
+  .clean-topline{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:10px !important;
+  }
+
+  .clean-close-time{
+    font-size:.76rem !important;
+    text-align:left !important;
+  }
+
+  .mobile-save-btn,
+  .match-card button[type="submit"]{
+    height:54px !important;
+    border-radius:18px !important;
+    font-size:1.02rem !important;
+    font-weight:950 !important;
+    margin-top:4px !important;
+  }
+}
