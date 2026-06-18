@@ -39,18 +39,13 @@
 
   <section class="card match-card mobile-focus-card {% if is_double %}double-selected{% endif %}">
 
-    <div class="mobile-card-topline clean-topline">
+    <div class="mobile-card-topline clean-topline status-only-topline">
   {% if not is_locked %}
     <span class="mobile-status-pill open">مفتوحة</span>
-    <span class="clean-close-time">
-      يغلق التوقع: {{ m.start_time.strftime('%Y-%m-%d') }} · {{ m.start_time.strftime('%H:%M') }}
-    </span>
   {% elif m.home_score is not none and m.away_score is not none %}
     <span class="mobile-status-pill finished">منتهية</span>
-    <span class="clean-close-time">النتيجة النهائية محفوظة</span>
   {% else %}
     <span class="mobile-status-pill locked">مغلقة</span>
-    <span class="clean-close-time">انتهى وقت التوقع</span>
   {% endif %}
 </div>
 
