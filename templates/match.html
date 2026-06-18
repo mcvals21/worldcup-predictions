@@ -100,7 +100,7 @@
       {% set pts = points_for(pred,match) %}
       {% set exact = match_finished and pred.home_score == match.home_score and pred.away_score == match.away_score %}
 
-      <div class="match-prediction-card {% if pred.is_double %}double-selected{% endif %}">
+      <div class="match-prediction-card {% if pred.is_double %}double-selected{% endif %} {% if match_finished and exact %}exact-card{% elif match_finished and pts > 0 %}partial-card{% elif match_finished %}wrong-card{% endif %}">
 
         <div class="prediction-player-row">
           <div>
