@@ -5879,3 +5879,151 @@ a{
     font-size:.82rem;
   }
 }
+/* More premium participant prediction cards */
+
+.match-prediction-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:20px !important;
+  background:linear-gradient(180deg,#ffffff,#fbfbfb) !important;
+  border:1px solid rgba(148,163,184,.25) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.07) !important;
+}
+
+.match-prediction-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  width:5px;
+  background:#d0d5dd;
+}
+
+.match-prediction-card.exact-card::before{
+  background:#12b76a;
+}
+
+.match-prediction-card.partial-card::before{
+  background:#d4af37;
+}
+
+.match-prediction-card.wrong-card::before{
+  background:#d92d20;
+}
+
+.prediction-player-row{
+  align-items:center !important;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+}
+
+.prediction-player-row strong{
+  font-size:1.05rem !important;
+  color:#0f172a !important;
+}
+
+.prediction-player-row small{
+  color:#667085 !important;
+  font-size:.76rem !important;
+  margin-top:2px;
+}
+
+.result-chip{
+  min-width:54px;
+  height:38px;
+  padding:0 12px !important;
+  font-size:.9rem !important;
+  font-weight:950 !important;
+}
+
+.result-chip.exact{
+  background:#ecfdf3 !important;
+  color:#027a48 !important;
+  border:1px solid rgba(2,122,72,.18) !important;
+}
+
+.result-chip.partial{
+  background:#fff7df !important;
+  color:#7a560e !important;
+  border:1px solid rgba(212,175,55,.30) !important;
+}
+
+.result-chip.wrong{
+  background:#fff1f3 !important;
+  color:#b42318 !important;
+  border:1px solid rgba(180,35,24,.18) !important;
+}
+
+.prediction-score-line{
+  margin-top:12px !important;
+  padding:0 !important;
+  background:transparent !important;
+  display:grid !important;
+  grid-template-columns:1fr auto !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+
+.prediction-score-line span{
+  color:#667085 !important;
+  font-weight:900 !important;
+  font-size:.82rem !important;
+}
+
+.prediction-score-line b{
+  min-width:86px;
+  height:46px;
+  border-radius:16px;
+  background:#f8fafc;
+  color:#7a560e !important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.45rem !important;
+  font-weight:950 !important;
+  direction:ltr !important;
+  unicode-bidi:isolate !important;
+  border:1px solid rgba(148,163,184,.18);
+}
+
+/* Exact result score gets subtle green feel */
+.match-prediction-card.exact-card .prediction-score-line b{
+  background:#f0fdf4;
+  border-color:rgba(18,183,106,.18);
+}
+
+/* Partial result score gets subtle gold feel */
+.match-prediction-card.partial-card .prediction-score-line b{
+  background:#fffaf0;
+  border-color:rgba(212,175,55,.22);
+}
+
+/* Wrong result score stays neutral but clean */
+.match-prediction-card.wrong-card .prediction-score-line b{
+  background:#f8fafc;
+}
+
+/* Mobile fine tuning */
+@media (max-width:700px){
+  .match-prediction-card{
+    padding:14px 15px !important;
+    margin-bottom:11px !important;
+  }
+
+  .prediction-player-row strong{
+    font-size:1rem !important;
+  }
+
+  .prediction-score-line b{
+    min-width:78px;
+    height:44px;
+    font-size:1.32rem !important;
+  }
+
+  .result-chip{
+    min-width:50px;
+    height:36px;
+    font-size:.86rem !important;
+  }
+}
