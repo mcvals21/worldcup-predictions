@@ -2,54 +2,15 @@
 
 {% block content %}
 
-<div class="page-hero">
+<div class="page-hero admin-hero">
   <h1>لوحة الإدارة</h1>
-  <p>إضافة المباريات، تسجيل النتائج، وتعديل جدول البطولة.</p>
+  <p>إدارة النتائج، إضافة المباريات، وروابط المشاركين.</p>
 </div>
 
-<div class="admin-section">
-  <h2>توقع البطل</h2>
-
-  <form method="post" class="admin-inline-form">
-    <input type="hidden" name="action" value="champion_deadline">
-
-    <label>موعد إغلاق توقع البطل</label>
-    <input
-      type="datetime-local"
-      name="deadline"
-      value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}"
-      required
-    >
-
-    <button type="submit">حفظ الموعد</button>
-  </form>
-</div>
-
-<div class="admin-section">
-  <h2>إضافة مباراة جديدة</h2>
-
-  <form method="post" class="admin-add-match-form">
-    <input type="hidden" name="action" value="add_match">
-
-    <input type="text" name="home_team" placeholder="الفريق الأول" required>
-    <input type="text" name="away_team" placeholder="الفريق الثاني" required>
-
-    <input type="datetime-local" name="start_time" required>
-
-    <select name="stage">
-      {% for key, label in stage_labels.items() %}
-        <option value="{{ key }}">{{ label }}</option>
-      {% endfor %}
-    </select>
-
-    <button type="submit">إضافة المباراة</button>
-  </form>
-</div>
-
-<div class="admin-section">
+<div class="admin-section admin-main-section">
   <h2>إدارة المباريات</h2>
 
-  <div class="match-tabs">
+  <div class="match-tabs admin-filter-tabs">
     {% for key, label in match_filter_labels.items() %}
       <a
         class="match-tab {% if selected_filter == key %}active{% endif %}"
@@ -203,33 +164,85 @@
   </div>
 </div>
 
-<div class="admin-section">
-  <h2>روابط المشاركين</h2>
+<div class="admin-tools-grid">
 
-  <div class="participants-grid">
-    {% for p in participants %}
-      {% set player_url = url_for('participant_page', token=p.token, _external=True) %}
+  <details class="admin-tool-card">
+    <summary>
+      <span>➕ إضافة مباراة جديدة</span>
+      <b>⌄</b>
+    </summary>
 
-      <div class="participant-link-card">
-        <strong>{{ p.name }}</strong>
+    <form method="post" class="admin-add-match-form admin-tool-body">
+      <input type="hidden" name="action" value="add_match">
 
-        <div class="participant-actions">
-          <a href="{{ player_url }}">
-            فتح
-          </a>
+      <input type="text" name="home_team" placeholder="الفريق الأول" required>
+      <input type="text" name="away_team" placeholder="الفريق الثاني" required>
 
-          <button
-            type="button"
-            class="copy-link-btn"
-            data-link="{{ player_url }}"
-            onclick="navigator.clipboard.writeText(this.dataset.link); this.textContent='تم النسخ';"
-          >
-            نسخ الرابط
-          </button>
+      <input type="datetime-local" name="start_time" required>
+
+      <select name="stage">
+        {% for key, label in stage_labels.items() %}
+          <option value="{{ key }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+
+      <button type="submit">إضافة المباراة</button>
+    </form>
+  </details>
+
+  <details class="admin-tool-card">
+    <summary>
+      <span>🏆 موعد توقع البطل</span>
+      <b>⌄</b>
+    </summary>
+
+    <form method="post" class="admin-inline-form admin-tool-body">
+      <input type="hidden" name="action" value="champion_deadline">
+
+      <label>موعد إغلاق توقع البطل</label>
+      <input
+        type="datetime-local"
+        name="deadline"
+        value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}"
+        required
+      >
+
+      <button type="submit">حفظ الموعد</button>
+    </form>
+  </details>
+
+  <details class="admin-tool-card participants-tool">
+    <summary>
+      <span>🔗 روابط المشاركين</span>
+      <b>⌄</b>
+    </summary>
+
+    <div class="participants-grid admin-tool-body">
+      {% for p in participants %}
+        {% set player_url = url_for('participant_page', token=p.token, _external=True) %}
+
+        <div class="participant-link-card">
+          <strong>{{ p.name }}</strong>
+
+          <div class="participant-actions">
+            <a href="{{ player_url }}">
+              فتح
+            </a>
+
+            <button
+              type="button"
+              class="copy-link-btn"
+              data-link="{{ player_url }}"
+              onclick="navigator.clipboard.writeText(this.dataset.link); this.textContent='تم النسخ';"
+            >
+              نسخ الرابط
+            </button>
+          </div>
         </div>
-      </div>
-    {% endfor %}
-  </div>
+      {% endfor %}
+    </div>
+  </details>
+
 </div>
 
 {% endblock %}
