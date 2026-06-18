@@ -4,8 +4,32 @@
 
 <div class="page-hero admin-hero">
   <h1>لوحة الإدارة</h1>
-  <p>إدارة النتائج، إضافة المباريات، وروابط المشاركين.</p>
+  <p>إضافة المباريات، إدارة النتائج، وروابط المشاركين.</p>
 </div>
+
+<details class="admin-tool-card admin-add-first" open>
+  <summary>
+    <span>➕ إضافة مباراة جديدة</span>
+    <b>⌄</b>
+  </summary>
+
+  <form method="post" class="admin-add-match-form admin-tool-body">
+    <input type="hidden" name="action" value="add_match">
+
+    <input type="text" name="home_team" placeholder="الفريق الأول" required>
+    <input type="text" name="away_team" placeholder="الفريق الثاني" required>
+
+    <input type="datetime-local" name="start_time" required>
+
+    <select name="stage">
+      {% for key, label in stage_labels.items() %}
+        <option value="{{ key }}">{{ label }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">إضافة المباراة</button>
+  </form>
+</details>
 
 <div class="admin-section admin-main-section">
   <h2>إدارة المباريات</h2>
@@ -165,30 +189,6 @@
 </div>
 
 <div class="admin-tools-grid">
-
-  <details class="admin-tool-card">
-    <summary>
-      <span>➕ إضافة مباراة جديدة</span>
-      <b>⌄</b>
-    </summary>
-
-    <form method="post" class="admin-add-match-form admin-tool-body">
-      <input type="hidden" name="action" value="add_match">
-
-      <input type="text" name="home_team" placeholder="الفريق الأول" required>
-      <input type="text" name="away_team" placeholder="الفريق الثاني" required>
-
-      <input type="datetime-local" name="start_time" required>
-
-      <select name="stage">
-        {% for key, label in stage_labels.items() %}
-          <option value="{{ key }}">{{ label }}</option>
-        {% endfor %}
-      </select>
-
-      <button type="submit">إضافة المباراة</button>
-    </form>
-  </details>
 
   <details class="admin-tool-card">
     <summary>
