@@ -10,27 +10,44 @@
   </div>
 </section>
 
-<section class="card champion-card">
-  <h3>🏆 توقع بطل البطولة</h3>
+<details class="card champion-card champion-collapsible">
+  <summary>
+    <div>
+      <strong>🏆 توقع بطل البطولة</strong>
+      <span>
+        {% if champion %}
+          اختيارك الحالي: {{ champion.team_name }}
+        {% elif champion_locked %}
+          تم إغلاق التوقع
+        {% else %}
+          اضغط للاختيار أو التعديل
+        {% endif %}
+      </span>
+    </div>
 
-  {% if champion_locked %}
-    <p>تم إغلاق توقع البطل.</p>
-    <p>اختيارك: <b>{{ champion.team_name if champion else 'لم يتم الاختيار' }}</b></p>
-  {% else %}
-    <form method="post">
-      <input type="hidden" name="action" value="champion">
+    <b class="champion-arrow">⌄</b>
+  </summary>
 
-      <select name="team_name" required>
-        <option value="">اختر المنتخب</option>
-        {% for team in teams %}
-          <option value="{{team}}" {% if champion and champion.team_name==team %}selected{% endif %}>{{team}}</option>
-        {% endfor %}
-      </select>
+  <div class="champion-body">
+    {% if champion_locked %}
+      <p>تم إغلاق توقع البطل.</p>
+      <p>اختيارك: <b>{{ champion.team_name if champion else 'لم يتم الاختيار' }}</b></p>
+    {% else %}
+      <form method="post">
+        <input type="hidden" name="action" value="champion">
 
-      <button>حفظ البطل</button>
-    </form>
-  {% endif %}
-</section>
+        <select name="team_name" required>
+          <option value="">اختر المنتخب</option>
+          {% for team in teams %}
+            <option value="{{team}}" {% if champion and champion.team_name==team %}selected{% endif %}>{{team}}</option>
+          {% endfor %}
+        </select>
+
+        <button>حفظ البطل</button>
+      </form>
+    {% endif %}
+  </div>
+</details>
 
 <h3 class="section-title">⚽ المباريات</h3>
 
