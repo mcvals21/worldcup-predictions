@@ -4846,3 +4846,71 @@ a{
   color:#7a560e !important;
   border:1px solid rgba(212,175,55,.20) !important;
 }
+/* Final button/status color decision */
+
+/* Open status stays green */
+.status-only-topline .mobile-status-pill.open,
+.mobile-status-pill.open{
+  background:#ecfdf3 !important;
+  color:#027a48 !important;
+  border:1px solid rgba(2,122,72,.18) !important;
+  box-shadow:none !important;
+}
+
+/* Finished / locked stay neutral-gold */
+.status-only-topline .mobile-status-pill.finished,
+.mobile-status-pill.finished{
+  background:#fff7df !important;
+  color:#7a560e !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+}
+
+.status-only-topline .mobile-status-pill.locked,
+.mobile-status-pill.locked{
+  background:#f2f4f7 !important;
+  color:#475467 !important;
+  border:1px solid rgba(148,163,184,.35) !important;
+}
+
+/* Save / edit prediction button: dark with gold touch */
+.match-card .mobile-save-btn,
+.match-card button.mobile-save-btn{
+  width:auto !important;
+  min-width:200px !important;
+  max-width:260px !important;
+  height:46px !important;
+  min-height:46px !important;
+  display:block !important;
+  margin:4px auto 16px !important;
+  padding:0 26px !important;
+  border-radius:999px !important;
+
+  background:linear-gradient(135deg,#111111,#2a2618) !important;
+  color:#fff7df !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.18) !important;
+
+  font-size:.95rem !important;
+  font-weight:950 !important;
+}
+
+.match-card .mobile-save-btn:active{
+  transform:scale(.98);
+}
+
+/* Champion save button inside menu: same dark-gold style */
+.menu-champion-form button{
+  background:linear-gradient(135deg,#111111,#2a2618) !important;
+  color:#fff7df !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  box-shadow:none !important;
+  font-size:.9rem !important;
+  font-weight:950 !important;
+}
+
+/* Champion select: clean white with gold border */
+.menu-champion-form select{
+  background:#fff !important;
+  color:#111827 !important;
+  border:1px solid rgba(212,175,55,.35) !important;
+}
