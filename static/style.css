@@ -4000,3 +4000,264 @@ nav a{
     font-size:.9rem;
   }
 }
+/* Dark + Gold World Cup theme override */
+body{
+  background:
+    radial-gradient(circle at 85% 0%, rgba(212,175,55,.14), transparent 18%),
+    radial-gradient(circle at 12% 10%, rgba(255,255,255,.05), transparent 20%),
+    linear-gradient(180deg,#0c0c0c 0%,#151515 48%,#090909 100%) !important;
+}
+
+/* New compact header */
+.clean-wc-header{
+  position:relative !important;
+  overflow:visible !important;
+  padding:16px 16px 18px !important;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.08), transparent 18%),
+    radial-gradient(circle at 82% 18%, rgba(212,175,55,.18), transparent 18%),
+    linear-gradient(135deg,#101010 0%,#1b1a16 55%,#2d240f 100%) !important;
+  border-bottom:1px solid rgba(212,175,55,.30) !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.35) !important;
+}
+
+.clean-wc-header::after{
+  content:"";
+  position:absolute;
+  right:0;
+  left:0;
+  bottom:0;
+  height:3px;
+  background:linear-gradient(90deg,transparent,#d4af37,transparent);
+}
+
+.clean-header-row{
+  position:relative;
+  z-index:4;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  max-width:900px;
+  margin:0 auto;
+}
+
+.clean-title{
+  min-width:0;
+}
+
+.clean-kicker{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 10px;
+  margin-bottom:8px;
+  border-radius:999px;
+  background:rgba(212,175,55,.12);
+  border:1px solid rgba(212,175,55,.35);
+  color:#f5d77a;
+  font-size:.78rem;
+  font-weight:950;
+}
+
+.clean-title h1{
+  margin:0 !important;
+  color:#fff !important;
+  font-size:1.65rem !important;
+  line-height:1.25 !important;
+  font-weight:950 !important;
+}
+
+.clean-subtitle{
+  position:relative;
+  z-index:1;
+  max-width:900px;
+  margin:8px auto 0 !important;
+  color:rgba(255,255,255,.78) !important;
+  font-size:.92rem;
+  font-weight:850;
+  line-height:1.6;
+}
+
+/* Dropdown menu */
+.clean-menu{
+  position:relative;
+  flex:0 0 auto;
+}
+
+.clean-menu summary{
+  list-style:none;
+  cursor:pointer;
+  min-height:44px;
+  padding:10px 14px;
+  border-radius:15px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(212,175,55,.35);
+  color:#fff;
+  font-weight:950;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  box-shadow:0 8px 20px rgba(0,0,0,.20);
+}
+
+.clean-menu summary::-webkit-details-marker{
+  display:none;
+}
+
+.clean-menu-panel{
+  position:absolute;
+  top:54px;
+  left:0;
+  min-width:210px;
+  padding:8px;
+  border-radius:18px;
+  background:#fff;
+  border:1px solid rgba(212,175,55,.35);
+  box-shadow:0 18px 40px rgba(0,0,0,.30);
+  display:grid;
+  gap:6px;
+  z-index:99;
+}
+
+.clean-menu-panel a{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  padding:12px 13px;
+  border-radius:14px;
+  color:#111827 !important;
+  background:#fff;
+  text-decoration:none;
+  font-weight:950;
+}
+
+.clean-menu-panel a:hover{
+  background:#fff7df;
+}
+
+/* Remove old nav if it still appears somewhere */
+.wc-nav{
+  display:none !important;
+}
+
+/* Make player cards match dark-gold theme */
+.player-hero,
+.champion-collapsible,
+.champion-card{
+  border-color:rgba(212,175,55,.45) !important;
+  border-right:5px solid #d4af37 !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.22) !important;
+}
+
+.player-hero h2,
+.champion-collapsible summary strong,
+.champion-card h3{
+  color:#0f172a !important;
+}
+
+.player-hero .hero-kicker{
+  color:#8a6413 !important;
+}
+
+/* Buttons: less blue, more gold */
+.champion-body button,
+.champion-card button,
+.mobile-save-btn,
+.match-card button[type="submit"]{
+  background:linear-gradient(135deg,#d4af37,#a77a18) !important;
+  color:#111827 !important;
+  border:0 !important;
+  box-shadow:0 10px 22px rgba(212,175,55,.26) !important;
+}
+
+/* Match tabs with dark-gold mood */
+.match-tabs{
+  background:rgba(255,255,255,.08) !important;
+  border:1px solid rgba(212,175,55,.22) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.18) !important;
+}
+
+.match-tab{
+  background:rgba(255,255,255,.08) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  color:#f8fafc !important;
+}
+
+.match-tab small{
+  background:rgba(255,255,255,.16) !important;
+  color:#fff !important;
+}
+
+.match-tab.active{
+  background:#fff !important;
+  color:#111827 !important;
+  border-color:#fff !important;
+}
+
+.match-tab.active small{
+  background:#111827 !important;
+  color:#fff !important;
+}
+
+.section-title{
+  color:#fff !important;
+}
+
+/* Replace many blue pills with gold tone */
+.mobile-match-meta span,
+.stats-match-meta span,
+.stage-pill{
+  background:#fff7df !important;
+  color:#7a560e !important;
+}
+
+/* Mobile header */
+@media (max-width:700px){
+  .clean-wc-header{
+    padding:14px 13px 15px !important;
+  }
+
+  .clean-header-row{
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .clean-kicker{
+    font-size:.72rem;
+    padding:4px 9px;
+    margin-bottom:7px;
+  }
+
+  .clean-title h1{
+    font-size:1.32rem !important;
+    line-height:1.35 !important;
+  }
+
+  .clean-subtitle{
+    font-size:.78rem;
+    margin-top:7px !important;
+    padding-left:88px;
+  }
+
+  .clean-menu summary{
+    min-height:42px;
+    padding:9px 12px;
+    border-radius:14px;
+    font-size:.86rem;
+  }
+
+  .clean-menu-panel{
+    position:absolute;
+    top:50px;
+    left:0;
+    width:220px;
+    max-width:calc(100vw - 28px);
+  }
+
+  .clean-menu-panel a{
+    padding:12px;
+    font-size:.95rem;
+  }
+}
