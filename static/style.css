@@ -4580,3 +4580,73 @@ a{
     font-size:.76rem !important;
   }
 }
+/* Compact header + welcome card final polish */
+@media (max-width:700px){
+
+  /* Make header shorter */
+  .clean-wc-header{
+    padding:10px 13px 12px !important;
+  }
+
+  .clean-menu{
+    top:11px !important;
+    right:13px !important;
+  }
+
+  .clean-menu summary{
+    min-height:38px !important;
+    padding:7px 11px !important;
+    border-radius:14px !important;
+    font-size:.82rem !important;
+  }
+
+  .clean-title{
+    padding-top:44px !important;
+  }
+
+  .clean-kicker{
+    margin-bottom:6px !important;
+    padding:4px 10px !important;
+    font-size:.68rem !important;
+  }
+
+  .clean-title h1{
+    font-size:1.34rem !important;
+    line-height:1.25 !important;
+    gap:5px !important;
+  }
+
+  .clean-subtitle{
+    max-width:300px !important;
+    margin:6px auto 0 !important;
+    font-size:.73rem !important;
+    line-height:1.45 !important;
+  }
+
+  /* Turn welcome card into compact premium strip */
+  .player-hero{
+    margin:10px 0 12px !important;
+    padding:12px 15px !important;
+    border-radius:18px !important;
+    border-right:4px solid #d4af37 !important;
+    box-shadow:0 8px 22px rgba(0,0,0,.16) !important;
+  }
+
+  .player-hero .hero-kicker{
+    font-size:.7rem !important;
+    margin-bottom:2px !important;
+    color:#8a6413 !important;
+  }
+
+  .player-hero h2{
+    font-size:1.18rem !important;
+    line-height:1.25 !important;
+    margin:0 0 3px !important;
+  }
+
+  .player-hero p{
+    font-size:.76rem !important;
+    line-height:1.45 !important;
+    margin:0 !important;
+  }
+}
