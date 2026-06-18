@@ -4261,3 +4261,204 @@ body{
     font-size:.95rem;
   }
 }
+/* Final dark-gold menu and no-blue override */
+
+/* Put menu on the right */
+.clean-header-row{
+  flex-direction:row !important;
+}
+
+.clean-menu{
+  order:-1 !important;
+}
+
+.clean-title{
+  text-align:right;
+}
+
+/* Dropdown opens from the right */
+.clean-menu-panel{
+  right:0 !important;
+  left:auto !important;
+  text-align:right;
+}
+
+/* Champion inside dropdown */
+.menu-divider{
+  height:1px;
+  margin:6px 4px;
+  background:rgba(212,175,55,.25);
+}
+
+.menu-champion-box{
+  padding:10px;
+  border-radius:15px;
+  background:linear-gradient(180deg,#fffdf6,#ffffff);
+  border:1px solid rgba(212,175,55,.32);
+}
+
+.menu-champion-title{
+  color:#111827;
+  font-weight:950;
+  margin-bottom:7px;
+}
+
+.menu-champion-note{
+  color:#667085;
+  font-size:.82rem;
+  font-weight:850;
+  line-height:1.55;
+  margin-bottom:8px;
+}
+
+.menu-champion-form{
+  display:grid;
+  gap:7px;
+}
+
+.menu-champion-form select{
+  width:100%;
+  min-height:44px;
+  border-radius:13px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  color:#111827;
+  font-size:.9rem;
+  font-weight:850;
+  margin:0;
+}
+
+.menu-champion-form button{
+  width:100%;
+  min-height:44px;
+  border-radius:13px;
+  border:0;
+  background:linear-gradient(135deg,#d4af37,#9f7317) !important;
+  color:#111827 !important;
+  font-size:.9rem;
+  font-weight:950;
+  margin:0;
+  box-shadow:none !important;
+}
+
+/* Hide old champion card if still exists */
+.champion-collapsible{
+  display:none !important;
+}
+
+/* Remove remaining blue feeling */
+:root{
+  --brand:#a77a18;
+  --brand-dark:#14110a;
+  --accent:#d4af37;
+}
+
+/* Links */
+a{
+  color:#8a6413;
+}
+
+/* Blue hero sections to dark-gold */
+.leaderboard-hero,
+.stats-hero,
+.match-result-hero,
+.page-hero{
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.08), transparent 18%),
+    radial-gradient(circle at 82% 20%, rgba(212,175,55,.16), transparent 18%),
+    linear-gradient(135deg,#101010,#1b1a16,#2d240f) !important;
+  color:#fff !important;
+  border:1px solid rgba(212,175,55,.24) !important;
+}
+
+.leaderboard-hero p,
+.stats-hero p,
+.match-result-hero .muted,
+.page-hero p{
+  color:rgba(255,255,255,.78) !important;
+}
+
+/* Points and score colors */
+.points,
+.podium-points,
+.summary-score,
+.prediction-score{
+  color:#9f7317 !important;
+}
+
+/* Blue badges/pills to gold/neutral */
+.stage-pill,
+.time-pill,
+.mobile-match-meta span,
+.stats-match-meta span,
+.table-badge,
+.prediction-points,
+.leader-stats span,
+.mini-badge.bonus,
+.status-pill.upcoming{
+  background:#fff7df !important;
+  color:#7a560e !important;
+}
+
+/* Finished status was bluish */
+.mobile-status-pill.finished,
+.status-pill.finished{
+  background:#fff7df !important;
+  color:#7a560e !important;
+}
+
+/* Links/buttons inside cards that were blue */
+.mobile-card-link a,
+.small-action-link,
+.edit-box summary,
+.admin-edit-box summary,
+.participant-link-card a{
+  color:#8a6413 !important;
+}
+
+.mobile-card-link a,
+.copy-link-btn{
+  background:#fff7df !important;
+  color:#7a560e !important;
+}
+
+/* Active filter stays clean white/dark */
+.match-tab.active{
+  background:#fff !important;
+  color:#111827 !important;
+}
+
+.match-tab.active small{
+  background:#111827 !important;
+  color:#fff !important;
+}
+
+/* Mobile adjustments */
+@media (max-width:700px){
+  .clean-header-row{
+    align-items:flex-start;
+  }
+
+  .clean-title{
+    text-align:right;
+    flex:1;
+  }
+
+  .clean-menu{
+    flex:0 0 auto;
+  }
+
+  .clean-menu-panel{
+    top:50px;
+    right:0 !important;
+    left:auto !important;
+    width:250px;
+    max-width:calc(100vw - 26px);
+  }
+
+  .clean-subtitle{
+    padding-left:0 !important;
+    padding-right:0 !important;
+    text-align:right;
+  }
+}
