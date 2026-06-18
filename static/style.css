@@ -5572,3 +5572,310 @@ a{
     border-radius:22px !important;
   }
 }
+/* Match predictions page - clean dark/gold style */
+
+.match-view-hero{
+  margin:16px 0 14px;
+  padding:18px 14px;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.08), transparent 18%),
+    radial-gradient(circle at 82% 20%, rgba(212,175,55,.15), transparent 18%),
+    linear-gradient(135deg,#101010,#1b1a16,#2d240f);
+  color:#fff;
+  border:1px solid rgba(212,175,55,.28);
+  box-shadow:0 12px 30px rgba(0,0,0,.22);
+  text-align:center;
+}
+
+.match-view-kicker{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 11px;
+  margin-bottom:14px;
+  border-radius:999px;
+  background:rgba(212,175,55,.12);
+  border:1px solid rgba(212,175,55,.35);
+  color:#f5d77a;
+  font-size:.78rem;
+  font-weight:950;
+}
+
+.match-view-teams{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:10px;
+  direction:rtl;
+}
+
+.match-view-team{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-width:0;
+}
+
+.match-view-team img{
+  width:60px;
+  height:42px;
+  object-fit:cover;
+  border-radius:12px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.14),
+    0 8px 18px rgba(0,0,0,.22);
+}
+
+.match-view-team strong{
+  font-size:.96rem;
+  font-weight:950;
+  line-height:1.35;
+}
+
+.match-view-score{
+  min-width:78px;
+  min-height:52px;
+  border-radius:18px;
+  background:#fff;
+  color:#111827;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.35rem;
+  font-weight:950;
+  direction:ltr;
+  unicode-bidi:isolate;
+}
+
+.match-view-hero p{
+  margin:14px 0 0;
+  color:rgba(255,255,255,.78);
+  font-size:.85rem;
+  font-weight:850;
+}
+
+/* Predictions section */
+.match-predictions-section{
+  background:#fff !important;
+  border:1px solid rgba(212,175,55,.25) !important;
+  border-radius:24px !important;
+}
+
+/* Center title and count */
+.match-predictions-title.centered{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  gap:7px !important;
+  margin-bottom:16px !important;
+}
+
+.match-predictions-title.centered h3{
+  margin:0 !important;
+  font-size:1.15rem !important;
+  font-weight:950 !important;
+  color:#111827 !important;
+}
+
+.match-predictions-title.centered span{
+  width:auto !important;
+  min-width:76px !important;
+  height:auto !important;
+  padding:6px 12px !important;
+  border-radius:999px !important;
+  background:#fff7df !important;
+  color:#7a560e !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+  font-size:.82rem !important;
+  font-weight:950 !important;
+}
+
+/* Table version */
+.predictions-table table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.predictions-table th{
+  background:#fff7df !important;
+  color:#7a560e !important;
+  font-weight:950 !important;
+  text-align:center !important;
+}
+
+.predictions-table td{
+  text-align:center !important;
+  font-weight:850;
+}
+
+.prediction-score-fixed{
+  direction:ltr !important;
+  unicode-bidi:isolate !important;
+  font-weight:950 !important;
+  color:#7a560e !important;
+}
+
+/* Result chips */
+.result-chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:.84rem;
+  font-weight:950;
+  white-space:nowrap;
+}
+
+.result-chip.exact{
+  background:#ecfdf3 !important;
+  color:#027a48 !important;
+  border:1px solid rgba(2,122,72,.18) !important;
+}
+
+.result-chip.partial{
+  background:#fff7df !important;
+  color:#7a560e !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+}
+
+.result-chip.wrong{
+  background:#fdecec !important;
+  color:#b42318 !important;
+  border:1px solid rgba(180,35,24,.16) !important;
+}
+
+.result-chip.pending{
+  background:#f2f4f7 !important;
+  color:#475467 !important;
+  border:1px solid rgba(148,163,184,.30) !important;
+}
+
+/* Mobile cards */
+.match-prediction-cards{
+  display:none;
+}
+
+.match-prediction-card{
+  padding:14px;
+  border-radius:18px;
+  background:#fff;
+  border:1px solid rgba(148,163,184,.24);
+  box-shadow:0 8px 18px rgba(0,0,0,.06);
+  margin-bottom:10px;
+}
+
+.match-prediction-card.double-selected{
+  border-color:rgba(212,175,55,.45);
+  background:linear-gradient(180deg,#fffdf7,#fff);
+}
+
+.prediction-player-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.prediction-player-row strong{
+  display:block;
+  color:#111827;
+  font-size:1.02rem;
+  font-weight:950;
+  margin-bottom:3px;
+}
+
+.prediction-player-row small{
+  display:block;
+  color:#667085;
+  font-size:.78rem;
+  font-weight:850;
+}
+
+.prediction-score-line{
+  margin-top:12px;
+  padding:12px;
+  border-radius:16px;
+  background:#f8fafc;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.prediction-score-line span{
+  color:#667085;
+  font-weight:900;
+}
+
+.prediction-score-line b{
+  font-size:1.35rem;
+}
+
+/* Mobile layout */
+@media (max-width:700px){
+  .match-view-hero{
+    margin:12px 0 12px;
+    padding:16px 12px;
+    border-radius:22px;
+  }
+
+  .match-view-kicker{
+    margin-bottom:12px;
+  }
+
+  .match-view-team img{
+    width:56px;
+    height:39px;
+  }
+
+  .match-view-team strong{
+    font-size:.9rem;
+  }
+
+  .match-view-score{
+    min-width:66px;
+    min-height:46px;
+    border-radius:16px;
+    font-size:1.2rem;
+  }
+
+  .predictions-table{
+    display:none !important;
+  }
+
+  .match-prediction-cards{
+    display:block;
+  }
+
+  .match-predictions-section{
+    padding:14px !important;
+    border-radius:22px !important;
+  }
+
+  .match-prediction-card{
+    border-radius:18px;
+    padding:13px;
+  }
+
+  .prediction-score-line{
+    padding:11px 12px;
+  }
+
+  .prediction-score-line b{
+    font-size:1.28rem;
+  }
+
+  .result-chip{
+    padding:7px 10px;
+    font-size:.82rem;
+  }
+}
