@@ -4462,3 +4462,38 @@ a{
     text-align:right;
   }
 }
+/* Final compact header polish */
+@media (max-width:700px){
+  .clean-wc-header{
+    padding:12px 13px 13px !important;
+  }
+
+  .clean-header-row{
+    align-items:center !important;
+  }
+
+  .clean-menu summary{
+    min-height:40px !important;
+    padding:8px 11px !important;
+    border-radius:14px !important;
+    font-size:.84rem !important;
+  }
+
+  .clean-kicker{
+    margin-bottom:5px !important;
+    font-size:.68rem !important;
+    padding:4px 9px !important;
+  }
+
+  .clean-title h1{
+    font-size:1.22rem !important;
+    line-height:1.3 !important;
+  }
+
+  .clean-subtitle{
+    margin-top:6px !important;
+    font-size:.74rem !important;
+    line-height:1.5 !important;
+    color:rgba(255,255,255,.72) !important;
+  }
+}
