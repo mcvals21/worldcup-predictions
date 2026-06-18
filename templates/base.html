@@ -9,24 +9,26 @@
 </head>
 
 <body>
-<header class="wc-header">
-  <div class="wc-hero">
-    <div class="wc-kicker">مسابقة الأصدقاء</div>
+<header class="wc-header clean-wc-header">
+  <div class="clean-header-row">
+    <div class="clean-title">
+      <div class="clean-kicker">مسابقة الأصدقاء</div>
+      <h1>🏆 {{ t.name if t else 'توقعات المباريات' }}</h1>
+    </div>
 
-    <h1>
-      <span>🏆</span>
-      {{ t.name if t else 'توقعات المباريات' }}
-    </h1>
+    <details class="clean-menu">
+      <summary>☰ القائمة</summary>
 
-    <p>توقع النتائج، اجمع النقاط، ونافس على الصدارة</p>
+      <div class="clean-menu-panel">
+        <a href="/leaderboard">🏅 الترتيب</a>
+        <a href="{{ url_for('matches_page', filter='open') }}">⚽ المباريات</a>
+        <a href="/rules">📖 القوانين</a>
+        <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
+      </div>
+    </details>
   </div>
 
-  <nav class="wc-nav">
-    <a href="/leaderboard">🏅 الترتيب</a>
-    <a href="{{ url_for('matches_page', filter='open') }}">⚽ المباريات</a>
-    <a href="/rules">📖 القوانين</a>
-    <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
-  </nav>
+  <p class="clean-subtitle">توقع النتائج، اجمع النقاط، ونافس على الصدارة</p>
 </header>
 
 <main>
