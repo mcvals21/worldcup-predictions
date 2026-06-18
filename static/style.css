@@ -4567,3 +4567,16 @@ a{
     color:rgba(255,255,255,.76) !important;
   }
 }
+@media (max-width:700px){
+  .clean-title{
+    padding-top:46px !important;
+  }
+
+  .clean-title h1{
+    font-size:1.38rem !important;
+  }
+
+  .clean-subtitle{
+    font-size:.76rem !important;
+  }
+}
