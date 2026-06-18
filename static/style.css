@@ -4766,3 +4766,83 @@ a{
 .match-card .mobile-save-btn:hover{
   background:#1f2937 !important;
 }
+/* Final unified gold/ivory action theme */
+
+/* Status pill: no green, same theme */
+.status-only-topline{
+  background:#fffdf7 !important;
+  border-bottom:1px solid rgba(212,175,55,.20) !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:11px 14px !important;
+}
+
+.status-only-topline .mobile-status-pill,
+.mobile-status-pill.open,
+.mobile-status-pill.finished,
+.mobile-status-pill.locked{
+  background:#fff7df !important;
+  color:#7a560e !important;
+  border:1px solid rgba(212,175,55,.35) !important;
+  box-shadow:none !important;
+}
+
+.status-only-topline .mobile-status-pill{
+  min-width:90px;
+  padding:7px 15px !important;
+  border-radius:999px !important;
+  font-size:.82rem !important;
+  font-weight:950 !important;
+}
+
+/* Save prediction button: smaller, centered, same theme */
+.match-card .mobile-save-btn,
+.match-card button.mobile-save-btn{
+  width:auto !important;
+  min-width:190px !important;
+  max-width:250px !important;
+  height:46px !important;
+  min-height:46px !important;
+  display:block !important;
+  margin:4px auto 16px !important;
+  padding:0 24px !important;
+  border-radius:999px !important;
+
+  background:#fff7df !important;
+  color:#111827 !important;
+  border:1px solid rgba(212,175,55,.48) !important;
+  box-shadow:0 6px 16px rgba(0,0,0,.10) !important;
+
+  font-size:.95rem !important;
+  font-weight:950 !important;
+}
+
+.match-card .mobile-save-btn:active{
+  transform:scale(.98);
+}
+
+/* Champion button inside menu: same style */
+.menu-champion-form button{
+  background:#fff7df !important;
+  color:#111827 !important;
+  border:1px solid rgba(212,175,55,.48) !important;
+  box-shadow:none !important;
+  font-weight:950 !important;
+}
+
+/* Champion select softer */
+.menu-champion-form select{
+  background:#fff !important;
+  border:1px solid rgba(212,175,55,.32) !important;
+}
+
+/* Optional: make gold pills consistent */
+.mobile-match-meta span,
+.stats-match-meta span,
+.stage-pill,
+.time-pill{
+  background:#fff7df !important;
+  color:#7a560e !important;
+  border:1px solid rgba(212,175,55,.20) !important;
+}
