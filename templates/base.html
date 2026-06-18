@@ -9,21 +9,23 @@
 </head>
 
 <body>
-<header>
-  <div class="site-hero">
-    <div>
-      <div class="hero-kicker">مسابقة الأصدقاء</div>
-      <h1>🏆 {{ t.name if t else 'توقعات المباريات' }}</h1>
-      <p>توقع النتائج، اجمع النقاط، ونافس على الصدارة</p>
-    </div>
-    <div class="hero-ball">⚽</div>
+<header class="wc-header">
+  <div class="wc-hero">
+    <div class="wc-kicker">مسابقة الأصدقاء</div>
+
+    <h1>
+      <span>🏆</span>
+      {{ t.name if t else 'توقعات المباريات' }}
+    </h1>
+
+    <p>توقع النتائج، اجمع النقاط، ونافس على الصدارة</p>
   </div>
 
-  <nav>
+  <nav class="wc-nav">
     <a href="/leaderboard">🏅 الترتيب</a>
+    <a href="{{ url_for('matches_page', filter='open') }}">⚽ المباريات</a>
     <a href="/rules">📖 القوانين</a>
-  <a href="{{ url_for('matches_page', filter='open') }}">جدول المباريات</a>
-    <a href="{{ url_for('stats') }}">الإحصائيات</a>
+    <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
   </nav>
 </header>
 
