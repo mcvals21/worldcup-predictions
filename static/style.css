@@ -7268,3 +7268,18 @@ a{
   font-size:.76rem;
   font-weight:950;
 }
+.admin-danger-cleanup-card{
+  margin:12px 0 14px !important;
+  border-right-color:#d92d20 !important;
+}
+
+.admin-danger-cleanup-card summary{
+  background:#fff1f3 !important;
+  color:#b42318 !important;
+}
+
+.admin-danger-cleanup-card button{
+  background:#b42318 !important;
+  color:#fff !important;
+  border:0 !important;
+}
