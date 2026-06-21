@@ -13,7 +13,25 @@
     <b>⌄</b>
   </summary>
 
-  <details class="admin-tool-card admin-sync-card">
+  <form method="post" class="admin-add-match-form admin-tool-body">
+    <input type="hidden" name="action" value="add_match">
+
+    <input type="text" name="home_team" placeholder="الفريق الأول" required>
+    <input type="text" name="away_team" placeholder="الفريق الثاني" required>
+
+    <input type="datetime-local" name="start_time" required>
+
+    <select name="stage">
+      {% for key, label in stage_labels.items() %}
+        <option value="{{ key }}">{{ label }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">إضافة المباراة</button>
+  </form>
+</details>
+
+<details class="admin-tool-card admin-sync-card">
   <summary>
     <span>🌍 مزامنة مجانية لكأس العالم</span>
     <b>⌄</b>
@@ -38,24 +56,6 @@
       </button>
     </form>
   </div>
-</details>
-
-  <form method="post" class="admin-add-match-form admin-tool-body">
-    <input type="hidden" name="action" value="add_match">
-
-    <input type="text" name="home_team" placeholder="الفريق الأول" required>
-    <input type="text" name="away_team" placeholder="الفريق الثاني" required>
-
-    <input type="datetime-local" name="start_time" required>
-
-    <select name="stage">
-      {% for key, label in stage_labels.items() %}
-        <option value="{{ key }}">{{ label }}</option>
-      {% endfor %}
-    </select>
-
-    <button type="submit">إضافة المباراة</button>
-  </form>
 </details>
 
 <div class="admin-section admin-main-section">
