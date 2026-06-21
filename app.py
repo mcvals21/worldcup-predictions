@@ -1361,35 +1361,6 @@ def admin(code):
 
             flash('تم حفظ موعد إغلاق توقع البطل.')
 
-                elif action == 'sync_schedule_free':
-            try:
-                stats = sync_worldcup_schedule_football_data(t)
-
-                flash(
-                    f"تمت مزامنة الجدول: "
-                    f"إضافة {stats['added']}، "
-                    f"ربط {stats['linked']}، "
-                    f"موجود مسبقًا {stats['existing']}، "
-                    f"تجاوز {stats['skipped']}."
-                )
-            except Exception as e:
-                flash(f'فشلت مزامنة الجدول: {e}')
-
-        elif action == 'sync_results_free':
-            try:
-                stats = sync_worldcup_results_football_data(t)
-
-                flash(
-                    f"تم تحديث النتائج: "
-                    f"تحديث {stats['updated']}، "
-                    f"بدون تغيير {stats['unchanged']}، "
-                    f"تعارض {stats['conflicts']}، "
-                    f"غير مربوطة {stats['not_found']}، "
-                    f"لم تنتهِ {stats['not_finished']}."
-                )
-            except Exception as e:
-                flash(f'فشل تحديث النتائج: {e}')
-
         return redirect(url_for(
             'admin',
             code=code,
