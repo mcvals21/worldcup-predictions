@@ -1698,8 +1698,15 @@ def repair_football_data_match_links(t):
 
 
 def delete_empty_english_matches(t):
+    """Delete all future English-name matches, including their predictions.
+
+    This is intentionally limited to matches that have not started yet, so old
+    results and locked matches are not touched. The action name is kept the same
+    to work with the existing admin button.
+    """
     deleted = 0
-    kept_with_predictions = 0
+    deleted_predictions = 0
+    kept_started_or_locked = 0
 
     matches = Match.query.filter_by(
         tournament_id=t.id
@@ -1707,19 +1714,23 @@ def delete_empty_english_matches(t):
 
     for m in matches:
         name_text = f"{m.home_team} {m.away_team}"
-
         has_english = re.search(r'[A-Za-z]', name_text) is not None
 
         if not has_english:
+            continue
+
+        # Do not delete English matches that already started or finished.
+        if match_locked(m):
+            kept_started_or_locked += 1
             continue
 
         prediction_count = Prediction.query.filter_by(
             match_id=m.id
         ).count()
 
-        if prediction_count > 0:
-            kept_with_predictions += 1
-            continue
+        Prediction.query.filter_by(
+            match_id=m.id
+        ).delete()
 
         ApiMatchMap.query.filter_by(
             match_id=m.id
@@ -1727,12 +1738,14 @@ def delete_empty_english_matches(t):
 
         db.session.delete(m)
         deleted += 1
+        deleted_predictions += prediction_count
 
     db.session.commit()
 
     return {
         'deleted': deleted,
-        'kept_with_predictions': kept_with_predictions
+        'deleted_predictions': deleted_predictions,
+        'kept_started_or_locked': kept_started_or_locked
     }
 
 
@@ -1895,12 +1908,13 @@ def admin(code):
                 stats = delete_empty_english_matches(t)
 
                 flash(
-                    f"تم حذف النسخ الإنجليزية الفارغة: "
-                    f"حذف {stats['deleted']}، "
-                    f"تم حفظ {stats['kept_with_predictions']} لأنها تحتوي على توقعات."
+                    f"تم حذف المباريات الإنجليزية القادمة: "
+                    f"حذف {stats['deleted']} مباراة، "
+                    f"حذف {stats['deleted_predictions']} توقع مرتبط بها، "
+                    f"ترك {stats['kept_started_or_locked']} لأنها بدأت أو انتهت."
                 )
             except Exception as e:
-                flash(f'فشل حذف النسخ الإنجليزية الفارغة: {e}')
+                flash(f'فشل حذف المباريات الإنجليزية القادمة: {e}')
 
         return redirect(url_for(
             'admin',
