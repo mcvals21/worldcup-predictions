@@ -13,6 +13,33 @@
     <b>⌄</b>
   </summary>
 
+  <details class="admin-tool-card admin-sync-card">
+  <summary>
+    <span>🌍 مزامنة مجانية لكأس العالم</span>
+    <b>⌄</b>
+  </summary>
+
+  <div class="admin-tool-body admin-sync-body">
+    <p class="muted">
+      يستخدم football-data.org المجاني. النتائج قد تكون متأخرة قليلًا وليست Live فورية.
+    </p>
+
+    <form method="post" class="admin-inline-form">
+      <input type="hidden" name="action" value="sync_schedule_free">
+      <button type="submit">
+        مزامنة جدول البطولة
+      </button>
+    </form>
+
+    <form method="post" class="admin-inline-form">
+      <input type="hidden" name="action" value="sync_results_free">
+      <button type="submit">
+        تحديث النتائج النهائية
+      </button>
+    </form>
+  </div>
+</details>
+
   <form method="post" class="admin-add-match-form admin-tool-body">
     <input type="hidden" name="action" value="add_match">
 
