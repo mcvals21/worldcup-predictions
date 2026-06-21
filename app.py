@@ -1409,7 +1409,7 @@ def admin(code):
 
     participants = Participant.query.order_by(Participant.name).all()
 
-    return render_template(
+       return render_template(
         'admin.html',
         t=t,
         matches=matches,
@@ -1421,7 +1421,9 @@ def admin(code):
         match_counts=match_counts,
         locked=match_locked
     )
-    @app.cli.command('init-db')
+
+
+@app.cli.command('init-db')
 def init_db():
     db.drop_all()
     db.create_all()
