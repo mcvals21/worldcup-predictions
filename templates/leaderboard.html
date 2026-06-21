@@ -2,104 +2,95 @@
 
 {% block content %}
 
-<div class="leaderboard-hero">
+<section class="lb-hero">
   <div>
-    <h1>الترتيب العام 🏆</h1>
-    <p>تابع الصدارة، النقاط، والتوقعات الدقيقة بين المشاركين.</p>
+    <div class="lb-kicker">الترتيب العام</div>
+    <h1>🏆 صدارة المسابقة</h1>
+    <p>تابع النقاط، النتائج المطابقة، والمنافسة بين المشاركين.</p>
   </div>
-</div>
+
+  {% if rows %}
+    <div class="lb-hero-stats">
+      <div>
+        <strong>{{ rows|length }}</strong>
+        <span>مشارك</span>
+      </div>
+
+      <div>
+        <strong>{{ rows[0].points }}</strong>
+        <span>نقطة للمتصدر</span>
+      </div>
+    </div>
+  {% endif %}
+</section>
 
 {% if rows %}
 
-  <div class="top-podium">
-    {% for r in rows[:3] %}
-      <div class="podium-card rank-{{ loop.index }}">
-        <div class="podium-medal">
-          {% if loop.index == 1 %}
-            🥇
-          {% elif loop.index == 2 %}
-            🥈
-          {% else %}
-            🥉
-          {% endif %}
-        </div>
+  <section class="lb-champion-card">
+    <div class="lb-champion-rank">🥇</div>
 
-        <div class="podium-name">{{ r.name }}</div>
+    <div class="lb-champion-info">
+      <span>المركز الأول</span>
+      <h2>{{ rows[0].name }}</h2>
 
-        <div class="podium-points">
-          {{ r.points }}
-          <span>نقطة</span>
-        </div>
+      <div class="lb-champion-meta">
+        <span>✅ {{ rows[0].exact }} توقعات دقيقة</span>
 
-        <div class="podium-meta">
-          ✅ {{ r.exact }} توقعات دقيقة
-        </div>
-
-
-        {% if r.champion_bonus %}
-          <div class="mini-badge champion">
-            🏆 بطل +{{ r.champion_bonus }}
-          </div>
+        {% if rows[0].champion_bonus %}
+          <span>🏆 بطل +{{ rows[0].champion_bonus }}</span>
         {% endif %}
-      </div>
-    {% endfor %}
-  </div>
-
-{% endif %}
-
-
-<div class="mobile-leader-list">
-  {% for r in rows %}
-    <div class="leader-card {% if loop.index <= 3 %}top-three{% endif %}">
-      <div class="leader-rank">
-        {% if loop.index == 1 %}
-          🥇
-        {% elif loop.index == 2 %}
-          🥈
-        {% elif loop.index == 3 %}
-          🥉
-        {% else %}
-          {{ loop.index }}
-        {% endif %}
-      </div>
-
-      <div class="leader-info">
-        <strong>{{ r.name }}</strong>
-
-        <div class="leader-stats">
-          <span>✅ توقعات دقيقة: {{ r.exact }}</span>
-
-
-          {% if r.champion_bonus %}
-            <span>🏆 بطل: +{{ r.champion_bonus }}</span>
-          {% endif %}
-        </div>
-      </div>
-
-      <div class="leader-points">
-        <strong>{{ r.points }}</strong>
-        <span>نقطة</span>
       </div>
     </div>
-  {% endfor %}
-</div>
 
-<div class="desktop-leader-table">
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>الاسم</th>
-        <th>النقاط</th>
-        <th>توقعات دقيقة</th>
-        <th>نقاط إضافية</th>
-      </tr>
-    </thead>
+    <div class="lb-champion-points">
+      <strong>{{ rows[0].points }}</strong>
+      <span>نقطة</span>
+    </div>
+  </section>
 
-    <tbody>
+  {% if rows|length > 1 %}
+    <section class="lb-podium-grid">
+      {% for r in rows[1:3] %}
+        <div class="lb-podium-card rank-{{ loop.index + 1 }}">
+          <div class="lb-podium-rank">
+            {% if loop.index + 1 == 2 %}
+              🥈
+            {% else %}
+              🥉
+            {% endif %}
+          </div>
+
+          <div class="lb-podium-name">{{ r.name }}</div>
+
+          <div class="lb-podium-points">
+            <strong>{{ r.points }}</strong>
+            <span>نقطة</span>
+          </div>
+
+          <div class="lb-podium-meta">
+            ✅ {{ r.exact }} توقعات دقيقة
+          </div>
+
+          {% if r.champion_bonus %}
+            <div class="lb-mini-badge">
+              🏆 +{{ r.champion_bonus }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  <section class="lb-list-section">
+    <div class="lb-section-title">
+      <h3>📋 جميع المشاركين</h3>
+      <span>{{ rows|length }} مشارك</span>
+    </div>
+
+    <div class="lb-mobile-list">
       {% for r in rows %}
-        <tr>
-          <td>
+        <div class="lb-row-card {% if loop.index == 1 %}first{% elif loop.index <= 3 %}top{% endif %}">
+          <div class="lb-row-rank">
             {% if loop.index == 1 %}
               🥇
             {% elif loop.index == 2 %}
@@ -109,31 +100,87 @@
             {% else %}
               {{ loop.index }}
             {% endif %}
-          </td>
+          </div>
 
-          <td>
+          <div class="lb-row-info">
             <strong>{{ r.name }}</strong>
-          </td>
 
-          <td>
+            <div class="lb-row-meta">
+              <span>✅ {{ r.exact }} توقعات دقيقة</span>
+
+              {% if r.champion_bonus %}
+                <span>🏆 +{{ r.champion_bonus }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="lb-row-points">
             <strong>{{ r.points }}</strong>
-          </td>
-
-          <td>
-            {{ r.exact }}
-          </td>
-
-          <td>
-            {% if r.champion_bonus %}
-  <span class="table-badge champion">🏆 +{{ r.champion_bonus }}</span>
-{% else %}
-  -
-{% endif %}
-          </td>
-        </tr>
+            <span>نقطة</span>
+          </div>
+        </div>
       {% endfor %}
-    </tbody>
-  </table>
-</div>
+    </div>
+
+    <div class="lb-desktop-table">
+      <table>
+        <thead>
+          <tr>
+            <th>المركز</th>
+            <th>المشارك</th>
+            <th>النقاط</th>
+            <th>توقعات دقيقة</th>
+            <th>نقاط البطل</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for r in rows %}
+            <tr class="{% if loop.index == 1 %}first-row{% endif %}">
+              <td>
+                {% if loop.index == 1 %}
+                  🥇
+                {% elif loop.index == 2 %}
+                  🥈
+                {% elif loop.index == 3 %}
+                  🥉
+                {% else %}
+                  {{ loop.index }}
+                {% endif %}
+              </td>
+
+              <td>
+                <strong>{{ r.name }}</strong>
+              </td>
+
+              <td>
+                <b>{{ r.points }}</b>
+              </td>
+
+              <td>
+                {{ r.exact }}
+              </td>
+
+              <td>
+                {% if r.champion_bonus %}
+                  <span class="lb-table-badge">🏆 +{{ r.champion_bonus }}</span>
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+{% else %}
+
+  <div class="empty-card">
+    لا توجد نتائج في الترتيب حاليًا.
+  </div>
+
+{% endif %}
 
 {% endblock %}
