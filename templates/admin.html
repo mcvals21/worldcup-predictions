@@ -31,6 +31,27 @@
   </form>
 </details>
 
+<details class="admin-tool-card admin-danger-cleanup-card" open>
+  <summary>
+    <span>🧹 تنظيف النسخ الإنجليزية الفارغة</span>
+    <b>⌄</b>
+  </summary>
+
+  <div class="admin-tool-body">
+    <p class="muted">
+      هذا الزر يحذف فقط المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات.
+      أي مباراة عليها توقعات لن يتم حذفها.
+    </p>
+
+    <form method="post" class="admin-inline-form">
+      <input type="hidden" name="action" value="delete_empty_english_matches">
+
+      <button type="submit" formnovalidate>
+        حذف النسخ الإنجليزية الفارغة
+      </button>
+    </form>
+  </div>
+</details>
 
 <div class="admin-section admin-main-section">
   <h2>إدارة المباريات</h2>
