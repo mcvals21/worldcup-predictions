@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 import secrets
 import os
 import requests
+import re
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'change-this-secret-key'
@@ -1696,6 +1697,45 @@ def repair_football_data_match_links(t):
     }
 
 
+def delete_empty_english_matches(t):
+    deleted = 0
+    kept_with_predictions = 0
+
+    matches = Match.query.filter_by(
+        tournament_id=t.id
+    ).order_by(Match.start_time).all()
+
+    for m in matches:
+        name_text = f"{m.home_team} {m.away_team}"
+
+        has_english = re.search(r'[A-Za-z]', name_text) is not None
+
+        if not has_english:
+            continue
+
+        prediction_count = Prediction.query.filter_by(
+            match_id=m.id
+        ).count()
+
+        if prediction_count > 0:
+            kept_with_predictions += 1
+            continue
+
+        ApiMatchMap.query.filter_by(
+            match_id=m.id
+        ).delete()
+
+        db.session.delete(m)
+        deleted += 1
+
+    db.session.commit()
+
+    return {
+        'deleted': deleted,
+        'kept_with_predictions': kept_with_predictions
+    }
+
+
 
 @app.route('/admin/<code>', methods=['GET', 'POST'])
 def admin(code):
@@ -1837,6 +1877,19 @@ def admin(code):
                 )
             except Exception as e:
                 flash(f'فشل إصلاح الربط: {e}')
+
+
+                elif action == 'delete_empty_english_matches':
+            try:
+                stats = delete_empty_english_matches(t)
+
+                flash(
+                    f"تم حذف النسخ الإنجليزية الفارغة: "
+                    f"حذف {stats['deleted']}، "
+                    f"تم حفظ {stats['kept_with_predictions']} لأنها تحتوي على توقعات."
+                )
+            except Exception as e:
+                flash(f'فشل حذف النسخ الإنجليزية الفارغة: {e}')
 
         return redirect(url_for(
             'admin',
