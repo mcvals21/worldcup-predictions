@@ -2,69 +2,138 @@
 
 {% block content %}
 
-<section class="simple-lb-header">
+<div class="leaderboard-hero">
   <div>
-    <span>🏆 الترتيب العام</span>
-    <h2>جدول الصدارة</h2>
-    <p>النقاط والنتائج المطابقة بين المشاركين.</p>
+    <h1>الترتيب العام 🏆</h1>
+    <p>تابع الصدارة، النقاط، والتوقعات الدقيقة بين المشاركين.</p>
   </div>
-
-  {% if rows %}
-    <div class="simple-lb-count">
-      {{ rows|length }}
-      <small>مشارك</small>
-    </div>
-  {% endif %}
-</section>
+</div>
 
 {% if rows %}
 
-  <section class="simple-lb-list">
-    {% for r in rows %}
-      <div class="simple-lb-card {% if loop.index == 1 %}first{% elif loop.index <= 3 %}top{% endif %}">
-
-        <div class="simple-lb-rank">
+  <div class="top-podium">
+    {% for r in rows[:3] %}
+      <div class="podium-card rank-{{ loop.index }}">
+        <div class="podium-medal">
           {% if loop.index == 1 %}
             🥇
           {% elif loop.index == 2 %}
             🥈
-          {% elif loop.index == 3 %}
-            🥉
           {% else %}
-            {{ loop.index }}
+            🥉
           {% endif %}
         </div>
 
-        <div class="simple-lb-info">
-          <strong>{{ r.name }}</strong>
+        <div class="podium-name">{{ r.name }}</div>
 
-          <div class="simple-lb-meta">
-            <span class="exact-count-pill">
-  <b>{{ r.exact }}</b>
-  <small>عدد التوقعات الصحيحة</small>
-</span>
-
-            {% if r.champion_bonus %}
-              <span>🏆 +{{ r.champion_bonus }}</span>
-            {% endif %}
-          </div>
-        </div>
-
-        <div class="simple-lb-points">
-          <strong>{{ r.points }}</strong>
+        <div class="podium-points">
+          {{ r.points }}
           <span>نقطة</span>
         </div>
 
+        <div class="podium-meta">
+          ✅ {{ r.exact }} توقعات دقيقة
+        </div>
+
+
+        {% if r.champion_bonus %}
+          <div class="mini-badge champion">
+            🏆 بطل +{{ r.champion_bonus }}
+          </div>
+        {% endif %}
       </div>
     {% endfor %}
-  </section>
-
-{% else %}
-
-  <div class="empty-card">
-    لا توجد نتائج في الترتيب حاليًا.
   </div>
 
 {% endif %}
+
+
+<div class="mobile-leader-list">
+  {% for r in rows %}
+    <div class="leader-card {% if loop.index <= 3 %}top-three{% endif %}">
+      <div class="leader-rank">
+        {% if loop.index == 1 %}
+          🥇
+        {% elif loop.index == 2 %}
+          🥈
+        {% elif loop.index == 3 %}
+          🥉
+        {% else %}
+          {{ loop.index }}
+        {% endif %}
+      </div>
+
+      <div class="leader-info">
+        <strong>{{ r.name }}</strong>
+
+        <div class="leader-stats">
+          <span>✅ توقعات دقيقة: {{ r.exact }}</span>
+
+
+          {% if r.champion_bonus %}
+            <span>🏆 بطل: +{{ r.champion_bonus }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="leader-points">
+        <strong>{{ r.points }}</strong>
+        <span>نقطة</span>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="desktop-leader-table">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>الاسم</th>
+        <th>النقاط</th>
+        <th>توقعات دقيقة</th>
+        <th>نقاط إضافية</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for r in rows %}
+        <tr>
+          <td>
+            {% if loop.index == 1 %}
+              🥇
+            {% elif loop.index == 2 %}
+              🥈
+            {% elif loop.index == 3 %}
+              🥉
+            {% else %}
+              {{ loop.index }}
+            {% endif %}
+          </td>
+
+          <td>
+            <strong>{{ r.name }}</strong>
+          </td>
+
+          <td>
+            <strong>{{ r.points }}</strong>
+          </td>
+
+          <td>
+            {{ r.exact }}
+          </td>
+
+          <td>
+            {% if r.champion_bonus %}
+  <span class="table-badge champion">🏆 +{{ r.champion_bonus }}</span>
+{% else %}
+  -
+{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 {% endblock %}
