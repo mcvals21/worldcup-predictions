@@ -55,6 +55,41 @@
         تحديث النتائج النهائية
       </button>
     </form>
+    <div class="sync-report-box">
+  <h4>فحص المباريات غير المرتبطة</h4>
+
+  {% if unlinked_matches %}
+    <p>
+      يوجد {{ unlinked_matches|length }} مباراة غير مرتبطة بالمصدر.
+      راجعها قبل حذف أي شيء.
+    </p>
+
+    <div class="unlinked-list">
+      {% for item in unlinked_matches %}
+        {% set m = item.match %}
+        <div class="unlinked-match-card">
+          <strong>{{ m.home_team }} × {{ m.away_team }}</strong>
+
+          <span>
+            {{ m.start_time.strftime('%Y-%m-%d') }}
+            ·
+            {{ m.start_time.strftime('%H:%M') }}
+            ·
+            {{ stage_labels.get(m.stage, m.stage) }}
+          </span>
+
+          <b>
+            {{ item.prediction_count }} توقع
+          </b>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>
+      ممتاز، كل المباريات مرتبطة بالمصدر.
+    </p>
+  {% endif %}
+</div>
   </div>
 </details>
 
