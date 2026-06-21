@@ -197,56 +197,31 @@
     </div>
   {% endif %}
 </form>
-<script>
-function parseKuwaitTime(value) {
-  const parts = value.split(/[-T:]/).map(Number);
-  return new Date(
-    parts[0],
-    parts[1] - 1,
-    parts[2],
-    parts[3],
-    parts[4],
-    parts[5] || 0
-  );
-}
+<div id="bulkConfirmOverlay" class="bulk-confirm-overlay" style="display:none;">
+  <div class="bulk-confirm-box">
+    <div class="bulk-confirm-icon">🏆</div>
 
-function updateCountdowns() {
-  document.querySelectorAll('.countdown').forEach(function(el) {
-    const start = parseKuwaitTime(el.dataset.start);
-    const now = new Date();
-    const diff = start - now;
+    <h3>تأكيد حفظ التوقعات</h3>
 
-    if (diff <= 0) {
-      el.textContent = '🔒 تم إغلاق التوقع';
-      el.classList.add('locked');
-      return;
-    }
+    <p>
+      سيتم حفظ توقعات جميع المباريات المفتوحة.
+    </p>
 
-    const totalSeconds = Math.floor(diff / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+    <div id="bulkConfirmWarning" class="bulk-confirm-warning" style="display:none;">
+      ⚠️ يوجد توقع بنتيجة أكبر من 3 أهداف. تأكد أن الرقم صحيح قبل الحفظ.
+    </div>
 
-    let text = '⏳ يغلق خلال: ';
+    <div class="bulk-confirm-actions">
+      <button type="button" class="bulk-confirm-cancel" onclick="closeBulkConfirm()">
+        إلغاء
+      </button>
 
-    if (days > 0) {
-      text += days + ' يوم و ';
-    }
-
-    if (hours > 0) {
-      text += hours + ' ساعة و ';
-    }
-
-    text += minutes + ' دقيقة و ' + seconds + ' ثانية';
-
-    el.textContent = text;
-  });
-}
-
-updateCountdowns();
-setInterval(updateCountdowns, 1000);
-</script>
+      <button type="button" class="bulk-confirm-save" onclick="submitBulkPredictions()">
+        نعم، حفظ التوقعات
+      </button>
+    </div>
+  </div>
+</div>
 
 <script>
 let pendingBulkForm = null;
@@ -273,15 +248,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     const warningBox = document.getElementById('bulkConfirmWarning');
+    const overlay = document.getElementById('bulkConfirmOverlay');
 
     if (warningBox) {
       warningBox.style.display = hasLargeScore ? 'block' : 'none';
     }
 
-    const overlay = document.getElementById('bulkConfirmOverlay');
-
     if (overlay) {
       overlay.style.display = 'flex';
+    } else {
+      form.submit();
     }
   });
 });
