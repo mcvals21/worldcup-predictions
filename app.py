@@ -1267,6 +1267,35 @@ def sync_worldcup_results_football_data(t):
         'not_finished': not_finished,
     }
 
+def get_unlinked_matches_report(t):
+    linked_match_ids = {
+        row.match_id
+        for row in ApiMatchMap.query.filter_by(
+            source=FOOTBALL_DATA_SOURCE
+        ).all()
+    }
+
+    all_matches = Match.query.filter_by(
+        tournament_id=t.id
+    ).order_by(Match.start_time).all()
+
+    report = []
+
+    for match in all_matches:
+        if match.id in linked_match_ids:
+            continue
+
+        prediction_count = Prediction.query.filter_by(
+            match_id=match.id
+        ).count()
+
+        report.append({
+            'match': match,
+            'prediction_count': prediction_count
+        })
+
+    return report
+
 
 @app.route('/admin/<code>', methods=['GET', 'POST'])
 def admin(code):
@@ -1408,6 +1437,7 @@ def admin(code):
     }
 
     participants = Participant.query.order_by(Participant.name).all()
+    unlinked_matches = get_unlinked_matches_report(t)
 
     return render_template(
         'admin.html',
@@ -1419,7 +1449,8 @@ def admin(code):
         selected_filter=selected_filter,
         match_filter_labels=ADMIN_MATCH_FILTER_LABELS,
         match_counts=match_counts,
-        locked=match_locked
+        locked=match_locked,
+        unlinked_matches=unlinked_matches
     )
 
 
