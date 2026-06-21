@@ -7186,3 +7186,24 @@ a{
   font-weight:900;
   color:#027a48;
 }
+/* Admin World Cup free sync card */
+.admin-sync-card{
+  margin:12px 0 14px !important;
+}
+
+.admin-sync-body{
+  display:grid;
+  gap:10px;
+}
+
+.admin-sync-body p{
+  margin:0 0 4px;
+}
+
+.admin-sync-body form{
+  margin:0 !important;
+}
+
+.admin-sync-body button{
+  width:100%;
+}
