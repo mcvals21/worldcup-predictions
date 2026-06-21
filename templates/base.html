@@ -71,12 +71,57 @@
 
 <main>
   {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <div class="flash">{{ messages[0] }}</div>
-    {% endif %}
-  {% endwith %}
+  {% if messages %}
+    <div class="site-toast-stack" id="siteToastStack">
+      {% for message in messages %}
+        {% set is_error = 'لا يمكن' in message or 'إغلاق' in message or 'لم يتم' in message %}
+        {% set is_warning = 'تحتاج' in message or 'تنبيه' in message or 'أكبر' in message %}
+
+        <div class="site-toast {% if is_error %}error{% elif is_warning %}warning{% else %}success{% endif %}">
+          <div class="site-toast-icon">
+            {% if is_error %}
+              ⚠️
+            {% elif is_warning %}
+              ⏳
+            {% else %}
+              ✅
+            {% endif %}
+          </div>
+
+          <div class="site-toast-text">
+            {{ message }}
+          </div>
+
+          <button
+            type="button"
+            class="site-toast-close"
+            onclick="this.closest('.site-toast').remove();"
+          >
+            ×
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
   {% block content %}{% endblock %}
 </main>
+
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const toasts = document.querySelectorAll('.site-toast');
+
+  toasts.forEach(function (toast) {
+    setTimeout(function () {
+      toast.classList.add('hide');
+
+      setTimeout(function () {
+        toast.remove();
+      }, 250);
+    }, 3500);
+  });
+});
+</script>
 </body>
 </html>
