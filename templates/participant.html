@@ -249,60 +249,50 @@ setInterval(updateCountdowns, 1000);
 </script>
 
 <script>
-<div id="bulkConfirmOverlay" class="bulk-confirm-overlay" style="display:none;">
-  <div class="bulk-confirm-box">
-    <div class="bulk-confirm-icon">🏆</div>
-
-    <h3 id="bulkConfirmTitle">تأكيد حفظ التوقعات</h3>
-
-    <p id="bulkConfirmMessage">
-      سيتم حفظ توقعات جميع المباريات المفتوحة.
-    </p>
-
-    <div id="bulkConfirmWarning" class="bulk-confirm-warning" style="display:none;">
-      ⚠️ يوجد توقع بنتيجة أكبر من 3 أهداف. تأكد أن الرقم صحيح قبل الحفظ.
-    </div>
-
-    <div class="bulk-confirm-actions">
-      <button type="button" class="bulk-confirm-cancel" onclick="closeBulkConfirm()">
-        إلغاء
-      </button>
-
-      <button type="button" class="bulk-confirm-save" onclick="submitBulkPredictions()">
-        نعم، حفظ التوقعات
-      </button>
-    </div>
-  </div>
-</div>
-
-<script>
 let pendingBulkForm = null;
 
-function confirmBulkPredictions(form) {
-  pendingBulkForm = form;
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('bulk-prediction-form');
 
-  const scoreInputs = Array.from(form.querySelectorAll('input[type="number"]'));
-
-  const hasLargeScore = scoreInputs.some(function(input) {
-    const value = Number(input.value || 0);
-    return value > 3;
-  });
-
-  const warningBox = document.getElementById('bulkConfirmWarning');
-
-  if (hasLargeScore) {
-    warningBox.style.display = 'block';
-  } else {
-    warningBox.style.display = 'none';
+  if (!form) {
+    return;
   }
 
-  document.getElementById('bulkConfirmOverlay').style.display = 'flex';
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
 
-  return false;
-}
+    pendingBulkForm = form;
+
+    const scoreInputs = Array.from(
+      form.querySelectorAll('input[name^="home_score_"], input[name^="away_score_"]')
+    );
+
+    const hasLargeScore = scoreInputs.some(function (input) {
+      const value = Number(input.value || 0);
+      return value > 3;
+    });
+
+    const warningBox = document.getElementById('bulkConfirmWarning');
+
+    if (warningBox) {
+      warningBox.style.display = hasLargeScore ? 'block' : 'none';
+    }
+
+    const overlay = document.getElementById('bulkConfirmOverlay');
+
+    if (overlay) {
+      overlay.style.display = 'flex';
+    }
+  });
+});
 
 function closeBulkConfirm() {
-  document.getElementById('bulkConfirmOverlay').style.display = 'none';
+  const overlay = document.getElementById('bulkConfirmOverlay');
+
+  if (overlay) {
+    overlay.style.display = 'none';
+  }
+
   pendingBulkForm = null;
 }
 
@@ -312,5 +302,4 @@ function submitBulkPredictions() {
   }
 }
 </script>
-
 {% endblock %}
