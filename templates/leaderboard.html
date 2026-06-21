@@ -2,177 +2,58 @@
 
 {% block content %}
 
-<section class="lb-hero">
+<section class="simple-lb-header">
   <div>
-    <div class="lb-kicker">الترتيب العام</div>
-    <h1>🏆 صدارة المسابقة</h1>
-    <p>تابع النقاط، النتائج المطابقة، والمنافسة بين المشاركين.</p>
+    <span>🏆 الترتيب العام</span>
+    <h2>جدول الصدارة</h2>
+    <p>النقاط والنتائج المطابقة بين المشاركين.</p>
   </div>
 
   {% if rows %}
-    <div class="lb-hero-stats">
-      <div>
-        <strong>{{ rows|length }}</strong>
-        <span>مشارك</span>
-      </div>
-
-      <div>
-        <strong>{{ rows[0].points }}</strong>
-        <span>نقطة للمتصدر</span>
-      </div>
+    <div class="simple-lb-count">
+      {{ rows|length }}
+      <small>مشارك</small>
     </div>
   {% endif %}
 </section>
 
 {% if rows %}
 
-  <section class="lb-champion-card">
-    <div class="lb-champion-rank">🥇</div>
+  <section class="simple-lb-list">
+    {% for r in rows %}
+      <div class="simple-lb-card {% if loop.index == 1 %}first{% elif loop.index <= 3 %}top{% endif %}">
 
-    <div class="lb-champion-info">
-      <span>المركز الأول</span>
-      <h2>{{ rows[0].name }}</h2>
-
-      <div class="lb-champion-meta">
-        <span>✅ {{ rows[0].exact }} توقعات دقيقة</span>
-
-        {% if rows[0].champion_bonus %}
-          <span>🏆 بطل +{{ rows[0].champion_bonus }}</span>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="lb-champion-points">
-      <strong>{{ rows[0].points }}</strong>
-      <span>نقطة</span>
-    </div>
-  </section>
-
-  {% if rows|length > 1 %}
-    <section class="lb-podium-grid">
-      {% for r in rows[1:3] %}
-        <div class="lb-podium-card rank-{{ loop.index + 1 }}">
-          <div class="lb-podium-rank">
-            {% if loop.index + 1 == 2 %}
-              🥈
-            {% else %}
-              🥉
-            {% endif %}
-          </div>
-
-          <div class="lb-podium-name">{{ r.name }}</div>
-
-          <div class="lb-podium-points">
-            <strong>{{ r.points }}</strong>
-            <span>نقطة</span>
-          </div>
-
-          <div class="lb-podium-meta">
-            ✅ {{ r.exact }} توقعات دقيقة
-          </div>
-
-          {% if r.champion_bonus %}
-            <div class="lb-mini-badge">
-              🏆 +{{ r.champion_bonus }}
-            </div>
+        <div class="simple-lb-rank">
+          {% if loop.index == 1 %}
+            🥇
+          {% elif loop.index == 2 %}
+            🥈
+          {% elif loop.index == 3 %}
+            🥉
+          {% else %}
+            {{ loop.index }}
           {% endif %}
         </div>
-      {% endfor %}
-    </section>
-  {% endif %}
 
-  <section class="lb-list-section">
-    <div class="lb-section-title">
-      <h3>📋 جميع المشاركين</h3>
-      <span>{{ rows|length }} مشارك</span>
-    </div>
+        <div class="simple-lb-info">
+          <strong>{{ r.name }}</strong>
 
-    <div class="lb-mobile-list">
-      {% for r in rows %}
-        <div class="lb-row-card {% if loop.index == 1 %}first{% elif loop.index <= 3 %}top{% endif %}">
-          <div class="lb-row-rank">
-            {% if loop.index == 1 %}
-              🥇
-            {% elif loop.index == 2 %}
-              🥈
-            {% elif loop.index == 3 %}
-              🥉
-            {% else %}
-              {{ loop.index }}
+          <div class="simple-lb-meta">
+            <span>✅ {{ r.exact }} نتيجة مطابقة</span>
+
+            {% if r.champion_bonus %}
+              <span>🏆 +{{ r.champion_bonus }}</span>
             {% endif %}
           </div>
-
-          <div class="lb-row-info">
-            <strong>{{ r.name }}</strong>
-
-            <div class="lb-row-meta">
-              <span>✅ {{ r.exact }} توقعات دقيقة</span>
-
-              {% if r.champion_bonus %}
-                <span>🏆 +{{ r.champion_bonus }}</span>
-              {% endif %}
-            </div>
-          </div>
-
-          <div class="lb-row-points">
-            <strong>{{ r.points }}</strong>
-            <span>نقطة</span>
-          </div>
         </div>
-      {% endfor %}
-    </div>
 
-    <div class="lb-desktop-table">
-      <table>
-        <thead>
-          <tr>
-            <th>المركز</th>
-            <th>المشارك</th>
-            <th>النقاط</th>
-            <th>توقعات دقيقة</th>
-            <th>نقاط البطل</th>
-          </tr>
-        </thead>
+        <div class="simple-lb-points">
+          <strong>{{ r.points }}</strong>
+          <span>نقطة</span>
+        </div>
 
-        <tbody>
-          {% for r in rows %}
-            <tr class="{% if loop.index == 1 %}first-row{% endif %}">
-              <td>
-                {% if loop.index == 1 %}
-                  🥇
-                {% elif loop.index == 2 %}
-                  🥈
-                {% elif loop.index == 3 %}
-                  🥉
-                {% else %}
-                  {{ loop.index }}
-                {% endif %}
-              </td>
-
-              <td>
-                <strong>{{ r.name }}</strong>
-              </td>
-
-              <td>
-                <b>{{ r.points }}</b>
-              </td>
-
-              <td>
-                {{ r.exact }}
-              </td>
-
-              <td>
-                {% if r.champion_bonus %}
-                  <span class="lb-table-badge">🏆 +{{ r.champion_bonus }}</span>
-                {% else %}
-                  —
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+      </div>
+    {% endfor %}
   </section>
 
 {% else %}
