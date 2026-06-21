@@ -1757,8 +1757,7 @@ def admin(code):
             except Exception as e:
                 flash(f'فشل تحديث النتائج: {e}')
 
-
-                elif action == 'repair_source_links':
+        elif action == 'repair_source_links':
             try:
                 stats = repair_football_data_match_links(t)
 
