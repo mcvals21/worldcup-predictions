@@ -6111,3 +6111,122 @@ a{
     font-size:.95rem;
   }
 }
+/* Custom prediction save confirmation modal */
+.bulk-confirm-overlay{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(6px);
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+
+.bulk-confirm-box{
+  width:100%;
+  max-width:380px;
+  border-radius:26px;
+  background:linear-gradient(180deg,#fffdf8,#ffffff);
+  border:1px solid rgba(212,175,55,.35);
+  box-shadow:0 24px 60px rgba(0,0,0,.38);
+  padding:22px 18px;
+  text-align:center;
+  animation:bulkConfirmIn .18s ease-out;
+}
+
+@keyframes bulkConfirmIn{
+  from{
+    opacity:0;
+    transform:translateY(10px) scale(.98);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.bulk-confirm-icon{
+  width:54px;
+  height:54px;
+  margin:0 auto 10px;
+  border-radius:999px;
+  background:#111827;
+  color:#f5d77a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.45rem;
+  border:1px solid rgba(212,175,55,.45);
+}
+
+.bulk-confirm-box h3{
+  margin:0 0 8px;
+  color:#111827;
+  font-size:1.2rem;
+  font-weight:950;
+}
+
+.bulk-confirm-box p{
+  margin:0;
+  color:#667085;
+  font-size:.92rem;
+  font-weight:850;
+  line-height:1.6;
+}
+
+.bulk-confirm-warning{
+  margin:14px 0 0;
+  padding:11px 12px;
+  border-radius:16px;
+  background:#fff7df;
+  color:#7a560e;
+  border:1px solid rgba(212,175,55,.34);
+  font-size:.86rem;
+  font-weight:900;
+  line-height:1.55;
+}
+
+.bulk-confirm-actions{
+  display:grid;
+  grid-template-columns:1fr 1.25fr;
+  gap:10px;
+  margin-top:18px;
+}
+
+.bulk-confirm-actions button{
+  min-height:48px;
+  border-radius:16px;
+  font-weight:950;
+  margin:0;
+}
+
+.bulk-confirm-cancel{
+  background:#f2f4f7 !important;
+  color:#344054 !important;
+  border:1px solid rgba(148,163,184,.35) !important;
+  box-shadow:none !important;
+}
+
+.bulk-confirm-save{
+  background:linear-gradient(135deg,#111111,#2a2618) !important;
+  color:#fff7df !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  box-shadow:none !important;
+}
+
+@media (max-width:700px){
+  .bulk-confirm-box{
+    max-width:340px;
+    border-radius:24px;
+    padding:20px 16px;
+  }
+
+  .bulk-confirm-actions{
+    grid-template-columns:1fr;
+  }
+
+  .bulk-confirm-actions button{
+    min-height:47px;
+  }
+}
