@@ -30,103 +30,31 @@
     لا توجد مباريات في هذا القسم حاليًا.
   </div>
 {% endif %}
-<form
-  method="post"
-  id="bulk-prediction-form"
-  class="bulk-prediction-form"
->
-  <input type="hidden" name="action" value="bulk_predict">
+{% for m in matches %}
+  {% set pred = predictions.get(m.id) %}
+  {% set is_double = pred and pred.is_double %}
+  {% set home_flag = team_flag_code(m.home_team) %}
+  {% set away_flag = team_flag_code(m.away_team) %}
+  {% set is_locked = locked(m) %}
 
-  {% for m in matches %}
-    {% set pred = predictions.get(m.id) %}
-    {% set is_double = pred and pred.is_double %}
-    {% set home_flag = team_flag_code(m.home_team) %}
-    {% set away_flag = team_flag_code(m.away_team) %}
-    {% set is_locked = locked(m) %}
+  <section class="card match-card mobile-focus-card {% if is_double %}double-selected{% endif %}">
 
-    <section class="card match-card mobile-focus-card {% if is_double %}double-selected{% endif %}">
+    <div class="mobile-card-topline clean-topline status-only-topline">
+  {% if not is_locked %}
+    <span class="mobile-status-pill open">مفتوحة</span>
+  {% elif m.home_score is not none and m.away_score is not none %}
+    <span class="mobile-status-pill finished">منتهية</span>
+  {% else %}
+    <span class="mobile-status-pill locked">مغلقة</span>
+  {% endif %}
+</div>
 
-      <div class="mobile-card-topline clean-topline status-only-topline">
-        {% if not is_locked %}
-          <span class="mobile-status-pill open">مفتوحة</span>
-        {% elif m.home_score is not none and m.away_score is not none %}
-          <span class="mobile-status-pill finished">منتهية</span>
-        {% else %}
-          <span class="mobile-status-pill locked">مغلقة</span>
-        {% endif %}
-      </div>
+    {% if not is_locked %}
+      <form method="post" class="mobile-predict-form">
+        <input type="hidden" name="action" value="predict">
+        <input type="hidden" name="match_id" value="{{ m.id }}">
 
-      {% if not is_locked %}
-
-        <div class="mobile-predict-form">
-          <input type="hidden" name="match_ids" value="{{ m.id }}">
-
-          <div class="mobile-match-main">
-            <div class="mobile-team-box">
-              {% if home_flag %}
-                <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
-              {% endif %}
-              <strong>{{ m.home_team }}</strong>
-            </div>
-
-            <div class="mobile-score-inputs">
-              <input
-                type="number"
-                min="0"
-                name="home_score_{{ m.id }}"
-                value="{{ pred.home_score if pred else 0 }}"
-                inputmode="numeric"
-                pattern="[0-9]*"
-              >
-
-              <span>-</span>
-
-              <input
-                type="number"
-                min="0"
-                name="away_score_{{ m.id }}"
-                value="{{ pred.away_score if pred else 0 }}"
-                inputmode="numeric"
-                pattern="[0-9]*"
-              >
-            </div>
-
-            <div class="mobile-team-box">
-              {% if away_flag %}
-                <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
-              {% endif %}
-              <strong>{{ m.away_team }}</strong>
-            </div>
-          </div>
-
-          <div class="mobile-match-meta">
-            <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
-            <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
-            <span>{{ m.start_time.strftime('%H:%M') }}</span>
-          </div>
-
-          {% if pred %}
-            <div class="mobile-saved-note">
-              ✅ توقعك الحالي:
-              <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
-            </div>
-          {% endif %}
-
-          {% if m.stage in knockout %}
-            <label class="double-option mobile-double-option">
-              <input type="checkbox" name="is_double_{{ m.id }}" {% if pred and pred.is_double %}checked{% endif %}>
-
-              <div>
-                <strong>⭐ مباراة مضاعفة</strong>
-                <span>نتيجة مطابقة = 6 نقاط، توقع الفائز = نقطتان</span>
-              </div>
-            </label>
-          {% endif %}
-        </div>
-
-      {% else %}
-
-        <div class="mobile-match-main locked-view">
+        <div class="mobile-match-main">
           <div class="mobile-team-box">
             {% if home_flag %}
               <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
@@ -134,12 +62,26 @@
             <strong>{{ m.home_team }}</strong>
           </div>
 
-          <div class="mobile-score-display">
-            {% if m.home_score is not none and m.away_score is not none %}
-              {{ m.home_score }} - {{ m.away_score }}
-            {% else %}
-              VS
-            {% endif %}
+          <div class="mobile-score-inputs">
+            <input
+              type="number"
+              min="0"
+              name="home_score"
+              value="{{ pred.home_score if pred else 0 }}"
+              inputmode="numeric"
+              pattern="[0-9]*"
+            >
+
+            <span>-</span>
+
+            <input
+              type="number"
+              min="0"
+              name="away_score"
+              value="{{ pred.away_score if pred else 0 }}"
+              inputmode="numeric"
+              pattern="[0-9]*"
+            >
           </div>
 
           <div class="mobile-team-box">
@@ -156,126 +98,142 @@
           <span>{{ m.start_time.strftime('%H:%M') }}</span>
         </div>
 
-        <div class="mobile-result-box">
-          {% if pred %}
-            <div>
-              <span>توقعك</span>
-              <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
-            </div>
+        {% if pred %}
+          <div class="mobile-saved-note">
+            ✅ توقعك الحالي: <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
+          </div>
+        {% endif %}
+
+        {% if m.stage in knockout %}
+          <label class="double-option mobile-double-option">
+            <input type="checkbox" name="is_double" {% if pred and pred.is_double %}checked{% endif %}>
 
             <div>
-              <span>نقاطك</span>
-              <b>{{ points_for(pred,m) if m.home_score is not none else 0 }}</b>
+              <strong>⭐ مباراة مضاعفة</strong>
+              <span>نتيجة مطابقة = 6 نقاط، توقع الفائز = نقطتان</span>
             </div>
+          </label>
+        {% endif %}
 
-            {% if pred.is_double %}
-              <div class="mobile-double-note">
-                ⭐ مباراة مضاعفة
-              </div>
-            {% endif %}
+        <button class="mobile-save-btn">
+  {{ 'تعديل التوقع' if pred else 'حفظ التوقع' }}
+</button>
+      </form>
+
+    {% else %}
+
+      <div class="mobile-match-main locked-view">
+        <div class="mobile-team-box">
+          {% if home_flag %}
+            <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+          {% endif %}
+          <strong>{{ m.home_team }}</strong>
+        </div>
+
+        <div class="mobile-score-display">
+          {% if m.home_score is not none and m.away_score is not none %}
+            {{ m.home_score }} - {{ m.away_score }}
           {% else %}
-            <div class="mobile-no-prediction">
-              لم تقم بإدخال توقع لهذه المباراة
-            </div>
+            VS
           {% endif %}
         </div>
 
-        <p class="mobile-card-link">
-          <a href="/match/{{m.id}}">عرض توقعات الجميع</a>
-        </p>
+        <div class="mobile-team-box">
+          {% if away_flag %}
+            <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+          {% endif %}
+          <strong>{{ m.away_team }}</strong>
+        </div>
+      </div>
 
-      {% endif %}
+      <div class="mobile-match-meta">
+        <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
+        <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
+        <span>{{ m.start_time.strftime('%H:%M') }}</span>
+      </div>
 
-    </section>
-  {% endfor %}
+      <div class="mobile-result-box">
+        {% if pred %}
+          <div>
+            <span>توقعك</span>
+            <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
+          </div>
 
-  {% if has_open_matches %}
-    <div class="bulk-save-panel">
-      <button type="submit" class="bulk-save-btn">
-        حفظ التوقعات
-      </button>
-    </div>
-  {% endif %}
-</form>
-<div id="bulkConfirmOverlay" class="bulk-confirm-overlay" style="display:none;">
-  <div class="bulk-confirm-box">
-    <div class="bulk-confirm-icon">🏆</div>
+          <div>
+            <span>نقاطك</span>
+            <b>{{ points_for(pred,m) if m.home_score is not none else 0 }}</b>
+          </div>
 
-    <h3>تأكيد حفظ التوقعات</h3>
+          {% if pred.is_double %}
+            <div class="mobile-double-note">
+              ⭐ مباراة مضاعفة
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="mobile-no-prediction">
+            لم تقم بإدخال توقع لهذه المباراة
+          </div>
+        {% endif %}
+      </div>
 
-    <p>
-      سيتم حفظ توقعات جميع المباريات المفتوحة.
-    </p>
+      <p class="mobile-card-link">
+        <a href="/match/{{m.id}}">عرض توقعات الجميع</a>
+      </p>
 
-    <div id="bulkConfirmWarning" class="bulk-confirm-warning" style="display:none;">
-      ⚠️ يوجد توقع بنتيجة أكبر من 3 أهداف. تأكد أن الرقم صحيح قبل الحفظ.
-    </div>
+    {% endif %}
 
-    <div class="bulk-confirm-actions">
-      <button type="button" class="bulk-confirm-cancel" onclick="closeBulkConfirm()">
-        إلغاء
-      </button>
-
-      <button type="button" class="bulk-confirm-save" onclick="submitBulkPredictions()">
-        نعم، حفظ التوقعات
-      </button>
-    </div>
-  </div>
-</div>
+  </section>
+{% endfor %}
 
 <script>
-let pendingBulkForm = null;
+function parseKuwaitTime(value) {
+  const parts = value.split(/[-T:]/).map(Number);
+  return new Date(
+    parts[0],
+    parts[1] - 1,
+    parts[2],
+    parts[3],
+    parts[4],
+    parts[5] || 0
+  );
+}
 
-document.addEventListener('DOMContentLoaded', function () {
-  const form = document.getElementById('bulk-prediction-form');
+function updateCountdowns() {
+  document.querySelectorAll('.countdown').forEach(function(el) {
+    const start = parseKuwaitTime(el.dataset.start);
+    const now = new Date();
+    const diff = start - now;
 
-  if (!form) {
-    return;
-  }
-
-  form.addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    pendingBulkForm = form;
-
-    const scoreInputs = Array.from(
-      form.querySelectorAll('input[name^="home_score_"], input[name^="away_score_"]')
-    );
-
-    const hasLargeScore = scoreInputs.some(function (input) {
-      const value = Number(input.value || 0);
-      return value > 3;
-    });
-
-    const warningBox = document.getElementById('bulkConfirmWarning');
-    const overlay = document.getElementById('bulkConfirmOverlay');
-
-    if (warningBox) {
-      warningBox.style.display = hasLargeScore ? 'block' : 'none';
+    if (diff <= 0) {
+      el.textContent = '🔒 تم إغلاق التوقع';
+      el.classList.add('locked');
+      return;
     }
 
-    if (overlay) {
-      overlay.style.display = 'flex';
-    } else {
-      form.submit();
+    const totalSeconds = Math.floor(diff / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    let text = '⏳ يغلق خلال: ';
+
+    if (days > 0) {
+      text += days + ' يوم و ';
     }
+
+    if (hours > 0) {
+      text += hours + ' ساعة و ';
+    }
+
+    text += minutes + ' دقيقة و ' + seconds + ' ثانية';
+
+    el.textContent = text;
   });
-});
-
-function closeBulkConfirm() {
-  const overlay = document.getElementById('bulkConfirmOverlay');
-
-  if (overlay) {
-    overlay.style.display = 'none';
-  }
-
-  pendingBulkForm = null;
 }
 
-function submitBulkPredictions() {
-  if (pendingBulkForm) {
-    pendingBulkForm.submit();
-  }
-}
+updateCountdowns();
+setInterval(updateCountdowns, 1000);
 </script>
+
 {% endblock %}
