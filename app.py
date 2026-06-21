@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import secrets
 import os
+import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'change-this-secret-key'
@@ -77,6 +78,16 @@ class Match(db.Model):
     stage = db.Column(db.String(50), nullable=False, default='group')
     home_score = db.Column(db.Integer, nullable=True)
     away_score = db.Column(db.Integer, nullable=True)
+
+class ApiMatchMap(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    source = db.Column(db.String(40), nullable=False)
+    external_id = db.Column(db.String(80), nullable=False)
+    match_id = db.Column(db.Integer, db.ForeignKey('match.id'), nullable=False)
+
+    __table_args__ = (
+        db.UniqueConstraint('source', 'external_id', name='uq_api_match_source_external'),
+    )
 
 
 class Prediction(db.Model):
@@ -1001,6 +1012,261 @@ def match_view(match_id):
         points_for=points_for
     )
 
+FOOTBALL_DATA_BASE_URL = 'https://api.football-data.org/v4'
+FOOTBALL_DATA_SOURCE = 'football-data'
+FOOTBALL_DATA_COMPETITION = os.environ.get('FOOTBALL_DATA_COMPETITION', 'WC')
+FOOTBALL_DATA_SEASON = int(os.environ.get('FOOTBALL_DATA_SEASON', '2026'))
+
+
+def football_data_headers():
+    token = os.environ.get('FOOTBALL_DATA_TOKEN')
+
+    if not token:
+        raise RuntimeError('FOOTBALL_DATA_TOKEN غير موجود في Render Environment Variables.')
+
+    return {
+        'X-Auth-Token': token
+    }
+
+
+def fetch_worldcup_matches_from_football_data():
+    response = requests.get(
+        f'{FOOTBALL_DATA_BASE_URL}/competitions/{FOOTBALL_DATA_COMPETITION}/matches',
+        headers=football_data_headers(),
+        params={
+            'season': FOOTBALL_DATA_SEASON
+        },
+        timeout=20
+    )
+
+    response.raise_for_status()
+    data = response.json()
+
+    return data.get('matches', [])
+
+
+def football_data_stage_to_local(stage):
+    stage = (stage or '').upper()
+
+    if stage == 'GROUP_STAGE':
+        return 'group'
+
+    if stage == 'LAST_32':
+        return 'round32'
+
+    if stage == 'LAST_16':
+        return 'round16'
+
+    if stage == 'QUARTER_FINALS':
+        return 'quarter'
+
+    if stage == 'SEMI_FINALS':
+        return 'semi'
+
+    if stage == 'THIRD_PLACE':
+        return 'third'
+
+    if stage == 'FINAL':
+        return 'final'
+
+    return 'group'
+
+
+def parse_football_data_time(utc_date):
+    dt = datetime.fromisoformat(utc_date.replace('Z', '+00:00'))
+    return dt.astimezone(KUWAIT_TZ).replace(tzinfo=None)
+
+
+def same_match_by_teams_and_day(tournament_id, home_team, away_team, start_time):
+    day_start = datetime.combine(start_time.date(), datetime.min.time())
+    day_end = day_start + timedelta(days=1)
+
+    return Match.query.filter(
+        Match.tournament_id == tournament_id,
+        Match.home_team == home_team,
+        Match.away_team == away_team,
+        Match.start_time >= day_start,
+        Match.start_time < day_end
+    ).first()
+
+
+def sync_worldcup_schedule_football_data(t):
+    matches_data = fetch_worldcup_matches_from_football_data()
+
+    added = 0
+    linked = 0
+    existing = 0
+    skipped = 0
+
+    db.create_all()
+
+    for item in matches_data:
+        external_id = str(item.get('id') or '').strip()
+        utc_date = item.get('utcDate')
+
+        home_team = (item.get('homeTeam') or {}).get('name')
+        away_team = (item.get('awayTeam') or {}).get('name')
+
+        if not external_id or not utc_date or not home_team or not away_team:
+            skipped += 1
+            continue
+
+        start_time = parse_football_data_time(utc_date)
+        stage = football_data_stage_to_local(item.get('stage'))
+
+        map_row = ApiMatchMap.query.filter_by(
+            source=FOOTBALL_DATA_SOURCE,
+            external_id=external_id
+        ).first()
+
+        if map_row:
+            existing += 1
+            continue
+
+        match = same_match_by_teams_and_day(
+            t.id,
+            home_team,
+            away_team,
+            start_time
+        )
+
+        if match:
+            db.session.add(ApiMatchMap(
+                source=FOOTBALL_DATA_SOURCE,
+                external_id=external_id,
+                match_id=match.id
+            ))
+            linked += 1
+            continue
+
+        match = Match(
+            tournament_id=t.id,
+            home_team=home_team,
+            away_team=away_team,
+            start_time=start_time,
+            stage=stage
+        )
+
+        db.session.add(match)
+        db.session.flush()
+
+        db.session.add(ApiMatchMap(
+            source=FOOTBALL_DATA_SOURCE,
+            external_id=external_id,
+            match_id=match.id
+        ))
+
+        added += 1
+
+    db.session.commit()
+
+    return {
+        'added': added,
+        'linked': linked,
+        'existing': existing,
+        'skipped': skipped,
+    }
+
+
+def football_data_final_score(item):
+    if item.get('status') != 'FINISHED':
+        return None
+
+    score = item.get('score') or {}
+    full_time = score.get('fullTime') or {}
+
+    home_score = full_time.get('home')
+    away_score = full_time.get('away')
+
+    if home_score is None or away_score is None:
+        return None
+
+    return int(home_score), int(away_score)
+
+
+def sync_worldcup_results_football_data(t):
+    matches_data = fetch_worldcup_matches_from_football_data()
+
+    updated = 0
+    unchanged = 0
+    conflicts = 0
+    not_found = 0
+    not_finished = 0
+
+    db.create_all()
+
+    for item in matches_data:
+        external_id = str(item.get('id') or '').strip()
+
+        if not external_id:
+            continue
+
+        final_score = football_data_final_score(item)
+
+        if final_score is None:
+            not_finished += 1
+            continue
+
+        home_score, away_score = final_score
+
+        map_row = ApiMatchMap.query.filter_by(
+            source=FOOTBALL_DATA_SOURCE,
+            external_id=external_id
+        ).first()
+
+        match = None
+
+        if map_row:
+            match = Match.query.get(map_row.match_id)
+
+        if not match:
+            home_team = (item.get('homeTeam') or {}).get('name')
+            away_team = (item.get('awayTeam') or {}).get('name')
+            utc_date = item.get('utcDate')
+
+            if home_team and away_team and utc_date:
+                start_time = parse_football_data_time(utc_date)
+                match = same_match_by_teams_and_day(
+                    t.id,
+                    home_team,
+                    away_team,
+                    start_time
+                )
+
+                if match:
+                    db.session.add(ApiMatchMap(
+                        source=FOOTBALL_DATA_SOURCE,
+                        external_id=external_id,
+                        match_id=match.id
+                    ))
+
+        if not match:
+            not_found += 1
+            continue
+
+        if match.home_score is None and match.away_score is None:
+            match.home_score = home_score
+            match.away_score = away_score
+            db.session.add(match)
+            updated += 1
+            continue
+
+        if match.home_score == home_score and match.away_score == away_score:
+            unchanged += 1
+            continue
+
+        conflicts += 1
+
+    db.session.commit()
+
+    return {
+        'updated': updated,
+        'unchanged': unchanged,
+        'conflicts': conflicts,
+        'not_found': not_found,
+        'not_finished': not_finished,
+    }
+
 
 @app.route('/admin/<code>', methods=['GET', 'POST'])
 def admin(code):
@@ -1094,6 +1360,35 @@ def admin(code):
             db.session.commit()
 
             flash('تم حفظ موعد إغلاق توقع البطل.')
+
+                elif action == 'sync_schedule_free':
+            try:
+                stats = sync_worldcup_schedule_football_data(t)
+
+                flash(
+                    f"تمت مزامنة الجدول: "
+                    f"إضافة {stats['added']}، "
+                    f"ربط {stats['linked']}، "
+                    f"موجود مسبقًا {stats['existing']}، "
+                    f"تجاوز {stats['skipped']}."
+                )
+            except Exception as e:
+                flash(f'فشلت مزامنة الجدول: {e}')
+
+        elif action == 'sync_results_free':
+            try:
+                stats = sync_worldcup_results_football_data(t)
+
+                flash(
+                    f"تم تحديث النتائج: "
+                    f"تحديث {stats['updated']}، "
+                    f"بدون تغيير {stats['unchanged']}، "
+                    f"تعارض {stats['conflicts']}، "
+                    f"غير مربوطة {stats['not_found']}، "
+                    f"لم تنتهِ {stats['not_finished']}."
+                )
+            except Exception as e:
+                flash(f'فشل تحديث النتائج: {e}')
 
         return redirect(url_for(
             'admin',
