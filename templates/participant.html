@@ -250,12 +250,37 @@ setInterval(updateCountdowns, 1000);
 </script>
 
 <script>
-function confirmBulkPredictions(form) {
-  const firstConfirm = confirm('هل تريد حفظ / تعديل جميع توقعات المباريات المفتوحة؟');
+<div id="bulkConfirmOverlay" class="bulk-confirm-overlay" style="display:none;">
+  <div class="bulk-confirm-box">
+    <div class="bulk-confirm-icon">🏆</div>
 
-  if (!firstConfirm) {
-    return false;
-  }
+    <h3 id="bulkConfirmTitle">تأكيد حفظ التوقعات</h3>
+
+    <p id="bulkConfirmMessage">
+      سيتم حفظ توقعات جميع المباريات المفتوحة.
+    </p>
+
+    <div id="bulkConfirmWarning" class="bulk-confirm-warning" style="display:none;">
+      ⚠️ يوجد توقع بنتيجة أكبر من 3 أهداف. تأكد أن الرقم صحيح قبل الحفظ.
+    </div>
+
+    <div class="bulk-confirm-actions">
+      <button type="button" class="bulk-confirm-cancel" onclick="closeBulkConfirm()">
+        إلغاء
+      </button>
+
+      <button type="button" class="bulk-confirm-save" onclick="submitBulkPredictions()">
+        نعم، حفظ التوقعات
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let pendingBulkForm = null;
+
+function confirmBulkPredictions(form) {
+  pendingBulkForm = form;
 
   const scoreInputs = Array.from(form.querySelectorAll('input[type="number"]'));
 
@@ -264,11 +289,28 @@ function confirmBulkPredictions(form) {
     return value > 3;
   });
 
+  const warningBox = document.getElementById('bulkConfirmWarning');
+
   if (hasLargeScore) {
-    return confirm('⚠️ يوجد توقع بنتيجة أكبر من 3 أهداف. هل أنت متأكد من الحفظ؟');
+    warningBox.style.display = 'block';
+  } else {
+    warningBox.style.display = 'none';
   }
 
-  return true;
+  document.getElementById('bulkConfirmOverlay').style.display = 'flex';
+
+  return false;
+}
+
+function closeBulkConfirm() {
+  document.getElementById('bulkConfirmOverlay').style.display = 'none';
+  pendingBulkForm = null;
+}
+
+function submitBulkPredictions() {
+  if (pendingBulkForm) {
+    pendingBulkForm.submit();
+  }
 }
 </script>
 
