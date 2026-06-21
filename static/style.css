@@ -7207,3 +7207,64 @@ a{
 .admin-sync-body button{
   width:100%;
 }
+/* Sync report / unlinked matches */
+.sync-report-box{
+  margin-top:12px;
+  padding:12px;
+  border-radius:18px;
+  background:#fffdf8;
+  border:1px solid rgba(212,175,55,.25);
+}
+
+.sync-report-box h4{
+  margin:0 0 7px;
+  color:#111827;
+  font-size:.98rem;
+  font-weight:950;
+}
+
+.sync-report-box p{
+  margin:0;
+  color:#667085;
+  font-size:.84rem;
+  font-weight:850;
+  line-height:1.6;
+}
+
+.unlinked-list{
+  display:grid;
+  gap:8px;
+  margin-top:10px;
+}
+
+.unlinked-match-card{
+  display:grid;
+  gap:5px;
+  padding:10px;
+  border-radius:15px;
+  background:#fff;
+  border:1px solid rgba(148,163,184,.22);
+}
+
+.unlinked-match-card strong{
+  color:#111827;
+  font-size:.9rem;
+  font-weight:950;
+}
+
+.unlinked-match-card span{
+  color:#667085;
+  font-size:.78rem;
+  font-weight:850;
+}
+
+.unlinked-match-card b{
+  width:max-content;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#fff7df;
+  color:#7a560e;
+  border:1px solid rgba(212,175,55,.25);
+  font-size:.76rem;
+  font-weight:950;
+}
