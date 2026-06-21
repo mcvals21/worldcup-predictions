@@ -1470,6 +1470,26 @@ TEAM_CANONICAL_ALIASES = {
 }
 
 
+
+TEAM_CANONICAL_ALIASES.update({
+    'cabo verde': 'cape_verde',
+    'cape verde islands': 'cape_verde',
+    'cape verde island': 'cape_verde',
+    'bosnia & herzegovina': 'bosnia',
+    'bosnia-herzegovina': 'bosnia',
+    'bosnia and herzeg.': 'bosnia',
+    'bosnia-herzeg.': 'bosnia',
+    'bosnia': 'bosnia',
+    'korea republic': 'south_korea',
+    'republic of korea': 'south_korea',
+    'congo dr': 'dr_congo',
+    'd.r. congo': 'dr_congo',
+    'democratic republic of congo': 'dr_congo',
+    'uruguay': 'uruguay',
+    'saudi arabia': 'saudi_arabia',
+})
+
+
 def canonical_team_key(name):
     text = (name or '').strip().lower()
 
@@ -1506,8 +1526,9 @@ def find_best_local_match_for_api_item(t, item):
     api_home_key = canonical_team_key(home_team)
     api_away_key = canonical_team_key(away_team)
 
-    window_start = api_start - timedelta(hours=2)
-    window_end = api_start + timedelta(hours=2)
+    # نستخدم نافذة واسعة لأن بعض المباريات القديمة أدخلت يدويًا وقد يختلف التوقيت بساعات.
+    window_start = api_start - timedelta(hours=18)
+    window_end = api_start + timedelta(hours=18)
 
     candidates = Match.query.filter(
         Match.tournament_id == t.id,
@@ -1518,18 +1539,50 @@ def find_best_local_match_for_api_item(t, item):
     matches = []
 
     for m in candidates:
-        if (
+        same_order = (
             canonical_team_key(m.home_team) == api_home_key
             and canonical_team_key(m.away_team) == api_away_key
-        ):
-            matches.append((prediction_count_for_match(m.id), m.id, m))
+        )
+
+        reversed_order = (
+            canonical_team_key(m.home_team) == api_away_key
+            and canonical_team_key(m.away_team) == api_home_key
+        )
+
+        if same_order or reversed_order:
+            time_diff = abs((m.start_time - api_start).total_seconds())
+            matches.append((prediction_count_for_match(m.id), -time_diff, m.id, m))
 
     if not matches:
         return None
 
-    matches.sort(key=lambda x: (-x[0], x[1]))
+    # نفضّل المباراة التي عليها توقعات أكثر، ثم الأقرب زمنيًا، ثم الأقدم ID.
+    matches.sort(key=lambda x: (-x[0], -x[1], x[2]))
 
-    return matches[0][2]
+    return matches[0][3]
+
+
+def move_predictions_to_target_match(old_match_id, target_match_id):
+    moved = 0
+    conflicts = 0
+
+    old_predictions = Prediction.query.filter_by(match_id=old_match_id).all()
+
+    for pred in old_predictions:
+        existing = Prediction.query.filter_by(
+            participant_id=pred.participant_id,
+            match_id=target_match_id
+        ).first()
+
+        if existing:
+            conflicts += 1
+            continue
+
+        pred.match_id = target_match_id
+        db.session.add(pred)
+        moved += 1
+
+    return moved, conflicts
 
 
 def repair_football_data_match_links(t):
@@ -1542,6 +1595,8 @@ def repair_football_data_match_links(t):
     already_ok = 0
     unmatched = 0
     kept_duplicates = 0
+    moved_predictions = 0
+    prediction_conflicts = 0
 
     db.create_all()
 
@@ -1608,6 +1663,10 @@ def repair_football_data_match_links(t):
         reassigned += 1
 
         if old_match and old_match.id != target_match.id:
+            moved, conflicts = move_predictions_to_target_match(old_match.id, target_match.id)
+            moved_predictions += moved
+            prediction_conflicts += conflicts
+
             old_predictions = prediction_count_for_match(old_match.id)
 
             other_api_links = ApiMatchMap.query.filter(
@@ -1632,7 +1691,10 @@ def repair_football_data_match_links(t):
         'already_ok': already_ok,
         'unmatched': unmatched,
         'kept_duplicates': kept_duplicates,
+        'moved_predictions': moved_predictions,
+        'prediction_conflicts': prediction_conflicts,
     }
+
 
 
 @app.route('/admin/<code>', methods=['GET', 'POST'])
@@ -1766,6 +1828,8 @@ def admin(code):
                     f"ربط جديد {stats['linked_new']}، "
                     f"إعادة ربط {stats['reassigned']}، "
                     f"حذف مكرر فارغ {stats['deleted_empty_duplicates']}، "
+                    f"نقل توقعات {stats['moved_predictions']}، "
+                    f"تعارض توقعات {stats['prediction_conflicts']}، "
                     f"نسخ نتائج {stats['copied_scores']}، "
                     f"سليم مسبقًا {stats['already_ok']}، "
                     f"غير مطابق {stats['unmatched']}، "
