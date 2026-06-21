@@ -39,7 +39,10 @@
           <strong>{{ r.name }}</strong>
 
           <div class="simple-lb-meta">
-            <span>✅ {{ r.exact }} نتيجة مطابقة</span>
+            <span class="exact-count-pill">
+  <b>{{ r.exact }}</b>
+  <small>توقع صحيح</small>
+</span>
 
             {% if r.champion_bonus %}
               <span>🏆 +{{ r.champion_bonus }}</span>
