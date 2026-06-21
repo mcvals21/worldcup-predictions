@@ -7155,3 +7155,34 @@ a{
     font-size:1.22rem;
   }
 }
+/* Exact match count badge */
+.exact-count-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  width:max-content;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#ecfdf3;
+  color:#027a48 !important;
+  border:1px solid rgba(2,122,72,.18);
+  font-size:.78rem;
+  font-weight:950;
+}
+
+.exact-count-pill::before{
+  content:"✅";
+  font-size:.75rem;
+}
+
+.exact-count-pill b{
+  font-size:.95rem;
+  line-height:1;
+  color:#027a48;
+}
+
+.exact-count-pill small{
+  font-size:.74rem;
+  font-weight:900;
+  color:#027a48;
+}
