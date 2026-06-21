@@ -1878,19 +1878,6 @@ def admin(code):
             except Exception as e:
                 flash(f'فشل إصلاح الربط: {e}')
 
-
-                elif action == 'delete_empty_english_matches':
-            try:
-                stats = delete_empty_english_matches(t)
-
-                flash(
-                    f"تم حذف النسخ الإنجليزية الفارغة: "
-                    f"حذف {stats['deleted']}، "
-                    f"تم حفظ {stats['kept_with_predictions']} لأنها تحتوي على توقعات."
-                )
-            except Exception as e:
-                flash(f'فشل حذف النسخ الإنجليزية الفارغة: {e}')
-
         return redirect(url_for(
             'admin',
             code=code,
