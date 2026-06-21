@@ -1297,6 +1297,344 @@ def get_unlinked_matches_report(t):
     return report
 
 
+TEAM_CANONICAL_ALIASES = {
+    'qatar': 'qatar',
+    'قطر': 'qatar',
+
+    'switzerland': 'switzerland',
+    'سويسرا': 'switzerland',
+
+    'brazil': 'brazil',
+    'البرازيل': 'brazil',
+
+    'morocco': 'morocco',
+    'المغرب': 'morocco',
+
+    'haiti': 'haiti',
+    'هايتي': 'haiti',
+    'هاييتي': 'haiti',
+
+    'scotland': 'scotland',
+    'اسكتلندا': 'scotland',
+    'سكوتلندا': 'scotland',
+
+    'australia': 'australia',
+    'استراليا': 'australia',
+    'أستراليا': 'australia',
+
+    'turkey': 'turkey',
+    'تركيا': 'turkey',
+
+    'germany': 'germany',
+    'المانيا': 'germany',
+    'ألمانيا': 'germany',
+
+    'curacao': 'curacao',
+    'curaçao': 'curacao',
+    'كوراساو': 'curacao',
+
+    'netherlands': 'netherlands',
+    'هولندا': 'netherlands',
+
+    'japan': 'japan',
+    'اليابان': 'japan',
+
+    'ivory coast': 'ivory_coast',
+    'côte d’ivoire': 'ivory_coast',
+    "cote d'ivoire": 'ivory_coast',
+    'ساحل العاج': 'ivory_coast',
+
+    'ecuador': 'ecuador',
+    'الاكوادور': 'ecuador',
+    'الإكوادور': 'ecuador',
+    'اكوادور': 'ecuador',
+
+    'sweden': 'sweden',
+    'السويد': 'sweden',
+
+    'tunisia': 'tunisia',
+    'تونس': 'tunisia',
+
+    'spain': 'spain',
+    'اسبانيا': 'spain',
+    'إسبانيا': 'spain',
+
+    'cape verde': 'cape_verde',
+    'كاب فيردي': 'cape_verde',
+
+    'belgium': 'belgium',
+    'بلجيكا': 'belgium',
+
+    'egypt': 'egypt',
+    'مصر': 'egypt',
+
+    'saudi arabia': 'saudi_arabia',
+    'السعودية': 'saudi_arabia',
+
+    'uruguay': 'uruguay',
+    'اوروغواي': 'uruguay',
+    'أوروغواي': 'uruguay',
+
+    'iran': 'iran',
+    'ايران': 'iran',
+    'إيران': 'iran',
+
+    'new zealand': 'new_zealand',
+    'نيوزلندا': 'new_zealand',
+    'نيوزيلندا': 'new_zealand',
+
+    'france': 'france',
+    'فرنسا': 'france',
+
+    'senegal': 'senegal',
+    'السنغال': 'senegal',
+
+    'iraq': 'iraq',
+    'العراق': 'iraq',
+
+    'norway': 'norway',
+    'النرويج': 'norway',
+
+    'argentina': 'argentina',
+    'الارجنتين': 'argentina',
+    'الأرجنتين': 'argentina',
+
+    'algeria': 'algeria',
+    'الجزائر': 'algeria',
+
+    'austria': 'austria',
+    'النمسا': 'austria',
+
+    'jordan': 'jordan',
+    'الاردن': 'jordan',
+    'الأردن': 'jordan',
+
+    'portugal': 'portugal',
+    'البرتغال': 'portugal',
+
+    'dr congo': 'dr_congo',
+    'congo dr': 'dr_congo',
+    'الكونغو الديمقراطية': 'dr_congo',
+
+    'uzbekistan': 'uzbekistan',
+    'اوزبكستان': 'uzbekistan',
+    'أوزبكستان': 'uzbekistan',
+
+    'colombia': 'colombia',
+    'كولومبيا': 'colombia',
+
+    'england': 'england',
+    'انجلترا': 'england',
+    'إنجلترا': 'england',
+
+    'croatia': 'croatia',
+    'كرواتيا': 'croatia',
+
+    'ghana': 'ghana',
+    'غانا': 'ghana',
+
+    'panama': 'panama',
+    'بنما': 'panama',
+
+    'czechia': 'czechia',
+    'czech republic': 'czechia',
+    'التشيك': 'czechia',
+
+    'south africa': 'south_africa',
+    'جنوب افريقيا': 'south_africa',
+    'جنوب أفريقيا': 'south_africa',
+
+    'canada': 'canada',
+    'كندا': 'canada',
+
+    'bosnia and herzegovina': 'bosnia',
+    'bosnia-herzegovina': 'bosnia',
+    'البوسنة': 'bosnia',
+    'البوسنة والهرسك': 'bosnia',
+
+    'mexico': 'mexico',
+    'المكسيك': 'mexico',
+
+    'south korea': 'south_korea',
+    'korea republic': 'south_korea',
+    'كوريا الجنوبية': 'south_korea',
+
+    'united states': 'usa',
+    'usa': 'usa',
+    'america': 'usa',
+    'أمريكا': 'usa',
+    'امريكا': 'usa',
+
+    'paraguay': 'paraguay',
+    'باراغواي': 'paraguay',
+}
+
+
+def canonical_team_key(name):
+    text = (name or '').strip().lower()
+
+    replacements = {
+        'أ': 'ا',
+        'إ': 'ا',
+        'آ': 'ا',
+        'ى': 'ي',
+        'ة': 'ه',
+        'ـ': '',
+    }
+
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+
+    text = ' '.join(text.split())
+
+    return TEAM_CANONICAL_ALIASES.get(text, text)
+
+
+def prediction_count_for_match(match_id):
+    return Prediction.query.filter_by(match_id=match_id).count()
+
+
+def find_best_local_match_for_api_item(t, item):
+    utc_date = item.get('utcDate')
+    home_team = (item.get('homeTeam') or {}).get('name')
+    away_team = (item.get('awayTeam') or {}).get('name')
+
+    if not utc_date or not home_team or not away_team:
+        return None
+
+    api_start = parse_football_data_time(utc_date)
+    api_home_key = canonical_team_key(home_team)
+    api_away_key = canonical_team_key(away_team)
+
+    window_start = api_start - timedelta(hours=2)
+    window_end = api_start + timedelta(hours=2)
+
+    candidates = Match.query.filter(
+        Match.tournament_id == t.id,
+        Match.start_time >= window_start,
+        Match.start_time <= window_end
+    ).all()
+
+    matches = []
+
+    for m in candidates:
+        if (
+            canonical_team_key(m.home_team) == api_home_key
+            and canonical_team_key(m.away_team) == api_away_key
+        ):
+            matches.append((prediction_count_for_match(m.id), m.id, m))
+
+    if not matches:
+        return None
+
+    matches.sort(key=lambda x: (-x[0], x[1]))
+
+    return matches[0][2]
+
+
+def repair_football_data_match_links(t):
+    matches_data = fetch_worldcup_matches_from_football_data()
+
+    linked_new = 0
+    reassigned = 0
+    deleted_empty_duplicates = 0
+    copied_scores = 0
+    already_ok = 0
+    unmatched = 0
+    kept_duplicates = 0
+
+    db.create_all()
+
+    for item in matches_data:
+        external_id = str(item.get('id') or '').strip()
+
+        if not external_id:
+            unmatched += 1
+            continue
+
+        target_match = find_best_local_match_for_api_item(t, item)
+
+        if not target_match:
+            unmatched += 1
+            continue
+
+        final_score = football_data_final_score(item)
+
+        map_row = ApiMatchMap.query.filter_by(
+            source=FOOTBALL_DATA_SOURCE,
+            external_id=external_id
+        ).first()
+
+        if not map_row:
+            db.session.add(ApiMatchMap(
+                source=FOOTBALL_DATA_SOURCE,
+                external_id=external_id,
+                match_id=target_match.id
+            ))
+            linked_new += 1
+
+            if (
+                final_score
+                and target_match.home_score is None
+                and target_match.away_score is None
+            ):
+                target_match.home_score = final_score[0]
+                target_match.away_score = final_score[1]
+                db.session.add(target_match)
+                copied_scores += 1
+
+            continue
+
+        current_match = Match.query.get(map_row.match_id)
+
+        if current_match and current_match.id == target_match.id:
+            already_ok += 1
+            continue
+
+        old_match = current_match
+
+        if (
+            final_score
+            and target_match.home_score is None
+            and target_match.away_score is None
+        ):
+            target_match.home_score = final_score[0]
+            target_match.away_score = final_score[1]
+            db.session.add(target_match)
+            copied_scores += 1
+
+        map_row.match_id = target_match.id
+        db.session.add(map_row)
+        reassigned += 1
+
+        if old_match and old_match.id != target_match.id:
+            old_predictions = prediction_count_for_match(old_match.id)
+
+            other_api_links = ApiMatchMap.query.filter(
+                ApiMatchMap.match_id == old_match.id,
+                ApiMatchMap.source == FOOTBALL_DATA_SOURCE,
+                ApiMatchMap.external_id != external_id
+            ).count()
+
+            if old_predictions == 0 and other_api_links == 0:
+                db.session.delete(old_match)
+                deleted_empty_duplicates += 1
+            else:
+                kept_duplicates += 1
+
+    db.session.commit()
+
+    return {
+        'linked_new': linked_new,
+        'reassigned': reassigned,
+        'deleted_empty_duplicates': deleted_empty_duplicates,
+        'copied_scores': copied_scores,
+        'already_ok': already_ok,
+        'unmatched': unmatched,
+        'kept_duplicates': kept_duplicates,
+    }
+
+
 @app.route('/admin/<code>', methods=['GET', 'POST'])
 def admin(code):
     if code != ADMIN_CODE:
@@ -1418,6 +1756,24 @@ def admin(code):
                 )
             except Exception as e:
                 flash(f'فشل تحديث النتائج: {e}')
+
+
+                elif action == 'repair_source_links':
+            try:
+                stats = repair_football_data_match_links(t)
+
+                flash(
+                    f"تم إصلاح الربط: "
+                    f"ربط جديد {stats['linked_new']}، "
+                    f"إعادة ربط {stats['reassigned']}، "
+                    f"حذف مكرر فارغ {stats['deleted_empty_duplicates']}، "
+                    f"نسخ نتائج {stats['copied_scores']}، "
+                    f"سليم مسبقًا {stats['already_ok']}، "
+                    f"غير مطابق {stats['unmatched']}، "
+                    f"مكرر محفوظ {stats['kept_duplicates']}."
+                )
+            except Exception as e:
+                flash(f'فشل إصلاح الربط: {e}')
 
         return redirect(url_for(
             'admin',
