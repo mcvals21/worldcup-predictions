@@ -542,7 +542,7 @@ def participant_page(token):
     selected_filter = request.args.get('filter', 'open')
 
     if selected_filter not in MATCH_FILTER_LABELS:
-        selected_filter = 'today'
+        selected_filter = 'open'
 
     all_matches = Match.query.filter_by(
         tournament_id=t.id
@@ -568,7 +568,85 @@ def participant_page(token):
     if request.method == 'POST':
         action = request.form.get('action')
 
-        if action == 'predict':
+        if action == 'bulk_predict':
+            match_ids = request.form.getlist('match_ids')
+
+            saved_count = 0
+            skipped_locked = 0
+            selected_doubles_by_stage = {}
+
+            for raw_match_id in match_ids:
+                try:
+                    match_id = int(raw_match_id)
+                except (TypeError, ValueError):
+                    continue
+
+                match = Match.query.filter_by(
+                    id=match_id,
+                    tournament_id=t.id
+                ).first()
+
+                if not match:
+                    continue
+
+                if match_locked(match):
+                    skipped_locked += 1
+                    continue
+
+                try:
+                    hs = int(request.form.get(f'home_score_{match.id}', 0) or 0)
+                    aw = int(request.form.get(f'away_score_{match.id}', 0) or 0)
+                except ValueError:
+                    hs = 0
+                    aw = 0
+
+                is_double = request.form.get(f'is_double_{match.id}') == 'on'
+
+                if is_double and match.stage not in KNOCKOUT_STAGES:
+                    is_double = False
+
+                if is_double:
+                    if match.stage in selected_doubles_by_stage:
+                        flash('لا يمكن اختيار أكثر من مباراة مضاعفة واحدة في نفس الدور.')
+                        return redirect(url_for(
+                            'participant_page',
+                            token=token,
+                            filter=selected_filter
+                        ))
+
+                    if current_double_used(p.id, t.id, match.stage, match.id):
+                        flash('لا يمكن اختيار أكثر من مباراة مضاعفة واحدة في نفس الدور.')
+                        return redirect(url_for(
+                            'participant_page',
+                            token=token,
+                            filter=selected_filter
+                        ))
+
+                    selected_doubles_by_stage[match.stage] = match.id
+
+                pred = predictions.get(match.id) or Prediction(
+                    participant_id=p.id,
+                    match_id=match.id
+                )
+
+                pred.home_score = hs
+                pred.away_score = aw
+                pred.is_double = is_double
+
+                db.session.add(pred)
+                predictions[match.id] = pred
+                saved_count += 1
+
+            db.session.commit()
+
+            if saved_count:
+                flash(f'تم حفظ / تعديل {saved_count} توقع.')
+            elif skipped_locked:
+                flash('لم يتم حفظ أي توقع لأن المباريات أصبحت مغلقة.')
+            else:
+                flash('لا توجد توقعات مفتوحة للحفظ.')
+
+        elif action == 'predict':
             match = Match.query.get_or_404(int(request.form['match_id']))
 
             if match_locked(match):
@@ -656,9 +734,10 @@ def participant_page(token):
         champion_locked=(
             t.champion_pick_deadline is not None
             and now_kw() >= t.champion_pick_deadline
-        )
+        ),
+        has_open_matches=any(not match_locked(m) for m in matches)
     )
-
+    
 @app.route('/rules')
 def rules():
     t = tournament()
