@@ -31,28 +31,6 @@
   </form>
 </details>
 
-<details class="admin-tool-card admin-danger-cleanup-card" open>
-  <summary>
-    <span>🧹 تنظيف النسخ الإنجليزية الفارغة</span>
-    <b>⌄</b>
-  </summary>
-
-  <div class="admin-tool-body">
-    <p class="muted">
-      هذا الزر يحذف فقط المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات.
-      أي مباراة عليها توقعات لن يتم حذفها.
-    </p>
-
-    <form method="post" class="admin-inline-form">
-      <input type="hidden" name="action" value="delete_empty_english_matches">
-
-      <button type="submit" formnovalidate>
-        حذف النسخ الإنجليزية الفارغة
-      </button>
-    </form>
-  </div>
-</details>
-
 <div class="admin-section admin-main-section">
   <h2>إدارة المباريات</h2>
 
@@ -150,7 +128,11 @@
         </form>
 
         {% if m.home_score is not none or m.away_score is not none %}
-          <form method="post" class="admin-clear-form">
+          <form
+            method="post"
+            class="admin-clear-form"
+            onsubmit="return confirm('هل تريد مسح النتيجة فقط؟ التوقعات ستبقى محفوظة.');"
+          >
             <input type="hidden" name="action" value="clear_result">
             <input type="hidden" name="match_id" value="{{ m.id }}">
 
@@ -188,7 +170,11 @@
             <button type="submit">حفظ التعديل</button>
           </form>
 
-          <form method="post" class="admin-delete-form">
+          <form
+            method="post"
+            onsubmit="return confirm('هل أنت متأكد؟ حذف المباراة سيحذف توقعات المشاركين لهذه المباراة أيضًا.');"
+            class="admin-delete-form"
+          >
             <input type="hidden" name="action" value="delete_match">
             <input type="hidden" name="match_id" value="{{ m.id }}">
 
@@ -247,7 +233,7 @@
               type="button"
               class="copy-link-btn"
               data-link="{{ player_url }}"
-              onclick="copyParticipantLink(this)"
+              onclick="navigator.clipboard.writeText(this.dataset.link); this.textContent='تم النسخ';"
             >
               نسخ الرابط
             </button>
@@ -258,147 +244,5 @@
   </details>
 
 </div>
-
-<div id="adminConfirmOverlay" class="admin-confirm-overlay" style="display:none;">
-  <div class="admin-confirm-box">
-    <div id="adminConfirmIcon" class="admin-confirm-icon">⚠️</div>
-
-    <h3 id="adminConfirmTitle">تأكيد العملية</h3>
-
-    <p id="adminConfirmMessage">
-      هل تريد المتابعة؟
-    </p>
-
-    <div id="adminConfirmWarning" class="admin-confirm-warning" style="display:none;">
-      يوجد رقم كبير في النتيجة. تأكد أن النتيجة صحيحة قبل الحفظ.
-    </div>
-
-    <div class="admin-confirm-actions">
-      <button type="button" class="admin-confirm-cancel" onclick="closeAdminConfirm()">
-        إلغاء
-      </button>
-
-      <button type="button" id="adminConfirmSubmit" class="admin-confirm-submit" onclick="submitAdminConfirm()">
-        تأكيد
-      </button>
-    </div>
-  </div>
-</div>
-
-<script>
-let pendingAdminForm = null;
-
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.admin-result-form').forEach(function (form) {
-    form.addEventListener('submit', function (event) {
-      const homeInput = form.querySelector('input[name="home_score"]');
-      const awayInput = form.querySelector('input[name="away_score"]');
-
-      const homeScore = Number(homeInput ? homeInput.value || 0 : 0);
-      const awayScore = Number(awayInput ? awayInput.value || 0 : 0);
-
-      if (homeScore > 3 || awayScore > 3) {
-        event.preventDefault();
-
-        openAdminConfirm({
-          form: form,
-          icon: '⚽',
-          title: 'تأكيد حفظ النتيجة',
-          message: 'تم إدخال نتيجة أكبر من 3 أهداف. هل أنت متأكد أن النتيجة صحيحة؟',
-          warning: 'هذا تنبيه فقط لتجنب إدخال رقم كبير بالخطأ.',
-          submitText: 'نعم، حفظ النتيجة',
-          danger: false
-        });
-      }
-    });
-  });
-
-  document.querySelectorAll('.admin-clear-form').forEach(function (form) {
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      openAdminConfirm({
-        form: form,
-        icon: '🧹',
-        title: 'مسح النتيجة',
-        message: 'هل تريد مسح النتيجة فقط؟ توقعات المشاركين ستبقى محفوظة.',
-        warning: '',
-        submitText: 'نعم، مسح النتيجة',
-        danger: false
-      });
-    });
-  });
-
-  document.querySelectorAll('.admin-delete-form').forEach(function (form) {
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      openAdminConfirm({
-        form: form,
-        icon: '🗑️',
-        title: 'حذف المباراة',
-        message: 'هل أنت متأكد؟ حذف المباراة سيحذف توقعات المشاركين لهذه المباراة أيضًا.',
-        warning: 'هذه العملية لا يمكن التراجع عنها بسهولة.',
-        submitText: 'نعم، حذف المباراة',
-        danger: true
-      });
-    });
-  });
-});
-
-function openAdminConfirm(options) {
-  pendingAdminForm = options.form;
-
-  document.getElementById('adminConfirmIcon').textContent = options.icon || '⚠️';
-  document.getElementById('adminConfirmTitle').textContent = options.title || 'تأكيد العملية';
-  document.getElementById('adminConfirmMessage').textContent = options.message || 'هل تريد المتابعة؟';
-
-  const warningBox = document.getElementById('adminConfirmWarning');
-
-  if (options.warning) {
-    warningBox.textContent = options.warning;
-    warningBox.style.display = 'block';
-  } else {
-    warningBox.style.display = 'none';
-  }
-
-  const submitButton = document.getElementById('adminConfirmSubmit');
-  submitButton.textContent = options.submitText || 'تأكيد';
-
-  if (options.danger) {
-    submitButton.classList.add('danger');
-  } else {
-    submitButton.classList.remove('danger');
-  }
-
-  document.getElementById('adminConfirmOverlay').style.display = 'flex';
-}
-
-function closeAdminConfirm() {
-  document.getElementById('adminConfirmOverlay').style.display = 'none';
-  pendingAdminForm = null;
-}
-
-function submitAdminConfirm() {
-  if (pendingAdminForm) {
-    pendingAdminForm.submit();
-  }
-}
-
-function copyParticipantLink(button) {
-  const link = button.dataset.link;
-
-  navigator.clipboard.writeText(link).then(function () {
-    const oldText = button.textContent;
-    button.textContent = 'تم النسخ';
-    button.classList.add('copied');
-
-    setTimeout(function () {
-      button.textContent = oldText;
-      button.classList.remove('copied');
-    }, 1200);
-  });
-}
-</script>
 
 {% endblock %}
