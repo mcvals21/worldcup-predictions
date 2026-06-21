@@ -1813,12 +1813,24 @@ def admin(code):
         elif action == 'delete_match':
             m = Match.query.get_or_404(int(request.form['match_id']))
 
-            Prediction.query.filter_by(match_id=m.id).delete()
+            prediction_count = Prediction.query.filter_by(
+                match_id=m.id
+            ).count()
 
-            db.session.delete(m)
-            db.session.commit()
+            if prediction_count > 0:
+                flash(
+                    f'لا يمكن حذف {m.home_team} × {m.away_team} لأن عليها '
+                    f'{prediction_count} توقع. احذف فقط المباريات التي عليها 0 توقع.'
+                )
+            else:
+                ApiMatchMap.query.filter_by(
+                    match_id=m.id
+                ).delete()
 
-            flash('تم حذف المباراة.')
+                db.session.delete(m)
+                db.session.commit()
+
+                flash(f'تم حذف المباراة: {m.home_team} × {m.away_team}')
 
         elif action == 'champion_deadline':
             t.champion_pick_deadline = datetime.strptime(
@@ -1877,6 +1889,18 @@ def admin(code):
                 )
             except Exception as e:
                 flash(f'فشل إصلاح الربط: {e}')
+
+        elif action == 'delete_empty_english_matches':
+            try:
+                stats = delete_empty_english_matches(t)
+
+                flash(
+                    f"تم حذف النسخ الإنجليزية الفارغة: "
+                    f"حذف {stats['deleted']}، "
+                    f"تم حفظ {stats['kept_with_predictions']} لأنها تحتوي على توقعات."
+                )
+            except Exception as e:
+                flash(f'فشل حذف النسخ الإنجليزية الفارغة: {e}')
 
         return redirect(url_for(
             'admin',
