@@ -1409,7 +1409,7 @@ def admin(code):
 
     participants = Participant.query.order_by(Participant.name).all()
 
-       return render_template(
+    return render_template(
         'admin.html',
         t=t,
         matches=matches,
