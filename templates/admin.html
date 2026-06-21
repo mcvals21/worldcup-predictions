@@ -31,75 +31,7 @@
   </form>
 </details>
 
-<details class="admin-tool-card admin-sync-card">
-  <summary>
-    <span>🌍 مزامنة مجانية لكأس العالم</span>
-    <b>⌄</b>
-  </summary>
 
-  <div class="admin-tool-body admin-sync-body">
-    <p class="muted">
-      يستخدم football-data.org المجاني. النتائج قد تكون متأخرة قليلًا وليست Live فورية.
-    </p>
-
-    <form method="post" class="admin-inline-form sync-action-form">
-      <input type="hidden" name="action" value="sync_schedule_free">
-      <button type="submit" formnovalidate>
-        مزامنة جدول البطولة
-      </button>
-    </form>
-
-    <form method="post" class="admin-inline-form sync-action-form">
-      <input type="hidden" name="action" value="sync_results_free">
-      <button type="submit" formnovalidate>
-        تحديث النتائج النهائية
-      </button>
-    </form>
-
-    <form method="post" class="admin-inline-form sync-action-form">
-      <input type="hidden" name="action" value="repair_source_links">
-      <button type="submit" formnovalidate>
-        إصلاح ربط المباريات
-      </button>
-    </form>
-
-    <div class="sync-report-box">
-      <h4>فحص المباريات غير المرتبطة</h4>
-
-      {% if unlinked_matches %}
-        <p>
-          يوجد {{ unlinked_matches|length }} مباراة غير مرتبطة بالمصدر.
-          راجعها قبل حذف أي شيء.
-        </p>
-
-        <div class="unlinked-list">
-          {% for item in unlinked_matches %}
-            {% set m = item.match %}
-            <div class="unlinked-match-card">
-              <strong>{{ m.home_team }} × {{ m.away_team }}</strong>
-
-              <span>
-                {{ m.start_time.strftime('%Y-%m-%d') }}
-                ·
-                {{ m.start_time.strftime('%H:%M') }}
-                ·
-                {{ stage_labels.get(m.stage, m.stage) }}
-              </span>
-
-              <b>
-                {{ item.prediction_count }} توقع
-              </b>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p>
-          ممتاز، كل المباريات مرتبطة بالمصدر.
-        </p>
-      {% endif %}
-    </div>
-  </div>
-</details>
 <div class="admin-section admin-main-section">
   <h2>إدارة المباريات</h2>
 
