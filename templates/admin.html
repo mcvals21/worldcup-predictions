@@ -1,43 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="admin-v2">
+<div class="admin-safe-v4" dir="rtl">
 
-  <section class="card admin-v2-add-card">
-    <div class="admin-v2-card-head">
-      <span class="admin-v2-badge">＋ مباراة جديدة</span>
-      <h2>إضافة مباراة</h2>
-      <p>أضف المباراة يدويًا وحدد التاريخ والوقت والدور.</p>
+  <section class="admin-safe-card admin-safe-add-card">
+    <div class="admin-safe-card-title-row">
+      <div>
+        <span class="admin-safe-mini-badge">＋ مباراة جديدة</span>
+        <h2>إضافة مباراة</h2>
+        <p>أضف مباراة يدويًا بسرعة، مع تاريخ ووقت منفصلين لتقليل الأخطاء.</p>
+      </div>
     </div>
 
-    <form method="post" class="admin-v2-add-form">
+    <form method="post" class="admin-safe-add-form">
       <input type="hidden" name="action" value="add_match">
 
-      <div class="admin-v2-grid two">
-        <label class="admin-v2-field">
-          <span>الفريق الأول</span>
-          <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
-        </label>
+      <label class="admin-safe-field">
+        <span>الفريق الأول</span>
+        <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
+      </label>
 
-        <label class="admin-v2-field">
-          <span>الفريق الثاني</span>
-          <input type="text" name="away_team" placeholder="مثال: العراق" required>
-        </label>
-      </div>
+      <label class="admin-safe-field">
+        <span>الفريق الثاني</span>
+        <input type="text" name="away_team" placeholder="مثال: العراق" required>
+      </label>
 
-      <div class="admin-v2-grid two">
-        <label class="admin-v2-field">
-          <span>تاريخ المباراة</span>
-          <input type="date" name="match_date" required>
-        </label>
+      <label class="admin-safe-field">
+        <span>تاريخ المباراة</span>
+        <input type="date" name="match_date" required>
+      </label>
 
-        <label class="admin-v2-field">
-          <span>وقت المباراة</span>
-          <input type="time" name="match_time" required>
-        </label>
-      </div>
+      <label class="admin-safe-field">
+        <span>وقت المباراة</span>
+        <input type="time" name="match_time" required>
+      </label>
 
-      <label class="admin-v2-field">
+      <label class="admin-safe-field admin-safe-full">
         <span>الدور</span>
         <select name="stage" required>
           {% for key, label in stage_labels.items() %}
@@ -46,42 +44,46 @@
         </select>
       </label>
 
-      <button type="submit" class="admin-v2-primary-btn">إضافة المباراة</button>
+      <button type="submit" class="admin-safe-btn admin-safe-primary admin-safe-full">
+        إضافة المباراة
+      </button>
     </form>
   </section>
 
-  <form method="post" class="admin-v2-cleanup" onsubmit="return confirm('سيتم حذف المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات فقط. هل تريد المتابعة؟')">
-    <input type="hidden" name="action" value="delete_empty_english_matches">
-    <button type="submit">حذف المباريات الإنجليزية القديمة بلا توقعات</button>
-  </form>
-
-  <section class="card admin-v2-main-card">
-    <div class="admin-v2-section-head">
+  <section class="admin-safe-card admin-safe-tools-card">
+    <div class="admin-safe-tools-top">
       <div>
         <h2>إدارة المباريات</h2>
         <p>أدخل النتائج، عدّل المباريات، وتابع عدد التوقعات.</p>
       </div>
+
+      <form method="post" class="admin-safe-cleanup-form" onsubmit="return confirm('سيتم حذف المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات فقط. هل تريد المتابعة؟')">
+        <input type="hidden" name="action" value="delete_empty_english_matches">
+        <button type="submit" class="admin-safe-btn admin-safe-cleanup-btn">
+          حذف المباريات الإنجليزية القديمة
+        </button>
+      </form>
     </div>
 
-    <div class="match-tabs admin-v2-tabs">
+    <div class="admin-safe-tabs">
       {% for key, label in match_filter_labels.items() %}
         <a
-          class="match-tab {% if selected_filter == key %}active{% endif %}"
+          class="admin-safe-tab {% if selected_filter == key %}active{% endif %}"
           href="{{ url_for('admin', code=code, filter=key) }}"
         >
           <span>{{ label }}</span>
-          <small>{{ match_counts[key] }}</small>
+          <b>{{ match_counts[key] }}</b>
         </a>
       {% endfor %}
     </div>
 
     {% if not matches %}
-      <div class="empty-card admin-v2-empty">
+      <div class="admin-safe-empty">
         لا توجد مباريات في هذا القسم حاليًا.
       </div>
     {% endif %}
 
-    <div class="admin-v2-match-list">
+    <div class="admin-safe-match-list">
       {% for m in matches %}
         {% set home_flag = team_flag_code(m.home_team) %}
         {% set away_flag = team_flag_code(m.away_team) %}
@@ -89,32 +91,34 @@
         {% set is_finished = m.home_score is not none and m.away_score is not none %}
         {% set is_locked = locked(m) %}
 
-        <section class="admin-v2-match-card">
-          <div class="admin-v2-status-row">
-            {% if is_finished %}
-              <span class="admin-v2-status done">المنتهية</span>
-            {% elif is_locked %}
-              <span class="admin-v2-status needs">تحتاج نتيجة</span>
-            {% else %}
-              <span class="admin-v2-status upcoming">القادمة</span>
-            {% endif %}
+        <section class="admin-safe-match-card">
+          <div class="admin-safe-match-top">
+            <div class="admin-safe-state-row">
+              {% if is_finished %}
+                <span class="admin-safe-state done">المنتهية</span>
+              {% elif is_locked %}
+                <span class="admin-safe-state needs">تحتاج نتيجة</span>
+              {% else %}
+                <span class="admin-safe-state upcoming">القادمة</span>
+              {% endif %}
 
-            <span class="admin-v2-pred-count">{{ pred_count }} توقع</span>
+              <span class="admin-safe-count">{{ pred_count }} توقع</span>
+            </div>
           </div>
 
-          <form method="post" class="admin-v2-result-form">
+          <form method="post" class="admin-safe-result-form">
             <input type="hidden" name="action" value="result">
             <input type="hidden" name="match_id" value="{{ m.id }}">
 
-            <div class="admin-v2-match-main">
-              <div class="admin-v2-team">
+            <div class="admin-safe-teams-score">
+              <div class="admin-safe-team">
                 {% if home_flag %}
                   <img src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
                 {% endif %}
                 <strong>{{ m.home_team }}</strong>
               </div>
 
-              <div class="admin-v2-score-box">
+              <div class="admin-safe-score-inputs">
                 <input
                   type="number"
                   min="0"
@@ -132,7 +136,7 @@
                 >
               </div>
 
-              <div class="admin-v2-team">
+              <div class="admin-safe-team">
                 {% if away_flag %}
                   <img src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
                 {% endif %}
@@ -140,94 +144,113 @@
               </div>
             </div>
 
-            <div class="admin-v2-meta">
+            <div class="admin-safe-meta">
               <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
               <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
               <span>{{ m.start_time.strftime('%H:%M') }}</span>
             </div>
 
-            <button type="submit" class="admin-v2-save-btn">حفظ النتيجة</button>
+            <div class="admin-safe-actions-grid">
+              <button type="submit" class="admin-safe-btn admin-safe-save-btn">
+                حفظ النتيجة
+              </button>
+            </div>
           </form>
 
-          <form method="post" class="admin-v2-clear-form" onsubmit="return confirm('هل تريد مسح النتيجة فقط؟ التوقعات ستبقى محفوظة.')">
-            <input type="hidden" name="action" value="clear_result">
-            <input type="hidden" name="match_id" value="{{ m.id }}">
-            <button type="submit">مسح النتيجة</button>
-          </form>
-
-          <details class="admin-v2-edit-box">
-            <summary>تعديل المباراة</summary>
-
-            <form method="post" class="admin-v2-edit-form">
-              <input type="hidden" name="action" value="edit_match">
+          <div class="admin-safe-secondary-actions">
+            <form method="post" onsubmit="return confirm('هل تريد مسح النتيجة فقط؟ التوقعات ستبقى محفوظة.')">
+              <input type="hidden" name="action" value="clear_result">
               <input type="hidden" name="match_id" value="{{ m.id }}">
-
-              <label class="admin-v2-field">
-                <span>الفريق الأول</span>
-                <input type="text" name="home_team" value="{{ m.home_team }}" required>
-              </label>
-
-              <label class="admin-v2-field">
-                <span>الفريق الثاني</span>
-                <input type="text" name="away_team" value="{{ m.away_team }}" required>
-              </label>
-
-              <label class="admin-v2-field">
-                <span>وقت المباراة</span>
-                <input
-                  type="datetime-local"
-                  name="start_time"
-                  value="{{ m.start_time.strftime('%Y-%m-%dT%H:%M') }}"
-                  required
-                >
-              </label>
-
-              <label class="admin-v2-field">
-                <span>الدور</span>
-                <select name="stage" required>
-                  {% for key, label in stage_labels.items() %}
-                    <option value="{{ key }}" {% if m.stage == key %}selected{% endif %}>{{ label }}</option>
-                  {% endfor %}
-                </select>
-              </label>
-
-              <button type="submit" class="admin-v2-primary-btn">حفظ التعديل</button>
+              <button type="submit" class="admin-safe-btn admin-safe-muted-btn">
+                مسح النتيجة
+              </button>
             </form>
 
-            <form method="post" class="admin-v2-delete-form" onsubmit="return confirm('تحذير: سيتم حذف المباراة وتوقعاتها. هل أنت متأكد؟')">
-              <input type="hidden" name="action" value="delete_match">
-              <input type="hidden" name="match_id" value="{{ m.id }}">
-              <button type="submit">حذف المباراة</button>
-            </form>
-          </details>
+            <details class="admin-safe-edit-box">
+              <summary>تعديل المباراة</summary>
+
+              <form method="post" class="admin-safe-edit-form">
+                <input type="hidden" name="action" value="edit_match">
+                <input type="hidden" name="match_id" value="{{ m.id }}">
+
+                <label class="admin-safe-field">
+                  <span>الفريق الأول</span>
+                  <input type="text" name="home_team" value="{{ m.home_team }}" required>
+                </label>
+
+                <label class="admin-safe-field">
+                  <span>الفريق الثاني</span>
+                  <input type="text" name="away_team" value="{{ m.away_team }}" required>
+                </label>
+
+                <label class="admin-safe-field">
+                  <span>وقت المباراة</span>
+                  <input
+                    type="datetime-local"
+                    name="start_time"
+                    value="{{ m.start_time.strftime('%Y-%m-%dT%H:%M') }}"
+                    required
+                  >
+                </label>
+
+                <label class="admin-safe-field">
+                  <span>الدور</span>
+                  <select name="stage" required>
+                    {% for key, label in stage_labels.items() %}
+                      <option value="{{ key }}" {% if m.stage == key %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+
+                <button type="submit" class="admin-safe-btn admin-safe-primary">
+                  حفظ التعديل
+                </button>
+              </form>
+
+              <form method="post" class="admin-safe-delete-form" onsubmit="return confirm('تحذير: سيتم حذف المباراة وتوقعاتها. هل أنت متأكد؟')">
+                <input type="hidden" name="action" value="delete_match">
+                <input type="hidden" name="match_id" value="{{ m.id }}">
+                <button type="submit" class="admin-safe-btn admin-safe-danger-btn">
+                  حذف المباراة
+                </button>
+              </form>
+            </details>
+          </div>
         </section>
       {% endfor %}
     </div>
   </section>
 
-  <section class="card admin-v2-small-card">
-    <h3>موعد إغلاق توقع البطل</h3>
-    <form method="post" class="admin-v2-deadline-form">
+  <section class="admin-safe-card admin-safe-small-card">
+    <h2>موعد إغلاق توقع البطل</h2>
+    <form method="post" class="admin-safe-deadline-form">
       <input type="hidden" name="action" value="champion_deadline">
-      <input
-        type="datetime-local"
-        name="deadline"
-        value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}"
-        required
-      >
-      <button type="submit" class="admin-v2-primary-btn">حفظ الموعد</button>
+      <label class="admin-safe-field">
+        <span>الموعد</span>
+        <input
+          type="datetime-local"
+          name="deadline"
+          value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}"
+          required
+        >
+      </label>
+      <button type="submit" class="admin-safe-btn admin-safe-primary">
+        حفظ الموعد
+      </button>
     </form>
   </section>
 
-  <details class="card admin-v2-small-card admin-v2-links-card">
+  <details class="admin-safe-card admin-safe-small-card admin-safe-links-card">
     <summary>روابط المشاركين</summary>
 
-    <div class="admin-v2-links-list">
+    <div class="admin-safe-links-list">
       {% for p in participants %}
-        <div class="admin-v2-link-row">
+        <div class="admin-safe-link-row">
           <strong>{{ p.name }}</strong>
           <code id="link{{ p.id }}">https://worldcup-predictions-isey.onrender.com/p/{{ p.token }}</code>
-          <button type="button" onclick="copyLink('link{{ p.id }}')">نسخ</button>
+          <button type="button" class="admin-safe-btn admin-safe-copy-btn" onclick="copyLink('link{{ p.id }}')">
+            نسخ
+          </button>
         </div>
       {% endfor %}
     </div>
