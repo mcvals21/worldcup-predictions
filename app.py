@@ -1120,6 +1120,13 @@ def admin(code):
     }
 
     participants = Participant.query.order_by(Participant.name).all()
+        prediction_counts = {
+        match_id: count
+        for match_id, count in db.session.query(
+            Prediction.match_id,
+            db.func.count(Prediction.id)
+        ).group_by(Prediction.match_id).all()
+    }
 
     return render_template(
         'admin.html',
