@@ -640,7 +640,7 @@ def participant_page(token):
             db.session.commit()
 
             if saved_count:
-                flash(f'تم حفظ {saved_count} توقع.')
+                flash('تم حفظ التوقعات.')
             elif skipped_locked:
                 flash('لم يتم حفظ أي توقع لأن المباريات أصبحت مغلقة.')
             else:
