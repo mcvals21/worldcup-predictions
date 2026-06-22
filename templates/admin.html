@@ -174,10 +174,13 @@
           </form>
 
           <form
-            method="post"
-            onsubmit="return confirm('هل أنت متأكد؟ حذف المباراة سيحذف توقعات المشاركين لهذه المباراة أيضًا.');"
-            class="admin-delete-form"
-          >
+  method="post"
+  class="admin-delete-form js-confirm-form"
+  data-confirm-title="حذف المباراة؟"
+  data-confirm-text="سيتم حذف المباراة وتوقعات المشاركين المرتبطة بها. لا تستخدم هذا إلا إذا كنت متأكدًا."
+  data-confirm-button="حذف المباراة"
+  data-confirm-danger="1"
+>
             <input type="hidden" name="action" value="delete_match">
             <input type="hidden" name="match_id" value="{{ m.id }}">
 
@@ -247,5 +250,82 @@
   </details>
 
 </div>
+
+<div class="admin-modal-backdrop" id="adminConfirmModal" hidden>
+  <div class="admin-modal-card">
+    <button type="button" class="admin-modal-close" id="adminModalClose">×</button>
+
+    <div class="admin-modal-icon" id="adminModalIcon">⚠️</div>
+
+    <h3 id="adminModalTitle">تأكيد العملية</h3>
+    <p id="adminModalText">هل أنت متأكد؟</p>
+
+    <div class="admin-modal-actions">
+      <button type="button" class="admin-modal-cancel" id="adminModalCancel">
+        إلغاء
+      </button>
+
+      <button type="button" class="admin-modal-confirm" id="adminModalConfirm">
+        تأكيد
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const modal = document.getElementById('adminConfirmModal');
+  const title = document.getElementById('adminModalTitle');
+  const text = document.getElementById('adminModalText');
+  const icon = document.getElementById('adminModalIcon');
+  const confirmBtn = document.getElementById('adminModalConfirm');
+  const cancelBtn = document.getElementById('adminModalCancel');
+  const closeBtn = document.getElementById('adminModalClose');
+
+  let pendingForm = null;
+
+  document.querySelectorAll('.js-confirm-form').forEach(function (form) {
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      pendingForm = form;
+
+      title.textContent = form.dataset.confirmTitle || 'تأكيد العملية';
+      text.textContent = form.dataset.confirmText || 'هل أنت متأكد؟';
+      confirmBtn.textContent = form.dataset.confirmButton || 'تأكيد';
+
+      const danger = form.dataset.confirmDanger === '1';
+
+      modal.classList.toggle('danger', danger);
+      icon.textContent = danger ? '🗑️' : '⚠️';
+
+      modal.hidden = false;
+    });
+  });
+
+  function closeModal() {
+    modal.hidden = true;
+    pendingForm = null;
+  }
+
+  cancelBtn.addEventListener('click', closeModal);
+  closeBtn.addEventListener('click', closeModal);
+
+  confirmBtn.addEventListener('click', function () {
+    if (pendingForm) {
+      const form = pendingForm;
+      pendingForm = null;
+      modal.hidden = true;
+      form.submit();
+    }
+  });
+
+  modal.addEventListener('click', function (event) {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+});
+</script>
 
 {% endblock %}
