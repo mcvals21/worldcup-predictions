@@ -6887,3 +6887,58 @@ a{
     width:38px;
   }
 }
+/* زر حفظ التوقعات - نسخة بسيطة وراقية */
+.bulk-save-bar{
+  position:sticky !important;
+  bottom:12px !important;
+  z-index:90 !important;
+  width:min(92%, 420px) !important;
+  margin:22px auto 18px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+
+.bulk-save-btn{
+  width:100% !important;
+  min-height:54px !important;
+  margin:0 !important;
+  border-radius:18px !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  background:linear-gradient(135deg,#14120b,#211b0d) !important;
+  color:#f8e7a1 !important;
+  font-size:1.03rem !important;
+  font-weight:950 !important;
+  letter-spacing:.1px !important;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.32),
+    inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.bulk-save-btn::before{
+  content:"" !important;
+}
+
+.bulk-save-btn:hover{
+  background:linear-gradient(135deg,#1a160c,#2a210d) !important;
+}
+
+.bulk-save-btn:active{
+  transform:scale(.985) !important;
+}
+
+@media (max-width:700px){
+  .bulk-save-bar{
+    bottom:12px !important;
+    width:min(90%, 390px) !important;
+    margin:20px auto 16px !important;
+  }
+
+  .bulk-save-btn{
+    min-height:52px !important;
+    border-radius:17px !important;
+    font-size:1rem !important;
+  }
+}
