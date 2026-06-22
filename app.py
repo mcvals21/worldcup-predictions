@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import secrets
 import os
+import re
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'change-this-secret-key'
@@ -1028,26 +1029,31 @@ def admin(code):
         action = request.form.get('action')
 
         if action == 'add_match':
-    match_date = request.form['match_date']
-    match_time = request.form['match_time']
+            # New compact form uses separate date/time fields.
+            # Keep backward compatibility with the old datetime-local field.
+            if request.form.get('match_date') and request.form.get('match_time'):
+                dt = datetime.strptime(
+                    f"{request.form['match_date']} {request.form['match_time']}",
+                    '%Y-%m-%d %H:%M'
+                )
+            else:
+                dt = datetime.strptime(
+                    request.form['start_time'],
+                    '%Y-%m-%dT%H:%M'
+                )
 
-    dt = datetime.strptime(
-        f'{match_date} {match_time}',
-        '%Y-%m-%d %H:%M'
-    )
+            m = Match(
+                tournament_id=t.id,
+                home_team=request.form['home_team'].strip(),
+                away_team=request.form['away_team'].strip(),
+                start_time=dt,
+                stage=request.form['stage']
+            )
 
-    m = Match(
-        tournament_id=t.id,
-        home_team=request.form['home_team'].strip(),
-        away_team=request.form['away_team'].strip(),
-        start_time=dt,
-        stage=request.form['stage']
-    )
+            db.session.add(m)
+            db.session.commit()
 
-    db.session.add(m)
-    db.session.commit()
-
-    flash('تمت إضافة المباراة بنجاح.')
+            flash('تمت إضافة المباراة بنجاح.')
 
         elif action == 'result':
             m = Match.query.get_or_404(int(request.form['match_id']))
@@ -1094,6 +1100,29 @@ def admin(code):
             db.session.commit()
 
             flash('تم حذف المباراة.')
+
+        elif action == 'delete_empty_english_matches':
+            deleted_count = 0
+
+            all_tournament_matches = Match.query.filter_by(
+                tournament_id=t.id
+            ).all()
+
+            for m in all_tournament_matches:
+                pred_count = Prediction.query.filter_by(match_id=m.id).count()
+                teams_text = f'{m.home_team} {m.away_team}'
+                has_english = re.search(r'[A-Za-z]', teams_text) is not None
+
+                if has_english and pred_count == 0:
+                    db.session.delete(m)
+                    deleted_count += 1
+
+            db.session.commit()
+
+            if deleted_count:
+                flash(f'تم حذف {deleted_count} مباراة إنجليزية قديمة بلا توقعات.')
+            else:
+                flash('لا توجد مباريات إنجليزية قديمة بلا توقعات لحذفها.')
 
         elif action == 'champion_deadline':
             t.champion_pick_deadline = datetime.strptime(
