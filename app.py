@@ -1028,23 +1028,26 @@ def admin(code):
         action = request.form.get('action')
 
         if action == 'add_match':
-            dt = datetime.strptime(
-                request.form['start_time'],
-                '%Y-%m-%dT%H:%M'
-            )
+    match_date = request.form['match_date']
+    match_time = request.form['match_time']
 
-            m = Match(
-                tournament_id=t.id,
-                home_team=request.form['home_team'].strip(),
-                away_team=request.form['away_team'].strip(),
-                start_time=dt,
-                stage=request.form['stage']
-            )
+    dt = datetime.strptime(
+        f'{match_date} {match_time}',
+        '%Y-%m-%d %H:%M'
+    )
 
-            db.session.add(m)
-            db.session.commit()
+    m = Match(
+        tournament_id=t.id,
+        home_team=request.form['home_team'].strip(),
+        away_team=request.form['away_team'].strip(),
+        start_time=dt,
+        stage=request.form['stage']
+    )
 
-            flash('تمت إضافة المباراة.')
+    db.session.add(m)
+    db.session.commit()
+
+    flash('تمت إضافة المباراة بنجاح.')
 
         elif action == 'result':
             m = Match.query.get_or_404(int(request.form['match_id']))
