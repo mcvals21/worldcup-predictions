@@ -6367,3 +6367,103 @@ a{
     padding:22px 14px 14px;
   }
 }
+/* Simple clean toast */
+.toast-area{
+  position:fixed;
+  top:calc(14px + env(safe-area-inset-top));
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9999;
+  width:min(92vw, 560px);
+  display:grid;
+  gap:10px;
+  pointer-events:none;
+}
+
+.premium-toast-simple{
+  pointer-events:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:13px 16px;
+  border-radius:18px;
+  background:rgba(17,24,39,.96);
+  color:#fff;
+  border:1px solid rgba(212,175,55,.42);
+  box-shadow:0 16px 40px rgba(0,0,0,.36);
+  backdrop-filter:blur(12px);
+  font-weight:900;
+  text-align:center;
+  line-height:1.55;
+  animation:toastSlide .22s ease both;
+}
+
+.toast-simple-icon{
+  flex:0 0 auto;
+  font-size:1.15rem;
+}
+
+.toast-simple-text{
+  color:#fff8dd;
+  font-size:.92rem;
+}
+
+.premium-toast-simple.toast-success{
+  border-color:rgba(18,183,106,.55);
+}
+
+.premium-toast-simple.toast-warning{
+  border-color:rgba(253,176,34,.60);
+}
+
+.premium-toast-simple.toast-error{
+  border-color:rgba(217,45,32,.60);
+}
+
+.toast-hide{
+  animation:toastOut .25s ease forwards;
+}
+
+/* إخفاء أي تصميم رسائل قديم */
+.flash,
+.alert,
+.site-toast,
+.premium-toast{
+  display:none !important;
+}
+
+@keyframes toastSlide{
+  from{
+    opacity:0;
+    transform:translateY(-10px) scale(.98);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+@keyframes toastOut{
+  to{
+    opacity:0;
+    transform:translateY(-8px) scale(.98);
+  }
+}
+
+@media (max-width:700px){
+  .toast-area{
+    top:calc(10px + env(safe-area-inset-top));
+    width:calc(100vw - 24px);
+  }
+
+  .premium-toast-simple{
+    border-radius:16px;
+    padding:12px 14px;
+    font-size:.88rem;
+  }
+
+  .toast-simple-text{
+    font-size:.86rem;
+  }
+}
