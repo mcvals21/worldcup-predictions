@@ -6067,3 +6067,44 @@ a{
     border-radius:15px !important;
   }
 }
+/* إصلاح رسائل التنبيه بعد الحفظ */
+.flash,
+.alert,
+.site-toast,
+.flash-message{
+  position: relative !important;
+  background: #11100b !important;
+  color: #fff8dd !important;
+  border: 1px solid rgba(212,175,55,.65) !important;
+  border-radius: 18px !important;
+  padding: 14px 48px 14px 16px !important;
+  margin: 14px auto !important;
+  width: calc(100% - 32px) !important;
+  max-width: 760px !important;
+  min-height: auto !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35) !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+  display: block !important;
+}
+
+.flash button,
+.alert button,
+.site-toast button,
+.flash-message button,
+.flash .close,
+.alert .close,
+.site-toast .close{
+  position: absolute !important;
+  top: 50% !important;
+  right: 14px !important;
+  transform: translateY(-50%) !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  border: 0 !important;
+  background: rgba(255,255,255,.12) !important;
+  color: #fff !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
