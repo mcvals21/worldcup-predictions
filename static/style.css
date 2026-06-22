@@ -6553,16 +6553,49 @@ a{
 }
 
 @media (max-width:700px){
+  /* زر حفظ التوقعات - بسيط ومتناسق */
+.bulk-save-bar{
+  position:sticky;
+  bottom:12px;
+  z-index:60;
+  margin:18px auto 12px;
+  width:min(100%, 680px);
+  padding:0;
+  border-radius:20px;
+  background:transparent;
+}
+
+.bulk-save-btn{
+  width:100% !important;
+  min-height:58px !important;
+  margin:0 !important;
+  border-radius:20px !important;
+  border:1px solid rgba(212,175,55,.65) !important;
+  background:linear-gradient(135deg,#11100b,#211b0c) !important;
+  color:#fff8dd !important;
+  font-size:1.05rem !important;
+  font-weight:950 !important;
+  letter-spacing:.1px;
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+.bulk-save-btn:active{
+  transform:scale(.99);
+}
+
+@media (max-width:700px){
   .bulk-save-bar{
     bottom:10px;
-    border-radius:20px;
+    margin:16px auto 10px;
+    width:100%;
   }
 
   .bulk-save-btn{
     min-height:56px !important;
+    border-radius:18px !important;
+    font-size:1rem !important;
   }
-
-  .bulk-card-note{
-    font-size:.78rem;
-  }
+}
 }
