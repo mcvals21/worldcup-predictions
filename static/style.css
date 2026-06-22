@@ -6788,3 +6788,53 @@ a{
     border-radius:20px !important;
   }
 }
+/* زر حفظ التوقعات - نسخة أنيقة وخفيفة */
+.bulk-save-bar{
+  position:sticky !important;
+  bottom:14px !important;
+  z-index:90 !important;
+  width:min(92%, 420px) !important;
+  margin:22px auto 18px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+
+.bulk-save-btn{
+  width:100% !important;
+  min-height:54px !important;
+  margin:0 !important;
+  border-radius:999px !important;
+  border:1px solid rgba(212,175,55,.65) !important;
+  background:linear-gradient(135deg,#fff8dd,#f4d06f) !important;
+  color:#1a1406 !important;
+  font-size:1.02rem !important;
+  font-weight:950 !important;
+  letter-spacing:.1px !important;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.75) !important;
+}
+
+.bulk-save-btn::before{
+  content:"✅ ";
+}
+
+.bulk-save-btn:active{
+  transform:scale(.985) !important;
+}
+
+@media (max-width:700px){
+  .bulk-save-bar{
+    bottom:12px !important;
+    width:min(90%, 390px) !important;
+    margin:20px auto 16px !important;
+  }
+
+  .bulk-save-btn{
+    min-height:52px !important;
+    font-size:1rem !important;
+  }
+}
