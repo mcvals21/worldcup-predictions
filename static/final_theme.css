@@ -750,3 +750,271 @@ main{
     padding:14px !important;
   }
 }
+/* =========================================================
+   FINAL SYNC PATCH
+   توحيد صفحة المتسابق مع صفحة الإدارة
+   أصغر، أهدأ، والعدادات بدون أزرق
+========================================================= */
+
+/* توحيد عرض الصفحة */
+main{
+  max-width:520px !important;
+}
+
+/* تقليل الفراغات بين العناصر */
+.wc-welcome-card,
+.player-hero{
+  margin:12px 0 22px !important;
+}
+
+.wc-section-head,
+.section-title{
+  margin:22px auto 16px !important;
+}
+
+/* عنوان المباريات أقرب للإدارة */
+.wc-section-head h3,
+.section-title{
+  font-size:1.55rem !important;
+  line-height:1.2 !important;
+}
+
+/* التبويبات مثل الإدارة */
+.match-tabs,
+.wc-tabs{
+  padding:8px !important;
+  border-radius:22px !important;
+  gap:8px !important;
+  background:linear-gradient(180deg,#24231f,#151511) !important;
+  border:1px solid rgba(212,175,55,.35) !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.28) !important;
+}
+
+/* التبويب غير النشط */
+.match-tab,
+.wc-tab{
+  min-height:54px !important;
+  border-radius:16px !important;
+  background:linear-gradient(180deg,#302f2a,#22211d) !important;
+  color:#fff8dd !important;
+  border:1px solid rgba(212,175,55,.22) !important;
+  font-size:.98rem !important;
+}
+
+/* التبويب النشط مثل الإدارة */
+.match-tab.active,
+.wc-tab.active{
+  background:linear-gradient(180deg,#d9bd61,#f2da83) !important;
+  color:#11100b !important;
+  border:1px solid rgba(212,175,55,.70) !important;
+  box-shadow:none !important;
+}
+
+/* إصلاح دائرة العدد — بدون أزرق */
+.match-tab small,
+.wc-tab small,
+.match-tab.active small,
+.wc-tab.active small{
+  width:32px !important;
+  height:32px !important;
+  min-width:32px !important;
+  min-height:32px !important;
+  border-radius:999px !important;
+  background:#fff8dd !important;
+  color:#11100b !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  font-size:.84rem !important;
+  font-weight:1000 !important;
+  box-shadow:none !important;
+}
+
+/* كرت المباراة يكون أقرب لحجم الإدارة */
+.wc-match-card,
+.mobile-focus-card{
+  border-radius:26px !important;
+  margin-bottom:18px !important;
+  background:linear-gradient(180deg,#24231f,#131310) !important;
+  border:1px solid rgba(212,175,55,.36) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.34) !important;
+}
+
+/* رأس الكرت أنظف وأقل طولًا */
+.wc-card-top,
+.mobile-card-topline{
+  padding:12px 12px 10px !important;
+  border-bottom:1px solid rgba(212,175,55,.18) !important;
+}
+
+/* شارة مفتوحة / منتهية مثل الإدارة */
+.wc-status-pill,
+.mobile-status-pill{
+  min-width:96px !important;
+  min-height:38px !important;
+  padding:7px 14px !important;
+  border-radius:999px !important;
+  font-size:.82rem !important;
+  font-weight:1000 !important;
+  box-shadow:none !important;
+}
+
+.wc-status-pill.open,
+.mobile-status-pill.open,
+.wc-status-pill.finished,
+.mobile-status-pill.finished,
+.wc-status-pill.locked,
+.mobile-status-pill.locked{
+  background:linear-gradient(180deg,#2d2b25,#1b1a16) !important;
+  color:#f4d77a !important;
+  border:1px solid rgba(212,175,55,.42) !important;
+}
+
+/* تصغير منطقة الفرق والنتيجة */
+.wc-match-main,
+.mobile-match-main{
+  padding:18px 12px 12px !important;
+  gap:10px !important;
+}
+
+/* الأعلام بحجم أقرب للإدارة */
+.wc-team-flag,
+.mobile-team-flag{
+  width:62px !important;
+  height:46px !important;
+  border-radius:13px !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.32) !important;
+}
+
+/* أسماء الفرق */
+.wc-team-box strong,
+.mobile-team-box strong{
+  font-size:.94rem !important;
+  line-height:1.25 !important;
+  font-weight:1000 !important;
+}
+
+/* مربعات النتيجة أصغر قليلًا */
+.wc-score-inputs input,
+.mobile-score-inputs input,
+.wc-score-display span,
+.mobile-score-display{
+  width:66px !important;
+  height:66px !important;
+  border-radius:18px !important;
+  font-size:1.65rem !important;
+  font-weight:1000 !important;
+  background:linear-gradient(180deg,#fffdf7,#f2f0e8) !important;
+  color:#071126 !important;
+  border:1.5px solid rgba(255,255,255,.88) !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.28) !important;
+}
+
+/* علامة - */
+.wc-score-inputs span,
+.mobile-score-inputs span,
+.wc-score-display b{
+  color:#f4d77a !important;
+  font-size:1.25rem !important;
+}
+
+/* المجموعات / التاريخ / الوقت مثل الإدارة */
+.wc-meta-row,
+.mobile-match-meta{
+  padding:0 10px 16px !important;
+  gap:7px !important;
+}
+
+.wc-meta-row span,
+.mobile-match-meta span{
+  min-width:auto !important;
+  min-height:32px !important;
+  padding:7px 11px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f4d77a !important;
+  border:1px solid rgba(212,175,55,.45) !important;
+  font-size:.78rem !important;
+  font-weight:1000 !important;
+  box-shadow:none !important;
+}
+
+/* زر حفظ التوقعات مثل الإدارة */
+.wc-save-bar,
+.bulk-save-bar{
+  width:100% !important;
+  margin:18px auto 14px !important;
+}
+
+.wc-save-btn,
+.bulk-save-btn{
+  min-height:54px !important;
+  border-radius:18px !important;
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f4d77a !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  box-shadow:0 14px 32px rgba(0,0,0,.36) !important;
+  font-size:1rem !important;
+  font-weight:1000 !important;
+}
+
+/* إخفاء أي أيقونة داخل زر الحفظ لو كانت مزعجة */
+.wc-save-btn{
+  letter-spacing:0 !important;
+}
+
+/* صفحة الإدارة: توحيد عداداتها أيضًا لو ظهر فيها أزرق */
+.admin-v2-tabs small,
+.admin-filter-tabs small,
+.admin-theme-v8 small{
+  background:#fff8dd !important;
+  color:#11100b !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+}
+
+/* موبايل */
+@media (max-width:700px){
+  main{
+    max-width:520px !important;
+    padding:14px 12px 32px !important;
+  }
+
+  .wc-match-card,
+  .mobile-focus-card{
+    border-radius:24px !important;
+    margin-bottom:16px !important;
+  }
+
+  .wc-match-main,
+  .mobile-match-main{
+    padding:17px 10px 12px !important;
+    gap:8px !important;
+  }
+
+  .wc-team-flag,
+  .mobile-team-flag{
+    width:60px !important;
+    height:44px !important;
+  }
+
+  .wc-score-inputs input,
+  .mobile-score-inputs input,
+  .wc-score-display span,
+  .mobile-score-display{
+    width:62px !important;
+    height:62px !important;
+    font-size:1.58rem !important;
+  }
+
+  .match-tab,
+  .wc-tab{
+    min-height:52px !important;
+    font-size:.92rem !important;
+  }
+
+  .match-tab small,
+  .wc-tab small{
+    width:30px !important;
+    height:30px !important;
+    min-width:30px !important;
+    min-height:30px !important;
+  }
+}
