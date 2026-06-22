@@ -787,14 +787,6 @@ def today_page():
 def leaderboard():
     t = tournament()
     participants = Participant.query.order_by(Participant.name).all()
-    prediction_counts = {
-    match_id: count
-    for match_id, count in db.session.query(
-        Prediction.match_id,
-        db.func.count(Prediction.id)
-    ).group_by(Prediction.match_id).all()
-}
-
     rows = []
 
     final_match = Match.query.filter_by(
