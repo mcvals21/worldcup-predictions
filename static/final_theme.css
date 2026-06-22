@@ -700,3 +700,83 @@ main{
   color:#11100b !important;
   border:1px solid rgba(212,175,55,.55) !important;
 }
+/* =====================================================
+   FIX PATCH v4
+   إزالة الدائرة الزرقاء + توسيط أرقام النتيجة + إزالة الكأس من الزر
+===================================================== */
+
+/* عدادات التبويبات: المفتوحة / كل المباريات */
+html body .match-tabs a.match-tab small,
+html body .wc-tabs a.wc-tab small,
+html body .match-tabs a.match-tab.active small,
+html body .wc-tabs a.wc-tab.active small{
+  background:#fff8dd !important;
+  color:#11100b !important;
+  border:1px solid rgba(212,175,55,.65) !important;
+  box-shadow:none !important;
+
+  width:32px !important;
+  height:32px !important;
+  min-width:32px !important;
+  min-height:32px !important;
+  max-width:32px !important;
+  max-height:32px !important;
+
+  border-radius:999px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  padding:0 !important;
+  margin:0 !important;
+  line-height:1 !important;
+  font-size:.86rem !important;
+  font-weight:1000 !important;
+}
+
+/* أرقام النتيجة في صفحة كل المباريات تكون في وسط المربع */
+html body .public-score-box{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+
+  padding:0 !important;
+  margin:0 auto !important;
+  line-height:1 !important;
+
+  width:66px !important;
+  min-width:66px !important;
+  max-width:66px !important;
+  height:58px !important;
+  min-height:58px !important;
+  max-height:58px !important;
+
+  border-radius:18px !important;
+  font-size:1.2rem !important;
+  font-weight:1000 !important;
+  direction:ltr !important;
+  unicode-bidi:isolate !important;
+}
+
+/* أرقام النتيجة في صفحة المتسابق أيضًا تكون وسط المربعات */
+html body .wc-score-inputs input,
+html body .mobile-score-inputs input,
+html body .wc-score-display span,
+html body .mobile-score-display{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  padding:0 !important;
+  line-height:1 !important;
+}
+
+/* منع ظهور أي كأس قبل زر حفظ التوقعات */
+html body .wc-save-btn::before,
+html body .bulk-save-btn::before{
+  content:"" !important;
+  display:none !important;
+}
+
+/* لو الكأس مكتوبة داخل الزر من HTML، هذا لا يخفيها؛ احذفها من participant.html كما في الخطوة التالية */
