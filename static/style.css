@@ -7318,3 +7318,37 @@ a{
     min-width:64px !important;
   }
 }
+/* تمييز خلفية كرت المباراة عن مربعات النتيجة */
+.mobile-focus-card{
+  background:linear-gradient(180deg,#f7f4ec,#f1eee6) !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+}
+
+.mobile-card-topline{
+  background:linear-gradient(180deg,#fbf8ef,#f4f0e6) !important;
+  border-bottom:1px solid rgba(212,175,55,.22) !important;
+}
+
+.mobile-match-main{
+  background:linear-gradient(180deg,#f7f4ec,#f1eee6) !important;
+}
+
+.mobile-score-inputs input{
+  background:#ffffff !important;
+  border:2px solid #ded7c7 !important;
+  color:#071126 !important;
+  box-shadow:
+    0 8px 18px rgba(15,23,42,.08),
+    inset 0 1px 0 rgba(255,255,255,.85) !important;
+}
+
+.mobile-score-inputs input:focus{
+  background:#ffffff !important;
+  border-color:#d4af37 !important;
+  box-shadow:0 0 0 4px rgba(212,175,55,.18) !important;
+}
+
+/* منطقة معلومات المباراة تكون مفصولة عن الخلفية */
+.mobile-match-meta{
+  background:transparent !important;
+}
