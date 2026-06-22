@@ -102,12 +102,6 @@
           <span>{{ m.start_time.strftime('%H:%M') }}</span>
         </div>
 
-        {% if pred %}
-          <div class="mobile-saved-note">
-            ✅ توقعك الحالي: <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
-          </div>
-        {% endif %}
-
         {% if m.stage in knockout %}
           <label class="double-option mobile-double-option">
             <input type="checkbox" name="is_double_{{ m.id }}" {% if pred and pred.is_double %}checked{% endif %}>
@@ -186,12 +180,12 @@
   </section>
 {% endfor %}
   {% if ns.open_count > 0 %}
-   <div class="bulk-save-bar">
-  <button type="submit" class="bulk-save-btn">
-    حفظ التوقعات
-  </button>
-</div>
-  {% endif %}
+  <div class="bulk-save-bar">
+    <button type="submit" class="bulk-save-btn">
+      حفظ التوقعات
+    </button>
+  </div>
+{% endif %}
 </form>
 <script>
 function parseKuwaitTime(value) {
