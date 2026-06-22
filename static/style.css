@@ -6942,3 +6942,143 @@ a{
     font-size:1rem !important;
   }
 }
+/* Admin add match panel */
+.admin-add-panel{
+  margin:18px 0 20px;
+  border-radius:26px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#fffdf6,#ffffff);
+  border:1px solid rgba(212,175,55,.35);
+  box-shadow:0 14px 34px rgba(0,0,0,.20);
+}
+
+.admin-add-head{
+  padding:18px 18px 8px;
+  border-bottom:1px solid rgba(212,175,55,.16);
+}
+
+.admin-add-head span{
+  display:inline-flex;
+  padding:6px 12px;
+  border-radius:999px;
+  background:#fff7dc;
+  color:#7a5a00;
+  border:1px solid rgba(212,175,55,.35);
+  font-weight:950;
+  font-size:.82rem;
+}
+
+.admin-add-head h2{
+  margin:10px 0 4px;
+  color:#101828;
+  font-weight:950;
+}
+
+.admin-add-head p{
+  margin:0;
+  color:#667085;
+  font-weight:800;
+}
+
+.admin-add-match-form{
+  padding:16px 18px 18px;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+
+.admin-input-group{
+  display:grid;
+  gap:6px;
+}
+
+.admin-input-group label{
+  color:#344054;
+  font-weight:950;
+  font-size:.88rem;
+}
+
+.admin-add-submit{
+  grid-column:1 / -1;
+  margin-top:4px !important;
+  border-radius:18px !important;
+  background:linear-gradient(135deg,#14120b,#211b0d) !important;
+  color:#f8e7a1 !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+}
+
+/* Admin section header + search */
+.admin-section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.admin-section-head h2{
+  margin:0 0 4px !important;
+}
+
+.admin-section-head p{
+  margin:0;
+  color:#667085;
+  font-weight:800;
+  font-size:.9rem;
+}
+
+.admin-search-box{
+  margin:12px 0 14px;
+}
+
+.admin-search-box input{
+  width:100%;
+  border-radius:18px !important;
+  background:#f8fafc !important;
+  border:1px solid rgba(148,163,184,.45) !important;
+  font-weight:900;
+}
+
+/* Prediction count badge */
+.admin-status-row{
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.admin-prediction-count{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:8px 13px;
+  background:#eef4ff;
+  color:#3538cd;
+  font-size:.86rem;
+  font-weight:950;
+  border:1px solid rgba(53,56,205,.12);
+}
+
+@media (max-width:700px){
+  .admin-add-panel{
+    border-radius:24px;
+    margin:16px 0 18px;
+  }
+
+  .admin-add-match-form{
+    grid-template-columns:1fr;
+    padding:14px;
+  }
+
+  .admin-add-head{
+    padding:16px 14px 8px;
+  }
+
+  .admin-section-head{
+    display:block;
+    text-align:right;
+  }
+
+  .admin-search-box input{
+    min-height:54px;
+  }
+}
