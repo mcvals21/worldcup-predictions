@@ -253,8 +253,6 @@
 
 <div class="admin-modal-backdrop" id="adminConfirmModal" hidden>
   <div class="admin-modal-card">
-    <button type="button" class="admin-modal-close" id="adminModalClose">×</button>
-
     <div class="admin-modal-icon" id="adminModalIcon">⚠️</div>
 
     <h3 id="adminModalTitle">تأكيد العملية</h3>
@@ -280,7 +278,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const icon = document.getElementById('adminModalIcon');
   const confirmBtn = document.getElementById('adminModalConfirm');
   const cancelBtn = document.getElementById('adminModalCancel');
-  const closeBtn = document.getElementById('adminModalClose');
 
   let pendingForm = null;
 
@@ -309,7 +306,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   cancelBtn.addEventListener('click', closeModal);
-  closeBtn.addEventListener('click', closeModal);
 
   confirmBtn.addEventListener('click', function () {
     if (pendingForm) {
