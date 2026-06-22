@@ -447,6 +447,92 @@
   color:#7a560e;
 }
 
+
+/* Admin v7 compact polish */
+.admin-scope-v6 .as6-add-card{
+  padding:14px !important;
+  border-radius:22px !important;
+}
+
+.admin-scope-v6 .as6-add-card .as6-head{
+  margin-bottom:10px !important;
+}
+
+.admin-scope-v6 .as6-add-card .as6-badge{
+  padding:6px 11px !important;
+  font-size:.78rem !important;
+}
+
+.admin-scope-v6 .as6-add-card h2{
+  font-size:1.22rem !important;
+  margin-top:4px !important;
+}
+
+.admin-scope-v6 .as6-add-card p{
+  display:none !important;
+}
+
+.admin-scope-v6 .as6-add-card .as6-form{
+  gap:9px !important;
+}
+
+.admin-scope-v6 .as6-add-card .as6-grid-2{
+  gap:9px !important;
+}
+
+.admin-scope-v6 .as6-add-card label{
+  gap:5px !important;
+}
+
+.admin-scope-v6 .as6-add-card label span{
+  font-size:.82rem !important;
+}
+
+.admin-scope-v6 .as6-add-card input,
+.admin-scope-v6 .as6-add-card select{
+  height:47px !important;
+  min-height:47px !important;
+  border-radius:15px !important;
+  font-size:15px !important;
+}
+
+.admin-scope-v6 .as6-add-card button{
+  min-height:48px !important;
+  border-radius:16px !important;
+}
+
+.admin-scope-v6 .as6-tools{
+  margin:0 0 14px;
+  border-radius:18px;
+  border:1px solid rgba(180,35,24,.18);
+  background:#fff;
+  overflow:hidden;
+}
+
+.admin-scope-v6 .as6-tools summary{
+  cursor:pointer;
+  padding:12px 14px;
+  color:#7a560e;
+  font-weight:950;
+  list-style:none;
+  text-align:center;
+}
+
+.admin-scope-v6 .as6-tools summary::-webkit-details-marker{
+  display:none;
+}
+
+.admin-scope-v6 .as6-tools .as6-cleanup{
+  padding:0 12px 12px;
+  margin:0;
+}
+
+.admin-scope-v6 .as6-tools .as6-danger{
+  min-height:46px !important;
+  font-size:.92rem !important;
+  border-radius:15px !important;
+}
+
 @media (max-width:700px){
   .admin-scope-v6{gap:16px;}
 
@@ -496,11 +582,37 @@
     grid-template-columns:1fr;
   }
 }
+
+
+@media (max-width:700px){
+  .admin-scope-v6 .as6-add-card{
+    padding:12px !important;
+  }
+
+  .admin-scope-v6 .as6-add-card .as6-team-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .admin-scope-v6 .as6-add-card .as6-dt-grid{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  .admin-scope-v6 .as6-add-card input,
+  .admin-scope-v6 .as6-add-card select{
+    height:45px !important;
+    min-height:45px !important;
+  }
+
+  .admin-scope-v6 .as6-tabs{
+    margin-top:10px !important;
+  }
+}
+
 </style>
 
 <div class="admin-scope-v6">
 
-  <section class="as6-card">
+  <section class="as6-card as6-add-card">
     <div class="as6-head">
       <div>
         <span class="as6-badge">＋ مباراة جديدة</span>
@@ -512,7 +624,7 @@
     <form method="post" class="as6-form">
       <input type="hidden" name="action" value="add_match">
 
-      <div class="as6-grid-2">
+      <div class="as6-grid-2 as6-team-grid">
         <label>
           <span>الفريق الأول</span>
           <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
@@ -524,7 +636,7 @@
         </label>
       </div>
 
-      <div class="as6-grid-2">
+      <div class="as6-grid-2 as6-dt-grid">
         <label>
           <span>تاريخ المباراة</span>
           <input type="date" name="match_date" required>
@@ -549,7 +661,7 @@
     </form>
   </section>
 
-  <section class="as6-card">
+  <section class="as6-card as6-manage-card">
     <div class="as6-head">
       <div>
         <h2>إدارة المباريات</h2>
@@ -557,10 +669,13 @@
       </div>
     </div>
 
-    <form method="post" class="as6-cleanup" onsubmit="return confirm('سيتم حذف المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات فقط. هل تريد المتابعة؟')">
-      <input type="hidden" name="action" value="delete_empty_english_matches">
-      <button type="submit" class="as6-danger">حذف المباريات الإنجليزية القديمة بلا توقعات</button>
-    </form>
+    <details class="as6-tools">
+      <summary>أدوات تنظيف البيانات</summary>
+      <form method="post" class="as6-cleanup" onsubmit="return confirm('سيتم حذف المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات فقط. هل تريد المتابعة؟')">
+        <input type="hidden" name="action" value="delete_empty_english_matches">
+        <button type="submit" class="as6-danger">حذف المباريات الإنجليزية القديمة بلا توقعات</button>
+      </form>
+    </details>
 
     <div class="as6-tabs">
       {% for key, label in match_filter_labels.items() %}
