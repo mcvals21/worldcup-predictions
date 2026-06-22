@@ -2,23 +2,26 @@
 
 {% block content %}
 
-<section class="card player-hero">
-  <div>
-    <div class="hero-kicker">صفحة التوقعات الخاصة بك</div>
-    <h2>أهلًا {{ p.name }} 👋</h2>
-    <p class="muted">يمكنك تعديل توقعاتك حتى بداية المباراة فقط</p>
+<section class="wc-welcome-card">
+  <div class="wc-welcome-icon">👋</div>
+
+  <div class="wc-welcome-content">
+    <div class="wc-welcome-kicker">مرحبًا بك في مسابقة الأصدقاء</div>
+    <h2>أهلاً {{ p.name }}</h2>
+    <p>يمكنك تعديل توقعاتك حتى بداية المباراة فقط</p>
   </div>
 </section>
 
+<section class="wc-section-head">
+  <span class="wc-line"></span>
+  <h3>⚽ المباريات</h3>
+  <span class="wc-line"></span>
+</section>
 
-<h3 class="section-title">
-  <span>⚽ المباريات</span>
-</h3>
-
-<div class="match-tabs">
+<div class="match-tabs wc-tabs">
   {% for key, label in match_filter_labels.items() %}
     <a
-      class="match-tab {% if selected_filter == key %}active{% endif %}"
+      class="match-tab wc-tab {% if selected_filter == key %}active{% endif %}"
       href="{{ url_for('participant_page', token=p.token, filter=key) }}"
     >
       <span>{{ label }}</span>
@@ -28,47 +31,43 @@
 </div>
 
 {% if not matches %}
-  <div class="empty-card">
+  <div class="empty-card wc-empty-card">
     لا توجد مباريات في هذا القسم حاليًا.
   </div>
 {% endif %}
-<form method="post" class="bulk-predictions-form" id="bulkPredictionsForm">
+
+<form method="post" class="wc-bulk-form">
   <input type="hidden" name="action" value="bulk_predict">
-  {% set ns = namespace(open_count=0) %}
-{% for m in matches %}
-  {% set pred = predictions.get(m.id) %}
-  {% set is_double = pred and pred.is_double %}
-  {% set home_flag = team_flag_code(m.home_team) %}
-  {% set away_flag = team_flag_code(m.away_team) %}
-  {% set is_locked = locked(m) %}
 
-  <section class="card match-card mobile-focus-card {% if is_double %}double-selected{% endif %}">
+  {% for m in matches %}
+    {% set pred = predictions.get(m.id) %}
+    {% set home_flag = team_flag_code(m.home_team) %}
+    {% set away_flag = team_flag_code(m.away_team) %}
+    {% set is_locked = locked(m) %}
 
-    <div class="mobile-card-topline clean-topline status-only-topline">
-  {% if not is_locked %}
-    <span class="mobile-status-pill open">مفتوحة</span>
-  {% elif m.home_score is not none and m.away_score is not none %}
-    <span class="mobile-status-pill finished">منتهية</span>
-  {% else %}
-    <span class="mobile-status-pill locked">مغلقة</span>
-  {% endif %}
-</div>
+    <section class="wc-match-card">
+      <div class="wc-card-top">
+        {% if not is_locked %}
+          <span class="wc-status-pill open">مفتوحة</span>
+        {% elif m.home_score is not none and m.away_score is not none %}
+          <span class="wc-status-pill finished">منتهية</span>
+        {% else %}
+          <span class="wc-status-pill locked">مغلقة</span>
+        {% endif %}
+      </div>
 
-    {% if not is_locked %}
-      {% set ns.open_count = ns.open_count + 1 %}
+      <div class="wc-match-main">
+        <div class="wc-team-box">
+          {% if home_flag %}
+            <img class="wc-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+          {% endif %}
+          <strong>{{ m.home_team }}</strong>
+        </div>
 
-      <div class="mobile-predict-form">
-        <input type="hidden" name="match_ids" value="{{ m.id }}">
+        {% if not is_locked %}
+          <div class="wc-score-inputs">
+            <input type="hidden" name="match_ids" value="{{ m.id }}">
 
-        <div class="mobile-match-main">
-          <div class="mobile-team-box">
-            {% if home_flag %}
-              <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
-            {% endif %}
-            <strong>{{ m.home_team }}</strong>
-          </div>
-
-          <div class="mobile-score-inputs">
             <input
               type="number"
               min="0"
@@ -89,155 +88,72 @@
               pattern="[0-9]*"
             >
           </div>
-
-          <div class="mobile-team-box">
-            {% if away_flag %}
-              <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+        {% else %}
+          <div class="wc-score-display">
+            {% if m.home_score is not none and m.away_score is not none %}
+              <span>{{ m.home_score }}</span>
+              <b>-</b>
+              <span>{{ m.away_score }}</span>
+            {% else %}
+              <span>VS</span>
             {% endif %}
-            <strong>{{ m.away_team }}</strong>
           </div>
-        </div>
-
-        <div class="mobile-match-meta">
-          <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
-          <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
-          <span>{{ m.start_time.strftime('%H:%M') }}</span>
-        </div>
-
-        {% if m.stage in knockout %}
-          <label class="double-option mobile-double-option">
-            <input type="checkbox" name="is_double_{{ m.id }}" {% if pred and pred.is_double %}checked{% endif %}>
-
-            <div>
-              <strong>⭐ مباراة مضاعفة</strong>
-              <span>نتيجة مطابقة = 6 نقاط، توقع الفائز = نقطتان</span>
-            </div>
-          </label>
         {% endif %}
 
-      </div>
-
-    {% else %}
-
-      <div class="mobile-match-main locked-view">
-        <div class="mobile-team-box">
-          {% if home_flag %}
-            <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
-          {% endif %}
-          <strong>{{ m.home_team }}</strong>
-        </div>
-
-        <div class="mobile-score-display">
-          {% if m.home_score is not none and m.away_score is not none %}
-            {{ m.home_score }} - {{ m.away_score }}
-          {% else %}
-            VS
-          {% endif %}
-        </div>
-
-        <div class="mobile-team-box">
+        <div class="wc-team-box">
           {% if away_flag %}
-            <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+            <img class="wc-team-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
           {% endif %}
           <strong>{{ m.away_team }}</strong>
         </div>
       </div>
 
-      <div class="mobile-match-meta">
-        <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
-        <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
+      <div class="wc-meta-row">
         <span>{{ m.start_time.strftime('%H:%M') }}</span>
+        <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
+        <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
       </div>
 
-      <div class="mobile-result-box">
-        {% if pred %}
-          <div>
-            <span>توقعك</span>
-            <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
+      {% if is_locked and pred %}
+        <div class="wc-locked-extra">
+          <div class="wc-locked-box">
+            <label>توقعك</label>
+            <strong>{{ pred.home_score }} - {{ pred.away_score }}</strong>
           </div>
 
-          <div>
-            <span>نقاطك</span>
-            <b>{{ points_for(pred,m) if m.home_score is not none else 0 }}</b>
+          <div class="wc-locked-box">
+            <label>نقاطك</label>
+            <strong>{{ points_for(pred, m) if m.home_score is not none else 0 }}</strong>
           </div>
+        </div>
 
-          {% if pred.is_double %}
-            <div class="mobile-double-note">
-              ⭐ مباراة مضاعفة
-            </div>
-          {% endif %}
-        {% else %}
-          <div class="mobile-no-prediction">
-            لم تقم بإدخال توقع لهذه المباراة
-          </div>
-        {% endif %}
-      </div>
+        <a class="wc-view-link" href="/match/{{ m.id }}">عرض توقعات الجميع</a>
+      {% elif is_locked and not pred %}
+        <div class="wc-no-prediction">
+          لم تقم بإدخال توقع لهذه المباراة
+        </div>
 
-      <p class="mobile-card-link">
-        <a href="/match/{{m.id}}">عرض توقعات الجميع</a>
-      </p>
+        <a class="wc-view-link" href="/match/{{ m.id }}">عرض توقعات الجميع</a>
+      {% endif %}
 
-    {% endif %}
+      {% if not is_locked and m.stage in knockout %}
+        <label class="wc-double-option">
+          <input
+            type="checkbox"
+            name="is_double_{{ m.id }}"
+            {% if pred and pred.is_double %}checked{% endif %}
+          >
+          <span>⭐ مباراة مضاعفة</span>
+        </label>
+      {% endif %}
+    </section>
+  {% endfor %}
 
-  </section>
-{% endfor %}
-  {% if ns.open_count > 0 %}
-  <div class="bulk-save-bar">
-    <button type="submit" class="bulk-save-btn">
-      حفظ التوقعات
-    </button>
-  </div>
-{% endif %}
+  {% if has_open_matches %}
+    <div class="wc-save-bar">
+      <button type="submit" class="wc-save-btn">🏆 حفظ التوقعات</button>
+    </div>
+  {% endif %}
 </form>
-<script>
-function parseKuwaitTime(value) {
-  const parts = value.split(/[-T:]/).map(Number);
-  return new Date(
-    parts[0],
-    parts[1] - 1,
-    parts[2],
-    parts[3],
-    parts[4],
-    parts[5] || 0
-  );
-}
-
-function updateCountdowns() {
-  document.querySelectorAll('.countdown').forEach(function(el) {
-    const start = parseKuwaitTime(el.dataset.start);
-    const now = new Date();
-    const diff = start - now;
-
-    if (diff <= 0) {
-      el.textContent = '🔒 تم إغلاق التوقع';
-      el.classList.add('locked');
-      return;
-    }
-
-    const totalSeconds = Math.floor(diff / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    let text = '⏳ يغلق خلال: ';
-
-    if (days > 0) {
-      text += days + ' يوم و ';
-    }
-
-    if (hours > 0) {
-      text += hours + ' ساعة و ';
-    }
-
-    text += minutes + ' دقيقة و ' + seconds + ' ثانية';
-
-    el.textContent = text;
-  });
-}
-
-updateCountdowns();
-setInterval(updateCountdowns, 1000);
-</script>
 
 {% endblock %}
