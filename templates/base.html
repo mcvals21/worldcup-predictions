@@ -72,31 +72,36 @@
 <main>
   {% with messages = get_flashed_messages() %}
   {% if messages %}
-    <div class="site-toast-stack" id="siteToastStack">
+    <div class="toast-area" id="toastArea">
       {% for message in messages %}
-        {% set is_error = 'لا يمكن' in message or 'إغلاق' in message or 'لم يتم' in message %}
-        {% set is_warning = 'تحتاج' in message or 'تنبيه' in message or 'أكبر' in message %}
+        {% set is_error = 'لا يمكن' in message or 'فشل' in message or 'خطأ' in message or 'لم يتم' in message %}
+        {% set is_warning = 'مسح' in message or 'حذف' in message or 'تنبيه' in message or 'إغلاق' in message %}
 
-        <div class="site-toast {% if is_error %}error{% elif is_warning %}warning{% else %}success{% endif %}">
-          <div class="site-toast-icon">
+        <div class="premium-toast {% if is_error %}toast-error{% elif is_warning %}toast-warning{% else %}toast-success{% endif %}">
+          <div class="premium-toast-icon">
             {% if is_error %}
               ⚠️
             {% elif is_warning %}
-              ⏳
+              🟡
             {% else %}
               ✅
             {% endif %}
           </div>
 
-          <div class="site-toast-text">
-            {{ message }}
+          <div class="premium-toast-content">
+            <strong>
+              {% if is_error %}
+                لم تكتمل العملية
+              {% elif is_warning %}
+                تنبيه
+              {% else %}
+                تم بنجاح
+              {% endif %}
+            </strong>
+            <span>{{ message }}</span>
           </div>
 
-          <button
-            type="button"
-            class="site-toast-close"
-            onclick="this.closest('.site-toast').remove();"
-          >
+          <button type="button" class="premium-toast-close" onclick="this.closest('.premium-toast').remove()">
             ×
           </button>
         </div>
