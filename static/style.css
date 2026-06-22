@@ -6599,3 +6599,35 @@ a{
   }
 }
 }
+/* تبسيط صفحة التوقعات */
+.mobile-saved-note,
+.bulk-card-note{
+  display:none !important;
+}
+
+.bulk-save-bar{
+  position:sticky;
+  bottom:10px;
+  z-index:60;
+  margin:18px auto 10px;
+  width:min(100%, 680px);
+  padding:0;
+  background:transparent;
+}
+
+.bulk-save-btn{
+  width:100% !important;
+  min-height:56px !important;
+  margin:0 !important;
+  border-radius:18px !important;
+  border:1px solid rgba(212,175,55,.65) !important;
+  background:linear-gradient(135deg,#11100b,#211b0c) !important;
+  color:#fff8dd !important;
+  font-size:1.05rem !important;
+  font-weight:950 !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.35) !important;
+}
+
+.bulk-save-btn:active{
+  transform:scale(.99);
+}
