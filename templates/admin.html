@@ -669,14 +669,6 @@
       </div>
     </div>
 
-    <details class="as6-tools">
-      <summary>أدوات تنظيف البيانات</summary>
-      <form method="post" class="as6-cleanup" onsubmit="return confirm('سيتم حذف المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات فقط. هل تريد المتابعة؟')">
-        <input type="hidden" name="action" value="delete_empty_english_matches">
-        <button type="submit" class="as6-danger">حذف المباريات الإنجليزية القديمة بلا توقعات</button>
-      </form>
-    </details>
-
     <div class="as6-tabs">
       {% for key, label in match_filter_labels.items() %}
         <a
