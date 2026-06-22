@@ -6631,3 +6631,160 @@ a{
 .bulk-save-btn:active{
   transform:scale(.99);
 }
+/* تحسين صفحة المستخدم - نسخة أنظف */
+.mobile-focus-card{
+  border-radius:26px !important;
+  overflow:hidden !important;
+  background:linear-gradient(180deg,#ffffff,#f8fafc) !important;
+  border:1px solid rgba(212,175,55,.22) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.24) !important;
+  margin-bottom:20px !important;
+}
+
+.mobile-card-topline{
+  padding:13px 12px !important;
+  background:linear-gradient(180deg,#fffdf6,#ffffff) !important;
+  border-bottom:1px solid rgba(212,175,55,.18) !important;
+}
+
+.mobile-status-pill{
+  min-width:104px;
+  justify-content:center;
+  border-radius:999px !important;
+  padding:8px 14px !important;
+  font-weight:950 !important;
+  font-size:.88rem !important;
+}
+
+.mobile-status-pill.open{
+  background:#ecfdf3 !important;
+  color:#047857 !important;
+  border:1px solid #bbf7d0 !important;
+}
+
+.mobile-match-main{
+  padding:22px 18px 16px !important;
+  gap:14px !important;
+}
+
+.mobile-team-box strong{
+  font-size:1.02rem !important;
+  color:#071126 !important;
+  font-weight:950 !important;
+}
+
+.mobile-team-flag{
+  width:68px !important;
+  height:48px !important;
+  border-radius:14px !important;
+  box-shadow:0 8px 18px rgba(15,23,42,.18) !important;
+}
+
+.mobile-score-inputs{
+  gap:10px !important;
+}
+
+.mobile-score-inputs input{
+  width:76px !important;
+  height:76px !important;
+  border-radius:20px !important;
+  background:#f8fafc !important;
+  border:2px solid #e5e7eb !important;
+  color:#071126 !important;
+  font-size:1.85rem !important;
+  font-weight:950 !important;
+  box-shadow:inset 0 2px 5px rgba(15,23,42,.05) !important;
+}
+
+.mobile-score-inputs input:focus{
+  border-color:#d4af37 !important;
+  box-shadow:0 0 0 4px rgba(212,175,55,.18) !important;
+}
+
+.mobile-score-inputs span{
+  color:#475467 !important;
+  font-size:1.4rem !important;
+  font-weight:950 !important;
+}
+
+.mobile-match-meta{
+  padding:0 14px 18px !important;
+  gap:8px !important;
+}
+
+.mobile-match-meta span{
+  background:#fff7dc !important;
+  color:#7a5a00 !important;
+  border:1px solid rgba(212,175,55,.35) !important;
+  border-radius:999px !important;
+  padding:7px 12px !important;
+  font-size:.84rem !important;
+  font-weight:950 !important;
+}
+
+/* زر حفظ التوقعات بشكل أخف وأجمل */
+.bulk-save-bar{
+  position:sticky !important;
+  bottom:12px !important;
+  z-index:80 !important;
+  margin:22px auto 14px !important;
+  width:min(100%, 520px) !important;
+  padding:0 10px !important;
+  background:transparent !important;
+}
+
+.bulk-save-btn{
+  width:100% !important;
+  min-height:58px !important;
+  border-radius:22px !important;
+  border:1px solid rgba(212,175,55,.70) !important;
+  background:linear-gradient(135deg,#1b1609,#2b210b) !important;
+  color:#fff8dd !important;
+  font-size:1.08rem !important;
+  font-weight:950 !important;
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+.bulk-save-btn:active{
+  transform:scale(.985);
+}
+
+/* حتى لا يغطي زر الحفظ آخر بطاقة */
+.bulk-predictions-form{
+  padding-bottom:18px !important;
+}
+
+@media (max-width:700px){
+  .mobile-focus-card{
+    border-radius:24px !important;
+    margin-bottom:18px !important;
+  }
+
+  .mobile-match-main{
+    padding:20px 12px 14px !important;
+  }
+
+  .mobile-team-flag{
+    width:64px !important;
+    height:46px !important;
+  }
+
+  .mobile-score-inputs input{
+    width:74px !important;
+    height:74px !important;
+    font-size:1.8rem !important;
+  }
+
+  .bulk-save-bar{
+    bottom:10px !important;
+    width:100% !important;
+    padding:0 8px !important;
+  }
+
+  .bulk-save-btn{
+    min-height:56px !important;
+    border-radius:20px !important;
+  }
+}
