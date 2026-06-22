@@ -8116,3 +8116,316 @@ body .prediction-points{
     border-radius:22px !important;
   }
 }
+/* =====================================================
+   FINAL ADMIN-LIKE DARK THEME
+   صفحة المتسابق + كل المباريات + توقعات الجميع
+   داكن مثل لوحة الإدارة
+===================================================== */
+
+/* تبويبات المفتوحة / كل المباريات */
+body .match-tabs{
+  display:flex !important;
+  gap:10px !important;
+  padding:8px !important;
+  border-radius:24px !important;
+  background:linear-gradient(180deg,#2b2a25,#171714) !important;
+  border:1px solid rgba(212,175,55,.34) !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.32) !important;
+}
+
+body .match-tab{
+  flex:1 !important;
+  min-height:58px !important;
+  border-radius:18px !important;
+  background:linear-gradient(180deg,#32312c,#24231f) !important;
+  color:#fff3bd !important;
+  border:1px solid rgba(212,175,55,.22) !important;
+  font-weight:950 !important;
+  box-shadow:none !important;
+}
+
+body .match-tab small{
+  min-width:30px !important;
+  height:30px !important;
+  background:#111827 !important;
+  color:#fff !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+}
+
+body .match-tab.active{
+  background:linear-gradient(180deg,#11100b,#050504) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.58) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.38) !important;
+}
+
+body .match-tab.active small{
+  background:#f6d77a !important;
+  color:#111827 !important;
+}
+
+
+/* كرت مباراة المتسابق */
+body .mobile-focus-card{
+  background:
+    radial-gradient(circle at top center, rgba(212,175,55,.08), transparent 38%),
+    linear-gradient(180deg,#25241f 0%, #11110f 100%) !important;
+  border:1px solid rgba(212,175,55,.36) !important;
+  border-radius:28px !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.42) !important;
+  overflow:hidden !important;
+}
+
+body .mobile-card-topline{
+  background:linear-gradient(180deg,#2d2b25,#1d1c18) !important;
+  border-bottom:1px solid rgba(212,175,55,.22) !important;
+  padding:14px 12px !important;
+}
+
+/* حالة المباراة: مفتوحة / منتهية / مغلقة */
+body .mobile-status-pill.open,
+body .mobile-status-pill.finished,
+body .mobile-status-pill.locked{
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.26) !important;
+}
+
+/* الفرق والأعلام */
+body .mobile-team-box strong{
+  color:#ffffff !important;
+  font-weight:950 !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.45) !important;
+}
+
+body .mobile-team-flag{
+  width:68px !important;
+  height:48px !important;
+  border-radius:14px !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.35) !important;
+}
+
+/* مربعات النتيجة تبقى فاتحة فقط لأنها تحتاج وضوح */
+body .mobile-score-inputs input,
+body .mobile-score-display{
+  width:76px !important;
+  height:76px !important;
+  border-radius:20px !important;
+  background:linear-gradient(180deg,#ffffff,#f2f3f5) !important;
+  color:#071126 !important;
+  border:2px solid rgba(255,255,255,.85) !important;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+  font-size:1.8rem !important;
+  font-weight:950 !important;
+}
+
+body .mobile-score-inputs span{
+  color:#f6d77a !important;
+  font-size:1.45rem !important;
+  font-weight:950 !important;
+}
+
+/* المجموعات / التاريخ / الوقت */
+body .mobile-match-meta{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex-wrap:wrap !important;
+  padding:0 12px 20px !important;
+}
+
+body .mobile-match-meta span{
+  min-height:36px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:8px 15px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.26) !important;
+  font-size:.84rem !important;
+  font-weight:950 !important;
+  line-height:1 !important;
+}
+
+body .mobile-match-meta span:nth-child(2){
+  min-width:112px !important;
+}
+
+body .mobile-match-meta span:nth-child(3){
+  min-width:70px !important;
+}
+
+
+/* زر حفظ التوقعات - داكن مثل لوحة الإدارة */
+body .bulk-save-bar{
+  width:min(92%, 440px) !important;
+  margin:24px auto 18px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+body .bulk-save-btn{
+  width:100% !important;
+  min-height:60px !important;
+  border-radius:22px !important;
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f6d77a !important;
+  border:1.5px solid rgba(212,175,55,.58) !important;
+  box-shadow:
+    0 16px 36px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.06) !important;
+  font-size:1.08rem !important;
+  font-weight:950 !important;
+}
+
+body .bulk-save-btn::before{
+  content:"" !important;
+}
+
+body .bulk-save-btn:hover{
+  background:linear-gradient(180deg,#242116,#0d0c08) !important;
+}
+
+
+/* صندوق توقعك / نقاطك في المباريات المنتهية */
+body .mobile-result-box{
+  background:linear-gradient(180deg,#2b2a25,#1b1a16) !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+  color:#ffffff !important;
+}
+
+body .mobile-result-box span{
+  color:#d7c58a !important;
+}
+
+body .mobile-result-box b{
+  color:#ffffff !important;
+}
+
+body .mobile-card-link a{
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+}
+
+
+/* =====================================================
+   صفحة كل المباريات
+===================================================== */
+
+body .public-match-card{
+  background:
+    radial-gradient(circle at top center, rgba(212,175,55,.08), transparent 38%),
+    linear-gradient(180deg,#25241f 0%, #11110f 100%) !important;
+  border:1px solid rgba(212,175,55,.36) !important;
+  border-radius:26px !important;
+  color:#ffffff !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.38) !important;
+}
+
+body .public-team-side,
+body .public-team-side span,
+body .public-team,
+body .public-team span{
+  color:#ffffff !important;
+  font-weight:950 !important;
+}
+
+body .public-score-box{
+  background:linear-gradient(180deg,#ffffff,#f2f3f5) !important;
+  color:#071126 !important;
+  border:2px solid rgba(255,255,255,.85) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.28) !important;
+}
+
+body .public-match-card .stage-pill,
+body .public-match-card .time-pill,
+body .public-match-card .status-pill,
+body .public-match-card .status-pill.finished,
+body .public-match-card .status-pill.live,
+body .public-match-card .status-pill.upcoming{
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+}
+
+body .public-match-footer{
+  border-top:1px solid rgba(212,175,55,.22) !important;
+}
+
+body .small-action-link{
+  color:#f6d77a !important;
+}
+
+
+/* =====================================================
+   صفحة توقعات الجميع للمباراة
+===================================================== */
+
+body .match-result-hero,
+body .prediction-card{
+  background:
+    radial-gradient(circle at top center, rgba(212,175,55,.08), transparent 38%),
+    linear-gradient(180deg,#25241f 0%, #11110f 100%) !important;
+  border:1px solid rgba(212,175,55,.36) !important;
+  color:#ffffff !important;
+  box-shadow:0 16px 36px rgba(0,0,0,.34) !important;
+}
+
+body .prediction-head strong{
+  color:#ffffff !important;
+}
+
+body .prediction-score{
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+  border-radius:999px !important;
+  padding:7px 14px !important;
+}
+
+body .prediction-points{
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+}
+
+body .prediction-status{
+  color:#fff3bd !important;
+}
+
+
+/* موبايل */
+@media (max-width:700px){
+  body .mobile-score-inputs input,
+  body .mobile-score-display{
+    width:74px !important;
+    height:74px !important;
+    font-size:1.78rem !important;
+  }
+
+  body .mobile-team-flag{
+    width:66px !important;
+    height:48px !important;
+  }
+
+  body .mobile-match-meta span{
+    min-height:34px !important;
+    padding:7px 12px !important;
+    font-size:.8rem !important;
+  }
+
+  body .bulk-save-btn{
+    min-height:58px !important;
+    border-radius:22px !important;
+  }
+}
