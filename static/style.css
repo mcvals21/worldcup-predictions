@@ -7553,3 +7553,246 @@ a{
     border-radius:22px !important;
   }
 }
+/* =====================================================
+   Theme polish: صفحة المتسابق + صفحة كل المباريات + صفحة توقعات المباراة
+   Dark / Gold / Mint Save Button
+===================================================== */
+
+/* كروت المباريات في صفحة المتسابق */
+.mobile-focus-card{
+  background:linear-gradient(180deg,#24231f,#151511) !important;
+  border:1px solid rgba(212,175,55,.34) !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.42) !important;
+  overflow:hidden !important;
+}
+
+.mobile-card-topline{
+  background:linear-gradient(180deg,#2b2a25,#1f1e1a) !important;
+  border-bottom:1px solid rgba(212,175,55,.22) !important;
+}
+
+.mobile-team-box strong{
+  color:#ffffff !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.35) !important;
+}
+
+.mobile-score-inputs input,
+.mobile-score-display{
+  background:linear-gradient(180deg,#ffffff,#f3f4f6) !important;
+  color:#071126 !important;
+  border:2px solid rgba(255,255,255,.85) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.24),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+
+.mobile-score-inputs span{
+  color:#f6d77a !important;
+}
+
+/* المجموعات / التاريخ / الوقت */
+.mobile-match-meta{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex-wrap:wrap !important;
+  padding:0 12px 18px !important;
+}
+
+.mobile-match-meta span{
+  min-height:34px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:7px 13px !important;
+  border-radius:999px !important;
+  background:rgba(10,10,8,.74) !important;
+  color:#fff3bd !important;
+  border:1px solid rgba(212,175,55,.42) !important;
+  font-size:.82rem !important;
+  font-weight:950 !important;
+  line-height:1 !important;
+}
+
+.mobile-match-meta span:nth-child(2){
+  min-width:112px !important;
+}
+
+.mobile-match-meta span:nth-child(3){
+  min-width:68px !important;
+}
+
+/* زر حفظ التوقعات - مثل لون مفتوحة */
+.bulk-save-btn{
+  background:linear-gradient(180deg,#ecfdf3,#d1fae5) !important;
+  color:#047857 !important;
+  border:1px solid rgba(16,185,129,.42) !important;
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.88) !important;
+  font-weight:950 !important;
+}
+
+.bulk-save-btn:hover{
+  background:linear-gradient(180deg,#d1fae5,#a7f3d0) !important;
+}
+
+/* حالة مفتوحة */
+.mobile-status-pill.open{
+  background:linear-gradient(180deg,#ecfdf3,#d1fae5) !important;
+  color:#047857 !important;
+  border:1px solid rgba(16,185,129,.35) !important;
+}
+
+.mobile-status-pill.finished,
+.mobile-status-pill.locked{
+  background:rgba(212,175,55,.12) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.35) !important;
+}
+
+/* كرت النتائج بعد انتهاء المباراة */
+.mobile-result-box{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(212,175,55,.22) !important;
+  color:#fff !important;
+}
+
+.mobile-result-box span{
+  color:#d7c58a !important;
+}
+
+.mobile-result-box b{
+  color:#ffffff !important;
+}
+
+.mobile-card-link a{
+  background:rgba(212,175,55,.12) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+}
+
+/* =====================================================
+   صفحة كل المباريات
+===================================================== */
+
+.public-match-card{
+  background:linear-gradient(180deg,#24231f,#151511) !important;
+  border:1px solid rgba(212,175,55,.34) !important;
+  color:#ffffff !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.36) !important;
+}
+
+.public-team-side,
+.public-team-side span,
+.public-team,
+.public-team span{
+  color:#ffffff !important;
+  font-weight:950 !important;
+}
+
+.public-score-box{
+  background:linear-gradient(180deg,#ffffff,#f3f4f6) !important;
+  color:#071126 !important;
+  border:1px solid rgba(255,255,255,.85) !important;
+  box-shadow:0 8px 20px rgba(0,0,0,.25) !important;
+}
+
+.public-match-card .stage-pill,
+.public-match-card .time-pill,
+.public-match-card .status-pill,
+.public-match-card .status-pill.finished,
+.public-match-card .status-pill.live,
+.public-match-card .status-pill.upcoming{
+  background:rgba(10,10,8,.74) !important;
+  color:#fff3bd !important;
+  border:1px solid rgba(212,175,55,.42) !important;
+}
+
+.public-match-card .status-pill.finished{
+  background:linear-gradient(180deg,#ecfdf3,#d1fae5) !important;
+  color:#047857 !important;
+  border:1px solid rgba(16,185,129,.35) !important;
+}
+
+.public-match-footer{
+  border-top:1px solid rgba(212,175,55,.20) !important;
+}
+
+.small-action-link{
+  color:#f6d77a !important;
+}
+
+/* =====================================================
+   صفحة عرض توقعات الجميع للمباراة
+===================================================== */
+
+.match-result-hero{
+  background:linear-gradient(180deg,#24231f,#151511) !important;
+  border:1px solid rgba(212,175,55,.34) !important;
+  color:#fff !important;
+}
+
+.prediction-card{
+  background:linear-gradient(180deg,#24231f,#151511) !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+  color:#fff !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.32) !important;
+}
+
+.prediction-head strong{
+  color:#fff !important;
+}
+
+.prediction-score{
+  background:rgba(10,10,8,.74) !important;
+  color:#fff3bd !important;
+  border:1px solid rgba(212,175,55,.38) !important;
+  border-radius:999px !important;
+  padding:7px 14px !important;
+}
+
+.prediction-points{
+  background:linear-gradient(180deg,#ecfdf3,#d1fae5) !important;
+  color:#047857 !important;
+  border:1px solid rgba(16,185,129,.35) !important;
+}
+
+.prediction-status{
+  color:#fff3bd !important;
+}
+
+/* أزرار عامة في الصفحات الداكنة */
+.match-card button,
+.public-match-card button{
+  border-radius:18px !important;
+}
+
+/* موبايل */
+@media (max-width:700px){
+  .mobile-focus-card,
+  .public-match-card,
+  .prediction-card{
+    border-radius:24px !important;
+  }
+
+  .mobile-match-meta{
+    gap:7px !important;
+    padding:0 10px 18px !important;
+  }
+
+  .mobile-match-meta span{
+    min-height:32px !important;
+    padding:7px 11px !important;
+    font-size:.8rem !important;
+  }
+
+  .mobile-match-meta span:nth-child(2){
+    min-width:104px !important;
+  }
+
+  .mobile-match-meta span:nth-child(3){
+    min-width:64px !important;
+  }
+}
