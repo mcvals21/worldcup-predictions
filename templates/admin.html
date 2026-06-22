@@ -1,286 +1,233 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
+<div class="admin-v2">
 
-<div class="page-hero admin-hero">
-  <h1>لوحة الإدارة</h1>
-  <p>إضافة المباريات، إدارة النتائج، وروابط المشاركين.</p>
-</div>
-
-<section class="admin-add-panel">
-  <div class="admin-add-head">
-    <div>
-      <span>➕ مباراة جديدة</span>
+  <section class="card admin-v2-add-card">
+    <div class="admin-v2-card-head">
+      <span class="admin-v2-badge">＋ مباراة جديدة</span>
       <h2>إضافة مباراة</h2>
-      <p>أضف المباراة يدويًا وحدد الوقت والدور.</p>
-    </div>
-  </div>
-
-  <form method="post" class="admin-add-match-form admin-tool-body">
-    <input type="hidden" name="action" value="add_match">
-
-    <div class="admin-input-group">
-      <label>الفريق الأول</label>
-      <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
+      <p>أضف المباراة يدويًا وحدد التاريخ والوقت والدور.</p>
     </div>
 
-    <div class="admin-input-group">
-      <label>الفريق الثاني</label>
-      <input type="text" name="away_team" placeholder="مثال: العراق" required>
-    </div>
+    <form method="post" class="admin-v2-add-form">
+      <input type="hidden" name="action" value="add_match">
 
-    <div class="admin-input-group">
-      <label>وقت المباراة</label>
-      <input type="datetime-local" name="start_time" required>
-    </div>
+      <div class="admin-v2-grid two">
+        <label class="admin-v2-field">
+          <span>الفريق الأول</span>
+          <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
+        </label>
 
-    <div class="admin-input-group">
-      <label>الدور</label>
-      <select name="stage">
-        {% for key, label in stage_labels.items() %}
-          <option value="{{ key }}">{{ label }}</option>
-        {% endfor %}
-      </select>
-    </div>
+        <label class="admin-v2-field">
+          <span>الفريق الثاني</span>
+          <input type="text" name="away_team" placeholder="مثال: العراق" required>
+        </label>
+      </div>
 
-    <button type="submit" class="admin-add-submit">
-      إضافة المباراة
-    </button>
+      <div class="admin-v2-grid two">
+        <label class="admin-v2-field">
+          <span>تاريخ المباراة</span>
+          <input type="date" name="match_date" required>
+        </label>
+
+        <label class="admin-v2-field">
+          <span>وقت المباراة</span>
+          <input type="time" name="match_time" required>
+        </label>
+      </div>
+
+      <label class="admin-v2-field">
+        <span>الدور</span>
+        <select name="stage" required>
+          {% for key, label in stage_labels.items() %}
+            <option value="{{ key }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <button type="submit" class="admin-v2-primary-btn">إضافة المباراة</button>
+    </form>
+  </section>
+
+  <form method="post" class="admin-v2-cleanup" onsubmit="return confirm('سيتم حذف المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات فقط. هل تريد المتابعة؟')">
+    <input type="hidden" name="action" value="delete_empty_english_matches">
+    <button type="submit">حذف المباريات الإنجليزية القديمة بلا توقعات</button>
   </form>
-</section>
-<form method="post" class="admin-cleanup-form">
-  <input type="hidden" name="action" value="delete_empty_english_matches">
-  <button type="submit" class="admin-secondary-btn">
-    حذف المباريات الإنجليزية القديمة بلا توقعات
-  </button>
-</form>
-<div class="admin-section admin-main-section">
-  <div class="admin-section-head">
-    <div>
-      <h2>إدارة المباريات</h2>
-      <p>ابحث، أدخل النتائج، وعدّل المباريات من مكان واحد.</p>
+
+  <section class="card admin-v2-main-card">
+    <div class="admin-v2-section-head">
+      <div>
+        <h2>إدارة المباريات</h2>
+        <p>أدخل النتائج، عدّل المباريات، وتابع عدد التوقعات.</p>
+      </div>
     </div>
-  </div>
 
-  <div class="match-tabs admin-filter-tabs">
-    {% for key, label in match_filter_labels.items() %}
-      <a
-        class="match-tab {% if selected_filter == key %}active{% endif %}"
-        href="{{ url_for('admin', code=code, filter=key) }}"
-      >
-        <span>{{ label }}</span>
-        <small>{{ match_counts[key] }}</small>
-      </a>
-    {% endfor %}
-  </div>
-
-  {% if not matches %}
-    <div class="empty-card">
-      لا توجد مباريات في هذا القسم حاليًا.
+    <div class="match-tabs admin-v2-tabs">
+      {% for key, label in match_filter_labels.items() %}
+        <a
+          class="match-tab {% if selected_filter == key %}active{% endif %}"
+          href="{{ url_for('admin', code=code, filter=key) }}"
+        >
+          <span>{{ label }}</span>
+          <small>{{ match_counts[key] }}</small>
+        </a>
+      {% endfor %}
     </div>
-  {% endif %}
 
-  <div class="admin-matches-grid">
-    {% for m in matches %}
-    {% set pred_count = prediction_counts.get(m.id, 0) %}
-      {% set home_flag = team_flag_code(m.home_team) %}
-      {% set away_flag = team_flag_code(m.away_team) %}
+    {% if not matches %}
+      <div class="empty-card admin-v2-empty">
+        لا توجد مباريات في هذا القسم حاليًا.
+      </div>
+    {% endif %}
 
-     <div
-  class="admin-match-card"
-  data-search="{{ (m.home_team ~ ' ' ~ m.away_team ~ ' ' ~ stage_labels.get(m.stage, m.stage))|lower }}"
->
-        <div class="admin-match-header">
-          <span class="stage-pill">
-            {{ stage_labels.get(m.stage, m.stage) }}
-          </span>
+    <div class="admin-v2-match-list">
+      {% for m in matches %}
+        {% set home_flag = team_flag_code(m.home_team) %}
+        {% set away_flag = team_flag_code(m.away_team) %}
+        {% set pred_count = prediction_counts.get(m.id, 0) %}
+        {% set is_finished = m.home_score is not none and m.away_score is not none %}
+        {% set is_locked = locked(m) %}
 
-          <span class="time-pill">
-            {{ m.start_time.strftime('%Y-%m-%d') }}
-            ·
-            {{ m.start_time.strftime('%H:%M') }}
-          </span>
-        </div>
-
-        <div class="admin-status-row">
-  {% if m.home_score is not none and m.away_score is not none %}
-    <span class="admin-status-badge success">✅ النتيجة محفوظة</span>
-  {% elif locked(m) %}
-    <span class="admin-status-badge warning">⚠️ تحتاج نتيجة</span>
-  {% else %}
-    <span class="admin-status-badge neutral">⏳ لم تبدأ</span>
-  {% endif %}
-
-  <span class="admin-prediction-count">
-    {{ pred_count }} توقع
-  </span>
-</div>
-        </div>
-
-        <div class="admin-teams-row">
-          <div class="admin-team-box">
-            {% if home_flag %}
-              <img class="admin-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+        <section class="admin-v2-match-card">
+          <div class="admin-v2-status-row">
+            {% if is_finished %}
+              <span class="admin-v2-status done">المنتهية</span>
+            {% elif is_locked %}
+              <span class="admin-v2-status needs">تحتاج نتيجة</span>
+            {% else %}
+              <span class="admin-v2-status upcoming">القادمة</span>
             {% endif %}
-            <strong>{{ m.home_team }}</strong>
+
+            <span class="admin-v2-pred-count">{{ pred_count }} توقع</span>
           </div>
 
-          <div class="admin-team-box">
-            {% if away_flag %}
-              <img class="admin-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
-            {% endif %}
-            <strong>{{ m.away_team }}</strong>
-          </div>
-        </div>
+          <form method="post" class="admin-v2-result-form">
+            <input type="hidden" name="action" value="result">
+            <input type="hidden" name="match_id" value="{{ m.id }}">
 
-        <form method="post" class="admin-result-form">
-          <input type="hidden" name="action" value="result">
-          <input type="hidden" name="match_id" value="{{ m.id }}">
+            <div class="admin-v2-match-main">
+              <div class="admin-v2-team">
+                {% if home_flag %}
+                  <img src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+                {% endif %}
+                <strong>{{ m.home_team }}</strong>
+              </div>
 
-          <div class="admin-score-inputs">
-            <input
-              type="number"
-              min="0"
-              name="home_score"
-              value="{{ m.home_score if m.home_score is not none else '' }}"
-              placeholder="0"
-              required
-            >
+              <div class="admin-v2-score-box">
+                <input
+                  type="number"
+                  min="0"
+                  name="home_score"
+                  value="{{ m.home_score if m.home_score is not none else 0 }}"
+                  inputmode="numeric"
+                >
+                <span>-</span>
+                <input
+                  type="number"
+                  min="0"
+                  name="away_score"
+                  value="{{ m.away_score if m.away_score is not none else 0 }}"
+                  inputmode="numeric"
+                >
+              </div>
 
-            <span>-</span>
+              <div class="admin-v2-team">
+                {% if away_flag %}
+                  <img src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+                {% endif %}
+                <strong>{{ m.away_team }}</strong>
+              </div>
+            </div>
 
-            <input
-              type="number"
-              min="0"
-              name="away_score"
-              value="{{ m.away_score if m.away_score is not none else '' }}"
-              placeholder="0"
-              required
-            >
-          </div>
+            <div class="admin-v2-meta">
+              <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
+              <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
+              <span>{{ m.start_time.strftime('%H:%M') }}</span>
+            </div>
 
-          <button type="submit" class="save-result-btn">
-            حفظ النتيجة
-          </button>
-        </form>
+            <button type="submit" class="admin-v2-save-btn">حفظ النتيجة</button>
+          </form>
 
-        {% if m.home_score is not none or m.away_score is not none %}
-          <form
-            method="post"
-            class="admin-clear-form js-confirm-form"
-            data-confirm-title="مسح النتيجة؟"
-            data-confirm-text="سيتم مسح نتيجة المباراة فقط، وستبقى توقعات المشاركين محفوظة."
-            data-confirm-button="مسح النتيجة"
-            data-confirm-danger="0"
-          >
+          <form method="post" class="admin-v2-clear-form" onsubmit="return confirm('هل تريد مسح النتيجة فقط؟ التوقعات ستبقى محفوظة.')">
             <input type="hidden" name="action" value="clear_result">
             <input type="hidden" name="match_id" value="{{ m.id }}">
-
-            <button type="submit">
-              مسح النتيجة
-            </button>
-          </form>
-        {% endif %}
-
-        <details class="admin-edit-box">
-          <summary>تعديل المباراة</summary>
-
-          <form method="post" class="admin-edit-form">
-            <input type="hidden" name="action" value="edit_match">
-            <input type="hidden" name="match_id" value="{{ m.id }}">
-
-            <input type="text" name="home_team" value="{{ m.home_team }}" required>
-            <input type="text" name="away_team" value="{{ m.away_team }}" required>
-
-            <input
-              type="datetime-local"
-              name="start_time"
-              value="{{ m.start_time.strftime('%Y-%m-%dT%H:%M') }}"
-              required
-            >
-
-            <select name="stage">
-              {% for key, label in stage_labels.items() %}
-                <option value="{{ key }}" {% if m.stage == key %}selected{% endif %}>
-                  {{ label }}
-                </option>
-              {% endfor %}
-            </select>
-
-            <button type="submit">حفظ التعديل</button>
+            <button type="submit">مسح النتيجة</button>
           </form>
 
-          <form
-  method="post"
-  class="admin-delete-form js-confirm-form"
-  data-confirm-title="حذف المباراة؟"
-  data-confirm-text="سيتم حذف المباراة وتوقعات المشاركين المرتبطة بها. لا تستخدم هذا إلا إذا كنت متأكدًا."
-  data-confirm-button="حذف المباراة"
-  data-confirm-danger="1"
->
-            <input type="hidden" name="action" value="delete_match">
-            <input type="hidden" name="match_id" value="{{ m.id }}">
+          <details class="admin-v2-edit-box">
+            <summary>تعديل المباراة</summary>
 
-            <button type="submit">
-              حذف المباراة
-            </button>
-          </form>
-        </details>
-      </div>
-    {% endfor %}
-  </div>
-</div>
+            <form method="post" class="admin-v2-edit-form">
+              <input type="hidden" name="action" value="edit_match">
+              <input type="hidden" name="match_id" value="{{ m.id }}">
 
-<div class="admin-tools-grid">
+              <label class="admin-v2-field">
+                <span>الفريق الأول</span>
+                <input type="text" name="home_team" value="{{ m.home_team }}" required>
+              </label>
 
-  <details class="admin-tool-card">
-    <summary>
-      <span>🏆 موعد توقع البطل</span>
-      <b>⌄</b>
-    </summary>
+              <label class="admin-v2-field">
+                <span>الفريق الثاني</span>
+                <input type="text" name="away_team" value="{{ m.away_team }}" required>
+              </label>
 
-    <form method="post" class="admin-inline-form admin-tool-body">
+              <label class="admin-v2-field">
+                <span>وقت المباراة</span>
+                <input
+                  type="datetime-local"
+                  name="start_time"
+                  value="{{ m.start_time.strftime('%Y-%m-%dT%H:%M') }}"
+                  required
+                >
+              </label>
+
+              <label class="admin-v2-field">
+                <span>الدور</span>
+                <select name="stage" required>
+                  {% for key, label in stage_labels.items() %}
+                    <option value="{{ key }}" {% if m.stage == key %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+
+              <button type="submit" class="admin-v2-primary-btn">حفظ التعديل</button>
+            </form>
+
+            <form method="post" class="admin-v2-delete-form" onsubmit="return confirm('تحذير: سيتم حذف المباراة وتوقعاتها. هل أنت متأكد؟')">
+              <input type="hidden" name="action" value="delete_match">
+              <input type="hidden" name="match_id" value="{{ m.id }}">
+              <button type="submit">حذف المباراة</button>
+            </form>
+          </details>
+        </section>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card admin-v2-small-card">
+    <h3>موعد إغلاق توقع البطل</h3>
+    <form method="post" class="admin-v2-deadline-form">
       <input type="hidden" name="action" value="champion_deadline">
-
-      <label>موعد إغلاق توقع البطل</label>
       <input
         type="datetime-local"
         name="deadline"
         value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}"
         required
       >
-
-      <button type="submit">حفظ الموعد</button>
+      <button type="submit" class="admin-v2-primary-btn">حفظ الموعد</button>
     </form>
-  </details>
+  </section>
 
-  <details class="admin-tool-card participants-tool">
-    <summary>
-      <span>🔗 روابط المشاركين</span>
-      <b>⌄</b>
-    </summary>
+  <details class="card admin-v2-small-card admin-v2-links-card">
+    <summary>روابط المشاركين</summary>
 
-    <div class="participants-grid admin-tool-body">
+    <div class="admin-v2-links-list">
       {% for p in participants %}
-        {% set player_url = url_for('participant_page', token=p.token, _external=True) %}
-
-        <div class="participant-link-card">
+        <div class="admin-v2-link-row">
           <strong>{{ p.name }}</strong>
-
-          <div class="participant-actions">
-            <a href="{{ player_url }}">
-              فتح
-            </a>
-
-            <button
-              type="button"
-              class="copy-link-btn"
-              data-link="{{ player_url }}"
-              onclick="navigator.clipboard.writeText(this.dataset.link); this.textContent='تم النسخ';"
-            >
-              نسخ الرابط
-            </button>
-          </div>
+          <code id="link{{ p.id }}">https://worldcup-predictions-isey.onrender.com/p/{{ p.token }}</code>
+          <button type="button" onclick="copyLink('link{{ p.id }}')">نسخ</button>
         </div>
       {% endfor %}
     </div>
@@ -288,95 +235,12 @@
 
 </div>
 
-<div class="admin-modal-backdrop" id="adminConfirmModal" hidden>
-  <div class="admin-modal-card">
-    <div class="admin-modal-icon" id="adminModalIcon">⚠️</div>
-
-    <h3 id="adminModalTitle">تأكيد العملية</h3>
-    <p id="adminModalText">هل أنت متأكد؟</p>
-
-    <div class="admin-modal-actions">
-      <button type="button" class="admin-modal-cancel" id="adminModalCancel">
-        إلغاء
-      </button>
-
-      <button type="button" class="admin-modal-confirm" id="adminModalConfirm">
-        تأكيد
-      </button>
-    </div>
-  </div>
-</div>
-
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const modal = document.getElementById('adminConfirmModal');
-  const title = document.getElementById('adminModalTitle');
-  const text = document.getElementById('adminModalText');
-  const icon = document.getElementById('adminModalIcon');
-  const confirmBtn = document.getElementById('adminModalConfirm');
-  const cancelBtn = document.getElementById('adminModalCancel');
-
-  let pendingForm = null;
-
-  document.querySelectorAll('.js-confirm-form').forEach(function (form) {
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      pendingForm = form;
-
-      title.textContent = form.dataset.confirmTitle || 'تأكيد العملية';
-      text.textContent = form.dataset.confirmText || 'هل أنت متأكد؟';
-      confirmBtn.textContent = form.dataset.confirmButton || 'تأكيد';
-
-      const danger = form.dataset.confirmDanger === '1';
-
-      modal.classList.toggle('danger', danger);
-      icon.textContent = danger ? '🗑️' : '⚠️';
-
-      modal.hidden = false;
-    });
-  });
-
-  function closeModal() {
-    modal.hidden = true;
-    pendingForm = null;
-  }
-
-  cancelBtn.addEventListener('click', closeModal);
-
-  confirmBtn.addEventListener('click', function () {
-    if (pendingForm) {
-      const form = pendingForm;
-      pendingForm = null;
-      modal.hidden = true;
-      form.submit();
-    }
-  });
-
-  modal.addEventListener('click', function (event) {
-    if (event.target === modal) {
-      closeModal();
-    }
-  });
-});
+function copyLink(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText.trim());
+  alert('تم نسخ الرابط');
+}
 </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const searchInput = document.getElementById('adminMatchSearch');
-  const cards = document.querySelectorAll('.admin-match-card');
-
-  if (!searchInput) return;
-
-  searchInput.addEventListener('input', function () {
-    const term = this.value.trim().toLowerCase();
-
-    cards.forEach(function (card) {
-      const text = card.dataset.search || '';
-      card.style.display = text.includes(term) ? '' : 'none';
-    });
-  });
-});
-</script>
-
 {% endblock %}
