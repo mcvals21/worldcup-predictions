@@ -7823,3 +7823,296 @@ a{
     min-width:64px !important;
   }
 }
+/* =====================================================
+   FINAL OVERRIDE - Participant + Matches + Match View
+   ثيم قريب من الصورة: داكن، ذهبي، وزر حفظ فاتح مثل تبويب المفتوحة
+===================================================== */
+
+/* خلفية كروت صفحة المتسابق */
+body .mobile-focus-card{
+  background:
+    radial-gradient(circle at top center, rgba(212,175,55,.08), transparent 35%),
+    linear-gradient(180deg,#22221e 0%, #11110f 100%) !important;
+  border:1px solid rgba(212,175,55,.36) !important;
+  border-radius:28px !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.42) !important;
+  overflow:hidden !important;
+}
+
+/* الشريط العلوي داخل البطاقة */
+body .mobile-card-topline{
+  background:transparent !important;
+  border-bottom:1px solid rgba(212,175,55,.18) !important;
+  padding:14px 12px !important;
+}
+
+/* كلمة مفتوحة / منتهية */
+body .mobile-status-pill.open{
+  background:linear-gradient(180deg,#fffdf7,#efe9da) !important;
+  color:#123524 !important;
+  border:1px solid rgba(212,175,55,.45) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.20) !important;
+}
+
+body .mobile-status-pill.finished,
+body .mobile-status-pill.locked{
+  background:linear-gradient(180deg,#fffdf7,#efe9da) !important;
+  color:#7a5a00 !important;
+  border:1px solid rgba(212,175,55,.45) !important;
+}
+
+/* أسماء الفرق */
+body .mobile-team-box strong{
+  color:#ffffff !important;
+  font-weight:950 !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.45) !important;
+}
+
+/* الأعلام */
+body .mobile-team-flag{
+  width:70px !important;
+  height:50px !important;
+  border-radius:15px !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.34) !important;
+}
+
+/* مربعات التوقع */
+body .mobile-score-inputs input,
+body .mobile-score-display{
+  width:78px !important;
+  height:78px !important;
+  border-radius:20px !important;
+  background:linear-gradient(180deg,#ffffff,#f2f3f5) !important;
+  color:#071126 !important;
+  border:2px solid rgba(255,255,255,.85) !important;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+  font-size:1.85rem !important;
+  font-weight:950 !important;
+}
+
+/* علامة - */
+body .mobile-score-inputs span{
+  color:#f3d36f !important;
+  font-size:1.45rem !important;
+  font-weight:950 !important;
+}
+
+/* المجموعات / التاريخ / الوقت */
+body .mobile-match-meta{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex-wrap:wrap !important;
+  padding:0 12px 20px !important;
+}
+
+body .mobile-match-meta span{
+  min-height:36px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:8px 15px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#11110f,#070707) !important;
+  color:#f5d77a !important;
+  border:1px solid rgba(212,175,55,.48) !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.28) !important;
+  font-size:.84rem !important;
+  font-weight:950 !important;
+  line-height:1 !important;
+}
+
+body .mobile-match-meta span:nth-child(2){
+  min-width:112px !important;
+}
+
+body .mobile-match-meta span:nth-child(3){
+  min-width:70px !important;
+}
+
+/* زر حفظ التوقعات: مثل مربع المفتوحة وليس أخضر */
+body .bulk-save-bar{
+  width:min(92%, 440px) !important;
+  margin:24px auto 18px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+body .bulk-save-btn{
+  width:100% !important;
+  min-height:62px !important;
+  border-radius:24px !important;
+  background:linear-gradient(180deg,#fffdf7 0%, #f1ecdd 100%) !important;
+  color:#101522 !important;
+  border:1.5px solid rgba(212,175,55,.55) !important;
+  box-shadow:
+    0 16px 36px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.96) !important;
+  font-size:1.12rem !important;
+  font-weight:950 !important;
+  letter-spacing:0 !important;
+}
+
+body .bulk-save-btn::before{
+  content:"" !important;
+}
+
+body .bulk-save-btn:hover{
+  background:linear-gradient(180deg,#ffffff 0%, #ebe3d1 100%) !important;
+}
+
+/* مباريات منتهية: صندوق توقعك ونقاطك */
+body .mobile-result-box{
+  background:rgba(255,255,255,.07) !important;
+  border:1px solid rgba(212,175,55,.22) !important;
+  color:#ffffff !important;
+}
+
+body .mobile-result-box span{
+  color:#d7c58a !important;
+}
+
+body .mobile-result-box b{
+  color:#ffffff !important;
+}
+
+body .mobile-card-link a{
+  background:linear-gradient(180deg,#fffdf7,#efe9da) !important;
+  color:#101522 !important;
+  border:1px solid rgba(212,175,55,.45) !important;
+}
+
+/* تبويبات المفتوحة / كل المباريات */
+body .match-tabs{
+  display:flex !important;
+  gap:10px !important;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04)) !important;
+  border:1px solid rgba(212,175,55,.25) !important;
+  border-radius:24px !important;
+  padding:8px !important;
+  box-shadow:0 10px 25px rgba(0,0,0,.24) !important;
+}
+
+body .match-tab{
+  flex:1 !important;
+  min-height:58px !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,.08) !important;
+  color:#f6f0dd !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  font-weight:950 !important;
+}
+
+body .match-tab small{
+  min-width:30px !important;
+  height:30px !important;
+  background:rgba(255,255,255,.18) !important;
+  color:#fff !important;
+}
+
+body .match-tab.active{
+  background:linear-gradient(180deg,#fffdf8,#f1eddf) !important;
+  color:#101522 !important;
+  border:1px solid rgba(212,175,55,.48) !important;
+}
+
+body .match-tab.active small{
+  background:#111827 !important;
+  color:#ffffff !important;
+}
+
+/* صفحة كل المباريات */
+body .public-match-card{
+  background:
+    radial-gradient(circle at top center, rgba(212,175,55,.08), transparent 35%),
+    linear-gradient(180deg,#22221e 0%, #11110f 100%) !important;
+  border:1px solid rgba(212,175,55,.36) !important;
+  border-radius:26px !important;
+  color:#fff !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.38) !important;
+}
+
+body .public-team-side,
+body .public-team-side span,
+body .public-team,
+body .public-team span{
+  color:#ffffff !important;
+  font-weight:950 !important;
+}
+
+body .public-score-box{
+  background:linear-gradient(180deg,#ffffff,#f2f3f5) !important;
+  color:#071126 !important;
+  border:2px solid rgba(255,255,255,.85) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.28) !important;
+}
+
+body .public-match-card .stage-pill,
+body .public-match-card .time-pill,
+body .public-match-card .status-pill{
+  background:linear-gradient(180deg,#11110f,#070707) !important;
+  color:#f5d77a !important;
+  border:1px solid rgba(212,175,55,.48) !important;
+}
+
+body .small-action-link{
+  color:#f5d77a !important;
+}
+
+/* صفحة توقعات الجميع */
+body .match-result-hero,
+body .prediction-card{
+  background:
+    radial-gradient(circle at top center, rgba(212,175,55,.08), transparent 35%),
+    linear-gradient(180deg,#22221e 0%, #11110f 100%) !important;
+  border:1px solid rgba(212,175,55,.36) !important;
+  color:#fff !important;
+}
+
+body .prediction-head strong{
+  color:#fff !important;
+}
+
+body .prediction-score{
+  background:linear-gradient(180deg,#11110f,#070707) !important;
+  color:#f5d77a !important;
+  border:1px solid rgba(212,175,55,.48) !important;
+  border-radius:999px !important;
+  padding:7px 14px !important;
+}
+
+body .prediction-points{
+  background:linear-gradient(180deg,#fffdf8,#f1eddf) !important;
+  color:#101522 !important;
+  border:1px solid rgba(212,175,55,.48) !important;
+}
+
+@media (max-width:700px){
+  body .mobile-score-inputs input,
+  body .mobile-score-display{
+    width:74px !important;
+    height:74px !important;
+    font-size:1.78rem !important;
+  }
+
+  body .mobile-team-flag{
+    width:66px !important;
+    height:48px !important;
+  }
+
+  body .mobile-match-meta span{
+    min-height:34px !important;
+    padding:7px 12px !important;
+    font-size:.8rem !important;
+  }
+
+  body .bulk-save-btn{
+    min-height:58px !important;
+    border-radius:22px !important;
+  }
+}
