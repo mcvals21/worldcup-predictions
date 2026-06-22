@@ -1,41 +1,542 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="admin-safe-v4" dir="rtl">
+<style>
+/* Admin page v6 - self-contained and scoped. Do not move to style.css. */
+.admin-scope-v6{
+  --bg-card:#fffdf7;
+  --bg-card-2:#ffffff;
+  --text:#071126;
+  --muted:#667085;
+  --gold:#d4af37;
+  --gold-soft:#fff7df;
+  --line:rgba(212,175,55,.28);
+  --danger:#b42318;
+  --ok:#027a48;
+  direction:rtl;
+  display:grid;
+  gap:18px;
+  color:var(--text);
+}
 
-  <section class="admin-safe-card admin-safe-add-card">
-    <div class="admin-safe-card-title-row">
+.admin-scope-v6,
+.admin-scope-v6 *{
+  box-sizing:border-box;
+}
+
+.admin-scope-v6 .as6-card{
+  background:linear-gradient(180deg,var(--bg-card),#fff);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:16px;
+  box-shadow:0 14px 34px rgba(0,0,0,.16);
+  overflow:hidden;
+}
+
+.admin-scope-v6 .as6-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.admin-scope-v6 .as6-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:7px 13px;
+  border-radius:999px;
+  background:var(--gold-soft);
+  color:#7a560e;
+  border:1px solid rgba(212,175,55,.35);
+  font-weight:950;
+  font-size:.82rem;
+  white-space:nowrap;
+}
+
+.admin-scope-v6 h2,
+.admin-scope-v6 h3{
+  margin:0;
+  color:var(--text);
+  font-weight:950;
+}
+
+.admin-scope-v6 h2{font-size:1.35rem;}
+.admin-scope-v6 h3{font-size:1.1rem;}
+
+.admin-scope-v6 p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-weight:800;
+  font-size:.92rem;
+  line-height:1.6;
+}
+
+.admin-scope-v6 .as6-form,
+.admin-scope-v6 .as6-edit-form,
+.admin-scope-v6 .as6-deadline{
+  display:grid;
+  gap:12px;
+}
+
+.admin-scope-v6 .as6-grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.admin-scope-v6 label{
+  display:grid;
+  gap:7px;
+  font-weight:950;
+  color:var(--text);
+}
+
+.admin-scope-v6 label span{
+  font-size:.88rem;
+}
+
+.admin-scope-v6 input,
+.admin-scope-v6 select{
+  width:100% !important;
+  height:52px !important;
+  min-height:52px !important;
+  margin:0 !important;
+  border-radius:17px !important;
+  border:1px solid rgba(148,163,184,.42) !important;
+  background:#fff !important;
+  color:var(--text) !important;
+  padding:0 14px !important;
+  font-size:16px !important;
+  font-weight:850 !important;
+  box-shadow:none !important;
+}
+
+.admin-scope-v6 input:focus,
+.admin-scope-v6 select:focus{
+  outline:none !important;
+  border-color:var(--gold) !important;
+  box-shadow:0 0 0 4px rgba(212,175,55,.15) !important;
+}
+
+.admin-scope-v6 button{
+  width:100% !important;
+  min-height:52px !important;
+  margin:0 !important;
+  border-radius:17px !important;
+  cursor:pointer;
+  font-size:1rem !important;
+  font-weight:950 !important;
+  box-shadow:none !important;
+}
+
+.admin-scope-v6 .as6-primary{
+  background:linear-gradient(135deg,#11100b,#27200e) !important;
+  color:#fff4c7 !important;
+  border:1px solid rgba(212,175,55,.45) !important;
+}
+
+.admin-scope-v6 .as6-secondary{
+  background:#fff !important;
+  color:#7a560e !important;
+  border:1px solid rgba(212,175,55,.35) !important;
+}
+
+.admin-scope-v6 .as6-danger{
+  background:#fff !important;
+  color:var(--danger) !important;
+  border:1px solid rgba(180,35,24,.25) !important;
+}
+
+.admin-scope-v6 .as6-cleanup{
+  margin:0 0 14px;
+}
+
+.admin-scope-v6 .as6-tabs{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  padding:8px;
+  border-radius:20px;
+  background:#fff9e8;
+  border:1px solid rgba(212,175,55,.25);
+  margin:14px 0 16px;
+}
+
+.admin-scope-v6 .as6-tab{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:50px;
+  padding:8px;
+  border-radius:15px;
+  background:#fff;
+  border:1px solid rgba(212,175,55,.20);
+  color:var(--text);
+  font-weight:950;
+  text-decoration:none;
+}
+
+.admin-scope-v6 .as6-tab small{
+  min-width:24px;
+  height:24px;
+  padding:0 7px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  background:#111827;
+  color:#fff;
+  font-size:.76rem;
+  font-weight:950;
+}
+
+.admin-scope-v6 .as6-tab.active{
+  background:linear-gradient(135deg,#11100b,#27200e);
+  color:#fff4c7;
+  border-color:rgba(212,175,55,.5);
+}
+
+.admin-scope-v6 .as6-tab.active small{
+  background:#fff4c7;
+  color:#11100b;
+}
+
+.admin-scope-v6 .as6-tab:last-child:nth-child(odd){
+  grid-column:1 / -1;
+}
+
+.admin-scope-v6 .as6-empty{
+  padding:16px;
+  text-align:center;
+  border-radius:18px;
+  border:1px dashed rgba(148,163,184,.55);
+  color:var(--muted);
+  font-weight:900;
+  background:#fff;
+}
+
+.admin-scope-v6 .as6-match-list{
+  display:grid;
+  gap:14px;
+}
+
+.admin-scope-v6 .as6-match{
+  border-radius:22px;
+  padding:14px;
+  background:linear-gradient(180deg,#fff,#f8fafc);
+  border:1px solid rgba(148,163,184,.35);
+  box-shadow:0 8px 18px rgba(16,24,40,.06);
+}
+
+.admin-scope-v6 .as6-status-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.admin-scope-v6 .as6-status,
+.admin-scope-v6 .as6-count{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:7px 12px;
+  font-size:.82rem;
+  font-weight:950;
+  white-space:nowrap;
+}
+
+.admin-scope-v6 .as6-status.done{
+  background:#ecfdf3;
+  color:#027a48;
+  border:1px solid rgba(2,122,72,.18);
+}
+
+.admin-scope-v6 .as6-status.needs{
+  background:#fff7ed;
+  color:#c2410c;
+  border:1px solid rgba(194,65,12,.18);
+}
+
+.admin-scope-v6 .as6-status.upcoming{
+  background:#f2f4f7;
+  color:#475467;
+  border:1px solid rgba(148,163,184,.35);
+}
+
+.admin-scope-v6 .as6-count{
+  background:#eef4ff;
+  color:#3538cd;
+  border:1px solid rgba(53,56,205,.12);
+}
+
+.admin-scope-v6 .as6-result-form{
+  display:grid;
+  gap:10px;
+  margin:0;
+}
+
+.admin-scope-v6 .as6-score-row{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:10px;
+  margin:4px 0;
+}
+
+.admin-scope-v6 .as6-team{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-width:0;
+  text-align:center;
+  font-weight:950;
+  color:var(--text);
+}
+
+.admin-scope-v6 .as6-team img{
+  width:58px;
+  height:42px;
+  object-fit:cover;
+  border-radius:10px;
+  background:#fff;
+  box-shadow:0 0 0 1px rgba(16,24,40,.12),0 5px 12px rgba(16,24,40,.14);
+}
+
+.admin-scope-v6 .as6-team strong{
+  font-size:.95rem;
+  line-height:1.25;
+  max-width:120px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.admin-scope-v6 .as6-score{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.admin-scope-v6 .as6-score input{
+  width:68px !important;
+  height:58px !important;
+  min-height:58px !important;
+  padding:0 !important;
+  text-align:center !important;
+  font-size:1.45rem !important;
+  font-weight:950 !important;
+  border-radius:17px !important;
+}
+
+.admin-scope-v6 .as6-score span{
+  font-weight:950;
+  color:#475467;
+}
+
+.admin-scope-v6 .as6-meta{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:4px 0 2px;
+}
+
+.admin-scope-v6 .as6-meta span{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:32px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:var(--gold-soft);
+  color:#7a560e;
+  border:1px solid rgba(212,175,55,.26);
+  font-size:.78rem;
+  font-weight:950;
+}
+
+.admin-scope-v6 .as6-action-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+
+.admin-scope-v6 .as6-clear-form,
+.admin-scope-v6 .as6-delete-form{
+  margin:0;
+}
+
+.admin-scope-v6 .as6-edit{
+  margin-top:10px;
+  border-top:1px solid rgba(148,163,184,.25);
+  padding-top:10px;
+}
+
+.admin-scope-v6 .as6-edit summary{
+  cursor:pointer;
+  list-style:none;
+  color:#7a560e;
+  font-weight:950;
+  text-align:center;
+  padding:12px;
+  border-radius:16px;
+  background:var(--gold-soft);
+  border:1px solid rgba(212,175,55,.30);
+}
+
+.admin-scope-v6 .as6-edit summary::-webkit-details-marker{
+  display:none;
+}
+
+.admin-scope-v6 .as6-edit-form{
+  margin-top:12px;
+}
+
+.admin-scope-v6 .as6-delete-form{
+  margin-top:10px;
+}
+
+.admin-scope-v6 .as6-small-card{
+  padding:16px;
+}
+
+.admin-scope-v6 .as6-deadline{
+  margin-top:12px;
+}
+
+.admin-scope-v6 .as6-links-list{
+  display:grid;
+  gap:10px;
+  margin-top:12px;
+}
+
+.admin-scope-v6 .as6-link-row{
+  display:grid;
+  gap:8px;
+  padding:12px;
+  border-radius:18px;
+  background:#fff;
+  border:1px solid rgba(148,163,184,.35);
+}
+
+.admin-scope-v6 .as6-link-row code{
+  direction:ltr;
+  display:block;
+  white-space:nowrap;
+  overflow:auto;
+  background:#f2f4f7;
+  color:#1849a9;
+  border-radius:12px;
+  padding:9px;
+  font-weight:850;
+}
+
+.admin-scope-v6 .as6-links-card summary{
+  cursor:pointer;
+  font-weight:950;
+  color:#7a560e;
+}
+
+@media (max-width:700px){
+  .admin-scope-v6{gap:16px;}
+
+  .admin-scope-v6 .as6-card{
+    border-radius:22px;
+    padding:14px;
+  }
+
+  .admin-scope-v6 .as6-head{
+    display:block;
+    margin-bottom:12px;
+  }
+
+  .admin-scope-v6 .as6-badge{
+    margin-bottom:10px;
+  }
+
+  .admin-scope-v6 h2{font-size:1.25rem;}
+
+  .admin-scope-v6 .as6-grid-2{
+    grid-template-columns:1fr;
+  }
+
+  .admin-scope-v6 .as6-score-row{
+    grid-template-columns:1fr auto 1fr;
+    gap:8px;
+  }
+
+  .admin-scope-v6 .as6-team img{
+    width:52px;
+    height:38px;
+  }
+
+  .admin-scope-v6 .as6-team strong{
+    font-size:.88rem;
+    max-width:96px;
+  }
+
+  .admin-scope-v6 .as6-score input{
+    width:60px !important;
+    height:54px !important;
+    min-height:54px !important;
+    font-size:1.35rem !important;
+  }
+
+  .admin-scope-v6 .as6-action-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+<div class="admin-scope-v6">
+
+  <section class="as6-card">
+    <div class="as6-head">
       <div>
-        <span class="admin-safe-mini-badge">＋ مباراة جديدة</span>
+        <span class="as6-badge">＋ مباراة جديدة</span>
         <h2>إضافة مباراة</h2>
         <p>أضف مباراة يدويًا بسرعة، مع تاريخ ووقت منفصلين لتقليل الأخطاء.</p>
       </div>
     </div>
 
-    <form method="post" class="admin-safe-add-form">
+    <form method="post" class="as6-form">
       <input type="hidden" name="action" value="add_match">
 
-      <label class="admin-safe-field">
-        <span>الفريق الأول</span>
-        <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
-      </label>
+      <div class="as6-grid-2">
+        <label>
+          <span>الفريق الأول</span>
+          <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
+        </label>
 
-      <label class="admin-safe-field">
-        <span>الفريق الثاني</span>
-        <input type="text" name="away_team" placeholder="مثال: العراق" required>
-      </label>
+        <label>
+          <span>الفريق الثاني</span>
+          <input type="text" name="away_team" placeholder="مثال: العراق" required>
+        </label>
+      </div>
 
-      <label class="admin-safe-field">
-        <span>تاريخ المباراة</span>
-        <input type="date" name="match_date" required>
-      </label>
+      <div class="as6-grid-2">
+        <label>
+          <span>تاريخ المباراة</span>
+          <input type="date" name="match_date" required>
+        </label>
 
-      <label class="admin-safe-field">
-        <span>وقت المباراة</span>
-        <input type="time" name="match_time" required>
-      </label>
+        <label>
+          <span>وقت المباراة</span>
+          <input type="time" name="match_time" required>
+        </label>
+      </div>
 
-      <label class="admin-safe-field admin-safe-full">
+      <label>
         <span>الدور</span>
         <select name="stage" required>
           {% for key, label in stage_labels.items() %}
@@ -44,46 +545,42 @@
         </select>
       </label>
 
-      <button type="submit" class="admin-safe-btn admin-safe-primary admin-safe-full">
-        إضافة المباراة
-      </button>
+      <button type="submit" class="as6-primary">إضافة المباراة</button>
     </form>
   </section>
 
-  <section class="admin-safe-card admin-safe-tools-card">
-    <div class="admin-safe-tools-top">
+  <section class="as6-card">
+    <div class="as6-head">
       <div>
         <h2>إدارة المباريات</h2>
         <p>أدخل النتائج، عدّل المباريات، وتابع عدد التوقعات.</p>
       </div>
-
-      <form method="post" class="admin-safe-cleanup-form" onsubmit="return confirm('سيتم حذف المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات فقط. هل تريد المتابعة؟')">
-        <input type="hidden" name="action" value="delete_empty_english_matches">
-        <button type="submit" class="admin-safe-btn admin-safe-cleanup-btn">
-          حذف المباريات الإنجليزية القديمة
-        </button>
-      </form>
     </div>
 
-    <div class="admin-safe-tabs">
+    <form method="post" class="as6-cleanup" onsubmit="return confirm('سيتم حذف المباريات التي تحتوي أسماء إنجليزية وليس عليها أي توقعات فقط. هل تريد المتابعة؟')">
+      <input type="hidden" name="action" value="delete_empty_english_matches">
+      <button type="submit" class="as6-danger">حذف المباريات الإنجليزية القديمة بلا توقعات</button>
+    </form>
+
+    <div class="as6-tabs">
       {% for key, label in match_filter_labels.items() %}
         <a
-          class="admin-safe-tab {% if selected_filter == key %}active{% endif %}"
+          class="as6-tab {% if selected_filter == key %}active{% endif %}"
           href="{{ url_for('admin', code=code, filter=key) }}"
         >
           <span>{{ label }}</span>
-          <b>{{ match_counts[key] }}</b>
+          <small>{{ match_counts[key] }}</small>
         </a>
       {% endfor %}
     </div>
 
     {% if not matches %}
-      <div class="admin-safe-empty">
+      <div class="as6-empty">
         لا توجد مباريات في هذا القسم حاليًا.
       </div>
     {% endif %}
 
-    <div class="admin-safe-match-list">
+    <div class="as6-match-list">
       {% for m in matches %}
         {% set home_flag = team_flag_code(m.home_team) %}
         {% set away_flag = team_flag_code(m.away_team) %}
@@ -91,34 +588,31 @@
         {% set is_finished = m.home_score is not none and m.away_score is not none %}
         {% set is_locked = locked(m) %}
 
-        <section class="admin-safe-match-card">
-          <div class="admin-safe-match-top">
-            <div class="admin-safe-state-row">
-              {% if is_finished %}
-                <span class="admin-safe-state done">المنتهية</span>
-              {% elif is_locked %}
-                <span class="admin-safe-state needs">تحتاج نتيجة</span>
-              {% else %}
-                <span class="admin-safe-state upcoming">القادمة</span>
-              {% endif %}
-
-              <span class="admin-safe-count">{{ pred_count }} توقع</span>
-            </div>
+        <section class="as6-match">
+          <div class="as6-status-row">
+            {% if is_finished %}
+              <span class="as6-status done">منتهية</span>
+            {% elif is_locked %}
+              <span class="as6-status needs">تحتاج نتيجة</span>
+            {% else %}
+              <span class="as6-status upcoming">قادمة</span>
+            {% endif %}
+            <span class="as6-count">{{ pred_count }} توقع</span>
           </div>
 
-          <form method="post" class="admin-safe-result-form">
+          <form method="post" class="as6-result-form">
             <input type="hidden" name="action" value="result">
             <input type="hidden" name="match_id" value="{{ m.id }}">
 
-            <div class="admin-safe-teams-score">
-              <div class="admin-safe-team">
+            <div class="as6-score-row">
+              <div class="as6-team">
                 {% if home_flag %}
                   <img src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
                 {% endif %}
                 <strong>{{ m.home_team }}</strong>
               </div>
 
-              <div class="admin-safe-score-inputs">
+              <div class="as6-score">
                 <input
                   type="number"
                   min="0"
@@ -136,7 +630,7 @@
                 >
               </div>
 
-              <div class="admin-safe-team">
+              <div class="as6-team">
                 {% if away_flag %}
                   <img src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
                 {% endif %}
@@ -144,46 +638,40 @@
               </div>
             </div>
 
-            <div class="admin-safe-meta">
+            <div class="as6-meta">
               <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
               <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
               <span>{{ m.start_time.strftime('%H:%M') }}</span>
             </div>
 
-            <div class="admin-safe-actions-grid">
-              <button type="submit" class="admin-safe-btn admin-safe-save-btn">
-                حفظ النتيجة
-              </button>
-            </div>
+            <button type="submit" class="as6-primary">حفظ النتيجة</button>
           </form>
 
-          <div class="admin-safe-secondary-actions">
-            <form method="post" onsubmit="return confirm('هل تريد مسح النتيجة فقط؟ التوقعات ستبقى محفوظة.')">
+          <div class="as6-action-grid">
+            <form method="post" class="as6-clear-form" onsubmit="return confirm('هل تريد مسح النتيجة فقط؟ التوقعات ستبقى محفوظة.')">
               <input type="hidden" name="action" value="clear_result">
               <input type="hidden" name="match_id" value="{{ m.id }}">
-              <button type="submit" class="admin-safe-btn admin-safe-muted-btn">
-                مسح النتيجة
-              </button>
+              <button type="submit" class="as6-secondary">مسح النتيجة</button>
             </form>
 
-            <details class="admin-safe-edit-box">
+            <details class="as6-edit">
               <summary>تعديل المباراة</summary>
 
-              <form method="post" class="admin-safe-edit-form">
+              <form method="post" class="as6-edit-form">
                 <input type="hidden" name="action" value="edit_match">
                 <input type="hidden" name="match_id" value="{{ m.id }}">
 
-                <label class="admin-safe-field">
+                <label>
                   <span>الفريق الأول</span>
                   <input type="text" name="home_team" value="{{ m.home_team }}" required>
                 </label>
 
-                <label class="admin-safe-field">
+                <label>
                   <span>الفريق الثاني</span>
                   <input type="text" name="away_team" value="{{ m.away_team }}" required>
                 </label>
 
-                <label class="admin-safe-field">
+                <label>
                   <span>وقت المباراة</span>
                   <input
                     type="datetime-local"
@@ -193,7 +681,7 @@
                   >
                 </label>
 
-                <label class="admin-safe-field">
+                <label>
                   <span>الدور</span>
                   <select name="stage" required>
                     {% for key, label in stage_labels.items() %}
@@ -202,17 +690,13 @@
                   </select>
                 </label>
 
-                <button type="submit" class="admin-safe-btn admin-safe-primary">
-                  حفظ التعديل
-                </button>
+                <button type="submit" class="as6-primary">حفظ التعديل</button>
               </form>
 
-              <form method="post" class="admin-safe-delete-form" onsubmit="return confirm('تحذير: سيتم حذف المباراة وتوقعاتها. هل أنت متأكد؟')">
+              <form method="post" class="as6-delete-form" onsubmit="return confirm('تحذير: سيتم حذف المباراة وتوقعاتها. هل أنت متأكد؟')">
                 <input type="hidden" name="action" value="delete_match">
                 <input type="hidden" name="match_id" value="{{ m.id }}">
-                <button type="submit" class="admin-safe-btn admin-safe-danger-btn">
-                  حذف المباراة
-                </button>
+                <button type="submit" class="as6-danger">حذف المباراة</button>
               </form>
             </details>
           </div>
@@ -221,36 +705,29 @@
     </div>
   </section>
 
-  <section class="admin-safe-card admin-safe-small-card">
-    <h2>موعد إغلاق توقع البطل</h2>
-    <form method="post" class="admin-safe-deadline-form">
+  <section class="as6-card as6-small-card">
+    <h3>موعد إغلاق توقع البطل</h3>
+    <form method="post" class="as6-deadline">
       <input type="hidden" name="action" value="champion_deadline">
-      <label class="admin-safe-field">
-        <span>الموعد</span>
-        <input
-          type="datetime-local"
-          name="deadline"
-          value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}"
-          required
-        >
-      </label>
-      <button type="submit" class="admin-safe-btn admin-safe-primary">
-        حفظ الموعد
-      </button>
+      <input
+        type="datetime-local"
+        name="deadline"
+        value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}"
+        required
+      >
+      <button type="submit" class="as6-primary">حفظ الموعد</button>
     </form>
   </section>
 
-  <details class="admin-safe-card admin-safe-small-card admin-safe-links-card">
+  <details class="as6-card as6-small-card as6-links-card">
     <summary>روابط المشاركين</summary>
 
-    <div class="admin-safe-links-list">
+    <div class="as6-links-list">
       {% for p in participants %}
-        <div class="admin-safe-link-row">
+        <div class="as6-link-row">
           <strong>{{ p.name }}</strong>
           <code id="link{{ p.id }}">https://worldcup-predictions-isey.onrender.com/p/{{ p.token }}</code>
-          <button type="button" class="admin-safe-btn admin-safe-copy-btn" onclick="copyLink('link{{ p.id }}')">
-            نسخ
-          </button>
+          <button type="button" class="as6-secondary" onclick="copyLink('link{{ p.id }}')">نسخ الرابط</button>
         </div>
       {% endfor %}
     </div>
