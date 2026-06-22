@@ -119,9 +119,6 @@
           </label>
         {% endif %}
 
-       <div class="bulk-card-note">
-  سيتم حفظ هذا التوقع عند الضغط على زر حفظ التوقعات أسفل الصفحة
-</div>
       </div>
 
     {% else %}
@@ -189,15 +186,11 @@
   </section>
 {% endfor %}
   {% if ns.open_count > 0 %}
-    <div class="bulk-save-bar">
-      <button type="submit" class="bulk-save-btn">
-        حفظ كل التوقعات
-      </button>
-
-      <span>
-        سيتم حفظ {{ ns.open_count }} مباراة مفتوحة
-      </span>
-    </div>
+   <div class="bulk-save-bar">
+  <button type="submit" class="bulk-save-btn">
+    حفظ التوقعات
+  </button>
+</div>
   {% endif %}
 </form>
 <script>
