@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import secrets
 import os
+from sqlalchemy import text, inspect
 import re
 
 app = Flask(__name__)
@@ -525,6 +526,15 @@ def current_double_used(participant_id, tournament_id, stage, exclude_match_id=N
         q = q.filter(Prediction.match_id != exclude_match_id)
 
     return q.first()
+
+def delete_match_external_refs(match_id):
+    table_names = inspect(db.engine).get_table_names()
+
+    if 'api_match_map' in table_names:
+        db.session.execute(
+            text('DELETE FROM api_match_map WHERE match_id = :match_id'),
+            {'match_id': match_id}
+        )
 
 
 @app.route('/')
@@ -1087,44 +1097,40 @@ def admin(code):
             m = Match.query.get_or_404(int(request.form['match_id']))
 
             Prediction.query.filter_by(match_id=m.id).delete()
+            delete_match_external_refs(m.id)
 
             db.session.delete(m)
             db.session.commit()
 
             flash('تم حذف المباراة.')
-
+            
         elif action == 'delete_empty_english_matches':
-            deleted_count = 0
+            all_matches = Match.query.filter_by(tournament_id=t.id).all()
 
-            all_tournament_matches = Match.query.filter_by(
-                tournament_id=t.id
-            ).all()
+            matches_to_delete = []
 
-            for m in all_tournament_matches:
-                pred_count = Prediction.query.filter_by(match_id=m.id).count()
+            for m in all_matches:
                 teams_text = f'{m.home_team} {m.away_team}'
                 has_english = re.search(r'[A-Za-z]', teams_text) is not None
 
-                if has_english and pred_count == 0:
-                    db.session.delete(m)
-                    deleted_count += 1
+                if not has_english:
+                    continue
+
+                pred_count = Prediction.query.filter_by(match_id=m.id).count()
+
+                if pred_count == 0:
+                    matches_to_delete.append(m)
+
+            deleted_count = 0
+
+            for m in matches_to_delete:
+                delete_match_external_refs(m.id)
+                db.session.delete(m)
+                deleted_count += 1
 
             db.session.commit()
 
-            if deleted_count:
-                flash(f'تم حذف {deleted_count} مباراة إنجليزية قديمة بلا توقعات.')
-            else:
-                flash('لا توجد مباريات إنجليزية قديمة بلا توقعات لحذفها.')
-
-        elif action == 'champion_deadline':
-            t.champion_pick_deadline = datetime.strptime(
-                request.form['deadline'],
-                '%Y-%m-%dT%H:%M'
-            )
-
-            db.session.commit()
-
-            flash('تم حفظ موعد إغلاق توقع البطل.')
+            flash(f'تم حذف {deleted_count} مباراة إنجليزية قديمة بلا توقعات.')
 
         return redirect(url_for(
             'admin',
