@@ -130,8 +130,11 @@
         {% if m.home_score is not none or m.away_score is not none %}
           <form
             method="post"
-            class="admin-clear-form"
-            onsubmit="return confirm('هل تريد مسح النتيجة فقط؟ التوقعات ستبقى محفوظة.');"
+            class="admin-clear-form js-confirm-form"
+            data-confirm-title="مسح النتيجة؟"
+            data-confirm-text="سيتم مسح نتيجة المباراة فقط، وستبقى توقعات المشاركين محفوظة."
+            data-confirm-button="مسح النتيجة"
+            data-confirm-danger="0"
           >
             <input type="hidden" name="action" value="clear_result">
             <input type="hidden" name="match_id" value="{{ m.id }}">
