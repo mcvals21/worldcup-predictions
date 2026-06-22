@@ -30,6 +30,9 @@
     لا توجد مباريات في هذا القسم حاليًا.
   </div>
 {% endif %}
+<form method="post" class="bulk-predictions-form" id="bulkPredictionsForm">
+  <input type="hidden" name="action" value="bulk_predict">
+  {% set ns = namespace(open_count=0) %}
 {% for m in matches %}
   {% set pred = predictions.get(m.id) %}
   {% set is_double = pred and pred.is_double %}
@@ -50,9 +53,10 @@
 </div>
 
     {% if not is_locked %}
-      <form method="post" class="mobile-predict-form">
-        <input type="hidden" name="action" value="predict">
-        <input type="hidden" name="match_id" value="{{ m.id }}">
+      {% set ns.open_count = ns.open_count + 1 %}
+
+      <div class="mobile-predict-form">
+        <input type="hidden" name="match_ids" value="{{ m.id }}">
 
         <div class="mobile-match-main">
           <div class="mobile-team-box">
@@ -66,7 +70,7 @@
             <input
               type="number"
               min="0"
-              name="home_score"
+              name="home_score_{{ m.id }}"
               value="{{ pred.home_score if pred else 0 }}"
               inputmode="numeric"
               pattern="[0-9]*"
@@ -77,7 +81,7 @@
             <input
               type="number"
               min="0"
-              name="away_score"
+              name="away_score_{{ m.id }}"
               value="{{ pred.away_score if pred else 0 }}"
               inputmode="numeric"
               pattern="[0-9]*"
@@ -106,7 +110,7 @@
 
         {% if m.stage in knockout %}
           <label class="double-option mobile-double-option">
-            <input type="checkbox" name="is_double" {% if pred and pred.is_double %}checked{% endif %}>
+            <input type="checkbox" name="is_double_{{ m.id }}" {% if pred and pred.is_double %}checked{% endif %}>
 
             <div>
               <strong>⭐ مباراة مضاعفة</strong>
@@ -115,10 +119,10 @@
           </label>
         {% endif %}
 
-        <button class="mobile-save-btn">
-  {{ 'تعديل التوقع' if pred else 'حفظ التوقع' }}
-</button>
-      </form>
+       <div class="bulk-card-note">
+  سيتم حفظ هذا التوقع عند الضغط على زر حفظ التوقعات أسفل الصفحة
+</div>
+      </div>
 
     {% else %}
 
@@ -184,7 +188,18 @@
 
   </section>
 {% endfor %}
+  {% if ns.open_count > 0 %}
+    <div class="bulk-save-bar">
+      <button type="submit" class="bulk-save-btn">
+        حفظ كل التوقعات
+      </button>
 
+      <span>
+        سيتم حفظ {{ ns.open_count }} مباراة مفتوحة
+      </span>
+    </div>
+  {% endif %}
+</form>
 <script>
 function parseKuwaitTime(value) {
   const parts = value.split(/[-T:]/).map(Number);
