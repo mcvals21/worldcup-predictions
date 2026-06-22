@@ -7,32 +7,63 @@
   <p>إضافة المباريات، إدارة النتائج، وروابط المشاركين.</p>
 </div>
 
-<details class="admin-tool-card admin-add-first" open>
-  <summary>
-    <span>➕ إضافة مباراة جديدة</span>
-    <b>⌄</b>
-  </summary>
+<section class="admin-add-panel">
+  <div class="admin-add-head">
+    <div>
+      <span>➕ مباراة جديدة</span>
+      <h2>إضافة مباراة</h2>
+      <p>أضف المباراة يدويًا وحدد الوقت والدور.</p>
+    </div>
+  </div>
 
   <form method="post" class="admin-add-match-form admin-tool-body">
     <input type="hidden" name="action" value="add_match">
 
-    <input type="text" name="home_team" placeholder="الفريق الأول" required>
-    <input type="text" name="away_team" placeholder="الفريق الثاني" required>
+    <div class="admin-input-group">
+      <label>الفريق الأول</label>
+      <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
+    </div>
 
-    <input type="datetime-local" name="start_time" required>
+    <div class="admin-input-group">
+      <label>الفريق الثاني</label>
+      <input type="text" name="away_team" placeholder="مثال: العراق" required>
+    </div>
 
-    <select name="stage">
-      {% for key, label in stage_labels.items() %}
-        <option value="{{ key }}">{{ label }}</option>
-      {% endfor %}
-    </select>
+    <div class="admin-input-group">
+      <label>وقت المباراة</label>
+      <input type="datetime-local" name="start_time" required>
+    </div>
 
-    <button type="submit">إضافة المباراة</button>
+    <div class="admin-input-group">
+      <label>الدور</label>
+      <select name="stage">
+        {% for key, label in stage_labels.items() %}
+          <option value="{{ key }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="admin-add-submit">
+      إضافة المباراة
+    </button>
   </form>
-</details>
-
+</section>
 <div class="admin-section admin-main-section">
-  <h2>إدارة المباريات</h2>
+  <div class="admin-section-head">
+    <div>
+      <h2>إدارة المباريات</h2>
+      <p>ابحث، أدخل النتائج، وعدّل المباريات من مكان واحد.</p>
+    </div>
+  </div>
+
+  <div class="admin-search-box">
+    <input
+      type="search"
+      id="adminMatchSearch"
+      placeholder="ابحث باسم المنتخب..."
+      autocomplete="off"
+    >
+  </div>
 
   <div class="match-tabs admin-filter-tabs">
     {% for key, label in match_filter_labels.items() %}
@@ -54,10 +85,14 @@
 
   <div class="admin-matches-grid">
     {% for m in matches %}
+    {% set pred_count = prediction_counts.get(m.id, 0) %}
       {% set home_flag = team_flag_code(m.home_team) %}
       {% set away_flag = team_flag_code(m.away_team) %}
 
-      <div class="admin-match-card">
+     <div
+  class="admin-match-card"
+  data-search="{{ (m.home_team ~ ' ' ~ m.away_team ~ ' ' ~ stage_labels.get(m.stage, m.stage))|lower }}"
+>
         <div class="admin-match-header">
           <span class="stage-pill">
             {{ stage_labels.get(m.stage, m.stage) }}
@@ -71,13 +106,18 @@
         </div>
 
         <div class="admin-status-row">
-          {% if m.home_score is not none and m.away_score is not none %}
-            <span class="admin-status-badge success">✅ النتيجة محفوظة</span>
-          {% elif locked(m) %}
-            <span class="admin-status-badge warning">⚠️ تحتاج نتيجة</span>
-          {% else %}
-            <span class="admin-status-badge neutral">⏳ لم تبدأ</span>
-          {% endif %}
+  {% if m.home_score is not none and m.away_score is not none %}
+    <span class="admin-status-badge success">✅ النتيجة محفوظة</span>
+  {% elif locked(m) %}
+    <span class="admin-status-badge warning">⚠️ تحتاج نتيجة</span>
+  {% else %}
+    <span class="admin-status-badge neutral">⏳ لم تبدأ</span>
+  {% endif %}
+
+  <span class="admin-prediction-count">
+    {{ pred_count }} توقع
+  </span>
+</div>
         </div>
 
         <div class="admin-teams-row">
@@ -320,6 +360,24 @@ document.addEventListener('DOMContentLoaded', function () {
     if (event.target === modal) {
       closeModal();
     }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('adminMatchSearch');
+  const cards = document.querySelectorAll('.admin-match-card');
+
+  if (!searchInput) return;
+
+  searchInput.addEventListener('input', function () {
+    const term = this.value.trim().toLowerCase();
+
+    cards.forEach(function (card) {
+      const text = card.dataset.search || '';
+      card.style.display = text.includes(term) ? '' : 'none';
+    });
   });
 });
 </script>
