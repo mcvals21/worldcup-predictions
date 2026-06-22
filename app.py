@@ -1119,9 +1119,9 @@ def admin(code):
         for key in ADMIN_MATCH_FILTER_LABELS
     }
 
-participants = Participant.query.order_by(Participant.name).all()
+    participants = Participant.query.order_by(Participant.name).all()
 
-prediction_counts = {
+    prediction_counts = {
         match_id: count
         for match_id, count in db.session.query(
             Prediction.match_id,
@@ -1129,7 +1129,7 @@ prediction_counts = {
         ).group_by(Prediction.match_id).all()
     }
 
-return render_template(
+    return render_template(
         'admin.html',
         t=t,
         matches=matches,
