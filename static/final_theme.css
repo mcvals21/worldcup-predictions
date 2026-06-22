@@ -780,3 +780,381 @@ html body .bulk-save-btn::before{
 }
 
 /* لو الكأس مكتوبة داخل الزر من HTML، هذا لا يخفيها؛ احذفها من participant.html كما في الخطوة التالية */
+
+/* =====================================================
+   PATCH v5
+   تحسين صفحة كل المباريات + صفحة توقعات الجميع
+===================================================== */
+
+/* =========================
+   صفحة كل المباريات
+========================= */
+
+html body .page-hero{
+  margin:14px auto 18px !important;
+  padding:0 !important;
+  text-align:center !important;
+}
+
+html body .page-hero h1{
+  color:#fff !important;
+  font-size:1.75rem !important;
+  font-weight:1000 !important;
+  margin:0 0 6px !important;
+}
+
+html body .page-hero p{
+  color:rgba(255,255,255,.70) !important;
+  font-size:.88rem !important;
+  font-weight:850 !important;
+  margin:0 !important;
+}
+
+html body .public-note{
+  margin:0 auto 18px !important;
+  padding:13px 14px !important;
+  border-radius:20px !important;
+  background:linear-gradient(180deg,#24231f,#151511) !important;
+  color:#fff3bd !important;
+  border:1px solid rgba(212,175,55,.34) !important;
+  font-size:.86rem !important;
+  font-weight:900 !important;
+  text-align:center !important;
+}
+
+html body .public-matches-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:18px !important;
+  margin:18px 0 28px !important;
+}
+
+html body .public-match-card{
+  padding:0 !important;
+  overflow:hidden !important;
+  border-radius:26px !important;
+  background:linear-gradient(180deg,#24231f,#131310) !important;
+  border:1.3px solid rgba(212,175,55,.38) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.36) !important;
+  color:#fff !important;
+}
+
+/* أعلى كرت المباراة */
+html body .public-match-top{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+  padding:14px 12px 10px !important;
+  border-bottom:1px solid rgba(212,175,55,.18) !important;
+  margin:0 !important;
+}
+
+/* الشارات */
+html body .public-match-card .stage-pill,
+html body .public-match-card .time-pill,
+html body .public-match-card .status-pill{
+  min-height:34px !important;
+  padding:7px 12px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f4d77a !important;
+  border:1px solid rgba(212,175,55,.45) !important;
+  font-size:.78rem !important;
+  font-weight:1000 !important;
+  box-shadow:none !important;
+}
+
+/* المنتخبات والنتيجة */
+html body .public-teams-row.clean{
+  display:grid !important;
+  grid-template-columns:1fr auto 1fr !important;
+  align-items:center !important;
+  gap:10px !important;
+  padding:20px 12px 16px !important;
+  margin:0 !important;
+}
+
+html body .public-team-side{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  min-width:0 !important;
+  text-align:center !important;
+}
+
+html body .public-team-side span{
+  color:#fff !important;
+  font-size:.94rem !important;
+  font-weight:1000 !important;
+  line-height:1.25 !important;
+  text-shadow:0 2px 6px rgba(0,0,0,.45) !important;
+}
+
+html body .public-flag{
+  width:60px !important;
+  height:44px !important;
+  border-radius:13px !important;
+  object-fit:cover !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.32) !important;
+}
+
+/* مربع النتيجة في الوسط */
+html body .public-score-box{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  padding:0 !important;
+  margin:0 auto !important;
+  line-height:1 !important;
+
+  width:66px !important;
+  min-width:66px !important;
+  max-width:66px !important;
+  height:58px !important;
+  min-height:58px !important;
+  max-height:58px !important;
+
+  border-radius:18px !important;
+  background:linear-gradient(180deg,#fffdf7,#f2f0e8) !important;
+  color:#071126 !important;
+  border:1.5px solid rgba(255,255,255,.88) !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.28) !important;
+  font-size:1.18rem !important;
+  font-weight:1000 !important;
+  direction:ltr !important;
+  unicode-bidi:isolate !important;
+}
+
+/* أسفل الكرت */
+html body .public-match-footer{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px !important;
+  flex-wrap:wrap !important;
+  padding:12px !important;
+  border-top:1px solid rgba(212,175,55,.18) !important;
+  margin:0 !important;
+}
+
+html body .small-action-link{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-height:38px !important;
+  padding:8px 14px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f4d77a !important;
+  border:1px solid rgba(212,175,55,.45) !important;
+  font-size:.82rem !important;
+  font-weight:1000 !important;
+  text-decoration:none !important;
+}
+
+/* =========================
+   صفحة توقعات الجميع
+========================= */
+
+html body .match-view-hero{
+  padding:16px 12px 18px !important;
+  margin:12px 0 16px !important;
+  border-radius:26px !important;
+  background:linear-gradient(180deg,#24231f,#131310) !important;
+  border:1.3px solid rgba(212,175,55,.38) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.36) !important;
+  color:#fff !important;
+  text-align:center !important;
+}
+
+html body .match-view-kicker{
+  display:inline-flex !important;
+  min-height:34px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:7px 13px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f4d77a !important;
+  border:1px solid rgba(212,175,55,.45) !important;
+  font-size:.8rem !important;
+  font-weight:1000 !important;
+  margin-bottom:14px !important;
+}
+
+html body .match-view-teams{
+  display:grid !important;
+  grid-template-columns:1fr auto 1fr !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+
+html body .match-view-team{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  text-align:center !important;
+}
+
+html body .match-view-team img{
+  width:60px !important;
+  height:44px !important;
+  border-radius:13px !important;
+  object-fit:cover !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.32) !important;
+}
+
+html body .match-view-team strong{
+  color:#fff !important;
+  font-size:.94rem !important;
+  font-weight:1000 !important;
+  line-height:1.25 !important;
+}
+
+html body .match-view-score{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:70px !important;
+  min-width:70px !important;
+  height:58px !important;
+  border-radius:18px !important;
+  background:linear-gradient(180deg,#fffdf7,#f2f0e8) !important;
+  color:#071126 !important;
+  border:1.5px solid rgba(255,255,255,.88) !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.28) !important;
+  font-size:1.12rem !important;
+  font-weight:1000 !important;
+  direction:ltr !important;
+  unicode-bidi:isolate !important;
+}
+
+html body .match-view-hero p{
+  color:rgba(255,255,255,.70) !important;
+  font-size:.82rem !important;
+  font-weight:850 !important;
+  margin:12px 0 0 !important;
+}
+
+/* صندوق توقعات المشاركين */
+html body .match-predictions-section{
+  padding:14px !important;
+  border-radius:26px !important;
+  background:linear-gradient(180deg,#24231f,#131310) !important;
+  border:1.3px solid rgba(212,175,55,.38) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.36) !important;
+  color:#fff !important;
+}
+
+html body .match-predictions-title.centered h3{
+  color:#fff !important;
+  font-size:1.12rem !important;
+  font-weight:1000 !important;
+}
+
+html body .match-predictions-title.centered span{
+  background:#fff8dd !important;
+  color:#11100b !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  font-size:.82rem !important;
+  font-weight:1000 !important;
+}
+
+/* كروت توقعات المشاركين */
+html body .match-prediction-card{
+  background:linear-gradient(180deg,#1d1c18,#11110f) !important;
+  border:1px solid rgba(212,175,55,.30) !important;
+  border-radius:20px !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.20) !important;
+  color:#fff !important;
+}
+
+html body .prediction-player-row{
+  border-bottom:1px solid rgba(212,175,55,.18) !important;
+}
+
+html body .prediction-player-row strong{
+  color:#fff !important;
+  font-weight:1000 !important;
+}
+
+html body .prediction-player-row small{
+  color:#cfc4a2 !important;
+  font-weight:850 !important;
+}
+
+html body .prediction-score-line{
+  background:transparent !important;
+}
+
+html body .prediction-score-line span{
+  color:#cfc4a2 !important;
+}
+
+html body .prediction-score-line b,
+html body .prediction-score-fixed{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-width:78px !important;
+  height:42px !important;
+  border-radius:15px !important;
+  background:linear-gradient(180deg,#171611,#080807) !important;
+  color:#f4d77a !important;
+  border:1px solid rgba(212,175,55,.45) !important;
+  font-size:1.18rem !important;
+  font-weight:1000 !important;
+  direction:ltr !important;
+  unicode-bidi:isolate !important;
+}
+
+/* شارات النقاط */
+html body .result-chip{
+  min-width:48px !important;
+  height:34px !important;
+  padding:0 10px !important;
+  border-radius:999px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  font-size:.82rem !important;
+  font-weight:1000 !important;
+}
+
+html body .result-chip.exact,
+html body .result-chip.partial,
+html body .result-chip.pending,
+html body .result-chip.wrong{
+  background:#fff8dd !important;
+  color:#11100b !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+}
+
+/* موبايل */
+@media (max-width:700px){
+  html body .public-match-card,
+  html body .match-view-hero,
+  html body .match-predictions-section{
+    border-radius:24px !important;
+  }
+
+  html body .public-score-box,
+  html body .match-view-score{
+    width:64px !important;
+    min-width:64px !important;
+    height:56px !important;
+  }
+
+  html body .public-flag,
+  html body .match-view-team img{
+    width:58px !important;
+    height:42px !important;
+  }
+}
