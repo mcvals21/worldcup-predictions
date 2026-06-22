@@ -7352,3 +7352,204 @@ a{
 .mobile-match-meta{
   background:transparent !important;
 }
+/* ================================
+   ثيم موحد لصفحة المتسابق وصفحة كل المباريات
+   داكن + ذهبي + مربعات نتيجة واضحة
+================================ */
+
+/* خلفية كرت المباراة في صفحة المتسابق */
+.mobile-focus-card{
+  background:linear-gradient(180deg,#24231f,#171714) !important;
+  border:1px solid rgba(212,175,55,.34) !important;
+  box-shadow:0 16px 38px rgba(0,0,0,.36) !important;
+  overflow:hidden !important;
+}
+
+/* الشريط العلوي داخل الكرت */
+.mobile-card-topline{
+  background:linear-gradient(180deg,#2b2a25,#1f1e1a) !important;
+  border-bottom:1px solid rgba(212,175,55,.24) !important;
+}
+
+/* حالة مفتوحة / منتهية */
+.mobile-status-pill.open,
+.mobile-status-pill.finished,
+.mobile-status-pill.locked{
+  background:rgba(212,175,55,.12) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.35) !important;
+}
+
+/* منطقة الفرق والنتيجة */
+.mobile-match-main{
+  background:transparent !important;
+}
+
+/* أسماء المنتخبات */
+.mobile-team-box strong{
+  color:#ffffff !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.35) !important;
+}
+
+/* مربعات التوقع تبقى فاتحة وواضحة */
+.mobile-score-inputs input{
+  background:linear-gradient(180deg,#ffffff,#f5f6f8) !important;
+  color:#071126 !important;
+  border:2px solid rgba(255,255,255,.85) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+
+/* علامة - بين النتيجتين */
+.mobile-score-inputs span{
+  color:#f6d77a !important;
+}
+
+/* المجموعات / التاريخ / الوقت */
+.mobile-match-meta{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex-wrap:wrap !important;
+  padding:0 12px 18px !important;
+}
+
+.mobile-match-meta span{
+  min-height:34px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:7px 13px !important;
+  border-radius:999px !important;
+  background:rgba(10,10,8,.72) !important;
+  color:#fff3bd !important;
+  border:1px solid rgba(212,175,55,.42) !important;
+  font-size:.82rem !important;
+  font-weight:950 !important;
+  line-height:1 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.mobile-match-meta span:nth-child(2){
+  min-width:112px !important;
+}
+
+.mobile-match-meta span:nth-child(3){
+  min-width:68px !important;
+}
+
+/* منطقة توقعك ونقاطك في المباريات المنتهية */
+.mobile-result-box{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(212,175,55,.20) !important;
+  color:#fff !important;
+}
+
+.mobile-result-box span{
+  color:#d7c58a !important;
+}
+
+.mobile-result-box b{
+  color:#ffffff !important;
+}
+
+/* زر عرض توقعات الجميع */
+.mobile-card-link a{
+  background:rgba(212,175,55,.12) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+}
+
+/* زر حفظ التوقعات */
+.bulk-save-btn{
+  background:linear-gradient(180deg,#242116,#11100b) !important;
+  color:#fff3bd !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.35) !important;
+}
+
+/* =================================
+   صفحة كل المباريات / matches
+================================= */
+
+.public-match-card{
+  background:linear-gradient(180deg,#24231f,#171714) !important;
+  border:1px solid rgba(212,175,55,.34) !important;
+  box-shadow:0 16px 38px rgba(0,0,0,.30) !important;
+  color:#ffffff !important;
+}
+
+.public-team-side,
+.public-team-side span,
+.public-team,
+.public-team span{
+  color:#ffffff !important;
+  font-weight:950 !important;
+}
+
+.public-score-box{
+  background:linear-gradient(180deg,#ffffff,#f5f6f8) !important;
+  color:#071126 !important;
+  border:1px solid rgba(255,255,255,.85) !important;
+  box-shadow:0 8px 20px rgba(0,0,0,.25) !important;
+}
+
+/* شارات صفحة كل المباريات */
+.public-match-card .stage-pill,
+.public-match-card .time-pill,
+.public-match-card .status-pill,
+.public-match-card .status-pill.finished,
+.public-match-card .status-pill.live,
+.public-match-card .status-pill.upcoming{
+  background:rgba(10,10,8,.72) !important;
+  color:#fff3bd !important;
+  border:1px solid rgba(212,175,55,.42) !important;
+}
+
+/* الفوتر داخل كرت كل المباريات */
+.public-match-footer{
+  border-top:1px solid rgba(212,175,55,.20) !important;
+}
+
+.small-action-link{
+  color:#f6d77a !important;
+}
+
+/* خلفية ملاحظة عامة إن وجدت */
+.public-note{
+  background:rgba(212,175,55,.10) !important;
+  color:#fff3bd !important;
+  border:1px solid rgba(212,175,55,.30) !important;
+}
+
+/* تحسين الموبايل */
+@media (max-width:700px){
+  .mobile-focus-card{
+    border-radius:24px !important;
+  }
+
+  .mobile-match-meta{
+    gap:7px !important;
+    padding:0 10px 18px !important;
+  }
+
+  .mobile-match-meta span{
+    min-height:32px !important;
+    padding:7px 11px !important;
+    font-size:.8rem !important;
+  }
+
+  .mobile-match-meta span:nth-child(2){
+    min-width:104px !important;
+  }
+
+  .mobile-match-meta span:nth-child(3){
+    min-width:64px !important;
+  }
+
+  .public-match-card{
+    border-radius:22px !important;
+  }
+}
