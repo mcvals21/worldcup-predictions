@@ -10,6 +10,7 @@
   </div>
 </section>
 
+
 <h3 class="section-title">⚽ المباريات</h3>
 
 <div class="match-tabs">
@@ -29,12 +30,6 @@
     لا توجد مباريات في هذا القسم حاليًا.
   </div>
 {% endif %}
-
-{% if has_open_matches %}
-<form method="post" class="bulk-predictions-form" id="bulkPredictionsForm">
-  <input type="hidden" name="action" value="bulk_predict">
-{% endif %}
-
 {% for m in matches %}
   {% set pred = predictions.get(m.id) %}
   {% set is_double = pred and pred.is_double %}
@@ -45,78 +40,85 @@
   <section class="card match-card mobile-focus-card {% if is_double %}double-selected{% endif %}">
 
     <div class="mobile-card-topline clean-topline status-only-topline">
-      {% if not is_locked %}
-        <span class="mobile-status-pill open">مفتوحة</span>
-      {% elif m.home_score is not none and m.away_score is not none %}
-        <span class="mobile-status-pill finished">منتهية</span>
-      {% else %}
-        <span class="mobile-status-pill locked">مغلقة</span>
-      {% endif %}
-    </div>
+  {% if not is_locked %}
+    <span class="mobile-status-pill open">مفتوحة</span>
+  {% elif m.home_score is not none and m.away_score is not none %}
+    <span class="mobile-status-pill finished">منتهية</span>
+  {% else %}
+    <span class="mobile-status-pill locked">مغلقة</span>
+  {% endif %}
+</div>
 
     {% if not is_locked %}
-      <input type="hidden" name="match_ids" value="{{ m.id }}">
+      <form method="post" class="mobile-predict-form">
+        <input type="hidden" name="action" value="predict">
+        <input type="hidden" name="match_id" value="{{ m.id }}">
 
-      <div class="mobile-match-main">
-        <div class="mobile-team-box">
-          {% if home_flag %}
-            <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
-          {% endif %}
-          <strong>{{ m.home_team }}</strong>
-        </div>
-
-        <div class="mobile-score-inputs">
-          <input
-            type="number"
-            min="0"
-            name="home_score_{{ m.id }}"
-            value="{{ pred.home_score if pred else 0 }}"
-            inputmode="numeric"
-            pattern="[0-9]*"
-          >
-
-          <span>-</span>
-
-          <input
-            type="number"
-            min="0"
-            name="away_score_{{ m.id }}"
-            value="{{ pred.away_score if pred else 0 }}"
-            inputmode="numeric"
-            pattern="[0-9]*"
-          >
-        </div>
-
-        <div class="mobile-team-box">
-          {% if away_flag %}
-            <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
-          {% endif %}
-          <strong>{{ m.away_team }}</strong>
-        </div>
-      </div>
-
-      <div class="mobile-match-meta">
-        <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
-        <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
-        <span>{{ m.start_time.strftime('%H:%M') }}</span>
-      </div>
-
-      {% if pred %}
-        <div class="mobile-saved-note">
-          ✅ توقعك الحالي: <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
-        </div>
-      {% endif %}
-
-      {% if m.stage in knockout %}
-        <label class="double-option mobile-double-option">
-          <input type="checkbox" name="is_double_{{ m.id }}" {% if pred and pred.is_double %}checked{% endif %}>
-
-          <div>
-            <strong>⭐ مباراة مضاعفة</strong>
-            <span>نتيجة مطابقة = 6 نقاط، توقع الفائز = نقطتان</span>
+        <div class="mobile-match-main">
+          <div class="mobile-team-box">
+            {% if home_flag %}
+              <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+            {% endif %}
+            <strong>{{ m.home_team }}</strong>
           </div>
-        </label>
-      {% endif %}
+
+          <div class="mobile-score-inputs">
+            <input
+              type="number"
+              min="0"
+              name="home_score"
+              value="{{ pred.home_score if pred else 0 }}"
+              inputmode="numeric"
+              pattern="[0-9]*"
+            >
+
+            <span>-</span>
+
+            <input
+              type="number"
+              min="0"
+              name="away_score"
+              value="{{ pred.away_score if pred else 0 }}"
+              inputmode="numeric"
+              pattern="[0-9]*"
+            >
+          </div>
+
+          <div class="mobile-team-box">
+            {% if away_flag %}
+              <img class="mobile-team-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+            {% endif %}
+            <strong>{{ m.away_team }}</strong>
+          </div>
+        </div>
+
+        <div class="mobile-match-meta">
+          <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
+          <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
+          <span>{{ m.start_time.strftime('%H:%M') }}</span>
+        </div>
+
+        {% if pred %}
+          <div class="mobile-saved-note">
+            ✅ توقعك الحالي: <b>{{ pred.home_score }} - {{ pred.away_score }}</b>
+          </div>
+        {% endif %}
+
+        {% if m.stage in knockout %}
+          <label class="double-option mobile-double-option">
+            <input type="checkbox" name="is_double" {% if pred and pred.is_double %}checked{% endif %}>
+
+            <div>
+              <strong>⭐ مباراة مضاعفة</strong>
+              <span>نتيجة مطابقة = 6 نقاط، توقع الفائز = نقطتان</span>
+            </div>
+          </label>
+        {% endif %}
+
+        <button class="mobile-save-btn">
+  {{ 'تعديل التوقع' if pred else 'حفظ التوقع' }}
+</button>
+      </form>
 
     {% else %}
 
@@ -182,16 +184,6 @@
 
   </section>
 {% endfor %}
-
-{% if has_open_matches %}
-  <div class="bulk-save-bar">
-    <button type="submit" class="bulk-save-btn">
-      حفظ كل التوقعات
-    </button>
-    <span>سيتم حفظ المباريات المفتوحة فقط</span>
-  </div>
-</form>
-{% endif %}
 
 <script>
 function parseKuwaitTime(value) {
