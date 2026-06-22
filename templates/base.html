@@ -115,16 +115,13 @@
 
   <script>
 document.addEventListener('DOMContentLoaded', function () {
-  const toasts = document.querySelectorAll('.site-toast');
-
-  toasts.forEach(function (toast) {
+  document.querySelectorAll('.premium-toast').forEach(function (toast) {
     setTimeout(function () {
-      toast.classList.add('hide');
-
+      toast.classList.add('toast-hide');
       setTimeout(function () {
         toast.remove();
-      }, 250);
-    }, 3500);
+      }, 300);
+    }, 4200);
   });
 });
 </script>
