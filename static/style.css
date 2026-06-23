@@ -3285,3 +3285,252 @@ html body .lb-bonus{
     font-size:.55rem !important;
   }
 }
+/* =====================================================
+   rank-clean-final
+   صفحة الترتيب - نسخة نهائية مستقلة لا تتأثر بالكود القديم
+===================================================== */
+
+/* إخفاء كل عناصر الترتيب القديمة بالقوة */
+html body .leaderboard-hero,
+html body .top-podium,
+html body .podium-card,
+html body .desktop-leader-table,
+html body .mobile-leader-list,
+html body .leader-card{
+  display:none !important;
+}
+
+/* الصفحة */
+html body .rank-clean-page{
+  display:grid !important;
+  gap:14px !important;
+  padding-top:4px !important;
+}
+
+/* العنوان */
+html body .rank-clean-header{
+  text-align:center !important;
+  margin:4px 0 16px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+html body .rank-clean-header h1{
+  margin:0 !important;
+  color:#ffffff !important;
+  font-size:1.85rem !important;
+  line-height:1.2 !important;
+  font-weight:1000 !important;
+}
+
+html body .rank-clean-header p{
+  margin:8px 0 0 !important;
+  color:#d8d3c5 !important;
+  font-size:.92rem !important;
+  line-height:1.6 !important;
+  font-weight:850 !important;
+}
+
+/* القائمة */
+html body .rank-clean-list{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+
+/* صف المتسابق */
+html body .rank-clean-row{
+  position:relative !important;
+  direction:rtl !important;
+
+  display:grid !important;
+  grid-template-columns:46px minmax(0,1fr) 70px 70px !important;
+  align-items:center !important;
+  gap:10px !important;
+
+  min-height:66px !important;
+  padding:12px 14px !important;
+  border-radius:17px !important;
+
+  background:#e2dfd7 !important;
+  border:1px solid #d0cbc0 !important;
+  box-shadow:none !important;
+  overflow:hidden !important;
+}
+
+/* إجبار كل النصوص داخل الصف */
+html body .rank-clean-row,
+html body .rank-clean-row *{
+  color:#171717 !important;
+  text-shadow:none !important;
+}
+
+/* الشريط الجانبي */
+html body .rank-clean-row::before{
+  content:"" !important;
+  position:absolute !important;
+  right:0 !important;
+  top:10px !important;
+  bottom:10px !important;
+  width:4px !important;
+  border-radius:999px 0 0 999px !important;
+  background:#8f949e !important;
+}
+
+html body .rank-clean-row.rank-gold::before{
+  background:#d0b255 !important;
+}
+
+html body .rank-clean-row.rank-silver::before{
+  background:#aeb4bf !important;
+}
+
+html body .rank-clean-row.rank-bronze::before{
+  background:#b88a5a !important;
+}
+
+/* ترتيب اللاعب */
+html body .rank-clean-place{
+  width:40px !important;
+  height:40px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:14px !important;
+  background:#f3efe3 !important;
+  border:1px solid rgba(0,0,0,.08) !important;
+
+  font-size:1rem !important;
+  font-weight:1000 !important;
+}
+
+/* الاسم */
+html body .rank-clean-name{
+  color:#171717 !important;
+  font-size:1.04rem !important;
+  line-height:1.2 !important;
+  font-weight:1000 !important;
+
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  padding-right:6px !important;
+}
+
+/* النقاط */
+html body .rank-clean-points{
+  height:42px !important;
+  min-width:70px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:14px !important;
+  background:linear-gradient(180deg,#3a3c42,#25272c) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+}
+
+html body .rank-clean-points strong{
+  color:#ffffff !important;
+  font-size:1.08rem !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+}
+
+html body .rank-clean-points span{
+  color:#d8d3c5 !important;
+  font-size:.58rem !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  margin-top:4px !important;
+}
+
+/* التوقعات الدقيقة */
+html body .rank-clean-exact{
+  height:42px !important;
+  min-width:70px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:14px !important;
+  background:#e7d79d !important;
+  border:1px solid rgba(167,131,37,.18) !important;
+}
+
+html body .rank-clean-exact strong{
+  color:#33280f !important;
+  font-size:1rem !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+}
+
+html body .rank-clean-exact span{
+  color:#5f4a16 !important;
+  font-size:.58rem !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  margin-top:4px !important;
+}
+
+/* الصف الأول لمسة بسيطة */
+html body .rank-clean-row.rank-gold{
+  background:#e7e2d4 !important;
+  border-color:rgba(208,178,85,.38) !important;
+}
+
+/* الهاتف */
+@media (max-width:640px){
+
+  html body .rank-clean-header h1{
+    font-size:1.55rem !important;
+  }
+
+  html body .rank-clean-header p{
+    font-size:.84rem !important;
+  }
+
+  html body .rank-clean-row{
+    grid-template-columns:40px minmax(0,1fr) 58px 58px !important;
+    gap:8px !important;
+    min-height:64px !important;
+    padding:11px 12px !important;
+    border-radius:16px !important;
+  }
+
+  html body .rank-clean-place{
+    width:36px !important;
+    height:36px !important;
+    border-radius:13px !important;
+    font-size:.88rem !important;
+  }
+
+  html body .rank-clean-name{
+    font-size:.98rem !important;
+  }
+
+  html body .rank-clean-points,
+  html body .rank-clean-exact{
+    min-width:56px !important;
+    height:40px !important;
+    border-radius:13px !important;
+  }
+
+  html body .rank-clean-points strong,
+  html body .rank-clean-exact strong{
+    font-size:.96rem !important;
+  }
+
+  html body .rank-clean-points span,
+  html body .rank-clean-exact span{
+    font-size:.54rem !important;
+  }
+}
