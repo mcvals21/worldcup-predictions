@@ -1474,3 +1474,211 @@ html body .mv-prediction-item.is-double{
     font-size:.82rem !important;
   }
 }
+/* =====================================================
+   ref-sports-8
+   تحسين صفحة توقعات المشاركين: تباين داكن + نقاط أوضح
+===================================================== */
+
+/* رأس كرت التوقعات يصبح داكنًا داخل الكرت الفاتح */
+html body .mv-section-title{
+  background:linear-gradient(180deg,#2e3033,#1d1f22) !important;
+  color:#f5f2ea !important;
+  border:1px solid rgba(230,211,156,.24) !important;
+  border-radius:24px !important;
+  padding:18px 14px !important;
+  margin-bottom:16px !important;
+  box-shadow:0 12px 24px rgba(0,0,0,.18) !important;
+}
+
+html body .mv-section-title h3{
+  color:#ffffff !important;
+}
+
+html body .mv-section-title span{
+  background:linear-gradient(180deg,#ead8a7,#ddc273) !important;
+  color:#17130a !important;
+  border:1px solid rgba(198,168,75,.45) !important;
+}
+
+/* كرت كل مشارك: أبيض مع شريط داكن خفيف للتباين */
+html body .mv-prediction-item{
+  position:relative !important;
+  overflow:hidden !important;
+
+  background:
+    linear-gradient(90deg,rgba(32,33,36,.08),transparent 34%),
+    #ffffff !important;
+
+  border:1px solid rgba(17,17,17,.10) !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.09) !important;
+}
+
+/* شريط جانبي يوضح نوع النتيجة */
+html body .mv-prediction-item::before{
+  content:"" !important;
+  position:absolute !important;
+  top:0 !important;
+  bottom:0 !important;
+  right:0 !important;
+  width:6px !important;
+  background:#9ca3af !important;
+}
+
+html body .mv-prediction-item.is-exact::before{
+  background:#22c55e !important;
+}
+
+html body .mv-prediction-item.is-partial::before{
+  background:#d6ad37 !important;
+}
+
+html body .mv-prediction-item.is-wrong::before{
+  background:#4b5563 !important;
+}
+
+html body .mv-prediction-item.is-pending::before{
+  background:#9ca3af !important;
+}
+
+/* اسم المشارك أوضح */
+html body .mv-player-block strong{
+  color:#111111 !important;
+  font-size:1.06rem !important;
+}
+
+html body .mv-player-block small{
+  color:#625c52 !important;
+}
+
+/* مربع التوقع نفسه يصبح أوضح */
+html body .mv-pred-score{
+  background:linear-gradient(180deg,#2b2d30,#161719) !important;
+  color:#f5f2ea !important;
+  border:1px solid rgba(230,211,156,.28) !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.16) !important;
+}
+
+html body .mv-pred-score span,
+html body .mv-pred-score b{
+  color:#f5f2ea !important;
+}
+
+/* شارة النقاط الجديدة */
+html body .mv-result-chip{
+  min-width:82px !important;
+  min-height:54px !important;
+  padding:7px 12px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:4px !important;
+
+  border-radius:18px !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.13) !important;
+}
+
+html body .mv-result-chip b{
+  font-size:1.22rem !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+}
+
+html body .mv-result-chip small{
+  font-size:.72rem !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+}
+
+/* +3 أو +6: نتيجة دقيقة */
+html body .mv-result-chip.exact{
+  background:linear-gradient(180deg,#dcfce7,#86efac) !important;
+  color:#14532d !important;
+  border:1px solid rgba(34,197,94,.45) !important;
+}
+
+html body .mv-result-chip.exact b,
+html body .mv-result-chip.exact small{
+  color:#14532d !important;
+}
+
+/* +1 أو +2: توقع صحيح جزئي */
+html body .mv-result-chip.partial{
+  background:linear-gradient(180deg,#ead8a7,#ddc273) !important;
+  color:#17130a !important;
+  border:1px solid rgba(198,168,75,.45) !important;
+}
+
+html body .mv-result-chip.partial b,
+html body .mv-result-chip.partial small{
+  color:#17130a !important;
+}
+
+/* 0: خطأ */
+html body .mv-result-chip.wrong{
+  background:linear-gradient(180deg,#3a3b3f,#1d1f22) !important;
+  color:#f5f2ea !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+}
+
+html body .mv-result-chip.wrong b,
+html body .mv-result-chip.wrong small{
+  color:#f5f2ea !important;
+}
+
+/* بانتظار النتيجة */
+html body .mv-result-chip.pending{
+  background:linear-gradient(180deg,#ece8df,#d8d2c5) !important;
+  color:#5f574b !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+}
+
+html body .mv-result-chip.pending b,
+html body .mv-result-chip.pending small{
+  color:#5f574b !important;
+}
+
+/* تمييز إضافي للمطابقة الكاملة */
+html body .mv-prediction-item.is-exact{
+  background:
+    linear-gradient(90deg,rgba(34,197,94,.12),transparent 38%),
+    #ffffff !important;
+  border-color:rgba(34,197,94,.28) !important;
+}
+
+/* تمييز للمشاركة التي فيها نقطة */
+html body .mv-prediction-item.is-partial{
+  background:
+    linear-gradient(90deg,rgba(214,173,55,.14),transparent 38%),
+    #ffffff !important;
+  border-color:rgba(214,173,55,.30) !important;
+}
+
+/* تمييز هادئ للخطأ */
+html body .mv-prediction-item.is-wrong{
+  background:
+    linear-gradient(90deg,rgba(31,41,55,.09),transparent 38%),
+    #ffffff !important;
+}
+
+/* الهاتف */
+@media (max-width:520px){
+  html body .mv-result-chip{
+    min-width:74px !important;
+    min-height:50px !important;
+    border-radius:16px !important;
+  }
+
+  html body .mv-result-chip b{
+    font-size:1.12rem !important;
+  }
+
+  html body .mv-result-chip small{
+    font-size:.68rem !important;
+  }
+
+  html body .mv-pred-score{
+    background:linear-gradient(180deg,#2b2d30,#161719) !important;
+  }
+}
