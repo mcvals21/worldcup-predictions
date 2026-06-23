@@ -3534,3 +3534,265 @@ html body .rank-clean-row.rank-gold{
     font-size:.54rem !important;
   }
 }
+/* =====================================================
+   leaderboard-final-fix
+   إصلاح فعلي لصفحة الترتيب الحالية lb-simple
+===================================================== */
+
+/* إخفاء كل البطاقات والجداول القديمة */
+html body .leaderboard-hero,
+html body .top-podium,
+html body .podium-card,
+html body .desktop-leader-table,
+html body .mobile-leader-list,
+html body .leader-card{
+  display:none !important;
+}
+
+/* صفحة الترتيب */
+html body .lb-simple-page{
+  display:grid !important;
+  gap:14px !important;
+}
+
+/* الترتيب */
+html body .lb-simple-page{
+  display:grid !important;
+  gap:14px !important;
+}
+
+/* العنوان */
+html body .lb-simple-title{
+  text-align:center !important;
+  margin:6px 0 16px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+html body .lb-simple-title h1{
+  color:#ffffff !important;
+  font-size:1.8rem !important;
+  line-height:1.2 !important;
+  font-weight:1000 !important;
+  margin:0 !important;
+}
+
+html body .lb-simple-title p{
+  color:#d8d3c5 !important;
+  font-size:.9rem !important;
+  line-height:1.6 !important;
+  font-weight:850 !important;
+  margin:8px 0 0 !important;
+}
+
+/* القائمة */
+html body .lb-simple-list{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+
+/* صف كل متسابق */
+html body .lb-simple-row{
+  position:relative !important;
+  direction:rtl !important;
+
+  display:grid !important;
+  grid-template-columns:42px minmax(0,1fr) 68px 68px !important;
+  align-items:center !important;
+  gap:10px !important;
+
+  min-height:66px !important;
+  padding:12px 14px !important;
+  border-radius:17px !important;
+
+  background:#e2dfd7 !important;
+  border:1px solid #d0cbc0 !important;
+  box-shadow:none !important;
+  overflow:hidden !important;
+
+  color:#171717 !important;
+}
+
+/* مهم: نكسر أي لون أبيض موروث من الكود القديم */
+html body .lb-simple-row *,
+html body .lb-simple-row strong,
+html body .lb-simple-row span,
+html body .lb-simple-row div{
+  text-shadow:none !important;
+}
+
+/* الشريط الجانبي */
+html body .lb-simple-row::before{
+  content:"" !important;
+  position:absolute !important;
+  right:0 !important;
+  top:10px !important;
+  bottom:10px !important;
+  width:4px !important;
+  border-radius:999px 0 0 999px !important;
+  background:#8f949e !important;
+}
+
+html body .lb-simple-row.rank-one::before{
+  background:#d0b255 !important;
+}
+
+html body .lb-simple-row.rank-two::before{
+  background:#aeb4bf !important;
+}
+
+html body .lb-simple-row.rank-three::before{
+  background:#b88a5a !important;
+}
+
+/* رقم الترتيب */
+html body .lb-rank{
+  width:38px !important;
+  height:38px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:13px !important;
+  background:#f3efe3 !important;
+  border:1px solid rgba(0,0,0,.08) !important;
+
+  color:#171717 !important;
+  font-size:.92rem !important;
+  font-weight:1000 !important;
+}
+
+/* الاسم */
+html body .lb-name{
+  color:#171717 !important;
+  font-size:1rem !important;
+  line-height:1.2 !important;
+  font-weight:1000 !important;
+
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+
+  padding-right:6px !important;
+}
+
+/* النقاط */
+html body .lb-points{
+  height:42px !important;
+  min-width:66px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:14px !important;
+  background:linear-gradient(180deg,#3a3c42,#25272c) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+
+  color:#ffffff !important;
+}
+
+html body .lb-points strong{
+  color:#ffffff !important;
+  font-size:1.05rem !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+}
+
+html body .lb-points span{
+  color:#d8d3c5 !important;
+  font-size:.56rem !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  margin-top:4px !important;
+}
+
+/* التوقعات الدقيقة */
+html body .lb-exact{
+  height:42px !important;
+  min-width:66px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:14px !important;
+  background:#e7d79d !important;
+  border:1px solid rgba(167,131,37,.18) !important;
+
+  color:#33280f !important;
+}
+
+html body .lb-exact{
+  font-size:.95rem !important;
+  font-weight:1000 !important;
+}
+
+html body .lb-exact span{
+  color:#5f4a16 !important;
+  font-size:.56rem !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  margin-top:4px !important;
+}
+
+/* البونص نخفيه الآن حتى لا يزدحم الصف */
+html body .lb-bonus{
+  display:none !important;
+}
+
+/* الهاتف */
+@media (max-width:640px){
+  html body .lb-simple-title h1{
+    font-size:1.55rem !important;
+  }
+
+  html body .lb-simple-title p{
+    font-size:.84rem !important;
+  }
+
+  html body .lb-simple-row{
+    grid-template-columns:40px minmax(0,1fr) 58px 58px !important;
+    gap:8px !important;
+    min-height:64px !important;
+    padding:11px 12px !important;
+    border-radius:16px !important;
+  }
+
+  html body .lb-rank{
+    width:36px !important;
+    height:36px !important;
+    border-radius:13px !important;
+    font-size:.88rem !important;
+  }
+
+  html body .lb-name{
+    font-size:.96rem !important;
+  }
+
+  html body .lb-points,
+  html body .lb-exact{
+    min-width:56px !important;
+    height:40px !important;
+    border-radius:13px !important;
+  }
+
+  html body .lb-points strong{
+    font-size:.98rem !important;
+  }
+
+  html body .lb-exact{
+    font-size:.92rem !important;
+  }
+
+  html body .lb-points span,
+  html body .lb-exact span{
+    font-size:.52rem !important;
+  }
+}
