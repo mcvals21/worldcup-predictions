@@ -36,21 +36,31 @@
     {% set match_finished = m.home_score is not none and m.away_score is not none %}
     {% set match_locked = locked(m) %}
 
-    <article class="public-match-card">
+    <article class="public-match-card clean-match-card">
 
-      <div class="public-match-top">
-  <span class="stage-pill">
-    {{ stage_labels.get(m.stage, m.stage) }}
-  </span>
+      <div class="public-status-row">
+        {% if match_finished %}
+          <span class="status-pill finished">منتهية</span>
+        {% elif match_locked %}
+          <span class="status-pill locked">مغلقة</span>
+        {% else %}
+          <span class="status-pill upcoming">مفتوحة</span>
+        {% endif %}
+      </div>
 
-  <span class="date-pill">
-    {{ m.start_time.strftime('%Y-%m-%d') }}
-  </span>
+      <div class="public-meta-strip">
+        <span class="meta-pill meta-group">
+          {{ stage_labels.get(m.stage, m.stage) }}
+        </span>
 
-  <span class="time-pill">
-    {{ m.start_time.strftime('%H:%M') }}
-  </span>
-</div>
+        <span class="meta-pill meta-date">
+          {{ m.start_time.strftime('%Y-%m-%d') }}
+        </span>
+
+        <span class="meta-pill meta-time">
+          {{ m.start_time.strftime('%H:%M') }}
+        </span>
+      </div>
 
       <div class="public-teams-row clean">
         <div class="public-team-side">
@@ -84,21 +94,17 @@
         </div>
       </div>
 
-      <div class="public-match-footer">
-        {% if match_finished %}
-          <span class="status-pill finished">منتهية</span>
+      {% if match_finished or match_locked %}
+        <div class="public-match-footer">
           <a class="small-action-link" href="{{ url_for('match_view', match_id=m.id) }}">
-            عرض التوقعات والنقاط
+            {% if match_finished %}
+              عرض التوقعات والنقاط
+            {% else %}
+              عرض التوقعات
+            {% endif %}
           </a>
-        {% elif match_locked %}
-          <span class="status-pill live">مغلقة</span>
-          <a class="small-action-link" href="{{ url_for('match_view', match_id=m.id) }}">
-            عرض التوقعات
-          </a>
-        {% else %}
-          <span class="status-pill upcoming">مفتوحة</span>
-        {% endif %}
-      </div>
+        </div>
+      {% endif %}
 
     </article>
   {% endfor %}
