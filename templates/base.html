@@ -4,23 +4,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101010">
+  <meta name="theme-color" content="#080808">
   <title>{{ t.name if t else 'توقعات المباريات' }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=clean18">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=ref-sports-1">
 </head>
 
-<body>
+<body class="{% block body_class %}{% endblock %}">
 <header class="wc-header clean-wc-header">
   <div class="clean-header-row">
 
-    <details class="clean-menu">
-      <summary>☰ القائمة</summary>
+    <details class="clean-menu" id="siteMenu">
+      <summary>
+        <span class="menu-label">القائمة</span>
+        <span class="menu-icon">☰</span>
+      </summary>
 
       <div class="clean-menu-panel">
-        <a href="/leaderboard">🏅 الترتيب</a>
-        <a href="{{ url_for('matches_page', filter='open') }}">⚽ المباريات</a>
-        <a href="/rules">📖 القوانين</a>
-        <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
+        <nav class="menu-links">
+          <a href="/leaderboard">🏅 الترتيب</a>
+          <a href="{{ url_for('matches_page', filter='open') }}">⚽ المباريات</a>
+          <a href="/rules">📖 القوانين</a>
+          <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
+        </nav>
 
         {% if p is defined %}
           <div class="menu-divider"></div>
@@ -52,7 +57,7 @@
                   {% endfor %}
                 </select>
 
-                <button>حفظ البطل</button>
+                <button type="submit">حفظ البطل</button>
               </form>
             {% endif %}
           </div>
@@ -62,7 +67,7 @@
 
     <div class="clean-title">
       <div class="clean-kicker">مسابقة الأصدقاء</div>
-      <h1>🏆 {{ t.name if t else 'توقعات المباريات' }}</h1>
+      <h1>{{ t.name if t else 'توقعات المباريات' }} <span>🏆</span></h1>
     </div>
 
   </div>
@@ -70,7 +75,7 @@
   <p class="clean-subtitle">توقع النتائج، اجمع النقاط، ونافس على الصدارة</p>
 </header>
 
-<main>
+<main class="site-main">
  {% with messages = get_flashed_messages() %}
   {% if messages %}
     <div class="toast-area" id="toastArea">
@@ -89,9 +94,7 @@
             {% endif %}
           </span>
 
-          <span class="toast-simple-text">
-            {{ message }}
-          </span>
+          <span class="toast-simple-text">{{ message }}</span>
         </div>
       {% endfor %}
     </div>
@@ -101,82 +104,38 @@
   {% block content %}{% endblock %}
 </main>
 
-  <script>
+<script>
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.premium-toast-simple').forEach(function (toast) {
     setTimeout(function () {
       toast.classList.add('toast-hide');
       setTimeout(function () {
         toast.remove();
-      }, 300);
+      }, 260);
     }, 4200);
   });
-});
-</script>
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const menu = document.querySelector("details.clean-menu");
 
-  if (menu) {
-    document.addEventListener("click", function (event) {
+  document.querySelectorAll('.clean-menu').forEach(function(menu){
+    document.addEventListener('click', function (event) {
       if (menu.open && !menu.contains(event.target)) {
-        menu.removeAttribute("open");
+        menu.removeAttribute('open');
       }
     });
 
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && menu.open) {
-        menu.removeAttribute("open");
-      }
-    });
-
-    menu.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        menu.removeAttribute("open");
+    menu.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', function(){
+        menu.removeAttribute('open');
       });
     });
-  }
+  });
 
-  document
-    .querySelectorAll(".mobile-status-pill, .wc-status-pill, .status-pill, .card-status-pill")
-    .forEach(function (pill) {
-      const text = pill.textContent.trim();
-
-      pill.classList.remove("is-open", "is-finished", "is-locked");
-
-      if (text.includes("مفتوحة")) {
-        pill.classList.add("is-open");
-      } else if (text.includes("منتهية")) {
-        pill.classList.add("is-finished");
-      } else if (text.includes("مغلقة")) {
-        pill.classList.add("is-locked");
-      }
-    });
-});
-</script>
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const menu = document.querySelector("details.clean-menu");
-
-  if (menu) {
-    document.addEventListener("click", function (event) {
-      if (menu.open && !menu.contains(event.target)) {
-        menu.removeAttribute("open");
-      }
-    });
-
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && menu.open) {
-        menu.removeAttribute("open");
-      }
-    });
-
-    menu.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        menu.removeAttribute("open");
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      document.querySelectorAll('.clean-menu[open]').forEach(function(menu){
+        menu.removeAttribute('open');
       });
-    });
-  }
+    }
+  });
 });
 </script>
 </body>
