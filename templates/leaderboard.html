@@ -2,20 +2,20 @@
 
 {% block content %}
 
-<section class="lb-simple-page">
+<section class="rank-clean-page">
 
-  <div class="lb-simple-title">
+  <header class="rank-clean-header">
     <h1>الترتيب العام</h1>
     <p>النقاط والتوقعات الصحيحة بين المشاركين</p>
-  </div>
+  </header>
 
   {% if rows %}
-    <div class="lb-simple-list">
+    <div class="rank-clean-list">
 
       {% for r in rows %}
-        <div class="lb-simple-row {% if loop.index == 1 %}rank-one{% elif loop.index == 2 %}rank-two{% elif loop.index == 3 %}rank-three{% endif %}">
+        <article class="rank-clean-row {% if loop.index == 1 %}rank-gold{% elif loop.index == 2 %}rank-silver{% elif loop.index == 3 %}rank-bronze{% endif %}">
 
-          <div class="lb-rank">
+          <div class="rank-clean-place">
             {% if loop.index == 1 %}
               🥇
             {% elif loop.index == 2 %}
@@ -27,27 +27,21 @@
             {% endif %}
           </div>
 
-          <div class="lb-name">
+          <div class="rank-clean-name">
             {{ r.name }}
           </div>
 
-          <div class="lb-points">
+          <div class="rank-clean-points">
             <strong>{{ r.points }}</strong>
             <span>نقطة</span>
           </div>
 
-          <div class="lb-exact">
-            {{ r.exact }}
+          <div class="rank-clean-exact">
+            <strong>{{ r.exact }}</strong>
             <span>دقيقة</span>
           </div>
 
-          {% if r.champion_bonus %}
-            <div class="lb-bonus">
-              +{{ r.champion_bonus }}
-            </div>
-          {% endif %}
-
-        </div>
+        </article>
       {% endfor %}
 
     </div>
