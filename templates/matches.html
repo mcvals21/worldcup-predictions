@@ -1,9 +1,11 @@
+
 {% extends "base.html" %}
 
 {% block content %}
 
 <div class="page-hero">
-  <h1>جدول المباريات</h1>
+  <div class="page-kicker">الجدول العام</div>
+  <h1>المباريات</h1>
   <p>تابع المباريات المفتوحة، القادمة، والمنتهية في مكان واحد.</p>
 </div>
 
@@ -36,8 +38,7 @@
     {% set match_finished = m.home_score is not none and m.away_score is not none %}
     {% set match_locked = locked(m) %}
 
-    <article class="public-match-card clean-match-card">
-
+    <article class="public-match-card">
       <div class="public-status-row">
         {% if match_finished %}
           <span class="status-pill finished">منتهية</span>
@@ -48,69 +49,38 @@
         {% endif %}
       </div>
 
-<div
-  class="public-meta-strip"
-  style="
-    display:grid !important;
-    grid-template-columns:1fr 1fr 1fr !important;
-    direction:ltr !important;
-    gap:8px !important;
-    padding:12px 12px 4px !important;
-    align-items:center !important;
-  "
->
-  <span
-    class="meta-pill meta-time"
-    style="grid-column:1 !important; direction:ltr !important;"
-  >
-    {{ m.start_time.strftime('%H:%M') }}
-  </span>
-
-  <span
-    class="meta-pill meta-date"
-    style="grid-column:2 !important; direction:ltr !important;"
-  >
-    {{ m.start_time.strftime('%Y-%m-%d') }}
-  </span>
-
-  <span
-    class="meta-pill meta-group"
-    style="grid-column:3 !important; direction:rtl !important;"
-  >
-    {{ stage_labels.get(m.stage, m.stage) }}
-  </span>
-</div>
-
       <div class="public-teams-row clean">
         <div class="public-team-side">
           {% if home_flag %}
-            <img
-              class="flag-img public-flag"
-              src="https://flagcdn.com/w80/{{ home_flag }}.png"
-              alt="{{ m.home_team }}"
-            >
+            <img class="flag-img public-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="{{ m.home_team }}">
           {% endif %}
           <span>{{ m.home_team }}</span>
         </div>
 
-        <div class="public-score-box">
+        <div class="public-score-group">
           {% if match_finished %}
-            {{ m.home_score }} - {{ m.away_score }}
+            <span class="public-score-box">{{ m.home_score }}</span>
+            <b>-</b>
+            <span class="public-score-box">{{ m.away_score }}</span>
           {% else %}
-            ×
+            <span class="public-score-box is-empty">؟</span>
+            <b>-</b>
+            <span class="public-score-box is-empty">؟</span>
           {% endif %}
         </div>
 
         <div class="public-team-side">
           {% if away_flag %}
-            <img
-              class="flag-img public-flag"
-              src="https://flagcdn.com/w80/{{ away_flag }}.png"
-              alt="{{ m.away_team }}"
-            >
+            <img class="flag-img public-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="{{ m.away_team }}">
           {% endif %}
           <span>{{ m.away_team }}</span>
         </div>
+      </div>
+
+      <div class="public-meta-row">
+        <span class="public-meta-pill">{{ stage_labels.get(m.stage, m.stage) }}</span>
+        <span class="public-meta-pill">{{ m.start_time.strftime('%Y-%m-%d') }}</span>
+        <span class="public-meta-pill">{{ m.start_time.strftime('%H:%M') }}</span>
       </div>
 
       {% if match_finished or match_locked %}
@@ -124,7 +94,6 @@
           </a>
         </div>
       {% endif %}
-
     </article>
   {% endfor %}
 </div>
