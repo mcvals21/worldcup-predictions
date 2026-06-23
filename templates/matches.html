@@ -35,17 +35,19 @@
     {% set away_flag = team_flag_code(m.away_team) %}
 
     <div class="public-match-card">
-      <div class="public-match-top">
-        <span class="stage-pill">
-          {{ stage_labels.get(m.stage, m.stage) }}
-        </span>
+     <div class="public-match-top">
+  <span class="stage-pill">
+    {{ stage_labels.get(m.stage, m.stage) }}
+  </span>
 
-        <span class="time-pill">
-          {{ m.start_time.strftime('%Y-%m-%d') }}
-          ·
-          {{ m.start_time.strftime('%H:%M') }}
-        </span>
-      </div>
+  <span class="date-pill">
+    {{ m.start_time.strftime('%Y-%m-%d') }}
+  </span>
+
+  <span class="time-pill">
+    {{ m.start_time.strftime('%H:%M') }}
+  </span>
+</div>
 
       <div class="public-teams-row clean">
         <div class="public-team-side">
