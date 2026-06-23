@@ -1074,3 +1074,59 @@ html body .toast-warning{
     grid-template-columns:1fr 1fr;
   }
 }
+/* =====================================================
+   ref-sports-6
+   توحيد زر حفظ التوقعات وزر عرض التوقعات
+===================================================== */
+
+html body .wc-save-btn,
+html body .wc-view-link,
+html body .small-action-link{
+  min-height:56px !important;
+  border-radius:18px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  background:
+    linear-gradient(180deg,#202124 0%, #111214 100%) !important;
+
+  color:#f5f2ea !important;
+  border:1px solid rgba(230,211,156,.42) !important;
+
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.26),
+    inset 0 1px 0 rgba(255,255,255,.06) !important;
+
+  font-size:1.03rem !important;
+  font-weight:1000 !important;
+  text-decoration:none !important;
+  text-shadow:none !important;
+  cursor:pointer !important;
+}
+
+/* لمسة ذهبية خفيفة عند الضغط أو المرور */
+html body .wc-save-btn:hover,
+html body .wc-view-link:hover,
+html body .small-action-link:hover{
+  background:
+    linear-gradient(180deg,#2c2d30 0%, #151617 100%) !important;
+
+  color:#ffffff !important;
+  border-color:rgba(230,211,156,.64) !important;
+}
+
+/* زر الحفظ داخل الشريط السفلي يبقى واضحًا */
+html body .wc-save-bar{
+  background:rgba(15,16,18,.86) !important;
+  border:1px solid rgba(230,211,156,.22) !important;
+  box-shadow:0 18px 38px rgba(0,0,0,.30) !important;
+}
+
+/* إزالة أي لون ذهبي قديم من زر الحفظ */
+html body .wc-save-btn::before,
+html body .bulk-save-btn::before{
+  display:none !important;
+  content:"" !important;
+}
