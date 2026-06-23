@@ -116,7 +116,7 @@
       <div class="wc-meta-row">
         <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
         <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
-        <span>{{ m.start_time.strftime('%H:%M') }}</span>
+        <span>{{ m.start_time.strftime('%I:%M %p') }}</span>
       </div>
 
       {% if is_locked and pred %}
