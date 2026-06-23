@@ -82,22 +82,56 @@
 </header>
 
 <main class="site-main">
- {% with messages = get_flashed_messages() %}
+{% with messages = get_flashed_messages() %}
   {% if messages %}
     <div class="toast-area" id="toastArea">
       {% for message in messages %}
-        {% set is_error = 'لا يمكن' in message or 'فشل' in message or 'خطأ' in message or 'لم يتم' in message %}
-        {% set is_warning = 'مسح' in message or 'حذف' in message or 'تنبيه' in message or 'إغلاق' in message or 'يرجى' in message %}
 
-        <div class="premium-toast-simple {% if is_error %}toast-error{% elif is_warning %}toast-warning{% else %}toast-success{% endif %}">
-          <span class="toast-simple-icon">
-            {% if is_error %}
-              ⚠️
-            {% elif is_warning %}
-              🟡
-            {% else %}
-              ✅
-            {% endif %}
+        {% if 'تم حفظ توقعاتك' in message or 'تم حفظ التوقعات' in message %}
+          <div class="prediction-warning-overlay prediction-save-overlay">
+            <div class="prediction-warning-card prediction-save-card">
+              <div class="prediction-warning-icon prediction-save-icon">
+                ✓
+              </div>
+
+              <h3>تم حفظ التوقعات</h3>
+
+              <p>
+                تم تسجيل توقعاتك بنجاح.
+              </p>
+
+              <div class="prediction-warning-actions">
+                <button type="button" class="prediction-warning-primary" data-close-save-modal>
+                  حسنًا
+                </button>
+              </div>
+            </div>
+          </div>
+        {% else %}
+
+          {% set is_error = 'لا يمكن' in message or 'فشل' in message or 'خطأ' in message or 'لم يتم' in message %}
+          {% set is_warning = 'مسح' in message or 'حذف' in message or 'تنبيه' in message or 'إغلاق' in message %}
+
+          <div class="premium-toast-simple {% if is_error %}toast-error{% elif is_warning %}toast-warning{% else %}toast-success{% endif %}">
+            <span class="toast-simple-icon">
+              {% if is_error %}
+                ⚠️
+              {% elif is_warning %}
+                🟡
+              {% else %}
+                ✅
+              {% endif %}
+            </span>
+
+            <span class="toast-simple-text">{{ message }}</span>
+          </div>
+
+        {% endif %}
+
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
           </span>
 
           <span class="toast-simple-text">{{ message }}</span>
