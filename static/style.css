@@ -1966,3 +1966,277 @@ html body .mv-result-chip.pending small{
     font-size:.62rem !important;
   }
 }
+/* =====================================================
+   predictions-clean-simple
+   صفحة توقعات المشاركين - نسخة أبسط وأهدأ
+===================================================== */
+
+/* الكرت العام */
+html body .mv-predictions-card{
+  padding: 14px !important;
+  border-radius: 26px !important;
+  background: #f4f1e8 !important;
+  border: 1px solid rgba(0,0,0,.06) !important;
+}
+
+/* عنوان القسم */
+html body .mv-section-title{
+  background: linear-gradient(180deg, #3a3c42, #25272c) !important;
+  border: 1px solid rgba(214, 194, 123, .22) !important;
+  border-radius: 22px !important;
+  padding: 18px 14px !important;
+  margin-bottom: 14px !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,.10) !important;
+}
+
+html body .mv-section-title h3{
+  margin: 0 0 10px 0 !important;
+  font-size: 1.35rem !important;
+  color: #fff !important;
+  font-weight: 1000 !important;
+}
+
+html body .mv-section-title span{
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 34px !important;
+  padding: 7px 16px !important;
+  border-radius: 999px !important;
+  background: #e3cf92 !important;
+  color: #18150f !important;
+  font-size: .88rem !important;
+  font-weight: 1000 !important;
+  border: 1px solid rgba(0,0,0,.08) !important;
+}
+
+/* قائمة المشاركين */
+html body .mv-predictions-list{
+  display: grid !important;
+  gap: 10px !important;
+}
+
+/* كل مشارك */
+html body .mv-prediction-item{
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 1fr auto auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  padding: 12px 12px !important;
+  min-height: 76px !important;
+  border-radius: 18px !important;
+
+  background: #fbfaf7 !important;
+  border: 1px solid #ded9cc !important;
+  box-shadow: 0 5px 14px rgba(0,0,0,.05) !important;
+  overflow: hidden !important;
+}
+
+/* نلغي الخلفيات الزائدة */
+html body .mv-prediction-item.is-exact,
+html body .mv-prediction-item.is-partial,
+html body .mv-prediction-item.is-wrong,
+html body .mv-prediction-item.is-pending,
+html body .mv-prediction-item.is-double{
+  background: #fbfaf7 !important;
+}
+
+/* شريط حالة بسيط على اليمين */
+html body .mv-prediction-item::before{
+  content: "" !important;
+  position: absolute !important;
+  right: 0 !important;
+  top: 10px !important;
+  bottom: 10px !important;
+  width: 4px !important;
+  border-radius: 999px 0 0 999px !important;
+  background: #8c919c !important;
+}
+
+html body .mv-prediction-item.is-exact::before{
+  background: #67c985 !important;
+}
+
+html body .mv-prediction-item.is-partial::before{
+  background: #d2b04f !important;
+}
+
+html body .mv-prediction-item.is-wrong::before{
+  background: #7d8490 !important;
+}
+
+/* بيانات المشارك */
+html body .mv-player-block{
+  display: grid !important;
+  gap: 3px !important;
+  min-width: 0 !important;
+  padding-right: 6px !important;
+}
+
+html body .mv-player-block strong{
+  color: #171717 !important;
+  font-size: 1.02rem !important;
+  font-weight: 1000 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+html body .mv-player-block small{
+  color: #787266 !important;
+  font-size: .76rem !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+}
+
+/* مربع التوقع */
+html body .mv-pred-score{
+  min-width: 86px !important;
+  height: 44px !important;
+  padding: 0 14px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+
+  border-radius: 14px !important;
+  background: linear-gradient(180deg, #42454d, #2b2e35) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+  box-shadow: none !important;
+
+  font-size: 1.05rem !important;
+  font-weight: 1000 !important;
+}
+
+html body .mv-pred-score span,
+html body .mv-pred-score b{
+  color: #fff !important;
+  font-size: 1.05rem !important;
+  font-weight: 1000 !important;
+}
+
+/* شارة النتيجة */
+html body .mv-result-block{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+html body .mv-result-chip{
+  min-width: 56px !important;
+  width: 56px !important;
+  height: 44px !important;
+  padding: 0 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 14px !important;
+  font-weight: 1000 !important;
+  border: 1px solid rgba(0,0,0,.08) !important;
+  box-shadow: none !important;
+}
+
+/* نخفي النصوص الإضافية */
+html body .mv-result-chip small{
+  display: none !important;
+}
+
+/* نُظهر فقط الرقم */
+html body .mv-result-chip b{
+  font-size: 1.08rem !important;
+  line-height: 1 !important;
+  font-weight: 1000 !important;
+}
+
+/* +3 */
+html body .mv-result-chip.exact{
+  background: #d9f2df !important;
+  color: #185c31 !important;
+  border-color: rgba(50,140,78,.18) !important;
+}
+
+html body .mv-result-chip.exact b{
+  color: #185c31 !important;
+}
+
+/* +1 */
+html body .mv-result-chip.partial{
+  background: #e7d49a !important;
+  color: #2f2612 !important;
+  border-color: rgba(157,122,24,.18) !important;
+}
+
+html body .mv-result-chip.partial b{
+  color: #2f2612 !important;
+}
+
+/* 0 */
+html body .mv-result-chip.wrong{
+  background: #454952 !important;
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,.05) !important;
+}
+
+html body .mv-result-chip.wrong b{
+  color: #ffffff !important;
+}
+
+/* بانتظار */
+html body .mv-result-chip.pending{
+  background: #d8d3c8 !important;
+  color: #5d584d !important;
+}
+
+html body .mv-result-chip.pending b{
+  color: #5d584d !important;
+}
+
+/* الهاتف */
+@media (max-width: 520px){
+  html body .mv-prediction-item{
+    grid-template-columns: 1fr auto auto !important;
+    gap: 8px !important;
+    min-height: 72px !important;
+    padding: 10px !important;
+    border-radius: 16px !important;
+  }
+
+  html body .mv-player-block strong{
+    font-size: .98rem !important;
+  }
+
+  html body .mv-player-block small{
+    font-size: .72rem !important;
+  }
+
+  html body .mv-pred-score{
+    min-width: 76px !important;
+    height: 40px !important;
+    padding: 0 12px !important;
+    border-radius: 13px !important;
+    font-size: 1rem !important;
+  }
+
+  html body .mv-pred-score span,
+  html body .mv-pred-score b{
+    font-size: 1rem !important;
+  }
+
+  html body .mv-result-chip{
+    min-width: 50px !important;
+    width: 50px !important;
+    height: 40px !important;
+    border-radius: 13px !important;
+  }
+
+  html body .mv-result-chip b{
+    font-size: 1rem !important;
+  }
+}
