@@ -1,4 +1,7 @@
+
 {% extends 'base.html' %}
+
+{% block body_class %}{% if has_open_matches %}has-save-bar{% endif %}{% endblock %}
 
 {% block content %}
 
@@ -95,7 +98,9 @@
               <b>-</b>
               <span>{{ m.away_score }}</span>
             {% else %}
-              <span>VS</span>
+              <span class="is-empty">؟</span>
+              <b>-</b>
+              <span class="is-empty">؟</span>
             {% endif %}
           </div>
         {% endif %}
@@ -108,19 +113,12 @@
         </div>
       </div>
 
-      <div class="final-card-meta-row">
-  <span class="final-card-meta-pill final-card-meta-stage">
-    {{ stage_labels.get(m.stage, m.stage) }}
-  </span>
+      <div class="wc-meta-row">
+        <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
+        <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
+        <span>{{ m.start_time.strftime('%H:%M') }}</span>
+      </div>
 
-  <span class="final-card-meta-pill final-card-meta-date">
-    {{ m.start_time.strftime('%Y-%m-%d') }}
-  </span>
-
-  <span class="final-card-meta-pill final-card-meta-time">
-    {{ m.start_time.strftime('%H:%M') }}
-  </span>
-</div>
       {% if is_locked and pred %}
         <div class="wc-locked-extra">
           <div class="wc-locked-box">
