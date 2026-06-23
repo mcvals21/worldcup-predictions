@@ -836,3 +836,102 @@ html body .wc-view-link,
 html body .small-action-link{
   letter-spacing:0 !important;
 }
+/* =====================================================
+   ref-sports-3
+   خلفية رمادية موحدة + تبويبات خيارين + زر عرض توقعات داكن
+===================================================== */
+
+/* الخلفية العامة لكل الصفحات */
+html body{
+  background:
+    radial-gradient(circle at top center, rgba(230,211,156,.22), transparent 34%),
+    linear-gradient(180deg,#d8d5ce 0%, #c7c4bc 100%) !important;
+  color:#111 !important;
+}
+
+/* إزالة إحساس الخلفية السوداء من المحتوى العام */
+html body::before{
+  opacity:.18 !important;
+}
+
+/* الهيدر يبقى داكن مثل الثيم المرجعي */
+html body .wc-header,
+html body .clean-wc-header{
+  background:
+    radial-gradient(circle at top center, rgba(230,211,156,.14), transparent 36%),
+    linear-gradient(180deg,#111 0%, #050505 100%) !important;
+}
+
+/* عنوان قسم المباريات على الخلفية الرمادية */
+html body .wc-section-head h3,
+html body .section-title,
+html body .section-title h2{
+  color:#111 !important;
+}
+
+/* التبويبات على الخلفية الرمادية */
+html body .match-tabs,
+html body .wc-tabs{
+  grid-template-columns:1fr 1fr !important;
+  background:#f5f2ea !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.12) !important;
+}
+
+/* التبويب غير النشط */
+html body .match-tab,
+html body .wc-tab{
+  background:linear-gradient(180deg,#ffffff,#e9e5dc) !important;
+  color:#111 !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+}
+
+/* التبويب النشط */
+html body .match-tab.active,
+html body .wc-tab.active{
+  background:linear-gradient(180deg,#171717,#050505) !important;
+  color:#fff !important;
+  border:1px solid rgba(230,211,156,.48) !important;
+}
+
+/* أرقام التبويبات */
+html body .match-tab small,
+html body .wc-tab small{
+  background:#fff !important;
+  color:#111 !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+}
+
+/* زر عرض التوقعات داكن لأنه زر ثانوي */
+html body .wc-view-link,
+html body .small-action-link{
+  background:linear-gradient(180deg,#171717,#050505) !important;
+  color:#f5f2ea !important;
+  border:1px solid rgba(230,211,156,.34) !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.22) !important;
+}
+
+html body .wc-view-link:hover,
+html body .small-action-link:hover{
+  background:linear-gradient(180deg,#252525,#090909) !important;
+  color:#fff !important;
+}
+
+/* زر الحفظ يبقى واضحًا بلون فاتح */
+html body .wc-save-btn{
+  background:linear-gradient(180deg,#ead8a7,#ddc273) !important;
+  color:#17130a !important;
+  border:1px solid rgba(198,168,75,.45) !important;
+}
+
+/* كرت المباراة يبقى فاتح وواضح فوق الخلفية الرمادية */
+html body .wc-match-card,
+html body .public-match-card,
+html body .wc-welcome-card,
+html body .page-hero,
+html body .public-note,
+html body .empty-card{
+  background:linear-gradient(180deg,#f8f5ee,#eee7d8) !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.14) !important;
+}
