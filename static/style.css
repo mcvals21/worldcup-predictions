@@ -2758,3 +2758,101 @@ html body .mv-simple-points{
     font-size:.98rem !important;
   }
 }
+/* =====================================================
+   ref-sports-16
+   صفحة الترتيب - نفس بساطة صفحة التوقعات
+===================================================== */
+
+/* إلغاء تأثيرات الترتيب القديمة */
+html body .leaderboard-hero,
+html body .top-podium,
+html body .podium-card,
+html body .desktop-leader-table,
+html body .mobile-leader-list,
+html body .leader-card{
+  display:none !important;
+}
+
+/* الصفحة */
+html body .lb-simple-page{
+  display:grid !important;
+  gap:14px !important;
+}
+
+/* عنوان بسيط بدون بطاقة كبيرة */
+html body .lb-simple-title{
+  text-align:center !important;
+  margin:4px 0 10px !important;
+}
+
+html body .lb-simple-title h1{
+  margin:0 !important;
+  color:#ffffff !important;
+  font-size:1.8rem !important;
+  line-height:1.2 !important;
+  font-weight:1000 !important;
+}
+
+html body .lb-simple-title p{
+  margin:8px 0 0 !important;
+  color:#d8d3c5 !important;
+  font-size:.92rem !important;
+  line-height:1.6 !important;
+  font-weight:850 !important;
+}
+
+/* قائمة الصفوف */
+html body .lb-simple-list{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+
+/* كل صف */
+html body .lb-simple-row{
+  position:relative !important;
+  direction:rtl !important;
+
+  display:grid !important;
+  grid-template-columns:48px 1fr auto auto !important;
+  align-items:center !important;
+  gap:10px !important;
+
+  min-height:68px !important;
+  padding:12px 14px !important;
+  border-radius:17px !important;
+
+  background:#e2dfd7 !important;
+  border:1px solid #d0cbc0 !important;
+  box-shadow:none !important;
+  overflow:hidden !important;
+}
+
+/* شريط جانبي بسيط للثلاثة الأوائل */
+html body .lb-simple-row::before{
+  content:"" !important;
+  position:absolute !important;
+  right:0 !important;
+  top:10px !important;
+  bottom:10px !important;
+  width:4px !important;
+  border-radius:999px 0 0 999px !important;
+  background:#8f949e !important;
+}
+
+html body .lb-simple-row.rank-one::before{
+  background:#d0b255 !important;
+}
+
+html body .lb-simple-row.rank-two::before{
+  background:#aeb4bf !important;
+}
+
+html body .lb-simple-row.rank-three::before{
+  background:#b88a5a !important;
+}
+
+/* رقم الترتيب */
+html body .lb-rank{
+  display:flex !important;
+  align-items:center ! ​:contentReference[oaicite:0]{index=0}​
