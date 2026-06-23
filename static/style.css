@@ -1835,3 +1835,478 @@ html body .final-card-meta-time{
     min-width:58px !important;
   }
 }
+/* =====================================================
+   clean14
+   تحسين القائمة المنسدلة + كروت المباريات + الشارات
+   خصوصًا للهاتف
+===================================================== */
+
+/* =========================
+   القائمة المنسدلة
+========================= */
+
+html body details.clean-menu{
+  position:relative !important;
+  z-index:9999 !important;
+}
+
+html body details.clean-menu > summary{
+  list-style:none !important;
+  cursor:pointer !important;
+  user-select:none !important;
+}
+
+html body details.clean-menu > summary::-webkit-details-marker{
+  display:none !important;
+}
+
+html body .clean-menu-panel{
+  position:absolute !important;
+  top:calc(100% + 12px) !important;
+  left:0 !important;
+  right:auto !important;
+
+  width:330px !important;
+  max-width:calc(100vw - 28px) !important;
+
+  padding:16px !important;
+  border-radius:26px !important;
+
+  background:
+    radial-gradient(circle at top right, rgba(244,215,122,.22), transparent 36%),
+    linear-gradient(180deg,#fffaf0 0%,#f4ecd8 100%) !important;
+
+  color:#071126 !important;
+  border:1.5px solid rgba(212,175,55,.58) !important;
+
+  box-shadow:
+    0 24px 55px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.75) !important;
+
+  overflow:hidden !important;
+}
+
+html body details.clean-menu[open] .clean-menu-panel{
+  animation:cleanMenuIn .18s ease-out both !important;
+}
+
+@keyframes cleanMenuIn{
+  from{
+    opacity:0;
+    transform:translateY(-8px) scale(.98);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+html body .clean-menu-panel::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  pointer-events:none !important;
+  background:
+    linear-gradient(90deg, transparent, rgba(255,255,255,.42), transparent) !important;
+  opacity:.35 !important;
+}
+
+html body .clean-menu-panel a{
+  position:relative !important;
+  z-index:1 !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+
+  min-height:54px !important;
+  padding:0 14px !important;
+  margin:0 0 7px !important;
+
+  border-radius:18px !important;
+  color:#071126 !important;
+  background:rgba(255,255,255,.38) !important;
+  border:1px solid rgba(212,175,55,.18) !important;
+
+  text-decoration:none !important;
+  font-size:1.08rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+}
+
+html body .clean-menu-panel a:hover{
+  background:linear-gradient(180deg,#f4d77a,#d6ad37) !important;
+  color:#11100b !important;
+}
+
+html body .clean-menu-panel hr,
+html body .clean-menu-panel .menu-divider{
+  border:0 !important;
+  height:1px !important;
+  background:linear-gradient(90deg,transparent,rgba(166,124,32,.35),transparent) !important;
+  margin:12px 0 !important;
+}
+
+html body .clean-menu-panel form{
+  position:relative !important;
+  z-index:1 !important;
+
+  background:rgba(255,255,255,.46) !important;
+  border:1px solid rgba(212,175,55,.24) !important;
+  border-radius:22px !important;
+  padding:14px !important;
+  margin-top:10px !important;
+}
+
+html body .clean-menu-panel form h3,
+html body .clean-menu-panel form strong,
+html body .clean-menu-panel form label{
+  color:#071126 !important;
+  font-weight:1000 !important;
+}
+
+html body .clean-menu-panel select{
+  width:100% !important;
+  min-height:52px !important;
+  border-radius:16px !important;
+  padding:0 14px !important;
+
+  background:#fff !important;
+  color:#071126 !important;
+  border:1px solid rgba(212,175,55,.38) !important;
+
+  font-weight:900 !important;
+  font-size:1rem !important;
+}
+
+html body .clean-menu-panel button,
+html body .clean-menu-panel input[type="submit"]{
+  width:100% !important;
+  min-height:52px !important;
+  margin-top:10px !important;
+
+  border-radius:16px !important;
+  background:linear-gradient(180deg,#f4d77a 0%,#d6ad37 100%) !important;
+  color:#151007 !important;
+  border:1.5px solid rgba(255,238,170,.75) !important;
+
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.45) !important;
+
+  font-weight:1000 !important;
+}
+
+/* =========================
+   أزرار الحفظ وعرض التوقعات
+========================= */
+
+html body .bulk-save-btn,
+html body .wc-save-btn,
+html body .mobile-card-link a,
+html body .wc-view-link,
+html body .small-action-link{
+  background:linear-gradient(180deg,#f4d77a 0%,#d6ad37 100%) !important;
+  color:#151007 !important;
+  border:1.5px solid rgba(255,238,170,.75) !important;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.45) !important;
+
+  font-weight:1000 !important;
+  text-decoration:none !important;
+  text-shadow:none !important;
+}
+
+html body .bulk-save-btn:hover,
+html body .wc-save-btn:hover,
+html body .mobile-card-link a:hover,
+html body .wc-view-link:hover,
+html body .small-action-link:hover{
+  background:linear-gradient(180deg,#ffe28a 0%,#c8941c 100%) !important;
+}
+
+html body .bulk-save-btn::before,
+html body .wc-save-btn::before{
+  content:"" !important;
+  display:none !important;
+}
+
+/* =========================
+   كروت المباريات
+========================= */
+
+html body .mobile-focus-card,
+html body .wc-match-card,
+html body .public-match-card,
+html body .clean-match-card{
+  background:
+    radial-gradient(circle at top center, rgba(244,215,122,.10), transparent 35%),
+    linear-gradient(180deg,#2f2d27 0%,#1c1b17 52%,#12110f 100%) !important;
+
+  border:1.5px solid rgba(212,175,55,.42) !important;
+  border-radius:28px !important;
+
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+
+  overflow:hidden !important;
+}
+
+/* لمسة علوية للكرت */
+html body .mobile-focus-card::before,
+html body .wc-match-card::before,
+html body .public-match-card::before,
+html body .clean-match-card::before{
+  content:"" !important;
+  display:block !important;
+  height:1px !important;
+  background:linear-gradient(90deg,transparent,rgba(244,215,122,.55),transparent) !important;
+}
+
+/* =========================
+   كلمة مفتوحة / منتهية / مغلقة
+========================= */
+
+html body .mobile-status-pill,
+html body .wc-status-pill,
+html body .status-pill,
+html body .card-status-pill{
+  min-height:34px !important;
+  padding:7px 16px !important;
+  border-radius:999px !important;
+
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  font-size:.82rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.18) !important;
+}
+
+/* مفتوحة = أخضر */
+html body .mobile-status-pill.is-open,
+html body .wc-status-pill.is-open,
+html body .status-pill.is-open,
+html body .card-status-pill.is-open,
+html body .status-pill.upcoming{
+  background:linear-gradient(180deg,#dcfce7 0%,#86efac 100%) !important;
+  color:#14532d !important;
+  border:1px solid rgba(34,197,94,.48) !important;
+}
+
+/* منتهية = أحمر */
+html body .mobile-status-pill.is-finished,
+html body .wc-status-pill.is-finished,
+html body .status-pill.is-finished,
+html body .card-status-pill.is-finished,
+html body .status-pill.finished{
+  background:linear-gradient(180deg,#fee2e2 0%,#fca5a5 100%) !important;
+  color:#7f1d1d !important;
+  border:1px solid rgba(239,68,68,.48) !important;
+}
+
+/* مغلقة = رمادي */
+html body .mobile-status-pill.is-locked,
+html body .wc-status-pill.is-locked,
+html body .status-pill.is-locked,
+html body .card-status-pill.is-locked,
+html body .status-pill.locked,
+html body .status-pill.live{
+  background:linear-gradient(180deg,#f3f4f6 0%,#d1d5db 100%) !important;
+  color:#374151 !important;
+  border:1px solid rgba(156,163,175,.58) !important;
+}
+
+/* =========================
+   المجموعة / التاريخ / الوقت
+   تنوع بصري فاتح لكسر الداكن
+========================= */
+
+html body .final-card-meta-row{
+  display:flex !important;
+  flex-direction:row !important;
+  direction:rtl !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex-wrap:wrap !important;
+  padding:0 12px 16px !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+
+html body .final-card-meta-pill,
+html body .mobile-match-meta span,
+html body .wc-meta-row span,
+html body .final-meta-pill,
+html body .meta-pill{
+  min-height:34px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  padding:7px 12px !important;
+  border-radius:999px !important;
+
+  font-size:.76rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+
+  box-shadow:
+    0 8px 16px rgba(0,0,0,.14),
+    inset 0 1px 0 rgba(255,255,255,.55) !important;
+}
+
+/* المجموعة */
+html body .final-card-meta-stage,
+html body .mobile-match-meta span:nth-child(1),
+html body .wc-meta-row span:nth-child(1),
+html body .meta-group{
+  background:linear-gradient(180deg,#fff4bf 0%,#f4d77a 100%) !important;
+  color:#4a3710 !important;
+  border:1px solid rgba(212,175,55,.48) !important;
+  direction:rtl !important;
+  min-width:88px !important;
+}
+
+/* التاريخ */
+html body .final-card-meta-date,
+html body .mobile-match-meta span:nth-child(2),
+html body .wc-meta-row span:nth-child(2),
+html body .meta-date{
+  background:linear-gradient(180deg,#eef4ff 0%,#dbeafe 100%) !important;
+  color:#1e3a8a !important;
+  border:1px solid rgba(96,165,250,.35) !important;
+  direction:ltr !important;
+  min-width:108px !important;
+}
+
+/* الوقت */
+html body .final-card-meta-time,
+html body .mobile-match-meta span:nth-child(3),
+html body .wc-meta-row span:nth-child(3),
+html body .meta-time{
+  background:linear-gradient(180deg,#ecfdf5 0%,#bbf7d0 100%) !important;
+  color:#166534 !important;
+  border:1px solid rgba(34,197,94,.34) !important;
+  direction:ltr !important;
+  min-width:66px !important;
+}
+
+/* =========================
+   تحسين صفحة كل المباريات أيضًا
+========================= */
+
+html body .public-matches-grid{
+  background:
+    radial-gradient(circle at top center, rgba(244,215,122,.08), transparent 38%),
+    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01)) !important;
+
+  border-radius:30px !important;
+  padding:10px !important;
+}
+
+html body .public-team-side span,
+html body .mobile-team-box strong,
+html body .wc-team-box strong{
+  color:#ffffff !important;
+  font-weight:1000 !important;
+  text-shadow:0 2px 8px rgba(0,0,0,.40) !important;
+}
+
+html body .public-flag,
+html body .mobile-team-flag,
+html body .wc-team-flag{
+  border-radius:14px !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.30) !important;
+}
+
+/* =========================
+   الهاتف تحديدًا
+========================= */
+
+@media (max-width:700px){
+
+  html body .clean-menu-panel{
+    position:fixed !important;
+    top:76px !important;
+    left:14px !important;
+    right:14px !important;
+    width:auto !important;
+    max-width:none !important;
+
+    padding:14px !important;
+    border-radius:24px !important;
+    max-height:calc(100vh - 96px) !important;
+    overflow-y:auto !important;
+  }
+
+  html body .clean-menu-panel a{
+    min-height:52px !important;
+    border-radius:17px !important;
+    font-size:1.02rem !important;
+  }
+
+  html body .mobile-focus-card,
+  html body .wc-match-card,
+  html body .public-match-card,
+  html body .clean-match-card{
+    border-radius:24px !important;
+  }
+
+  html body .final-card-meta-row,
+  html body .mobile-match-meta,
+  html body .wc-meta-row{
+    gap:6px !important;
+    padding:0 10px 16px !important;
+  }
+
+  html body .final-card-meta-pill,
+  html body .mobile-match-meta span,
+  html body .wc-meta-row span,
+  html body .final-meta-pill,
+  html body .meta-pill{
+    min-height:32px !important;
+    padding:7px 9px !important;
+    font-size:.71rem !important;
+  }
+
+  html body .final-card-meta-stage,
+  html body .mobile-match-meta span:nth-child(1),
+  html body .wc-meta-row span:nth-child(1),
+  html body .meta-group{
+    min-width:78px !important;
+  }
+
+  html body .final-card-meta-date,
+  html body .mobile-match-meta span:nth-child(2),
+  html body .wc-meta-row span:nth-child(2),
+  html body .meta-date{
+    min-width:98px !important;
+  }
+
+  html body .final-card-meta-time,
+  html body .mobile-match-meta span:nth-child(3),
+  html body .wc-meta-row span:nth-child(3),
+  html body .meta-time{
+    min-width:58px !important;
+  }
+
+  html body .bulk-save-btn,
+  html body .wc-save-btn{
+    min-height:54px !important;
+    border-radius:17px !important;
+  }
+
+  html body .mobile-card-link a,
+  html body .wc-view-link{
+    min-height:48px !important;
+    border-radius:16px !important;
+  }
+}
