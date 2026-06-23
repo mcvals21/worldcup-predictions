@@ -80,7 +80,7 @@
       <div class="public-meta-row">
         <span class="public-meta-pill">{{ stage_labels.get(m.stage, m.stage) }}</span>
         <span class="public-meta-pill">{{ m.start_time.strftime('%Y-%m-%d') }}</span>
-        <span class="public-meta-pill">{{ m.start_time.strftime('%H:%M') }}</span>
+        <span class="public-meta-pill">{{ m.start_time.strftime('%I:%M %p') }}</span>
       </div>
 
       {% if match_finished or match_locked %}
