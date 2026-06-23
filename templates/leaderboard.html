@@ -270,16 +270,8 @@
         <article class="rank-solo-row rank-{{ loop.index }}">
 
           <div class="rank-solo-place">
-            {% if loop.index == 1 %}
-              🥇
-            {% elif loop.index == 2 %}
-              🥈
-            {% elif loop.index == 3 %}
-              🥉
-            {% else %}
-              {{ loop.index }}
-            {% endif %}
-          </div>
+  {{ loop.index }}
+</div>
 
           <div class="rank-solo-name">
             {{ r.name }}
