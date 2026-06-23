@@ -75,7 +75,8 @@
               type="number"
               min="0"
               name="home_score_{{ m.id }}"
-              value="{{ pred.home_score if pred else 0 }}"
+              class="wc-score-input"
+              value="{{ pred.home_score if pred else '' }}"
               inputmode="numeric"
               pattern="[0-9]*"
             >
@@ -86,7 +87,8 @@
               type="number"
               min="0"
               name="away_score_{{ m.id }}"
-              value="{{ pred.away_score if pred else 0 }}"
+              class="wc-score-input"
+              value="{{ pred.away_score if pred else '' }}"
               inputmode="numeric"
               pattern="[0-9]*"
             >
@@ -160,5 +162,87 @@
     </div>
   {% endif %}
 </form>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.querySelector('.wc-bulk-form');
+  if (!form) return;
+
+  function showPredictionWarning(title, message, options) {
+    options = options || {};
+
+    document.querySelector('.prediction-warning-overlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'prediction-warning-overlay';
+    overlay.innerHTML = `
+      <div class="prediction-warning-card" role="dialog" aria-modal="true">
+        <div class="prediction-warning-icon">!</div>
+        <h3>${title}</h3>
+        <p>${message}</p>
+        <div class="prediction-warning-actions">
+          <button type="button" class="prediction-warning-secondary">تعديل التوقع</button>
+          ${options.allowContinue ? '<button type="button" class="prediction-warning-primary">الحفظ رغم ذلك</button>' : ''}
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('.prediction-warning-secondary').addEventListener('click', function () {
+      overlay.remove();
+    });
+
+    const primary = overlay.querySelector('.prediction-warning-primary');
+    if (primary) {
+      primary.addEventListener('click', function () {
+        overlay.remove();
+        form.dataset.confirmedLargeScore = '1';
+        form.requestSubmit();
+      });
+    }
+
+    overlay.addEventListener('click', function (event) {
+      if (event.target === overlay) overlay.remove();
+    });
+  }
+
+  form.addEventListener('submit', function (event) {
+    const inputs = Array.from(form.querySelectorAll('.wc-score-input'));
+
+    const emptyInput = inputs.find(function (input) {
+      return input.value.trim() === '';
+    });
+
+    if (emptyInput) {
+      event.preventDefault();
+      emptyInput.focus();
+      showPredictionWarning(
+        'أكمل التوقع أولاً',
+        'يوجد مربع نتيجة فارغ. يرجى إدخال نتيجة الفريقين لكل مباراة قبل الحفظ.'
+      );
+      return;
+    }
+
+    const largeInput = inputs.find(function (input) {
+      return Number(input.value) > 3;
+    });
+
+    if (largeInput && form.dataset.confirmedLargeScore !== '1') {
+      event.preventDefault();
+      largeInput.focus();
+      showPredictionWarning(
+        'تنبيه: النتيجة كبيرة',
+        'أدخلت نتيجة أكبر من 3 أهداف. هذا ممكن، لكن تأكد أنها مقصودة قبل الحفظ.',
+        { allowContinue: true }
+      );
+      return;
+    }
+
+    delete form.dataset.confirmedLargeScore;
+  });
+});
+</script>
 
 {% endblock %}
