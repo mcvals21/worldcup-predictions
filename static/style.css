@@ -794,3 +794,121 @@ main{max-width:520px;margin:0 auto;padding:14px 12px 34px}
   flex-direction: column !important;
   justify-content: center !important;
 }
+
+/* =====================================================
+   FIX PATCH 3
+   إصلاح زر عرض التوقعات + إعادة مربعات النتيجة لمربعات واضحة
+===================================================== */
+
+/* 1) إعادة مربعات النتيجة لشكل مربع وليس بيضاوي */
+html body .wc-score-inputs input,
+html body .mobile-score-inputs input,
+html body .wc-score-display span,
+html body .mobile-score-display,
+html body .public-score-box,
+html body .match-view-score{
+  width:64px !important;
+  min-width:64px !important;
+  max-width:64px !important;
+
+  height:64px !important;
+  min-height:64px !important;
+  max-height:64px !important;
+
+  flex:0 0 64px !important;
+
+  border-radius:17px !important;
+  padding:0 !important;
+  margin:0 !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  text-align:center !important;
+  line-height:1 !important;
+  font-size:1.65rem !important;
+  font-weight:1000 !important;
+
+  background:linear-gradient(180deg,#ffffff,#f2f0e8) !important;
+  color:#071126 !important;
+  border:1.5px solid rgba(255,255,255,.88) !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.26) !important;
+}
+
+/* للـ input تحديدًا حتى الرقم لا يرتفع */
+html body .wc-score-inputs input,
+html body .mobile-score-inputs input{
+  line-height:64px !important;
+  appearance:textfield !important;
+}
+
+/* إزالة أسهم input number في كروم */
+html body .wc-score-inputs input::-webkit-outer-spin-button,
+html body .wc-score-inputs input::-webkit-inner-spin-button,
+html body .mobile-score-inputs input::-webkit-outer-spin-button,
+html body .mobile-score-inputs input::-webkit-inner-spin-button{
+  -webkit-appearance:none !important;
+  margin:0 !important;
+}
+
+/* علامة - بين النتيجتين */
+html body .wc-score-inputs span,
+html body .mobile-score-inputs span,
+html body .wc-score-display b{
+  width:12px !important;
+  min-width:12px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  color:#f4d77a !important;
+  font-size:1.25rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+}
+
+/* 2) إصلاح زر عرض توقعات الجميع */
+html body .mobile-card-link{
+  margin:12px 14px 14px !important;
+  padding:0 !important;
+}
+
+html body .mobile-card-link a,
+html body .wc-view-link{
+  width:calc(100% - 28px) !important;
+  max-width:340px !important;
+  min-height:48px !important;
+
+  margin:12px auto 14px !important;
+  padding:0 18px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:16px !important;
+  background:linear-gradient(180deg,#fff7df,#e3c96d) !important;
+  color:#11100b !important;
+  border:1px solid rgba(212,175,55,.70) !important;
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.70) !important;
+
+  font-size:.96rem !important;
+  font-weight:1000 !important;
+  text-decoration:none !important;
+  line-height:1 !important;
+}
+
+/* لا يلتصق الزر بحد الكرت */
+html body .wc-match-card,
+html body .mobile-focus-card{
+  padding-bottom:12px !important;
+}
+
+/* تقليل تداخل صندوق توقعك/نقاطك مع الزر */
+html body .mobile-result-box,
+html body .wc-locked-extra{
+  margin-bottom:10px !important;
+}
