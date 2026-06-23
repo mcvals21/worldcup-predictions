@@ -4,8 +4,8 @@
 
 <style>
 /* =====================================================
-   leaderboard isolated style
-   هذا التنسيق خاص بصفحة الترتيب فقط ولا يؤثر على باقي الصفحات
+   leaderboard isolated final
+   خاص بصفحة الترتيب فقط ولا يؤثر على باقي الصفحات
 ===================================================== */
 
 .rank-solo-page,
@@ -22,7 +22,11 @@
 /* عنوان بسيط بدون كرت كبير */
 .rank-solo-head{
   text-align:center;
-  margin:6px 0 12px;
+  margin:6px 0 16px;
+  padding:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
 }
 
 .rank-solo-head h1{
@@ -41,7 +45,7 @@
   font-weight:850;
 }
 
-/* قائمة الترتيب */
+/* القائمة */
 .rank-solo-list{
   display:grid;
   gap:10px;
@@ -52,11 +56,11 @@
   position:relative;
 
   display:grid;
-  grid-template-columns:44px minmax(0,1fr) 68px 68px;
+  grid-template-columns:46px minmax(0,1fr) 86px;
   align-items:center;
-  gap:10px;
+  gap:12px;
 
-  min-height:66px;
+  min-height:68px;
   padding:12px 14px;
   border-radius:17px;
 
@@ -92,7 +96,7 @@
   background:#b88a5a;
 }
 
-/* الترتيب */
+/* رقم الترتيب */
 .rank-solo-place{
   width:42px;
   height:42px;
@@ -112,7 +116,7 @@
   flex-shrink:0;
 }
 
-/* المراكز الثلاثة الأولى */
+/* المركز الأول */
 .rank-solo-row.rank-1 .rank-solo-place{
   background:linear-gradient(180deg,#f2df9a 0%, #d4b45b 100%);
   border-color:#c7a03b;
@@ -120,6 +124,7 @@
   box-shadow:0 4px 12px rgba(212,180,91,.25);
 }
 
+/* المركز الثاني */
 .rank-solo-row.rank-2 .rank-solo-place{
   background:linear-gradient(180deg,#ececf1 0%, #c7cbd4 100%);
   border-color:#b2b8c2;
@@ -127,6 +132,7 @@
   box-shadow:0 4px 12px rgba(180,186,198,.22);
 }
 
+/* المركز الثالث */
 .rank-solo-row.rank-3 .rank-solo-place{
   background:linear-gradient(180deg,#dfb693 0%, #b98458 100%);
   border-color:#aa7650;
@@ -137,8 +143,8 @@
 /* الاسم */
 .rank-solo-name{
   color:#171717;
-  font-size:1.02rem;
-  line-height:1.2;
+  font-size:1.08rem;
+  line-height:1.25;
   font-weight:1000;
 
   white-space:nowrap;
@@ -150,66 +156,38 @@
 
 /* النقاط */
 .rank-solo-points{
-  height:42px;
-  min-width:66px;
+  height:46px;
+  min-width:82px;
 
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
 
-  border-radius:14px;
+  border-radius:15px;
   background:linear-gradient(180deg,#3a3c42,#25272c);
   border:1px solid rgba(255,255,255,.08);
 }
 
 .rank-solo-points strong{
   color:#fff;
-  font-size:1.05rem;
+  font-size:1.18rem;
   line-height:1;
   font-weight:1000;
 }
 
 .rank-solo-points span{
   color:#d8d3c5;
-  font-size:.56rem;
+  font-size:.62rem;
   line-height:1;
   font-weight:850;
   margin-top:4px;
 }
 
-/* التوقعات الدقيقة */
-.rank-solo-exact{
-  height:42px;
-  min-width:66px;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-
-  border-radius:14px;
-  background:#e7d79d;
-  border:1px solid rgba(167,131,37,.18);
-}
-
-.rank-solo-exact strong{
-  color:#33280f;
-  font-size:1rem;
-  line-height:1;
-  font-weight:1000;
-}
-
-.rank-solo-exact span{
-  color:#5f4a16;
-  font-size:.56rem;
-  line-height:1;
-  font-weight:850;
-  margin-top:4px;
-}
-
-.rank-solo-exact strong{
-  margin-top:0;
+/* تمييز بسيط للصف الأول */
+.rank-solo-row.rank-1{
+  background:#e7e2d4;
+  border-color:rgba(208,178,85,.38);
 }
 
 /* الهاتف */
@@ -223,39 +201,36 @@
   }
 
   .rank-solo-row{
-    grid-template-columns:40px minmax(0,1fr) 58px 58px;
-    gap:8px;
+    grid-template-columns:40px minmax(0,1fr) 74px;
+    gap:10px;
     min-height:64px;
     padding:11px 12px;
     border-radius:16px;
   }
 
   .rank-solo-place{
-  width:38px;
-  height:38px;
-  border-radius:13px;
-  font-size:.9rem;
-}
+    width:38px;
+    height:38px;
+    border-radius:13px;
+    font-size:.9rem;
+  }
 
   .rank-solo-name{
-    font-size:.96rem;
+    font-size:1rem;
   }
 
-  .rank-solo-points,
-  .rank-solo-exact{
-    min-width:56px;
-    height:40px;
-    border-radius:13px;
+  .rank-solo-points{
+    min-width:70px;
+    height:42px;
+    border-radius:14px;
   }
 
-  .rank-solo-points strong,
-  .rank-solo-exact strong{
-    font-size:.96rem;
+  .rank-solo-points strong{
+    font-size:1.08rem;
   }
 
-  .rank-solo-points span,
-  .rank-solo-exact span{
-    font-size:.52rem;
+  .rank-solo-points span{
+    font-size:.56rem;
   }
 }
 </style>
@@ -264,7 +239,7 @@
 
   <header class="rank-solo-head">
     <h1>الترتيب العام</h1>
-    <p>النقاط والتوقعات الصحيحة بين المشاركين</p>
+    <p>ترتيب المشاركين حسب النقاط</p>
   </header>
 
   {% if rows %}
@@ -274,8 +249,8 @@
         <article class="rank-solo-row rank-{{ loop.index }}">
 
           <div class="rank-solo-place">
-  {{ loop.index }}
-</div>
+            {{ loop.index }}
+          </div>
 
           <div class="rank-solo-name">
             {{ r.name }}
@@ -286,9 +261,6 @@
             <span>نقطة</span>
           </div>
 
-          <div class="rank-solo-exact">
-  <strong>{{ r.exact }}</strong>
-</div>
         </article>
       {% endfor %}
 
