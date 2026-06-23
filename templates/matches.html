@@ -48,17 +48,36 @@
         {% endif %}
       </div>
 
-     <div class="public-meta-strip">
-  <span class="meta-pill meta-group">
-    {{ stage_labels.get(m.stage, m.stage) }}
+<div
+  class="public-meta-strip"
+  style="
+    display:grid !important;
+    grid-template-columns:1fr 1fr 1fr !important;
+    direction:ltr !important;
+    gap:8px !important;
+    padding:12px 12px 4px !important;
+    align-items:center !important;
+  "
+>
+  <span
+    class="meta-pill meta-time"
+    style="grid-column:1 !important; direction:ltr !important;"
+  >
+    {{ m.start_time.strftime('%H:%M') }}
   </span>
 
-  <span class="meta-pill meta-date">
+  <span
+    class="meta-pill meta-date"
+    style="grid-column:2 !important; direction:ltr !important;"
+  >
     {{ m.start_time.strftime('%Y-%m-%d') }}
   </span>
 
-  <span class="meta-pill meta-time">
-    {{ m.start_time.strftime('%H:%M') }}
+  <span
+    class="meta-pill meta-group"
+    style="grid-column:3 !important; direction:rtl !important;"
+  >
+    {{ stage_labels.get(m.stage, m.stage) }}
   </span>
 </div>
 
