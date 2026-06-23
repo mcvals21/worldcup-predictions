@@ -2856,3 +2856,177 @@ html body .lb-simple-row.rank-three::before{
 html body .lb-rank{
   display:flex !important;
   align-items:center ! ​:contentReference[oaicite:0]{index=0}​
+
+  /* رقم الترتيب */
+html body .lb-rank{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  width:42px !important;
+  height:42px !important;
+  border-radius:14px !important;
+
+  background:#f3efe3 !important;
+  color:#171717 !important;
+  border:1px solid rgba(0,0,0,.08) !important;
+
+  font-size:1rem !important;
+  font-weight:1000 !important;
+}
+
+/* اسم المتسابق */
+html body .lb-name{
+  color:#171717 !important;
+  font-size:1.04rem !important;
+  font-weight:1000 !important;
+  line-height:1.2 !important;
+
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  padding-right:6px !important;
+}
+
+/* النقاط */
+html body .lb-points{
+  min-width:76px !important;
+  height:44px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:15px !important;
+  background:linear-gradient(180deg,#3a3c42,#25272c) !important;
+  color:#ffffff !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+}
+
+html body .lb-points strong{
+  color:#ffffff !important;
+  font-size:1.12rem !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+}
+
+html body .lb-points span{
+  color:#d8d3c5 !important;
+  font-size:.64rem !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  margin-top:4px !important;
+}
+
+/* التوقعات الدقيقة */
+html body .lb-exact{
+  min-width:76px !important;
+  height:44px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:15px !important;
+  background:#e7d79d !important;
+  color:#33280f !important;
+  border:1px solid rgba(167,131,37,.18) !important;
+
+  font-size:1rem !important;
+  font-weight:1000 !important;
+}
+
+html body .lb-exact span{
+  color:#5f4a16 !important;
+  font-size:.64rem !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  margin-top:4px !important;
+}
+
+/* نقاط إضافية مثل توقع البطل */
+html body .lb-bonus{
+  min-width:52px !important;
+  height:38px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:13px !important;
+  background:#d7f0dc !important;
+  color:#245d36 !important;
+  border:1px solid rgba(61,141,83,.18) !important;
+
+  font-size:.9rem !important;
+  font-weight:1000 !important;
+}
+
+/* تعديل الشبكة حتى تتحمل خانة البونص إن وجدت */
+html body .lb-simple-row{
+  grid-template-columns:48px minmax(0,1fr) 76px 76px auto !important;
+}
+
+/* الصف الأول لمسة بسيطة فقط */
+html body .lb-simple-row.rank-one{
+  background:#e7e2d4 !important;
+  border-color:rgba(208,178,85,.40) !important;
+}
+
+/* الهاتف */
+@media (max-width:640px){
+
+  html body .lb-simple-title h1{
+    font-size:1.55rem !important;
+  }
+
+  html body .lb-simple-title p{
+    font-size:.84rem !important;
+  }
+
+  html body .lb-simple-row{
+    grid-template-columns:42px minmax(0,1fr) 62px 62px !important;
+    gap:8px !important;
+    min-height:64px !important;
+    padding:11px 12px !important;
+    border-radius:16px !important;
+  }
+
+  html body .lb-rank{
+    width:38px !important;
+    height:38px !important;
+    border-radius:13px !important;
+    font-size:.92rem !important;
+  }
+
+  html body .lb-name{
+    font-size:.98rem !important;
+  }
+
+  html body .lb-points,
+  html body .lb-exact{
+    min-width:58px !important;
+    height:40px !important;
+    border-radius:13px !important;
+  }
+
+  html body .lb-points strong{
+    font-size:1rem !important;
+  }
+
+  html body .lb-exact{
+    font-size:.95rem !important;
+  }
+
+  html body .lb-points span,
+  html body .lb-exact span{
+    font-size:.58rem !important;
+  }
+
+  /* في الهاتف نخفي نقاط البونص المنفصلة حتى لا يزدحم الصف */
+  html body .lb-bonus{
+    display:none !important;
+  }
+}
