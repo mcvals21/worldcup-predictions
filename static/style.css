@@ -2461,3 +2461,179 @@ html body .mv-prediction-item.is-wrong::before{
     font-size: 1.22rem !important;
   }
 }
+/* =====================================================
+   ref-sports-13
+   صفحة توقعات المشاركين - صفوف بسيطة فقط
+===================================================== */
+
+/* إلغاء الكرت الكبير المحيط بالقائمة */
+html body .mv-participants-section,
+html body .mv-predictions-card,
+html body .match-predictions-section{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  border-radius:0 !important;
+}
+
+/* إخفاء عنوان توقعات المشاركين القديم إن بقي */
+html body .mv-section-title,
+html body .match-predictions-title{
+  display:none !important;
+}
+
+/* فاصل داكن بسيط */
+html body .mv-soft-divider{
+  height:12px !important;
+  margin:10px 0 16px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#3e424a,#292c32) !important;
+  border:1px solid rgba(255,255,255,.05) !important;
+}
+
+/* قائمة الصفوف */
+html body .mv-simple-predictions{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+
+/* صف كل لاعب */
+html body .mv-simple-row{
+  position:relative !important;
+  direction:rtl !important;
+
+  display:grid !important;
+  grid-template-columns:1fr auto auto !important;
+  align-items:center !important;
+  gap:14px !important;
+
+  min-height:68px !important;
+  padding:13px 16px !important;
+  border-radius:17px !important;
+
+  background:#e2dfd7 !important;
+  border:1px solid #d0cbc0 !important;
+  box-shadow:none !important;
+  overflow:hidden !important;
+}
+
+/* شريط جانبي خفيف */
+html body .mv-simple-row::before{
+  content:"" !important;
+  position:absolute !important;
+  right:0 !important;
+  top:10px !important;
+  bottom:10px !important;
+  width:4px !important;
+  border-radius:999px 0 0 999px !important;
+  background:#8f949e !important;
+}
+
+html body .mv-simple-row.is-exact::before{
+  background:#70c98b !important;
+}
+
+html body .mv-simple-row.is-partial::before{
+  background:#d0b255 !important;
+}
+
+html body .mv-simple-row.is-wrong::before{
+  background:#d77777 !important;
+}
+
+/* الاسم */
+html body .mv-simple-name{
+  text-align:right !important;
+  color:#171717 !important;
+  font-size:1.02rem !important;
+  font-weight:1000 !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  padding-right:6px !important;
+}
+
+/* النتيجة بالمنتصف بدون خلفية */
+html body .mv-simple-score{
+  min-width:82px !important;
+  text-align:center !important;
+  color:#20242d !important;
+  font-size:1.28rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  letter-spacing:.4px !important;
+}
+
+/* النقاط */
+html body .mv-simple-points{
+  min-width:52px !important;
+  height:40px !important;
+  padding:0 10px !important;
+
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:14px !important;
+  font-size:1.02rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  border:1px solid rgba(0,0,0,.08) !important;
+}
+
+/* +3 أو +6 */
+html body .mv-simple-points.is-exact{
+  background:#d7f0dc !important;
+  color:#245d36 !important;
+  border-color:rgba(61,141,83,.18) !important;
+}
+
+/* +1 أو +2 */
+html body .mv-simple-points.is-partial{
+  background:#e7d79d !important;
+  color:#33280f !important;
+  border-color:rgba(167,131,37,.18) !important;
+}
+
+/* 0 */
+html body .mv-simple-points.is-wrong{
+  background:#f1d6d6 !important;
+  color:#9a3434 !important;
+  border-color:rgba(154,52,52,.14) !important;
+}
+
+/* بانتظار */
+html body .mv-simple-points.is-pending{
+  background:#d6d1c6 !important;
+  color:#5b574d !important;
+}
+
+/* الهاتف */
+@media (max-width:640px){
+  html body .mv-simple-row{
+    grid-template-columns:1fr auto auto !important;
+    gap:10px !important;
+    min-height:64px !important;
+    padding:12px 12px !important;
+    border-radius:16px !important;
+  }
+
+  html body .mv-simple-name{
+    font-size:.98rem !important;
+  }
+
+  html body .mv-simple-score{
+    min-width:70px !important;
+    font-size:1.16rem !important;
+  }
+
+  html body .mv-simple-points{
+    min-width:48px !important;
+    height:38px !important;
+    border-radius:13px !important;
+    font-size:1rem !important;
+  }
+}
