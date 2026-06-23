@@ -1381,3 +1381,298 @@ html body .public-match-top .time-pill{
   font-weight:950 !important;
   line-height:1 !important;
 }
+/* =====================================================
+   clean10
+   أزرار أصفر فاتح + تحسين كرت كل مباراة + ترتيب الشارات
+===================================================== */
+
+/* زر حفظ التوقعات + زر عرض توقعات الجميع */
+html body .bulk-save-btn,
+html body .wc-save-btn,
+html body .mobile-card-link a,
+html body .wc-view-link,
+html body .small-action-link{
+  background:linear-gradient(180deg,#f4d77a 0%, #d6ad37 100%) !important;
+  color:#151007 !important;
+  border:1.5px solid rgba(255,238,170,.75) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.45) !important;
+  font-weight:1000 !important;
+  text-decoration:none !important;
+  text-shadow:none !important;
+}
+
+html body .bulk-save-btn:hover,
+html body .wc-save-btn:hover,
+html body .mobile-card-link a:hover,
+html body .wc-view-link:hover,
+html body .small-action-link:hover{
+  background:linear-gradient(180deg,#ffe28a 0%, #c8941c 100%) !important;
+}
+
+/* إزالة أي كأس من زر الحفظ */
+html body .bulk-save-btn::before,
+html body .wc-save-btn::before{
+  content:"" !important;
+  display:none !important;
+}
+
+/* كرت كل مباراة: تباين أوضح عن الخلفية */
+html body .public-match-card.clean-match-card{
+  padding:0 !important;
+  overflow:hidden !important;
+  border-radius:26px !important;
+  background:
+    radial-gradient(circle at top center, rgba(244,215,122,.10), transparent 34%),
+    linear-gradient(180deg,#2b2a25 0%, #171612 100%) !important;
+  border:1px solid rgba(212,175,55,.42) !important;
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.36),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+  color:#fff !important;
+}
+
+/* شريط الحالة أعلى الكرت */
+html body .public-status-row{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  padding:12px 12px 8px !important;
+  background:linear-gradient(180deg,#343229 0%, #25231d 100%) !important;
+  border-bottom:1px solid rgba(212,175,55,.18) !important;
+}
+
+/* مفتوحة خضراء، منتهية حمراء، مغلقة رمادية */
+html body .public-status-row .status-pill,
+html body .mobile-status-pill,
+html body .wc-status-pill{
+  min-height:34px !important;
+  padding:7px 16px !important;
+  border-radius:999px !important;
+  font-size:.82rem !important;
+  font-weight:1000 !important;
+  box-shadow:none !important;
+}
+
+html body .public-status-row .status-pill.upcoming,
+html body .mobile-status-pill.open,
+html body .wc-status-pill.open{
+  background:linear-gradient(180deg,#dcfce7,#86efac) !important;
+  color:#14532d !important;
+  border:1px solid rgba(34,197,94,.45) !important;
+}
+
+html body .public-status-row .status-pill.finished,
+html body .mobile-status-pill.finished,
+html body .wc-status-pill.finished{
+  background:linear-gradient(180deg,#fee2e2,#fca5a5) !important;
+  color:#7f1d1d !important;
+  border:1px solid rgba(239,68,68,.45) !important;
+}
+
+html body .public-status-row .status-pill.locked,
+html body .mobile-status-pill.locked,
+html body .wc-status-pill.locked{
+  background:linear-gradient(180deg,#f3f4f6,#d1d5db) !important;
+  color:#374151 !important;
+  border:1px solid rgba(156,163,175,.55) !important;
+}
+
+/* شريط المجموعة / التاريخ / الوقت */
+html body .public-meta-strip{
+  direction:ltr !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr 1fr !important;
+  grid-template-areas:"time date group" !important;
+  gap:8px !important;
+  padding:12px 12px 4px !important;
+  align-items:center !important;
+}
+
+html body .public-meta-strip .meta-group{
+  grid-area:group !important;
+  direction:rtl !important;
+}
+
+html body .public-meta-strip .meta-date{
+  grid-area:date !important;
+  direction:ltr !important;
+}
+
+html body .public-meta-strip .meta-time{
+  grid-area:time !important;
+  direction:ltr !important;
+}
+
+html body .public-meta-strip .meta-pill{
+  min-height:34px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:7px 10px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#11100d,#050505) !important;
+  color:#f4d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+  box-shadow:0 6px 14px rgba(0,0,0,.18) !important;
+  font-size:.78rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+/* منطقة الفرق */
+html body .public-teams-row.clean{
+  display:grid !important;
+  grid-template-columns:1fr auto 1fr !important;
+  align-items:center !important;
+  gap:10px !important;
+  padding:18px 12px 16px !important;
+  margin:0 !important;
+}
+
+html body .public-team-side{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  min-width:0 !important;
+  text-align:center !important;
+}
+
+html body .public-team-side span{
+  color:#fff !important;
+  font-size:.92rem !important;
+  font-weight:1000 !important;
+  line-height:1.25 !important;
+  text-shadow:0 2px 6px rgba(0,0,0,.45) !important;
+}
+
+html body .public-flag{
+  width:58px !important;
+  height:42px !important;
+  object-fit:cover !important;
+  border-radius:13px !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.32) !important;
+}
+
+/* مربع النتيجة */
+html body .public-score-box{
+  width:64px !important;
+  min-width:64px !important;
+  max-width:64px !important;
+  height:58px !important;
+  min-height:58px !important;
+  max-height:58px !important;
+  padding:0 !important;
+  margin:0 auto !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:17px !important;
+  background:linear-gradient(180deg,#ffffff,#f2f0e8) !important;
+  color:#071126 !important;
+  border:1.5px solid rgba(255,255,255,.90) !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.28) !important;
+
+  text-align:center !important;
+  line-height:1 !important;
+  font-size:1.08rem !important;
+  font-weight:1000 !important;
+  direction:ltr !important;
+  unicode-bidi:isolate !important;
+}
+
+/* فوتر كرت المباراة */
+html body .public-match-footer{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  padding:0 12px 14px !important;
+  margin:0 !important;
+  border-top:0 !important;
+}
+
+html body .small-action-link{
+  width:100% !important;
+  max-width:330px !important;
+  min-height:46px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:16px !important;
+  padding:0 14px !important;
+  font-size:.9rem !important;
+}
+
+/* نفس ترتيب الشارات في كرت المتسابق: المجموعة ثم التاريخ ثم الوقت */
+html body .mobile-match-meta,
+html body .wc-meta-row{
+  direction:ltr !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr 1fr !important;
+  grid-template-areas:"time date group" !important;
+  gap:8px !important;
+  padding:0 12px 16px !important;
+}
+
+html body .mobile-match-meta span:nth-child(1),
+html body .wc-meta-row span:nth-child(1){
+  grid-area:group !important;
+  direction:rtl !important;
+}
+
+html body .mobile-match-meta span:nth-child(2),
+html body .wc-meta-row span:nth-child(2){
+  grid-area:date !important;
+  direction:ltr !important;
+}
+
+html body .mobile-match-meta span:nth-child(3),
+html body .wc-meta-row span:nth-child(3){
+  grid-area:time !important;
+  direction:ltr !important;
+}
+
+html body .mobile-match-meta span,
+html body .wc-meta-row span{
+  min-width:0 !important;
+  min-height:34px !important;
+  padding:7px 9px !important;
+  font-size:.76rem !important;
+  white-space:nowrap !important;
+}
+
+/* موبايل */
+@media (max-width:700px){
+  html body .public-match-card.clean-match-card{
+    border-radius:22px !important;
+  }
+
+  html body .public-meta-strip,
+  html body .mobile-match-meta,
+  html body .wc-meta-row{
+    gap:6px !important;
+  }
+
+  html body .public-meta-strip .meta-pill,
+  html body .mobile-match-meta span,
+  html body .wc-meta-row span{
+    min-height:32px !important;
+    padding:7px 8px !important;
+    font-size:.72rem !important;
+  }
+
+  html body .public-score-box{
+    width:60px !important;
+    min-width:60px !important;
+    max-width:60px !important;
+    height:54px !important;
+    min-height:54px !important;
+    max-height:54px !important;
+  }
+}
