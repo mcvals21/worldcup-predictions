@@ -3511,3 +3511,728 @@ html body .page-hero p{
     padding-bottom:92px !important;
   }
 }
+/* =====================================================
+   clean17 - FULL PROFESSIONAL RESET THEME
+   Theme: Off-white app + white cards + black header + yellow accents
+   Colors only: black / white / off-white / yellow / gray
+===================================================== */
+
+:root{
+  --app-bg:#f3efe6;
+  --app-bg-2:#e7dece;
+
+  --black:#0b0b0b;
+  --black-2:#151515;
+  --black-3:#222222;
+
+  --white:#ffffff;
+  --offwhite:#fbf6ea;
+  --offwhite-2:#eee3cc;
+
+  --gray-1:#f1f1f1;
+  --gray-2:#d7d7d7;
+  --gray-3:#8c8c8c;
+  --gray-4:#343434;
+
+  --yellow:#f4d77a;
+  --yellow-2:#d6ad37;
+  --yellow-3:#a97812;
+
+  --text:#111111;
+  --muted:#666666;
+  --border:rgba(17,17,17,.12);
+  --gold-border:rgba(214,173,55,.55);
+
+  --radius-lg:28px;
+  --radius-md:20px;
+  --radius-sm:14px;
+
+  --shadow-card:0 14px 34px rgba(0,0,0,.12);
+  --shadow-strong:0 18px 44px rgba(0,0,0,.22);
+}
+
+/* =====================================================
+   الصفحة العامة
+===================================================== */
+
+html,
+body{
+  background:
+    radial-gradient(circle at top center, rgba(214,173,55,.20), transparent 34%),
+    linear-gradient(180deg,var(--app-bg),var(--app-bg-2)) !important;
+  color:var(--text) !important;
+}
+
+html body main,
+html body .container,
+html body .page-wrap,
+html body .content,
+html body .main-content{
+  background:transparent !important;
+}
+
+/* =====================================================
+   الهيدر
+===================================================== */
+
+html body .wc-header,
+html body .clean-wc-header{
+  position:relative !important;
+  padding-top:66px !important;
+  background:
+    radial-gradient(circle at top center, rgba(244,215,122,.13), transparent 36%),
+    linear-gradient(180deg,#111,#050505) !important;
+  border-bottom:1px solid rgba(244,215,122,.25) !important;
+  color:#fff !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.22) !important;
+}
+
+/* عنوان الموقع */
+html body .wc-header h1,
+html body .clean-wc-header h1,
+html body .brand-title,
+html body .site-title{
+  color:#fff !important;
+  font-weight:1000 !important;
+  letter-spacing:0 !important;
+}
+
+/* =====================================================
+   زر القائمة والقائمة المنسدلة
+===================================================== */
+
+html body details.clean-menu{
+  position:absolute !important;
+  top:12px !important;
+  right:14px !important;
+  left:auto !important;
+  z-index:9999 !important;
+  width:auto !important;
+}
+
+html body details.clean-menu > summary{
+  min-width:122px !important;
+  min-height:48px !important;
+  padding:0 18px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+
+  border-radius:18px !important;
+  background:linear-gradient(180deg,#252525,#0f0f0f) !important;
+  color:#fff !important;
+  border:1px solid rgba(244,215,122,.42) !important;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.07) !important;
+
+  font-size:1.08rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  list-style:none !important;
+  cursor:pointer !important;
+}
+
+html body details.clean-menu > summary::-webkit-details-marker{
+  display:none !important;
+}
+
+html body .clean-menu-panel{
+  position:absolute !important;
+  top:calc(100% + 12px) !important;
+  right:0 !important;
+  left:auto !important;
+
+  width:330px !important;
+  max-width:calc(100vw - 28px) !important;
+
+  padding:16px !important;
+  border-radius:26px !important;
+
+  background:linear-gradient(180deg,#fff,#f4efe3) !important;
+  color:var(--text) !important;
+  border:1.5px solid var(--gold-border) !important;
+
+  box-shadow:
+    0 24px 55px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.85) !important;
+
+  overflow:hidden !important;
+}
+
+html body details.clean-menu[open] .clean-menu-panel{
+  animation:menuFadeIn .16s ease-out both !important;
+}
+
+@keyframes menuFadeIn{
+  from{opacity:0; transform:translateY(-8px) scale(.98);}
+  to{opacity:1; transform:translateY(0) scale(1);}
+}
+
+html body .clean-menu-panel a{
+  min-height:54px !important;
+  padding:0 14px !important;
+  margin:0 0 8px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+
+  border-radius:18px !important;
+  background:var(--white) !important;
+  color:var(--text) !important;
+  border:1px solid rgba(17,17,17,.09) !important;
+
+  text-decoration:none !important;
+  font-size:1.08rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+}
+
+html body .clean-menu-panel a:hover{
+  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
+  color:var(--text) !important;
+}
+
+html body .clean-menu-panel form{
+  background:#fff !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+  border-radius:22px !important;
+  padding:14px !important;
+  margin-top:10px !important;
+}
+
+html body .clean-menu-panel select{
+  width:100% !important;
+  min-height:52px !important;
+  border-radius:16px !important;
+  padding:0 14px !important;
+  background:#fff !important;
+  color:var(--text) !important;
+  border:1px solid rgba(17,17,17,.16) !important;
+  font-weight:900 !important;
+  font-size:1rem !important;
+}
+
+/* =====================================================
+   كرت الترحيب
+===================================================== */
+
+html body .player-hero,
+html body .wc-welcome-card,
+html body .welcome-card{
+  background:linear-gradient(180deg,#fff,#f7f1e3) !important;
+  color:var(--text) !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+  border-radius:28px !important;
+  box-shadow:var(--shadow-card) !important;
+
+  text-align:center !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+html body .player-hero *,
+html body .wc-welcome-card *,
+html body .welcome-card *{
+  text-align:center !important;
+  color:var(--text) !important;
+}
+
+html body .player-hero h2,
+html body .wc-welcome-card h2,
+html body .welcome-card h2{
+  font-size:1.45rem !important;
+  line-height:1.25 !important;
+  font-weight:1000 !important;
+}
+
+/* =====================================================
+   العناوين
+===================================================== */
+
+html body .section-title,
+html body .section-title h2,
+html body .page-hero h1{
+  color:var(--text) !important;
+  font-weight:1000 !important;
+}
+
+html body .page-hero p,
+html body .public-note{
+  color:var(--muted) !important;
+}
+
+/* =====================================================
+   التبويبات
+===================================================== */
+
+html body .match-tabs{
+  background:#fff !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+  border-radius:24px !important;
+  padding:8px !important;
+  box-shadow:var(--shadow-card) !important;
+}
+
+html body .match-tab{
+  border-radius:17px !important;
+  min-height:48px !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+  background:linear-gradient(180deg,#f7f7f7,#e9e9e9) !important;
+  color:var(--text) !important;
+  font-weight:950 !important;
+}
+
+html body .match-tab.active{
+  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
+  color:var(--text) !important;
+  border-color:rgba(214,173,55,.70) !important;
+  box-shadow:
+    0 10px 20px rgba(0,0,0,.15),
+    inset 0 1px 0 rgba(255,255,255,.45) !important;
+}
+
+/* عداد التبويبات */
+html body .match-tab small{
+  background:rgba(0,0,0,.09) !important;
+  color:inherit !important;
+  border-radius:999px !important;
+  padding:4px 8px !important;
+  font-weight:1000 !important;
+}
+
+/* =====================================================
+   كروت المباريات
+===================================================== */
+
+html body .mobile-focus-card,
+html body .wc-match-card,
+html body .public-match-card,
+html body .clean-match-card{
+  background:linear-gradient(180deg,#fff,#f7f1e3) !important;
+  color:var(--text) !important;
+  border:1px solid rgba(17,17,17,.12) !important;
+  border-radius:28px !important;
+  box-shadow:var(--shadow-card) !important;
+  overflow:hidden !important;
+}
+
+/* إزالة الخطوط الداكنة القديمة */
+html body .mobile-focus-card::before,
+html body .wc-match-card::before,
+html body .public-match-card::before,
+html body .clean-match-card::before{
+  content:"" !important;
+  display:block !important;
+  height:5px !important;
+  background:linear-gradient(90deg,var(--black),var(--yellow),var(--black)) !important;
+}
+
+/* رأس الكرت */
+html body .mobile-card-topline,
+html body .wc-card-top,
+html body .public-status-row{
+  background:linear-gradient(180deg,#111,#050505) !important;
+  border-bottom:1px solid rgba(214,173,55,.38) !important;
+  color:#fff !important;
+}
+
+/* أسماء الفرق */
+html body .public-team-side span,
+html body .mobile-team-box strong,
+html body .wc-team-box strong{
+  color:var(--text) !important;
+  font-weight:1000 !important;
+  text-shadow:none !important;
+}
+
+/* الأعلام */
+html body .public-flag,
+html body .mobile-team-flag,
+html body .wc-team-flag{
+  border-radius:14px !important;
+  box-shadow:0 10px 20px rgba(0,0,0,.16) !important;
+}
+
+/* =====================================================
+   المجموعة / التاريخ / الوقت
+===================================================== */
+
+html body .final-card-meta-row,
+html body .mobile-match-meta,
+html body .wc-meta-row,
+html body .public-meta-strip{
+  display:flex !important;
+  flex-direction:row !important;
+  direction:rtl !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex-wrap:wrap !important;
+  padding:0 12px 16px !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+
+html body .final-card-meta-pill,
+html body .mobile-match-meta span,
+html body .wc-meta-row span,
+html body .final-meta-pill,
+html body .meta-pill,
+html body .public-meta-strip .meta-pill{
+  min-height:34px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  padding:7px 12px !important;
+  border-radius:999px !important;
+
+  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
+  color:var(--text) !important;
+  border:1px solid rgba(214,173,55,.70) !important;
+
+  box-shadow:
+    0 8px 14px rgba(0,0,0,.12),
+    inset 0 1px 0 rgba(255,255,255,.44) !important;
+
+  font-size:.76rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+html body .final-card-meta-stage,
+html body .mobile-match-meta span:nth-child(1),
+html body .wc-meta-row span:nth-child(1),
+html body .meta-group{
+  min-width:88px !important;
+  direction:rtl !important;
+}
+
+html body .final-card-meta-date,
+html body .mobile-match-meta span:nth-child(2),
+html body .wc-meta-row span:nth-child(2),
+html body .meta-date{
+  min-width:108px !important;
+  direction:ltr !important;
+}
+
+html body .final-card-meta-time,
+html body .mobile-match-meta span:nth-child(3),
+html body .wc-meta-row span:nth-child(3),
+html body .meta-time{
+  min-width:66px !important;
+  direction:ltr !important;
+}
+
+/* =====================================================
+   مربعات النتيجة
+===================================================== */
+
+html body .mobile-score-inputs input,
+html body .wc-score-inputs input,
+html body .mobile-score-display,
+html body .wc-score-display span,
+html body .public-score-box,
+html body .match-view-score{
+  background:linear-gradient(180deg,#111,#000) !important;
+  color:#fff !important;
+  border:2px solid rgba(214,173,55,.62) !important;
+  border-radius:18px !important;
+
+  box-shadow:
+    0 12px 24px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+
+  text-align:center !important;
+  font-weight:1000 !important;
+}
+
+/* علامة - بين النتيجتين */
+html body .mobile-score-inputs span,
+html body .wc-score-inputs span,
+html body .wc-score-display b{
+  color:var(--black) !important;
+  font-weight:1000 !important;
+}
+
+/* =====================================================
+   حالة المباراة
+===================================================== */
+
+html body .mobile-status-pill,
+html body .wc-status-pill,
+html body .status-pill,
+html body .card-status-pill{
+  min-height:36px !important;
+  padding:8px 18px !important;
+  border-radius:999px !important;
+
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  font-size:.85rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.35) !important;
+}
+
+/* مفتوحة = أصفر */
+html body .mobile-status-pill.is-open,
+html body .wc-status-pill.is-open,
+html body .status-pill.is-open,
+html body .card-status-pill.is-open,
+html body .status-pill.upcoming{
+  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
+  color:var(--text) !important;
+  border:1px solid rgba(214,173,55,.70) !important;
+}
+
+/* منتهية = رمادي غامق */
+html body .mobile-status-pill.is-finished,
+html body .wc-status-pill.is-finished,
+html body .status-pill.is-finished,
+html body .card-status-pill.is-finished,
+html body .status-pill.finished{
+  background:linear-gradient(180deg,#3a3a3a,#111) !important;
+  color:#fff !important;
+  border:1px solid rgba(0,0,0,.55) !important;
+}
+
+/* مغلقة = رمادي فاتح */
+html body .mobile-status-pill.is-locked,
+html body .wc-status-pill.is-locked,
+html body .status-pill.is-locked,
+html body .card-status-pill.is-locked,
+html body .status-pill.locked,
+html body .status-pill.live{
+  background:linear-gradient(180deg,#f1f1f1,#d8d8d8) !important;
+  color:#333 !important;
+  border:1px solid rgba(0,0,0,.16) !important;
+}
+
+/* =====================================================
+   الأزرار
+===================================================== */
+
+html body .bulk-save-btn,
+html body .wc-save-btn,
+html body .mobile-card-link a,
+html body .wc-view-link,
+html body .small-action-link,
+html body .clean-menu-panel button,
+html body .clean-menu-panel input[type="submit"]{
+  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
+  color:var(--text) !important;
+  border:1.5px solid rgba(214,173,55,.78) !important;
+
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.48) !important;
+
+  font-weight:1000 !important;
+  text-decoration:none !important;
+  text-shadow:none !important;
+}
+
+html body .bulk-save-btn:hover,
+html body .wc-save-btn:hover,
+html body .mobile-card-link a:hover,
+html body .wc-view-link:hover,
+html body .small-action-link:hover{
+  background:linear-gradient(180deg,#ffe28a,var(--yellow-3)) !important;
+}
+
+html body .bulk-save-btn::before,
+html body .wc-save-btn::before{
+  content:"" !important;
+  display:none !important;
+}
+
+/* =====================================================
+   الصناديق الداخلية: توقعك الحالي / نقاطك
+===================================================== */
+
+html body .mobile-result-box,
+html body .wc-locked-extra,
+html body .wc-locked-box{
+  background:#fff !important;
+  color:var(--text) !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+  border-radius:20px !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.10) !important;
+}
+
+html body .mobile-result-box *,
+html body .wc-locked-extra *,
+html body .wc-locked-box *{
+  color:var(--text) !important;
+}
+
+/* =====================================================
+   صفحة كل المباريات
+===================================================== */
+
+html body .public-matches-grid{
+  background:transparent !important;
+  border-radius:30px !important;
+  padding:0 !important;
+}
+
+html body .page-hero,
+html body .public-note,
+html body .empty-card{
+  background:linear-gradient(180deg,#fff,#f7f1e3) !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+  border-radius:24px !important;
+  box-shadow:var(--shadow-card) !important;
+  color:var(--text) !important;
+}
+
+html body .page-hero h1,
+html body .page-hero p{
+  color:var(--text) !important;
+}
+
+/* =====================================================
+   الهاتف
+===================================================== */
+
+@media (max-width:700px){
+
+  html body .wc-header,
+  html body .clean-wc-header{
+    padding-top:66px !important;
+  }
+
+  html body details.clean-menu{
+    top:12px !important;
+    right:14px !important;
+  }
+
+  html body details.clean-menu > summary{
+    min-width:118px !important;
+    min-height:46px !important;
+    padding:0 16px !important;
+    font-size:1.04rem !important;
+    border-radius:17px !important;
+  }
+
+  html body .clean-menu-panel{
+    position:fixed !important;
+    top:70px !important;
+    right:14px !important;
+    left:14px !important;
+    width:auto !important;
+    max-width:none !important;
+
+    padding:14px !important;
+    border-radius:24px !important;
+    max-height:calc(100vh - 92px) !important;
+    overflow-y:auto !important;
+  }
+
+  html body .clean-menu-panel a{
+    min-height:52px !important;
+    border-radius:17px !important;
+    font-size:1.02rem !important;
+  }
+
+  html body .player-hero,
+  html body .wc-welcome-card,
+  html body .welcome-card{
+    padding:22px 18px !important;
+  }
+
+  html body .mobile-focus-card,
+  html body .wc-match-card,
+  html body .public-match-card,
+  html body .clean-match-card{
+    border-radius:24px !important;
+    margin-bottom:18px !important;
+  }
+
+  html body .final-card-meta-row,
+  html body .mobile-match-meta,
+  html body .wc-meta-row,
+  html body .public-meta-strip{
+    gap:6px !important;
+    padding:0 10px 16px !important;
+  }
+
+  html body .final-card-meta-pill,
+  html body .mobile-match-meta span,
+  html body .wc-meta-row span,
+  html body .final-meta-pill,
+  html body .meta-pill,
+  html body .public-meta-strip .meta-pill{
+    min-height:32px !important;
+    padding:7px 9px !important;
+    font-size:.72rem !important;
+  }
+
+  html body .final-card-meta-stage,
+  html body .mobile-match-meta span:nth-child(1),
+  html body .wc-meta-row span:nth-child(1),
+  html body .meta-group{
+    min-width:78px !important;
+  }
+
+  html body .final-card-meta-date,
+  html body .mobile-match-meta span:nth-child(2),
+  html body .wc-meta-row span:nth-child(2),
+  html body .meta-date{
+    min-width:98px !important;
+  }
+
+  html body .final-card-meta-time,
+  html body .mobile-match-meta span:nth-child(3),
+  html body .wc-meta-row span:nth-child(3),
+  html body .meta-time{
+    min-width:58px !important;
+  }
+
+  /* زر الحفظ ثابت أسفل الهاتف */
+  html body .bulk-save-bar,
+  html body .wc-save-bar{
+    position:fixed !important;
+    left:12px !important;
+    right:12px !important;
+    bottom:12px !important;
+    z-index:9998 !important;
+
+    width:auto !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:0 !important;
+
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
+  }
+
+  html body .bulk-save-btn,
+  html body .wc-save-btn{
+    width:100% !important;
+    min-height:56px !important;
+    border-radius:18px !important;
+    font-size:1.02rem !important;
+  }
+
+  html body main,
+  html body .container,
+  html body .page-wrap{
+    padding-bottom:92px !important;
+  }
+}
