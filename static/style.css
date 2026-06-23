@@ -1760,3 +1760,78 @@ html body .wc-meta-row span{
   line-height:1 !important;
   white-space:nowrap !important;
 }
+/* =====================================================
+   clean13
+   ترتيب معلومات المباراة في صفحة المتسابق:
+   المجموعة يمين | التاريخ وسط | الوقت يسار
+===================================================== */
+
+html body .final-card-meta-row{
+  display:flex !important;
+  flex-direction:row !important;
+  direction:rtl !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex-wrap:wrap !important;
+  padding:0 12px 16px !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+
+html body .final-card-meta-pill{
+  min-height:34px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:7px 12px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#0f0f0d 0%, #050505 100%) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+  box-shadow:0 6px 14px rgba(0,0,0,.18) !important;
+  font-size:.76rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+html body .final-card-meta-stage{
+  direction:rtl !important;
+  min-width:86px !important;
+}
+
+html body .final-card-meta-date{
+  direction:ltr !important;
+  min-width:108px !important;
+}
+
+html body .final-card-meta-time{
+  direction:ltr !important;
+  min-width:64px !important;
+}
+
+@media (max-width:700px){
+  html body .final-card-meta-row{
+    gap:6px !important;
+    padding:0 10px 16px !important;
+  }
+
+  html body .final-card-meta-pill{
+    min-height:32px !important;
+    padding:7px 9px !important;
+    font-size:.72rem !important;
+  }
+
+  html body .final-card-meta-stage{
+    min-width:80px !important;
+  }
+
+  html body .final-card-meta-date{
+    min-width:100px !important;
+  }
+
+  html body .final-card-meta-time{
+    min-width:58px !important;
+  }
+}
