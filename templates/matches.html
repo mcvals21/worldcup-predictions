@@ -4,7 +4,7 @@
 
 <div class="page-hero">
   <h1>جدول المباريات</h1>
-  <p>تابع مباريات اليوم، القادمة، والمنتهية في مكان واحد.</p>
+  <p>تابع المباريات المفتوحة، القادمة، والمنتهية في مكان واحد.</p>
 </div>
 
 <div class="match-tabs">
@@ -33,32 +33,39 @@
   {% for m in matches %}
     {% set home_flag = team_flag_code(m.home_team) %}
     {% set away_flag = team_flag_code(m.away_team) %}
+    {% set match_finished = m.home_score is not none and m.away_score is not none %}
+    {% set match_locked = locked(m) %}
 
-    <div class="public-match-card">
-     <div class="public-match-top">
-  <span class="stage-pill">
-    {{ stage_labels.get(m.stage, m.stage) }}
-  </span>
+    <article class="public-match-card">
 
-  <span class="date-pill">
-    {{ m.start_time.strftime('%Y-%m-%d') }}
-  </span>
+      <div class="public-match-top">
+        <span class="stage-pill">
+          {{ stage_labels.get(m.stage, m.stage) }}
+        </span>
 
-  <span class="time-pill">
-    {{ m.start_time.strftime('%H:%M') }}
-  </span>
-</div>
+        <span class="date-pill">
+          {{ m.start_time.strftime('%Y-%m-%d') }}
+        </span>
+
+        <span class="time-pill">
+          {{ m.start_time.strftime('%H:%M') }}
+        </span>
+      </div>
 
       <div class="public-teams-row clean">
         <div class="public-team-side">
           {% if home_flag %}
-            <img class="flag-img public-flag" src="https://flagcdn.com/w80/{{ home_flag }}.png" alt="">
+            <img
+              class="flag-img public-flag"
+              src="https://flagcdn.com/w80/{{ home_flag }}.png"
+              alt="{{ m.home_team }}"
+            >
           {% endif %}
           <span>{{ m.home_team }}</span>
         </div>
 
         <div class="public-score-box">
-          {% if m.home_score is not none and m.away_score is not none %}
+          {% if match_finished %}
             {{ m.home_score }} - {{ m.away_score }}
           {% else %}
             ×
@@ -67,28 +74,33 @@
 
         <div class="public-team-side">
           {% if away_flag %}
-            <img class="flag-img public-flag" src="https://flagcdn.com/w80/{{ away_flag }}.png" alt="">
+            <img
+              class="flag-img public-flag"
+              src="https://flagcdn.com/w80/{{ away_flag }}.png"
+              alt="{{ m.away_team }}"
+            >
           {% endif %}
           <span>{{ m.away_team }}</span>
         </div>
       </div>
 
       <div class="public-match-footer">
-        {% if m.home_score is not none and m.away_score is not none %}
-          <span class="status-pill finished">انتهت</span>
+        {% if match_finished %}
+          <span class="status-pill finished">منتهية</span>
           <a class="small-action-link" href="{{ url_for('match_view', match_id=m.id) }}">
             عرض التوقعات والنقاط
           </a>
-        {% elif locked(m) %}
-          <span class="status-pill live">بدأت / مغلقة</span>
+        {% elif match_locked %}
+          <span class="status-pill live">مغلقة</span>
           <a class="small-action-link" href="{{ url_for('match_view', match_id=m.id) }}">
             عرض التوقعات
           </a>
         {% else %}
-          <span class="status-pill upcoming">لم تبدأ</span>
+          <span class="status-pill upcoming">مفتوحة</span>
         {% endif %}
       </div>
-    </div>
+
+    </article>
   {% endfor %}
 </div>
 
