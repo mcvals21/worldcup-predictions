@@ -94,20 +94,44 @@
 
 /* الترتيب */
 .rank-solo-place{
-  width:38px;
-  height:38px;
+  width:42px;
+  height:42px;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  border-radius:13px;
-  background:#f3efe3;
-  border:1px solid rgba(0,0,0,.08);
+  border-radius:14px;
+  background:#f4f1e8;
+  border:1px solid #d8d2c2;
 
-  color:#171717;
-  font-size:.95rem;
+  color:#1c1c1c;
+  font-size:1rem;
   font-weight:1000;
+  line-height:1;
+  flex-shrink:0;
+}
+
+/* المراكز الثلاثة الأولى */
+.rank-solo-row.rank-1 .rank-solo-place{
+  background:linear-gradient(180deg,#f2df9a 0%, #d4b45b 100%);
+  border-color:#c7a03b;
+  color:#3d2d00;
+  box-shadow:0 4px 12px rgba(212,180,91,.25);
+}
+
+.rank-solo-row.rank-2 .rank-solo-place{
+  background:linear-gradient(180deg,#ececf1 0%, #c7cbd4 100%);
+  border-color:#b2b8c2;
+  color:#2e3440;
+  box-shadow:0 4px 12px rgba(180,186,198,.22);
+}
+
+.rank-solo-row.rank-3 .rank-solo-place{
+  background:linear-gradient(180deg,#dfb693 0%, #b98458 100%);
+  border-color:#aa7650;
+  color:#3b2414;
+  box-shadow:0 4px 12px rgba(185,132,88,.22);
 }
 
 /* الاسم */
@@ -203,11 +227,11 @@
   }
 
   .rank-solo-place{
-    width:36px;
-    height:36px;
-    border-radius:13px;
-    font-size:.88rem;
-  }
+  width:38px;
+  height:38px;
+  border-radius:13px;
+  font-size:.9rem;
+}
 
   .rank-solo-name{
     font-size:.96rem;
