@@ -1130,3 +1130,347 @@ html body .bulk-save-btn::before{
   display:none !important;
   content:"" !important;
 }
+/* =====================================================
+   ref-sports-7
+   صفحة توقعات المشاركين - تصميم كروت بسيط وواضح
+===================================================== */
+
+html body .mv-page{
+  display:grid !important;
+  gap:18px !important;
+}
+
+/* كرت المباراة في الأعلى */
+html body .mv-match-card,
+html body .mv-predictions-card{
+  background:linear-gradient(180deg,#f7f3ea,#eee7d8) !important;
+  color:#131313 !important;
+  border:1px solid rgba(230,211,156,.44) !important;
+  border-radius:30px !important;
+  box-shadow:0 16px 36px rgba(0,0,0,.22) !important;
+  overflow:hidden !important;
+}
+
+html body .mv-match-card{
+  padding:22px 16px 18px !important;
+  text-align:center !important;
+}
+
+html body .mv-pill{
+  width:max-content !important;
+  min-height:38px !important;
+  margin:0 auto 20px !important;
+  padding:8px 18px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:999px !important;
+  background:rgba(230,211,156,.52) !important;
+  color:#17130a !important;
+  border:1px solid rgba(198,168,75,.34) !important;
+
+  font-size:.9rem !important;
+  font-weight:1000 !important;
+}
+
+/* صف المنتخبين والنتيجة */
+html body .mv-teams-row{
+  display:grid !important;
+  grid-template-columns:1fr auto 1fr !important;
+  align-items:center !important;
+  gap:12px !important;
+  direction:rtl !important;
+}
+
+html body .mv-team{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px !important;
+  min-width:0 !important;
+  text-align:center !important;
+}
+
+html body .mv-team img{
+  width:64px !important;
+  height:46px !important;
+  object-fit:cover !important;
+  border-radius:14px !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.13) !important;
+}
+
+html body .mv-team strong{
+  color:#131313 !important;
+  font-size:1.05rem !important;
+  line-height:1.25 !important;
+  font-weight:1000 !important;
+}
+
+/* النتيجة النهائية */
+html body .mv-score-boxes{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  direction:rtl !important;
+}
+
+html body .mv-score-boxes span{
+  width:58px !important;
+  height:58px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:18px !important;
+  background:#ffffff !important;
+  color:#121827 !important;
+  border:2px solid #e2ddcf !important;
+
+  font-size:1.7rem !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+  box-shadow:none !important;
+}
+
+html body .mv-score-boxes b{
+  color:#17130a !important;
+  font-size:1.35rem !important;
+  font-weight:1000 !important;
+}
+
+html body .mv-score-boxes .empty-score{
+  color:#9a9489 !important;
+}
+
+html body .mv-match-note{
+  margin:18px 0 0 !important;
+  color:#70695f !important;
+  font-size:.95rem !important;
+  line-height:1.7 !important;
+  font-weight:950 !important;
+}
+
+/* كرت التوقعات */
+html body .mv-predictions-card{
+  padding:18px 16px !important;
+}
+
+html body .mv-section-title{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px !important;
+  text-align:center !important;
+  margin-bottom:16px !important;
+}
+
+html body .mv-section-title h3{
+  margin:0 !important;
+  color:#131313 !important;
+  font-size:1.45rem !important;
+  line-height:1.25 !important;
+  font-weight:1000 !important;
+}
+
+html body .mv-section-title span{
+  min-height:38px !important;
+  padding:8px 18px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:999px !important;
+  background:rgba(230,211,156,.52) !important;
+  color:#17130a !important;
+  border:1px solid rgba(198,168,75,.34) !important;
+
+  font-size:.9rem !important;
+  font-weight:1000 !important;
+}
+
+/* قائمة المشاركين */
+html body .mv-predictions-list{
+  display:grid !important;
+  gap:10px !important;
+}
+
+/* سطر كل مشارك */
+html body .mv-prediction-item{
+  display:grid !important;
+  grid-template-columns:1fr auto auto !important;
+  align-items:center !important;
+  gap:12px !important;
+
+  padding:13px 14px !important;
+  border-radius:22px !important;
+
+  background:#ffffff !important;
+  border:1px solid rgba(17,17,17,.08) !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.07) !important;
+}
+
+html body .mv-player-block{
+  display:grid !important;
+  gap:5px !important;
+  min-width:0 !important;
+}
+
+html body .mv-player-block strong{
+  color:#131313 !important;
+  font-size:1.02rem !important;
+  line-height:1.25 !important;
+  font-weight:1000 !important;
+}
+
+html body .mv-player-block small{
+  color:#746d62 !important;
+  font-size:.78rem !important;
+  line-height:1.3 !important;
+  font-weight:900 !important;
+}
+
+/* نتيجة التوقع */
+html body .mv-pred-score{
+  min-width:94px !important;
+  min-height:48px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:7px !important;
+  direction:rtl !important;
+
+  border-radius:17px !important;
+  background:#f8f8f8 !important;
+  color:#121827 !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+
+  font-size:1.2rem !important;
+  font-weight:1000 !important;
+}
+
+html body .mv-pred-score span,
+html body .mv-pred-score b{
+  color:#121827 !important;
+  font-weight:1000 !important;
+}
+
+/* نتيجة النقاط */
+html body .mv-result-block{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+html body .mv-result-chip{
+  min-width:72px !important;
+  min-height:40px !important;
+  padding:8px 12px !important;
+
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:999px !important;
+  font-size:.88rem !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+  white-space:nowrap !important;
+}
+
+/* ألوان النتيجة ضمن ألوان الثيم */
+html body .mv-result-chip.exact{
+  background:rgba(230,211,156,.66) !important;
+  color:#17130a !important;
+  border:1px solid rgba(198,168,75,.42) !important;
+}
+
+html body .mv-result-chip.partial{
+  background:#ece8df !important;
+  color:#4c463c !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+}
+
+html body .mv-result-chip.wrong{
+  background:#f4dddd !important;
+  color:#8f2c2c !important;
+  border:1px solid rgba(143,44,44,.18) !important;
+}
+
+html body .mv-result-chip.pending{
+  background:#ece8df !important;
+  color:#6d6658 !important;
+  border:1px solid rgba(17,17,17,.10) !important;
+}
+
+/* تمييز خفيف للتوقع المضاعف */
+html body .mv-prediction-item.is-double{
+  border-color:rgba(198,168,75,.44) !important;
+  background:linear-gradient(180deg,#ffffff,#fbf6ea) !important;
+}
+
+/* الهاتف */
+@media (max-width:520px){
+
+  html body .mv-match-card{
+    padding:20px 12px 16px !important;
+  }
+
+  html body .mv-teams-row{
+    gap:8px !important;
+  }
+
+  html body .mv-team img{
+    width:58px !important;
+    height:42px !important;
+  }
+
+  html body .mv-team strong{
+    font-size:.98rem !important;
+  }
+
+  html body .mv-score-boxes span{
+    width:52px !important;
+    height:52px !important;
+    border-radius:16px !important;
+    font-size:1.52rem !important;
+  }
+
+  html body .mv-predictions-card{
+    padding:16px 12px !important;
+  }
+
+  html body .mv-prediction-item{
+    grid-template-columns:1fr auto !important;
+    grid-template-areas:
+      "player result"
+      "score score" !important;
+    gap:10px !important;
+    padding:13px !important;
+  }
+
+  html body .mv-player-block{
+    grid-area:player !important;
+  }
+
+  html body .mv-result-block{
+    grid-area:result !important;
+    justify-content:flex-end !important;
+  }
+
+  html body .mv-pred-score{
+    grid-area:score !important;
+    width:100% !important;
+    min-height:50px !important;
+  }
+
+  html body .mv-result-chip{
+    min-width:64px !important;
+    font-size:.82rem !important;
+  }
+}
