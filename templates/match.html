@@ -56,43 +56,44 @@
 
   </section>
 
-  <section class="mv-predictions-card">
 
-    <div class="mv-predictions-list">
+  <section class="mv-participants-section">
+
+    <div class="mv-soft-divider"></div>
+
+    <div class="mv-simple-predictions">
 
       {% for pred,p in preds %}
         {% set pts = points_for(pred,match) %}
         {% set exact = match_finished and pred.home_score == match.home_score and pred.away_score == match.away_score %}
 
-        <article class="mv-prediction-item
-          {% if pred.is_double %} is-double{% endif %}
-          {% if match_finished and exact %} is-exact{% elif match_finished and pts > 0 %} is-partial{% elif match_finished %} is-wrong{% else %} is-pending{% endif %}
-        ">
+        {% if not match_finished %}
+          {% set row_class = 'is-pending' %}
+          {% set pts_label = '—' %}
+        {% elif exact %}
+          {% set row_class = 'is-exact' %}
+          {% set pts_label = '+' ~ pts %}
+        {% elif pts > 0 %}
+          {% set row_class = 'is-partial' %}
+          {% set pts_label = '+' ~ pts %}
+        {% else %}
+          {% set row_class = 'is-wrong' %}
+          {% set pts_label = '0' %}
+        {% endif %}
 
-          <div class="mv-player-block">
-            <strong>{{ p.name }}</strong>
-            {% if pred.is_double %}
-              <small>⭐ مضاعفة</small>
-            {% endif %}
+        <div class="mv-simple-row {{ row_class }}">
+          <div class="mv-simple-name">
+            {{ p.name }}
           </div>
 
-          <div class="mv-pred-score" dir="ltr">
+          <div class="mv-simple-score" dir="ltr">
             {{ pred.home_score }} - {{ pred.away_score }}
           </div>
 
-          <div class="mv-result-block">
-            {% if not match_finished %}
-              <span class="mv-result-chip pending"><b>—</b></span>
-            {% elif exact %}
-              <span class="mv-result-chip exact"><b dir="ltr">+{{ pts }}</b></span>
-            {% elif pts > 0 %}
-              <span class="mv-result-chip partial"><b dir="ltr">+{{ pts }}</b></span>
-            {% else %}
-              <span class="mv-result-chip wrong"><b>0</b></span>
-            {% endif %}
+          <div class="mv-simple-points {{ row_class }}">
+            {{ pts_label }}
           </div>
-
-        </article>
+        </div>
       {% endfor %}
 
     </div>
