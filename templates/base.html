@@ -6,24 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080808">
   <title>{{ t.name if t else 'توقعات المباريات' }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=base-save-modal-2">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=base-save-modal-3">
 
-  <style>
-  /* رسالة حفظ التوقعات - نسخة أبسط */
+ <style>
+  /* رسالة حفظ التوقعات - بدون دائرة خلف الإيموجي */
   .prediction-save-icon{
-    background:linear-gradient(180deg,#d7f0dc,#9ee5af) !important;
-    color:#245d36 !important;
-    font-size:2.6rem !important;
-    font-weight:900 !important;
-  }
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
 
-  .prediction-save-card{
-    padding-top:30px !important;
+    width:auto !important;
+    height:auto !important;
+    min-width:0 !important;
+    min-height:0 !important;
+
+    border-radius:0 !important;
+    margin:0 auto 10px !important;
+    padding:0 !important;
+
+    color:inherit !important;
+    font-size:3rem !important;
+    line-height:1 !important;
   }
 
   .prediction-save-card h3{
     color:#131313 !important;
-    margin-top:14px !important;
+    margin-top:10px !important;
     margin-bottom:22px !important;
     font-size:1.85rem !important;
     font-weight:1000 !important;
