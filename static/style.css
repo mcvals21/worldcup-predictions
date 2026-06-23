@@ -802,3 +802,37 @@ tbody tr:last-child td{border-bottom:none}
   .public-score-box,
   .match-view-score{width:52px;height:52px;font-size:1.45rem}
 }
+
+
+/* =====================================================
+   polish-1: all matches UX + dark view buttons
+===================================================== */
+
+/* View predictions buttons are secondary actions, so they use the dark page language.
+   Save button remains gold and fixed only on the open matches tab. */
+html body .wc-view-link,
+html body .small-action-link{
+  background:linear-gradient(180deg,#171717,#050505) !important;
+  color:#f5f2ea !important;
+  border:1px solid rgba(230,211,156,.34) !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.24) !important;
+}
+
+html body .wc-view-link:hover,
+html body .small-action-link:hover{
+  background:linear-gradient(180deg,#242424,#090909) !important;
+  color:#ffffff !important;
+}
+
+/* Keep save button gold after the dark secondary button override. */
+html body .wc-save-btn{
+  background:linear-gradient(180deg,#ead8a7,#ddc273) !important;
+  color:#17130a !important;
+  border:1px solid rgba(198,168,75,.45) !important;
+}
+
+/* Slightly separate the secondary action from the card content. */
+html body .wc-view-link,
+html body .small-action-link{
+  letter-spacing:0 !important;
+}
