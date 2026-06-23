@@ -912,3 +912,49 @@ html body .mobile-result-box,
 html body .wc-locked-extra{
   margin-bottom:10px !important;
 }
+/* =====================================================
+   جعل زر حفظ التوقعات بنفس عائلة زر عرض توقعات الجميع
+===================================================== */
+
+html body .bulk-save-bar,
+html body .wc-save-bar{
+  position:static !important;
+  width:100% !important;
+  margin:18px auto 10px !important;
+  padding:0 14px !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+html body .bulk-save-btn,
+html body .wc-save-btn{
+  width:100% !important;
+  max-width:360px !important;
+  min-height:52px !important;
+  margin:0 auto !important;
+  padding:0 18px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:18px !important;
+  background:linear-gradient(180deg,#fff7df,#e3c96d) !important;
+  color:#11100b !important;
+  border:1.5px solid rgba(212,175,55,.75) !important;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.75) !important;
+
+  font-size:1rem !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+}
+
+html body .bulk-save-btn::before,
+html body .wc-save-btn::before{
+  content:"" !important;
+  display:none !important;
+}
