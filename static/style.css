@@ -357,3 +357,108 @@ main{max-width:520px;margin:0 auto;padding:14px 12px 34px}
 
 @media (min-width:760px){main{max-width:720px}.public-matches-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats-grid{grid-template-columns:1fr 1fr}.desktop-leader-table{display:block}.mobile-leader-list{display:none}.top-podium{grid-template-columns:1fr 1.15fr 1fr}.podium-card{display:block}.podium-card.rank-1{display:block;transform:translateY(-6px)}}
 @media (max-width:370px){.wc-score-inputs input,.mobile-score-inputs input,.wc-score-display span,.mobile-score-display{width:58px!important;height:58px!important;font-size:1.46rem!important}.wc-team-flag,.mobile-team-flag,.public-flag,.match-view-team img{width:54px!important;height:40px!important}.match-tab,.wc-tab{font-size:.88rem!important}}
+
+/* =====================================================
+   POLISH PATCH 1
+   تحسينات بعد تنظيف CSS
+===================================================== */
+
+/* زر حفظ التوقعات: لا يغطي الكروت */
+.bulk-save-bar,
+.wc-save-bar{
+  position:static !important;
+  width:100% !important;
+  margin:22px auto 10px !important;
+  padding:0 !important;
+}
+
+.bulk-save-btn,
+.wc-save-btn{
+  min-height:56px !important;
+  border-radius:18px !important;
+  background:linear-gradient(180deg,#171611,#070707) !important;
+  color:#f4d77a !important;
+  border:1px solid rgba(212,175,55,.55) !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.34) !important;
+  font-size:1.02rem !important;
+  font-weight:1000 !important;
+}
+
+/* كروت صفحة توقعات المشاركين: أخف وأقصر */
+.match-prediction-card{
+  padding:12px 14px !important;
+  border-radius:18px !important;
+  margin-bottom:10px !important;
+}
+
+.prediction-player-row{
+  padding-bottom:8px !important;
+}
+
+.prediction-player-row strong{
+  font-size:.98rem !important;
+}
+
+.prediction-player-row small{
+  font-size:.74rem !important;
+}
+
+.prediction-score-line{
+  margin-top:9px !important;
+}
+
+.prediction-score-line b,
+.prediction-score-fixed{
+  min-width:72px !important;
+  height:38px !important;
+  font-size:1.08rem !important;
+  border-radius:14px !important;
+}
+
+/* تبويبات المباريات: شكل أنعم */
+.match-tabs,
+.wc-tabs{
+  border-radius:20px !important;
+  padding:7px !important;
+  gap:8px !important;
+}
+
+.match-tab,
+.wc-tab{
+  min-height:50px !important;
+  border-radius:15px !important;
+}
+
+.match-tab small,
+.wc-tab small{
+  width:30px !important;
+  height:30px !important;
+  min-width:30px !important;
+  min-height:30px !important;
+}
+
+/* تقليل المسافات في كروت المباريات */
+.mobile-focus-card,
+.wc-match-card,
+.public-match-card{
+  margin-bottom:16px !important;
+}
+
+.mobile-match-main,
+.wc-match-main,
+.public-teams-row.clean{
+  padding-top:16px !important;
+  padding-bottom:12px !important;
+}
+
+/* تحسين مظهر صندوق توقعك / نقاطك */
+.mobile-result-box{
+  border-radius:18px !important;
+  padding:10px !important;
+  gap:8px !important;
+}
+
+.mobile-result-box > div{
+  border-radius:14px !important;
+  padding:9px !important;
+}
