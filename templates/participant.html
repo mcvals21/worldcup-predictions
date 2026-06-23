@@ -1,7 +1,7 @@
 
 {% extends 'base.html' %}
 
-{% block body_class %}{% if has_open_matches %}has-save-bar{% endif %}{% endblock %}
+{% block body_class %}{% if selected_filter == 'open' and has_open_matches %}has-save-bar{% endif %}{% endblock %}
 
 {% block content %}
 
@@ -132,13 +132,13 @@
           </div>
         </div>
 
-        <a class="wc-view-link" href="/match/{{ m.id }}">عرض توقعات الجميع</a>
+        <a class="wc-view-link" href="/match/{{ m.id }}">عرض التوقعات</a>
       {% elif is_locked and not pred %}
         <div class="wc-no-prediction">
           لم تقم بإدخال توقع لهذه المباراة
         </div>
 
-        <a class="wc-view-link" href="/match/{{ m.id }}">عرض توقعات الجميع</a>
+        <a class="wc-view-link" href="/match/{{ m.id }}">عرض التوقعات</a>
       {% endif %}
 
       {% if not is_locked and m.stage in knockout %}
@@ -154,7 +154,7 @@
     </section>
   {% endfor %}
 
-  {% if has_open_matches %}
+  {% if selected_filter == 'open' and has_open_matches %}
     <div class="wc-save-bar">
       <button type="submit" class="wc-save-btn">حفظ التوقعات</button>
     </div>
