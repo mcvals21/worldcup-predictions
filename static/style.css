@@ -1,4238 +1,804 @@
-/* =========================================================
-   CLEAN STYLE.CSS — World Cup Predictions
-   نسخة نظيفة موحدة: Dark / Gold
-   - لا تحتاج final_theme.css
-   - لا تحتوي على تراكمات الثيمات القديمة
-========================================================= */
-
 :root{
-  --bg:#050505;
-  --bg2:#12110e;
-  --panel:#171611;
-  --panel2:#24231f;
-  --panel3:#302f2a;
-  --gold:#d4af37;
-  --gold2:#f4d77a;
-  --cream:#fff8dd;
-  --cream2:#f2f0e8;
-  --text:#ffffff;
-  --dark:#071126;
-  --muted:#c8c0a8;
-  --line:rgba(212,175,55,.42);
-  --line-soft:rgba(212,175,55,.22);
-  --shadow:0 14px 34px rgba(0,0,0,.36);
-  --radius:24px;
-  --ok:#34d399;
-  --danger:#ef4444;
+  --bg:#080808;
+  --bg-soft:#101010;
+  --bg-elev:#161616;
+  --card:#f5f2ea;
+  --card-strong:#ffffff;
+  --text:#131313;
+  --muted:#6e685d;
+  --text-on-dark:#faf7f0;
+  --muted-on-dark:#d2cabd;
+  --accent:#e6d39c;
+  --accent-strong:#c6a84b;
+  --accent-text:#17130a;
+  --line:rgba(216,191,103,.34);
+  --line-soft:rgba(255,255,255,.10);
+  --shadow:0 18px 38px rgba(0,0,0,.25);
+  --shadow-soft:0 10px 28px rgba(0,0,0,.12);
+  --success-bg:#dcefdc;
+  --success-text:#255f32;
+  --danger-bg:#f4dddd;
+  --danger-text:#8f2c2c;
+  --neutral-bg:#ece8df;
+  --neutral-text:#6d6658;
 }
 
 *{box-sizing:border-box}
-html{font-size:16px;scroll-behavior:smooth}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth}
 body{
-  margin:0;
-  direction:rtl;
-  font-family:Arial,Tahoma,sans-serif;
-  line-height:1.6;
-  color:var(--text);
+  font-family:"Tahoma","Arial",sans-serif;
   background:
-    radial-gradient(circle at 15% 4%, rgba(255,255,255,.06), transparent 18%),
-    radial-gradient(circle at 86% 5%, rgba(212,175,55,.15), transparent 22%),
-    linear-gradient(180deg,var(--bg) 0%,var(--bg2) 48%,var(--bg) 100%);
+    radial-gradient(circle at top right, rgba(230,211,156,.12), transparent 22%),
+    radial-gradient(circle at top left, rgba(255,255,255,.06), transparent 16%),
+    linear-gradient(180deg,#0b0b0b 0%,#050505 100%);
+  color:var(--text-on-dark);
+  min-height:100vh;
 }
-
-a{color:var(--gold2);text-decoration:none;font-weight:900}
-button,input,select{font:inherit;font-size:16px}
-button{cursor:pointer}
-main{max-width:520px;margin:0 auto;padding:14px 12px 34px}
-
-/* =========================================================
-   HEADER + MENU
-========================================================= */
-.clean-wc-header{
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
   background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,.08), transparent 18%),
-    radial-gradient(circle at 84% 18%, rgba(212,175,55,.18), transparent 20%),
-    linear-gradient(135deg,#0b0b0a,#181713,#2a210d);
-  border-bottom:1px solid rgba(212,175,55,.36);
-  box-shadow:0 14px 34px rgba(0,0,0,.42);
-  padding:14px 14px 18px;
-  text-align:center;
+    linear-gradient(90deg, transparent 0, transparent 8%, rgba(255,255,255,.02) 8.1%, transparent 8.3%, transparent 100%),
+    radial-gradient(circle at center, transparent 0 62%, rgba(255,255,255,.018) 62.3%, transparent 63.2%);
+  opacity:.45;
+}
+a{text-decoration:none;color:inherit}
+img{display:block}
+button,input,select,textarea{font:inherit}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+
+.site-main,
+main{
+  width:min(100%, 720px);
+  margin:0 auto;
+  padding:18px 14px 42px;
+  position:relative;
+  z-index:1;
+}
+body.has-save-bar .site-main{padding-bottom:128px}
+
+/* header */
+.clean-wc-header{
+  width:min(100%,720px);
+  margin:0 auto;
+  padding:22px 14px 18px;
+  position:relative;
+  z-index:2;
 }
 .clean-wc-header::after{
-  content:"";display:block;height:2px;margin-top:16px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  content:"";
+  display:block;
+  margin-top:18px;
+  height:1px;
+  background:linear-gradient(90deg,transparent, rgba(230,211,156,.75), transparent);
 }
-.clean-header-row{display:block;position:relative;max-width:520px;margin:0 auto}
-.clean-menu{position:absolute;top:0;right:0;z-index:50}
+.clean-header-row{
+  position:relative;
+  min-height:52px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+.clean-title{
+  text-align:center;
+  padding-top:26px;
+}
+.clean-kicker{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:34px;
+  padding:6px 14px;
+  border-radius:999px;
+  background:rgba(230,211,156,.10);
+  border:1px solid rgba(230,211,156,.35);
+  color:var(--accent);
+  font-size:.84rem;
+  font-weight:950;
+  margin-bottom:14px;
+}
+.clean-title h1{
+  margin:0;
+  color:#fff;
+  font-size:clamp(2rem,4vw,2.5rem);
+  line-height:1.16;
+  font-weight:1000;
+  letter-spacing:-.3px;
+}
+.clean-title h1 span{font-size:.82em}
+.clean-subtitle{
+  margin:10px auto 0;
+  text-align:center;
+  color:var(--text-on-dark);
+  font-weight:900;
+  font-size:1.02rem;
+  line-height:1.7;
+}
+
+/* menu */
+.clean-menu{
+  position:absolute;
+  top:0;
+  right:0;
+}
 .clean-menu summary{
-  list-style:none;min-height:42px;padding:8px 13px;border-radius:16px;
-  background:rgba(255,255,255,.10);border:1px solid rgba(212,175,55,.46);
-  color:#fff;font-weight:950;box-shadow:0 10px 24px rgba(0,0,0,.32);cursor:pointer;
+  list-style:none;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  min-height:54px;
+  padding:0 20px;
+  border-radius:20px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border:1px solid rgba(230,211,156,.40);
+  color:#fff;
+  font-size:1.08rem;
+  font-weight:1000;
+  box-shadow:0 10px 26px rgba(0,0,0,.22);
 }
 .clean-menu summary::-webkit-details-marker{display:none}
+.clean-menu summary:hover{background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04))}
+.menu-icon{font-size:1.15rem;line-height:1}
 .clean-menu-panel{
-  position:absolute;top:52px;right:0;left:auto;min-width:230px;z-index:80;
-  border-radius:20px;background:#fffdf7;border:1px solid rgba(212,175,55,.45);
-  box-shadow:0 22px 60px rgba(0,0,0,.45);padding:8px;text-align:right;
+  width:min(340px, calc(100vw - 28px));
+  margin-top:12px;
+  padding:16px;
+  border-radius:28px;
+  background:var(--card);
+  color:var(--text);
+  border:1px solid rgba(230,211,156,.46);
+  box-shadow:0 28px 56px rgba(0,0,0,.30);
 }
+.menu-links{display:grid;gap:8px}
 .clean-menu-panel a{
-  display:block;padding:12px 13px;border-radius:14px;color:#101522;background:transparent;
-  font-weight:950;text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:52px;
+  padding:0 16px;
+  border-radius:18px;
+  color:var(--text);
+  font-weight:950;
+  background:#fff;
+  border:1px solid rgba(17,17,17,.08);
 }
-.clean-menu-panel a:hover{background:#fff4ce}
-.clean-title{padding-top:52px;text-align:center}
-.clean-kicker{
-  display:inline-flex;padding:5px 12px;margin:0 auto 8px;border-radius:999px;
-  background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.42);
-  color:var(--gold2);font-size:.75rem;font-weight:950;
+.menu-divider{
+  height:1px;
+  background:rgba(17,17,17,.10);
+  margin:14px 0;
 }
-.clean-title h1{
-  margin:0;color:#fff;font-size:1.48rem;line-height:1.28;font-weight:1000;
-  text-shadow:0 3px 12px rgba(0,0,0,.45);
-}
-.clean-subtitle{
-  max-width:320px;margin:8px auto 0;padding:0;color:rgba(255,255,255,.78);
-  font-size:.8rem;line-height:1.55;font-weight:850;text-align:center;
-}
-.menu-divider{height:1px;margin:6px 4px;background:rgba(212,175,55,.25)}
 .menu-champion-box{
-  padding:10px;border-radius:15px;background:linear-gradient(180deg,#fffdf6,#fff);
-  border:1px solid rgba(212,175,55,.32);color:#101522;
+  display:grid;
+  gap:12px;
+  padding:16px;
+  border-radius:22px;
+  background:#fff;
+  border:1px solid rgba(17,17,17,.08);
 }
-.menu-champion-title{font-weight:950;margin-bottom:7px}
-.menu-champion-note{color:#667085;font-size:.82rem;font-weight:850;line-height:1.55;margin-bottom:8px}
-.menu-champion-form{display:grid;gap:7px}
-.menu-champion-form select{
-  width:100%;min-height:44px;border-radius:13px;border:1px solid rgba(212,175,55,.35);
-  background:#fff;color:#111827;font-size:.9rem;font-weight:850;margin:0;padding:0 10px;
-}
+.menu-champion-title{font-weight:1000;font-size:1.12rem;color:var(--text);text-align:center}
+.menu-champion-note{color:var(--muted);font-size:.92rem;font-weight:900;line-height:1.7;text-align:center}
+.menu-champion-note b{color:var(--text)}
+.menu-champion-form{display:grid;gap:10px}
+.menu-champion-form select,
 .menu-champion-form button{
-  width:100%;min-height:44px;border-radius:13px;background:linear-gradient(180deg,#171611,#080807);
-  color:var(--gold2);border:1px solid rgba(212,175,55,.55);font-size:.9rem;font-weight:950;
+  width:100%;
+  min-height:50px;
+  border-radius:18px;
+  border:1px solid rgba(17,17,17,.10);
+}
+.menu-champion-form select{
+  padding:0 14px;
+  background:#fff;
+  color:var(--text);
+  font-weight:900;
+}
+.menu-champion-form button,
+.wc-save-btn,
+.wc-view-link,
+.small-action-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg, #ead8a7, #ddc273);
+  color:var(--accent-text);
+  border:1px solid rgba(198,168,75,.45);
+  font-weight:1000;
+  box-shadow:var(--shadow-soft);
 }
 
-/* =========================================================
-   SHARED ELEMENTS
-========================================================= */
-.card,.empty-card{border-radius:26px}
-.empty-card{
-  padding:18px;text-align:center;color:var(--muted);font-weight:900;
-  background:rgba(255,255,255,.06);border:1px dashed rgba(212,175,55,.30);
-}
-.page-hero{background:transparent;border:0;box-shadow:none;text-align:center;padding:8px 0 4px;margin:10px 0 16px}
-.page-hero h1{color:#fff;font-size:1.75rem;font-weight:1000;margin:0 0 6px}
-.page-hero p{color:rgba(255,255,255,.72);font-weight:850;margin:0;font-size:.88rem}
-
-/* Flash / toast */
+/* toasts */
 .toast-area{
-  position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
-  z-index:9999;width:calc(100vw - 24px);max-width:560px;display:grid;gap:10px;pointer-events:none;
+  display:grid;
+  gap:10px;
+  margin-bottom:16px;
 }
 .premium-toast-simple{
-  pointer-events:auto;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 14px;
-  border-radius:16px;background:rgba(17,24,39,.96);color:#fff;border:1px solid rgba(212,175,55,.45);
-  box-shadow:0 16px 40px rgba(0,0,0,.36);font-weight:900;text-align:center;line-height:1.55;
-  animation:toastSlide .22s ease both;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 16px;
+  border-radius:18px;
+  background:var(--card);
+  color:var(--text);
+  border:1px solid rgba(230,211,156,.44);
+  box-shadow:var(--shadow-soft);
+  font-weight:950;
 }
-.toast-simple-text{color:#fff8dd;font-size:.86rem}.toast-simple-icon{font-size:1.1rem}
-.toast-hide{animation:toastOut .25s ease forwards}
-@keyframes toastSlide{from{opacity:0;transform:translateY(-10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes toastOut{to{opacity:0;transform:translateY(-8px) scale(.98)}}
+.toast-simple-text{font-size:.92rem;line-height:1.7}
+.toast-hide{opacity:0;transform:translateY(-8px);transition:.25s ease}
 .flash,.alert,.site-toast,.premium-toast{display:none!important}
 
-/* =========================================================
-   PARTICIPANT PAGE
-========================================================= */
-.wc-welcome-card,.player-hero{
-  display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,#fffdf8,#eee7d8);
-  border:1.5px solid rgba(212,175,55,.72);border-radius:28px;padding:18px;margin:14px 0 24px;
-  box-shadow:0 18px 42px rgba(0,0,0,.35);color:#101522;
+/* generic cards */
+.page-hero,
+.public-note,
+.empty-card,
+.wc-welcome-card,
+.wc-match-card,
+.public-match-card,
+.match-view-hero,
+.match-predictions-section,
+.leaderboard-hero,
+.stats-hero,
+.card,
+.stats-summary-card,
+.stats-card,
+.podium-card,
+.leader-card{
+  background:var(--card);
+  color:var(--text);
+  border:1px solid rgba(230,211,156,.46);
+  box-shadow:var(--shadow);
+  border-radius:30px;
+}
+.page-hero,
+.leaderboard-hero,
+.stats-hero,
+.card,
+.match-predictions-section,
+.match-view-hero{padding:18px}
+.page-hero,
+.leaderboard-hero,
+.stats-hero{text-align:center}
+.page-kicker{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:32px;
+  padding:6px 14px;
+  border-radius:999px;
+  background:rgba(230,211,156,.30);
+  color:var(--accent-text);
+  font-size:.8rem;
+  font-weight:950;
+  margin-bottom:12px;
+}
+.page-hero h1,
+.leaderboard-hero h1,
+.stats-hero h1{
+  margin:0 0 8px;
+  font-size:1.8rem;
+  line-height:1.2;
+  color:var(--text);
+  font-weight:1000;
+}
+.page-hero p,
+.leaderboard-hero p,
+.stats-hero p,
+.card p{margin:0;color:var(--muted);font-size:.94rem;font-weight:900;line-height:1.7}
+.public-note,
+.empty-card{padding:14px 16px;text-align:center;font-weight:900;color:var(--muted);margin:16px 0}
+.card h2,.card h3{margin:0 0 12px;color:var(--text)}
+.card ul{margin:0;padding-right:20px;color:var(--muted);font-weight:900;line-height:1.9}
+.card li{margin:2px 0}
+
+/* section title */
+.wc-section-head{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  text-align:center;
+  margin:26px 0 16px;
+}
+.wc-section-head h3{
+  margin:0;
+  font-size:1.95rem;
+  line-height:1.2;
+  color:#fff;
+  font-weight:1000;
+}
+.wc-line{
+  width:48px;
+  height:2px;
+  background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  display:block;
+}
+
+/* welcome */
+.wc-welcome-card{
+  display:flex;
+  flex-direction:row-reverse;
+  align-items:center;
+  gap:14px;
+  padding:18px;
+  margin-bottom:24px;
 }
 .wc-welcome-icon{
-  width:58px;height:58px;min-width:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 30% 30%,#3b3a35,#101010 72%);color:var(--gold2);font-size:1.7rem;
+  width:58px;
+  height:58px;
+  min-width:58px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#111;
+  color:var(--accent);
+  font-size:1.6rem;
+  box-shadow:0 12px 24px rgba(0,0,0,.18);
 }
-.wc-welcome-kicker,.hero-kicker{color:#9a7218;font-size:.78rem;font-weight:950;margin-bottom:4px}
-.wc-welcome-card h2,.player-hero h2{color:#101522;font-size:1.55rem;font-weight:1000;margin:0 0 4px}
-.wc-welcome-card p,.player-hero p,.player-hero .muted{color:#646b77;font-size:.86rem;font-weight:850;margin:0}
-.wc-section-head,.section-title{display:flex;align-items:center;justify-content:center;gap:12px;margin:24px auto 16px;color:#fff;text-align:center}
-.section-title{font-size:1.45rem;font-weight:1000}
-.wc-section-head h3{margin:0;color:#fff;font-size:1.65rem;font-weight:1000}
-.wc-line,.section-title::before,.section-title::after,.wc-section-head::before,.wc-section-head::after{
-  content:"";width:46px;height:2px;display:block;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+.wc-welcome-content{flex:1;text-align:center}
+.wc-welcome-kicker{color:#977b2d;font-size:.84rem;font-weight:950;margin-bottom:6px}
+.wc-welcome-card h2{margin:0 0 6px;color:var(--text);font-size:2rem;line-height:1.1;font-weight:1000}
+.wc-welcome-card p{margin:0;color:var(--muted);font-size:.95rem;font-weight:900;line-height:1.7}
+
+/* tabs */
+.match-tabs,
+.wc-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  padding:8px;
+  margin:0 0 18px;
+  border-radius:24px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border:1px solid rgba(230,211,156,.22);
+  box-shadow:0 12px 28px rgba(0,0,0,.18);
+}
+.match-tab,
+.wc-tab{
+  min-height:58px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:0 10px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(230,211,156,.22);
+  color:var(--text-on-dark);
+  font-size:1.04rem;
+  font-weight:1000;
+}
+.match-tab.active,
+.wc-tab.active{
+  background:linear-gradient(180deg, #ead8a7, #ddc273);
+  color:var(--accent-text);
+  border-color:rgba(198,168,75,.45);
+}
+.match-tab small,
+.wc-tab small{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#f8f3e5;
+  color:#15110a;
+  font-size:.9rem;
+  font-weight:1000;
+  border:1px solid rgba(0,0,0,.08);
 }
 
-/* Tabs */
-.match-tabs,.wc-tabs{
-  display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px;margin:0 0 20px;border-radius:22px;
-  background:linear-gradient(180deg,#24231f,#151511);border:1px solid rgba(212,175,55,.36);
-  box-shadow:0 14px 30px rgba(0,0,0,.30);
+/* participant match cards */
+.wc-bulk-form{display:grid;gap:18px}
+.wc-match-card{overflow:hidden;padding:0}
+.wc-card-top,
+.public-status-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px 16px 10px;
+  border-bottom:1px solid rgba(17,17,17,.06);
 }
-.match-tab,.wc-tab{
-  min-height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:10px;
-  background:linear-gradient(180deg,#302f2a,#22211d);border:1px solid rgba(212,175,55,.24);
-  color:#fff8dd;font-size:.95rem;font-weight:1000;text-decoration:none;box-shadow:none;
+.wc-status-pill,
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:7px 18px;
+  border-radius:999px;
+  font-size:.88rem;
+  font-weight:1000;
+  border:1px solid transparent;
 }
-.match-tab.active,.wc-tab.active{background:linear-gradient(180deg,#d9bd61,#f2da83);color:#11100b;border:1px solid rgba(212,175,55,.72)}
-.match-tab small,.wc-tab small,.match-tab.active small,.wc-tab.active small{
-  width:32px;height:32px;min-width:32px;min-height:32px;max-width:32px;max-height:32px;border-radius:999px;
-  background:#fff8dd;color:#11100b;border:1px solid rgba(212,175,55,.55);display:inline-flex;
-  align-items:center;justify-content:center;font-size:.84rem;font-weight:1000;padding:0;margin:0;line-height:1;box-shadow:none;
+.wc-status-pill.open,
+.status-pill.upcoming{background:var(--success-bg);color:var(--success-text)}
+.wc-status-pill.finished,
+.status-pill.finished{background:var(--danger-bg);color:var(--danger-text)}
+.wc-status-pill.locked,
+.status-pill.locked,
+.status-pill.live{background:var(--neutral-bg);color:var(--neutral-text)}
+
+.wc-match-main,
+.public-teams-row.clean,
+.match-view-teams{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:12px;
+  padding:18px 14px 14px;
+}
+.wc-team-box,
+.public-team-side,
+.match-view-team{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  text-align:center;
+  min-width:0;
+}
+.wc-team-box strong,
+.public-team-side span,
+.match-view-team strong{
+  color:var(--text);
+  font-size:1.04rem;
+  font-weight:1000;
+  line-height:1.25;
+}
+.wc-team-flag,
+.public-flag,
+.match-view-team img{
+  width:60px;
+  height:44px;
+  object-fit:cover;
+  border-radius:14px;
+  box-shadow:0 8px 18px rgba(0,0,0,.12);
 }
 
-/* Prediction match cards */
-.wc-bulk-form{margin:0;padding-bottom:10px}
-.wc-match-card,.mobile-focus-card{
-  background:linear-gradient(180deg,#24231f,#131310);border:1.3px solid rgba(212,175,55,.38);
-  border-radius:26px;box-shadow:0 14px 34px rgba(0,0,0,.36);overflow:hidden;margin:0 0 18px;color:#fff;
+.wc-score-inputs,
+.wc-score-display,
+.public-score-group{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
 }
-.wc-card-top,.mobile-card-topline{
-  background:transparent;border-bottom:1px solid rgba(212,175,55,.18);padding:12px 12px 10px;
-  display:flex;align-items:center;justify-content:center;text-align:center;
-}
-.wc-status-pill,.mobile-status-pill{
-  min-width:96px;min-height:38px;padding:7px 14px;border-radius:999px;font-size:.82rem;font-weight:1000;
-  display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#2d2b25,#1b1a16);
-  color:var(--gold2);border:1px solid rgba(212,175,55,.42);box-shadow:none;
-}
-.wc-match-main,.mobile-match-main{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:17px 10px 12px;background:transparent}
-.wc-team-box,.mobile-team-box{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;min-width:0}
-.wc-team-flag,.mobile-team-flag{width:60px;height:44px;object-fit:cover;border-radius:13px;box-shadow:0 10px 22px rgba(0,0,0,.32)}
-.wc-team-box strong,.mobile-team-box strong{color:#fff;font-size:.94rem;font-weight:1000;line-height:1.25;text-shadow:0 2px 6px rgba(0,0,0,.45)}
-.wc-score-inputs,.mobile-score-inputs,.wc-score-display{display:flex;align-items:center;justify-content:center;gap:7px}
-.wc-score-inputs input,.mobile-score-inputs input,.wc-score-display span,.mobile-score-display{
-  width:62px!important;height:62px!important;border-radius:18px!important;background:linear-gradient(180deg,#fffdf7,#f2f0e8)!important;
-  color:#071126!important;border:1.5px solid rgba(255,255,255,.88)!important;box-shadow:0 10px 22px rgba(0,0,0,.28)!important;
-  font-size:1.58rem!important;font-weight:1000!important;text-align:center!important;line-height:1!important;padding:0!important;
-}
-.wc-score-inputs span,.mobile-score-inputs span,.wc-score-display b{color:var(--gold2);font-size:1.25rem;font-weight:1000}
-.wc-meta-row,.mobile-match-meta{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px;padding:0 10px 16px}
-.wc-meta-row span,.mobile-match-meta span{
-  min-width:auto;min-height:32px;padding:7px 11px;border-radius:999px;background:linear-gradient(180deg,#171611,#080807);
-  color:var(--gold2);border:1px solid rgba(212,175,55,.45);font-size:.78rem;font-weight:1000;box-shadow:none;
-}
-.wc-double-option{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0 0;color:var(--gold2);font-weight:900}
-.wc-double-option input{width:18px;height:18px}
-.wc-locked-extra,.mobile-result-box{background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.22);border-radius:20px;margin:14px;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.wc-locked-box,.mobile-result-box>div{background:rgba(255,255,255,.05);border-radius:16px;padding:10px;text-align:center}
-.wc-locked-box label,.mobile-result-box span{display:block;color:#cfc4a2;font-size:.78rem;font-weight:900;margin-bottom:5px}
-.wc-locked-box strong,.mobile-result-box b{color:#fff;font-size:1.2rem;font-weight:1000}
-.wc-no-prediction,.mobile-no-prediction{margin:14px;padding:14px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.22);text-align:center;color:var(--muted);font-weight:900}
-.wc-view-link,.mobile-card-link a{
-  display:block;width:calc(100% - 28px);margin:12px auto 0;min-height:52px;line-height:52px;border-radius:18px;
-  background:linear-gradient(180deg,#171611,#070707);color:var(--gold2);border:1px solid rgba(212,175,55,.45);
-  text-align:center;font-weight:1000;
-}
-.wc-save-bar,.bulk-save-bar{position:sticky;bottom:12px;z-index:80;width:100%;margin:18px auto 14px;padding:0;background:transparent;border:0;box-shadow:none}
-.wc-save-btn,.bulk-save-btn{
-  width:100%!important;min-height:54px!important;border-radius:18px!important;background:linear-gradient(180deg,#171611,#080807)!important;
-  color:var(--gold2)!important;border:1px solid rgba(212,175,55,.55)!important;box-shadow:0 14px 32px rgba(0,0,0,.36)!important;
-  font-size:1rem!important;font-weight:1000!important;
-}
-.wc-save-btn::before,.bulk-save-btn::before{content:""!important;display:none!important}
-
-/* =========================================================
-   MATCHES PAGE
-========================================================= */
-.public-note{
-  margin:0 auto 18px;padding:13px 14px;border-radius:20px;background:rgba(212,175,55,.10);
-  color:#fff3bd;border:1px solid rgba(212,175,55,.30);font-size:.86rem;font-weight:900;text-align:center;
-}
-.public-matches-grid{display:grid;grid-template-columns:1fr;gap:18px;margin:18px 0 28px}
-.public-match-card{
-  padding:0;overflow:hidden;border-radius:26px;background:linear-gradient(180deg,#24231f,#131310);
-  border:1.3px solid rgba(212,175,55,.38);box-shadow:0 14px 34px rgba(0,0,0,.36);color:#fff;
-}
-.public-match-top{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;padding:14px 12px 10px;border-bottom:1px solid rgba(212,175,55,.18);margin:0}
-.stage-pill,.time-pill,.status-pill{
-  min-height:34px;padding:7px 12px;border-radius:999px;background:linear-gradient(180deg,#171611,#080807);
-  color:var(--gold2);border:1px solid rgba(212,175,55,.45);font-size:.78rem;font-weight:1000;box-shadow:none;
-}
-.public-teams-row.clean{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:20px 12px 16px;margin:0}
-.public-team-side{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;text-align:center}
-.public-team-side span{color:#fff;font-size:.94rem;font-weight:1000;line-height:1.25;text-shadow:0 2px 6px rgba(0,0,0,.45)}
-.public-flag{width:60px;height:44px;border-radius:13px;object-fit:cover;box-shadow:0 10px 22px rgba(0,0,0,.32)}
-.public-score-box{
-  display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;padding:0!important;margin:0 auto!important;line-height:1!important;
-  width:66px!important;min-width:66px!important;max-width:66px!important;height:58px!important;min-height:58px!important;max-height:58px!important;
-  border-radius:18px!important;background:linear-gradient(180deg,#fffdf7,#f2f0e8)!important;color:#071126!important;border:1.5px solid rgba(255,255,255,.88)!important;
-  box-shadow:0 10px 22px rgba(0,0,0,.28)!important;font-size:1.18rem!important;font-weight:1000!important;direction:ltr!important;unicode-bidi:isolate!important;
-}
-.public-match-footer{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:12px;border-top:1px solid rgba(212,175,55,.18);margin:0}
-.small-action-link{
-  display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 14px;border-radius:999px;
-  background:linear-gradient(180deg,#171611,#080807);color:var(--gold2);border:1px solid rgba(212,175,55,.45);
-  font-size:.82rem;font-weight:1000;text-decoration:none;
-}
-
-/* =========================================================
-   MATCH VIEW / ALL PREDICTIONS
-========================================================= */
-.match-view-hero{
-  padding:16px 12px 18px;margin:12px 0 16px;border-radius:26px;background:linear-gradient(180deg,#24231f,#131310);
-  border:1.3px solid rgba(212,175,55,.38);box-shadow:0 14px 34px rgba(0,0,0,.36);color:#fff;text-align:center;
-}
-.match-view-kicker{
-  display:inline-flex;min-height:34px;align-items:center;justify-content:center;padding:7px 13px;border-radius:999px;
-  background:linear-gradient(180deg,#171611,#080807);color:var(--gold2);border:1px solid rgba(212,175,55,.45);
-  font-size:.8rem;font-weight:1000;margin-bottom:14px;
-}
-.match-view-teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;direction:rtl}
-.match-view-team{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}
-.match-view-team img{width:60px;height:44px;border-radius:13px;object-fit:cover;box-shadow:0 10px 22px rgba(0,0,0,.32)}
-.match-view-team strong{color:#fff;font-size:.94rem;font-weight:1000;line-height:1.25}
+.wc-score-inputs input,
+.wc-score-display span,
+.public-score-box,
 .match-view-score{
-  display:flex;align-items:center;justify-content:center;width:70px;min-width:70px;height:58px;border-radius:18px;
-  background:linear-gradient(180deg,#fffdf7,#f2f0e8);color:#071126;border:1.5px solid rgba(255,255,255,.88);
-  box-shadow:0 10px 22px rgba(0,0,0,.28);font-size:1.12rem;font-weight:1000;direction:ltr;unicode-bidi:isolate;
+  width:64px;
+  height:64px;
+  border-radius:18px;
+  border:2px solid #e2ddcf;
+  background:#fff;
+  color:#121827;
+  text-align:center;
+  font-size:1.85rem;
+  font-weight:1000;
+  line-height:60px;
+  padding:0;
+  box-shadow:none;
 }
-.match-view-hero p{color:rgba(255,255,255,.70);font-size:.82rem;font-weight:850;margin:12px 0 0}
-.match-predictions-section{
-  padding:14px!important;border-radius:26px!important;background:linear-gradient(180deg,#24231f,#131310)!important;
-  border:1.3px solid rgba(212,175,55,.38)!important;box-shadow:0 14px 34px rgba(0,0,0,.36)!important;color:#fff!important;
+.wc-score-display span,
+.public-score-box,
+.match-view-score{display:flex;align-items:center;justify-content:center;line-height:1}
+.wc-score-display span.is-empty,
+.public-score-box.is-empty{color:#99938a}
+.wc-score-inputs input:focus{
+  outline:none;
+  border-color:#c7aa52;
+  box-shadow:0 0 0 4px rgba(230,211,156,.32);
 }
-.match-predictions-title.centered{display:flex!important;flex-direction:column!important;align-items:center!important;gap:7px!important;text-align:center!important;margin-bottom:16px!important}
-.match-predictions-title.centered h3{color:#fff!important;font-size:1.12rem!important;font-weight:1000!important;margin:0!important}
-.match-predictions-title.centered span{background:#fff8dd!important;color:#11100b!important;border:1px solid rgba(212,175,55,.55)!important;font-size:.82rem!important;font-weight:1000!important;border-radius:999px!important;padding:6px 12px!important;min-width:76px!important}
-.predictions-table{display:none!important}.match-prediction-cards{display:block!important}
-.match-prediction-card{
-  background:linear-gradient(180deg,#1d1c18,#11110f)!important;border:1px solid rgba(212,175,55,.30)!important;
-  border-radius:20px!important;box-shadow:0 10px 24px rgba(0,0,0,.20)!important;color:#fff!important;margin-bottom:11px!important;padding:14px 15px!important;
-}
-.match-prediction-card::before{display:none!important}
-.prediction-player-row{border-bottom:1px solid rgba(212,175,55,.18)!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;padding-bottom:8px!important}
-.prediction-player-row strong{color:#fff!important;font-weight:1000!important;font-size:1.02rem!important}
-.prediction-player-row small{color:#cfc4a2!important;font-weight:850!important;font-size:.76rem!important}
-.prediction-score-line{background:transparent!important;display:grid!important;grid-template-columns:1fr auto!important;align-items:center!important;gap:10px!important;margin-top:10px!important;padding:0!important}
-.prediction-score-line span{color:#cfc4a2!important;font-size:.78rem!important;font-weight:900!important}
-.prediction-score-line b,.prediction-score-fixed{
-  display:flex!important;align-items:center!important;justify-content:center!important;min-width:78px!important;height:42px!important;border-radius:15px!important;
-  background:linear-gradient(180deg,#171611,#080807)!important;color:var(--gold2)!important;border:1px solid rgba(212,175,55,.45)!important;
-  font-size:1.18rem!important;font-weight:1000!important;direction:ltr!important;unicode-bidi:isolate!important;
-}
-.result-chip{
-  min-width:48px!important;height:34px!important;padding:0 10px!important;border-radius:999px!important;
-  display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:.82rem!important;font-weight:1000!important;
-}
-.result-chip.exact,.result-chip.partial,.result-chip.pending,.result-chip.wrong{background:#fff8dd!important;color:#11100b!important;border:1px solid rgba(212,175,55,.55)!important}
+.wc-score-inputs span,
+.wc-score-display b,
+.public-score-group b{font-size:1.4rem;color:var(--accent-text);font-weight:1000}
 
-/* =========================================================
-   LEADERBOARD
-========================================================= */
-.leaderboard-hero,.stats-hero{
-  margin:12px 0 16px;padding:16px;border-radius:26px;background:linear-gradient(180deg,#24231f,#131310);
-  border:1.3px solid rgba(212,175,55,.38);box-shadow:var(--shadow);color:#fff;text-align:center;
+.wc-meta-row,
+.public-meta-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:0 14px 18px;
 }
-.leaderboard-hero h1,.stats-hero h1{font-size:1.55rem;margin:0 0 6px;font-weight:1000;color:#fff}
-.leaderboard-hero p,.stats-hero p{color:rgba(255,255,255,.70);font-weight:850;margin:0;font-size:.86rem}
-.top-podium{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}
-.podium-card{display:none}.podium-card.rank-1{display:block;background:linear-gradient(180deg,#fffdf8,#eee7d8);border:1px solid rgba(212,175,55,.72);border-radius:26px;padding:16px;text-align:center;color:#101522;box-shadow:var(--shadow)}
-.podium-medal{font-size:2rem}.podium-name{font-weight:1000;font-size:1.1rem}.podium-points{font-weight:1000;font-size:1.6rem;color:#7a560e}.podium-points span{font-size:.8rem;color:#667085}.podium-meta{font-weight:850;color:#667085}
-.desktop-leader-table{display:none}.mobile-leader-list{display:block}
-.leader-card{display:grid;grid-template-columns:42px 1fr 68px;gap:10px;align-items:center;padding:12px;margin-bottom:10px;border-radius:20px;background:linear-gradient(180deg,#24231f,#131310);border:1px solid rgba(212,175,55,.30);box-shadow:0 10px 24px rgba(0,0,0,.20)}
-.leader-rank{width:38px;height:38px;border-radius:13px;background:#fff8dd;color:#11100b;display:flex;align-items:center;justify-content:center;font-weight:1000}
-.leader-info strong{color:#fff;font-weight:1000}.leader-stats{display:flex;flex-wrap:wrap;gap:5px}.leader-stats span{padding:5px 7px;border-radius:999px;background:rgba(212,175,55,.12);color:#f4d77a;font-size:.74rem;font-weight:900}
-.leader-points{min-width:60px;padding:8px;border-radius:15px;background:linear-gradient(180deg,#171611,#080807);color:var(--gold2);text-align:center;border:1px solid rgba(212,175,55,.42)}
-.leader-points strong{display:block;font-size:1.25rem;line-height:1}.leader-points span{font-size:.72rem;color:rgba(255,255,255,.75);font-weight:800}
-
-/* =========================================================
-   STATS + RULES
-========================================================= */
-.stats-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
-.stats-summary-card,.stats-card,.card{
-  background:linear-gradient(180deg,#24231f,#131310);border:1px solid rgba(212,175,55,.30);
-  border-radius:22px;padding:14px;box-shadow:0 10px 24px rgba(0,0,0,.22);color:#fff;
+.wc-meta-row span,
+.public-meta-pill,
+.match-view-kicker,
+.match-predictions-title.centered span,
+.leader-stats span,
+.stats-match-meta span,
+.table-badge,
+.mini-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(230,211,156,.52);
+  color:var(--accent-text);
+  border:1px solid rgba(198,168,75,.24);
+  font-size:.84rem;
+  font-weight:1000;
 }
-.stats-summary-card{text-align:center}.stats-summary-card span{display:block;color:#cfc4a2;font-size:.8rem;font-weight:900}.stats-summary-card strong{font-size:1.35rem;color:#fff;font-weight:1000}
-.stats-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:16px 0}.stats-card-title{font-weight:1000;margin-bottom:12px;color:#fff}
-.stats-list{display:grid;gap:9px}.stats-row{display:grid;grid-template-columns:38px 1fr 64px;gap:8px;align-items:center;padding:9px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.18)}
-.stats-rank{width:34px;height:34px;border-radius:12px;background:#fff8dd;color:#11100b;display:flex;align-items:center;justify-content:center;font-weight:1000}.stats-name{color:#fff;font-weight:1000}.stats-value{background:linear-gradient(180deg,#171611,#080807);color:var(--gold2);border:1px solid rgba(212,175,55,.42);border-radius:15px;padding:8px;text-align:center;font-weight:1000}.stats-value span{display:block;font-size:.7rem;color:rgba(255,255,255,.75)}
-.stats-match-row{padding:12px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.18);margin-bottom:10px}.stats-match-teams{display:grid;grid-template-columns:1fr;gap:8px;text-align:center;color:#fff;font-weight:1000}.stats-match-teams strong{margin:auto;background:#fff8dd;color:#11100b;border-radius:14px;padding:8px 10px}.stats-mini-flag{width:25px;height:18px;border-radius:4px;object-fit:cover}.stats-match-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin-top:10px}.stats-match-meta span{border-radius:999px;padding:6px 9px;background:rgba(212,175,55,.12);color:var(--gold2);font-size:.78rem;font-weight:1000}
-.card h2,.card h3{color:#fff}.card ul{padding-right:20px;color:rgba(255,255,255,.85);font-weight:850}.card li{margin:8px 0}
 
-/* =========================================================
-   ADMIN SMALL PATCHES (admin has scoped CSS inside template)
-========================================================= */
-.admin-theme-v8 .a8-count,.admin-theme-v8 .a8-tab small,.admin-theme-v8 .a8-tab.active small{background:#fff8dd!important;color:#11100b!important;border:1px solid rgba(212,175,55,.55)!important}
+.wc-double-option{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:0 18px 18px;
+  color:var(--muted);
+  font-weight:950;
+}
+.wc-double-option input{width:18px;height:18px;accent-color:#c6a84b}
 
-@media (min-width:760px){main{max-width:720px}.public-matches-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats-grid{grid-template-columns:1fr 1fr}.desktop-leader-table{display:block}.mobile-leader-list{display:none}.top-podium{grid-template-columns:1fr 1.15fr 1fr}.podium-card{display:block}.podium-card.rank-1{display:block;transform:translateY(-6px)}}
-@media (max-width:370px){.wc-score-inputs input,.mobile-score-inputs input,.wc-score-display span,.mobile-score-display{width:58px!important;height:58px!important;font-size:1.46rem!important}.wc-team-flag,.mobile-team-flag,.public-flag,.match-view-team img{width:54px!important;height:40px!important}.match-tab,.wc-tab{font-size:.88rem!important}}
+.wc-locked-extra{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:0 14px 12px;
+}
+.wc-locked-box,
+.wc-no-prediction{
+  background:#ffffff;
+  border:1px solid rgba(17,17,17,.08);
+  border-radius:20px;
+  padding:14px;
+  text-align:center;
+}
+.wc-locked-box label{display:block;color:var(--muted);font-size:.82rem;font-weight:900;margin-bottom:8px}
+.wc-locked-box strong{display:block;color:var(--text);font-size:1.45rem;font-weight:1000}
+.wc-no-prediction{margin:0 14px 12px;color:var(--muted);font-weight:900;line-height:1.7}
+.wc-view-link,
+.small-action-link{
+  width:calc(100% - 28px);
+  min-height:54px;
+  margin:0 auto 16px;
+  border-radius:18px;
+  font-size:1rem;
+}
 
-/* =====================================================
-   POLISH PATCH 1
-   تحسينات بعد تنظيف CSS
-===================================================== */
-
-/* زر حفظ التوقعات: لا يغطي الكروت */
-.bulk-save-bar,
 .wc-save-bar{
-  position:static !important;
-  width:100% !important;
-  margin:22px auto 10px !important;
-  padding:0 !important;
+  position:fixed;
+  right:50%;
+  transform:translateX(50%);
+  bottom:max(10px, env(safe-area-inset-bottom));
+  width:min(calc(100% - 28px), 692px);
+  padding:10px;
+  border-radius:24px;
+  background:rgba(8,8,8,.86);
+  border:1px solid rgba(230,211,156,.18);
+  box-shadow:0 18px 38px rgba(0,0,0,.28);
+  backdrop-filter:blur(14px);
+  z-index:50;
 }
-
-.bulk-save-btn,
 .wc-save-btn{
-  min-height:56px !important;
-  border-radius:18px !important;
-  background:linear-gradient(180deg,#171611,#070707) !important;
-  color:#f4d77a !important;
-  border:1px solid rgba(212,175,55,.55) !important;
-  box-shadow:0 12px 28px rgba(0,0,0,.34) !important;
-  font-size:1.02rem !important;
-  font-weight:1000 !important;
+  width:100%;
+  min-height:56px;
+  border-radius:18px;
+  font-size:1.04rem;
+  cursor:pointer;
 }
 
-/* كروت صفحة توقعات المشاركين: أخف وأقصر */
+/* matches page */
+.public-matches-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:18px}
+.public-match-card{overflow:hidden;padding:0}
+.public-match-footer{padding:0 0 1px}
+
+/* match view */
+.match-view-hero{text-align:center;margin-bottom:18px}
+.match-view-kicker{margin-bottom:16px}
+.match-view-hero p{margin:14px 0 0;color:var(--muted);font-size:.92rem;font-weight:900}
+.match-predictions-title.centered{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  text-align:center;
+  margin-bottom:16px;
+}
+.match-predictions-title.centered h3{margin:0;color:var(--text);font-size:1.2rem;font-weight:1000}
+.desktop-table{display:none}
+.match-prediction-cards{display:grid;gap:12px}
 .match-prediction-card{
-  padding:12px 14px !important;
-  border-radius:18px !important;
-  margin-bottom:10px !important;
+  background:#fff;
+  border:1px solid rgba(17,17,17,.08);
+  border-radius:22px;
+  padding:14px;
 }
-
 .prediction-player-row{
-  padding-bottom:8px !important;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(17,17,17,.07);
 }
-
-.prediction-player-row strong{
-  font-size:.98rem !important;
-}
-
-.prediction-player-row small{
-  font-size:.74rem !important;
-}
-
+.prediction-player-row strong{display:block;color:var(--text);font-size:1.02rem;font-weight:1000}
+.prediction-player-row small{display:block;color:var(--muted);font-size:.82rem;font-weight:900;margin-top:4px}
 .prediction-score-line{
-  margin-top:9px !important;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:12px;
+  margin-top:12px;
 }
-
+.prediction-score-line span{color:var(--muted);font-size:.84rem;font-weight:900}
 .prediction-score-line b,
 .prediction-score-fixed{
-  min-width:72px !important;
-  height:38px !important;
-  font-size:1.08rem !important;
-  border-radius:14px !important;
-}
-
-/* تبويبات المباريات: شكل أنعم */
-.match-tabs,
-.wc-tabs{
-  border-radius:20px !important;
-  padding:7px !important;
-  gap:8px !important;
-}
-
-.match-tab,
-.wc-tab{
-  min-height:50px !important;
-  border-radius:15px !important;
-}
-
-.match-tab small,
-.wc-tab small{
-  width:30px !important;
-  height:30px !important;
-  min-width:30px !important;
-  min-height:30px !important;
-}
-
-/* تقليل المسافات في كروت المباريات */
-.mobile-focus-card,
-.wc-match-card,
-.public-match-card{
-  margin-bottom:16px !important;
-}
-
-.mobile-match-main,
-.wc-match-main,
-.public-teams-row.clean{
-  padding-top:16px !important;
-  padding-bottom:12px !important;
-}
-
-/* تحسين مظهر صندوق توقعك / نقاطك */
-.mobile-result-box{
-  border-radius:18px !important;
-  padding:10px !important;
-  gap:8px !important;
-}
-
-.mobile-result-box > div{
-  border-radius:14px !important;
-  padding:9px !important;
-}
-/* =====================================================
-   POLISH PATCH 2
-   تصغير وتهذيب صفحة المتسابق بعد تنظيف CSS
-===================================================== */
-
-/* تقليل ارتفاع الهيدر قليلًا */
-.clean-wc-header{
-  padding:11px 14px 14px !important;
-}
-
-.clean-title{
-  padding-top:44px !important;
-}
-
-.clean-kicker{
-  margin-bottom:6px !important;
-  font-size:.7rem !important;
-  padding:4px 10px !important;
-}
-
-.clean-title h1{
-  font-size:1.34rem !important;
-}
-
-.clean-subtitle{
-  font-size:.76rem !important;
-  margin-top:6px !important;
-}
-
-/* كرت الترحيب أصغر */
-.player-hero,
-.wc-welcome-card{
-  margin:12px 0 20px !important;
-  padding:15px 16px !important;
-  border-radius:24px !important;
-  gap:12px !important;
-}
-
-.wc-welcome-icon{
-  width:50px !important;
-  height:50px !important;
-  min-width:50px !important;
-  font-size:1.45rem !important;
-}
-
-.player-hero h2,
-.wc-welcome-card h2{
-  font-size:1.38rem !important;
-  margin-bottom:3px !important;
-}
-
-.player-hero p,
-.wc-welcome-card p{
-  font-size:.8rem !important;
-  line-height:1.45 !important;
-}
-
-/* عنوان المباريات أصغر وأقرب */
-.section-title,
-.wc-section-head{
-  margin:20px auto 14px !important;
-}
-
-.section-title{
-  font-size:1.32rem !important;
-}
-
-.wc-section-head h3{
-  font-size:1.48rem !important;
-}
-
-.section-title::before,
-.section-title::after,
-.wc-section-head::before,
-.wc-section-head::after,
-.wc-line{
-  width:38px !important;
-}
-
-/* التبويبات أصغر */
-.match-tabs,
-.wc-tabs{
-  margin-bottom:16px !important;
-  padding:7px !important;
-  border-radius:20px !important;
-}
-
-.match-tab,
-.wc-tab{
-  min-height:48px !important;
-  border-radius:15px !important;
-  font-size:.9rem !important;
-}
-
-.match-tab small,
-.wc-tab small{
-  width:28px !important;
-  height:28px !important;
-  min-width:28px !important;
-  min-height:28px !important;
-  font-size:.8rem !important;
-}
-
-/* كرت المباراة أقصر */
-.mobile-focus-card,
-.wc-match-card{
-  border-radius:22px !important;
-  margin-bottom:14px !important;
-}
-
-/* رأس الكرت */
-.mobile-card-topline,
-.wc-card-top{
-  padding:10px 12px 8px !important;
-}
-
-.mobile-status-pill,
-.wc-status-pill{
-  min-height:34px !important;
-  min-width:88px !important;
-  padding:6px 13px !important;
-  font-size:.78rem !important;
-}
-
-/* منطقة الفرق والنتيجة */
-.mobile-match-main,
-.wc-match-main{
-  padding:15px 10px 10px !important;
-  gap:7px !important;
-}
-
-.mobile-team-flag,
-.wc-team-flag{
-  width:56px !important;
-  height:40px !important;
-  border-radius:11px !important;
-}
-
-.mobile-team-box,
-.wc-team-box{
-  gap:6px !important;
-}
-
-.mobile-team-box strong,
-.wc-team-box strong{
-  font-size:.88rem !important;
-  line-height:1.2 !important;
-}
-
-/* مربعات النتيجة أصغر */
-.mobile-score-inputs,
-.wc-score-inputs,
-.wc-score-display{
-  gap:6px !important;
-}
-
-.mobile-score-inputs input,
-.wc-score-inputs input,
-.mobile-score-display,
-.wc-score-display span{
-  width:58px !important;
-  height:58px !important;
-  border-radius:16px !important;
-  font-size:1.45rem !important;
-}
-
-.mobile-score-inputs span,
-.wc-score-inputs span,
-.wc-score-display b{
-  font-size:1.1rem !important;
-}
-
-/* شارات التاريخ والوقت والمجموعة */
-.mobile-match-meta,
-.wc-meta-row{
-  padding:0 8px 13px !important;
-  gap:6px !important;
-}
-
-.mobile-match-meta span,
-.wc-meta-row span{
-  min-height:30px !important;
-  padding:6px 10px !important;
-  font-size:.74rem !important;
-}
-
-/* صندوق توقعك / نقاطك أصغر وأوضح */
-.mobile-result-box,
-.wc-locked-extra{
-  margin:10px 12px !important;
-  padding:9px !important;
-  border-radius:18px !important;
-  gap:8px !important;
-}
-
-.mobile-result-box > div,
-.wc-locked-box{
-  padding:10px 8px !important;
-  border-radius:14px !important;
-}
-
-.mobile-result-box span,
-.wc-locked-box label{
-  font-size:.74rem !important;
-  margin-bottom:4px !important;
-}
-
-.mobile-result-box b,
-.wc-locked-box strong{
-  font-size:1.1rem !important;
-}
-
-/* زر عرض توقعات الجميع أقصر */
-.mobile-card-link a,
-.wc-view-link{
-  min-height:46px !important;
-  line-height:46px !important;
-  border-radius:16px !important;
-  font-size:.94rem !important;
-  margin-top:10px !important;
-}
-
-/* زر حفظ التوقعات */
-.bulk-save-bar,
-.wc-save-bar{
-  margin:16px auto 8px !important;
-}
-
-.bulk-save-btn,
-.wc-save-btn{
-  min-height:50px !important;
-  border-radius:16px !important;
-  font-size:.96rem !important;
-}
-
-/* تقليل المسافة السفلية العامة */
-.wc-bulk-form,
-.bulk-predictions-form{
-  padding-bottom:8px !important;
-}
-/* =====================================================
-   FIX: زر عرض التوقعات + توسيط أرقام النتيجة
-===================================================== */
-
-/* 1) إعطاء الكرت مساحة سفلية أفضل */
-.mobile-focus-card,
-.wc-match-card {
-  padding-bottom: 14px !important;
-}
-
-/* 2) حاوية زر عرض التوقعات */
-.mobile-card-link,
-.wc-view-link-wrap {
-  margin: 12px 14px 0 !important;
-}
-
-/* 3) شكل زر "عرض توقعات الجميع" */
-.mobile-card-link a,
-.wc-view-link {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  min-height: 52px !important;
-  padding: 0 16px !important;
-  border-radius: 18px !important;
-
-  background: linear-gradient(180deg, #0f0f10 0%, #090909 100%) !important;
-  color: #f0d97a !important;
-  border: 1.5px solid rgba(212, 175, 55, 0.55) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.03),
-    0 6px 18px rgba(0,0,0,0.22) !important;
-
-  font-size: 1rem !important;
-  font-weight: 800 !important;
-  text-decoration: none !important;
-  line-height: 1 !important;
-}
-
-/* hover بسيط إن وجد */
-.mobile-card-link a:hover,
-.wc-view-link:hover {
-  transform: translateY(-1px);
-  background: linear-gradient(180deg, #141415 0%, #0b0b0c 100%) !important;
-}
-
-/* 4) توسيط أرقام مربعات النتيجة البيضاء */
-.mobile-score-inputs input,
-.wc-score-inputs input,
-.mobile-score-display,
-.wc-score-display span,
-.score-box,
-.match-score-box {
-  text-align: center !important;
-  padding: 0 !important;
-  line-height: 1 !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  height: 58px !important;
-}
-
-/* لإبعاد الرقم قليلًا عن الأعلى لو بقي مرتفعًا */
-.mobile-score-inputs input,
-.wc-score-inputs input {
-  vertical-align: middle !important;
-}
-
-/* 5) لو عندك عنصر داخل المربع نفسه يحمل الرقم */
-.mobile-score-display b,
-.wc-score-display b,
-.score-box b,
-.match-score-box b {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  height: 100% !important;
-  line-height: 1 !important;
-  margin: 0 !important;
-}
-
-/* 6) لو كان النص داخل مربعات توقعك/نقاطك مرتفع قليلًا */
-.mobile-result-box > div,
-.wc-locked-box {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-}
-
-/* =====================================================
-   FIX PATCH 3
-   إصلاح زر عرض التوقعات + إعادة مربعات النتيجة لمربعات واضحة
-===================================================== */
-
-/* 1) إعادة مربعات النتيجة لشكل مربع وليس بيضاوي */
-html body .wc-score-inputs input,
-html body .mobile-score-inputs input,
-html body .wc-score-display span,
-html body .mobile-score-display,
-html body .public-score-box,
-html body .match-view-score{
-  width:64px !important;
-  min-width:64px !important;
-  max-width:64px !important;
-
-  height:64px !important;
-  min-height:64px !important;
-  max-height:64px !important;
-
-  flex:0 0 64px !important;
-
-  border-radius:17px !important;
-  padding:0 !important;
-  margin:0 !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  text-align:center !important;
-  line-height:1 !important;
-  font-size:1.65rem !important;
-  font-weight:1000 !important;
-
-  background:linear-gradient(180deg,#ffffff,#f2f0e8) !important;
-  color:#071126 !important;
-  border:1.5px solid rgba(255,255,255,.88) !important;
-  box-shadow:0 10px 22px rgba(0,0,0,.26) !important;
-}
-
-/* للـ input تحديدًا حتى الرقم لا يرتفع */
-html body .wc-score-inputs input,
-html body .mobile-score-inputs input{
-  line-height:64px !important;
-  appearance:textfield !important;
-}
-
-/* إزالة أسهم input number في كروم */
-html body .wc-score-inputs input::-webkit-outer-spin-button,
-html body .wc-score-inputs input::-webkit-inner-spin-button,
-html body .mobile-score-inputs input::-webkit-outer-spin-button,
-html body .mobile-score-inputs input::-webkit-inner-spin-button{
-  -webkit-appearance:none !important;
-  margin:0 !important;
-}
-
-/* علامة - بين النتيجتين */
-html body .wc-score-inputs span,
-html body .mobile-score-inputs span,
-html body .wc-score-display b{
-  width:12px !important;
-  min-width:12px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  color:#f4d77a !important;
-  font-size:1.25rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-}
-
-/* 2) إصلاح زر عرض توقعات الجميع */
-html body .mobile-card-link{
-  margin:12px 14px 14px !important;
-  padding:0 !important;
-}
-
-html body .mobile-card-link a,
-html body .wc-view-link{
-  width:calc(100% - 28px) !important;
-  max-width:340px !important;
-  min-height:48px !important;
-
-  margin:12px auto 14px !important;
-  padding:0 18px !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  border-radius:16px !important;
-  background:linear-gradient(180deg,#fff7df,#e3c96d) !important;
-  color:#11100b !important;
-  border:1px solid rgba(212,175,55,.70) !important;
-
-  box-shadow:
-    0 8px 20px rgba(0,0,0,.25),
-    inset 0 1px 0 rgba(255,255,255,.70) !important;
-
-  font-size:.96rem !important;
-  font-weight:1000 !important;
-  text-decoration:none !important;
-  line-height:1 !important;
-}
-
-/* لا يلتصق الزر بحد الكرت */
-html body .wc-match-card,
-html body .mobile-focus-card{
-  padding-bottom:12px !important;
-}
-
-/* تقليل تداخل صندوق توقعك/نقاطك مع الزر */
-html body .mobile-result-box,
-html body .wc-locked-extra{
-  margin-bottom:10px !important;
-}
-/* =====================================================
-   جعل زر حفظ التوقعات بنفس عائلة زر عرض توقعات الجميع
-===================================================== */
-
-html body .bulk-save-bar,
-html body .wc-save-bar{
-  position:static !important;
-  width:100% !important;
-  margin:18px auto 10px !important;
-  padding:0 14px !important;
-  background:transparent !important;
-  border:0 !important;
-  box-shadow:none !important;
-}
-
-html body .bulk-save-btn,
-html body .wc-save-btn{
-  width:100% !important;
-  max-width:360px !important;
-  min-height:52px !important;
-  margin:0 auto !important;
-  padding:0 18px !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  border-radius:18px !important;
-  background:linear-gradient(180deg,#fff7df,#e3c96d) !important;
-  color:#11100b !important;
-  border:1.5px solid rgba(212,175,55,.75) !important;
-
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.75) !important;
-
-  font-size:1rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-}
-
-html body .bulk-save-btn::before,
-html body .wc-save-btn::before{
-  content:"" !important;
-  display:none !important;
-}
-/* =====================================================
-   clean8
-   تحسين نهائي لصفحة المتسابق + صفحة كل المباريات
-   - أزرار ذهبي داكن
-   - تحسين شكل الكروت
-   - تحسين كلمة مفتوحة / منتهية
-   - تحسين شارات المجموعة / التاريخ / الوقت
-   - ترتيبها: المجموعة ثم التاريخ ثم الوقت
-===================================================== */
-
-/* -----------------------------
-   أزرار: حفظ التوقعات + عرض توقعات الجميع
------------------------------ */
-html body .bulk-save-btn,
-html body .wc-save-btn,
-html body .mobile-card-link a,
-html body .wc-view-link,
-html body .small-action-link{
-  background: linear-gradient(180deg, #d4b24a 0%, #a97914 100%) !important;
-  color: #17120a !important;
-  border: 1px solid rgba(245, 220, 138, .75) !important;
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.30) !important;
-  font-weight: 950 !important;
-  text-decoration: none !important;
-}
-
-html body .bulk-save-btn:hover,
-html body .wc-save-btn:hover,
-html body .mobile-card-link a:hover,
-html body .wc-view-link:hover,
-html body .small-action-link:hover{
-  background: linear-gradient(180deg, #dbba56 0%, #976d10 100%) !important;
-  color: #17120a !important;
-}
-
-/* بدون أي أيقونة قبل زر الحفظ */
-html body .bulk-save-btn::before,
-html body .wc-save-btn::before{
-  content: "" !important;
-  display: none !important;
-}
-
-/* زر عرض توقعات الجميع داخل كرت المتسابق */
-html body .mobile-card-link{
-  margin: 10px 14px 0 !important;
-}
-
-html body .mobile-card-link a{
-  display: block !important;
-  min-height: 48px !important;
-  line-height: 48px !important;
-  border-radius: 16px !important;
-  text-align: center !important;
-}
-
-/* زر حفظ التوقعات */
-html body .bulk-save-bar{
-  width: min(92%, 430px) !important;
-  margin: 22px auto 16px !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-html body .bulk-save-btn{
-  width: 100% !important;
-  min-height: 56px !important;
-  border-radius: 18px !important;
-  font-size: 1rem !important;
-  letter-spacing: 0 !important;
-}
-
-/* -----------------------------
-   كرت صفحة المتسابق
------------------------------ */
-html body .mobile-focus-card,
-html body .wc-match-card{
-  background:
-    radial-gradient(circle at top center, rgba(212,175,55,.07), transparent 34%),
-    linear-gradient(180deg, #262520 0%, #171612 100%) !important;
-  border: 1px solid rgba(212,175,55,.34) !important;
-  border-radius: 26px !important;
-  box-shadow: 0 16px 38px rgba(0,0,0,.34) !important;
-  overflow: hidden !important;
-}
-
-html body .mobile-card-topline,
-html body .wc-card-top{
-  background: linear-gradient(180deg, #2d2b25 0%, #211f1a 100%) !important;
-  border-bottom: 1px solid rgba(212,175,55,.18) !important;
-  padding: 12px 14px !important;
-}
-
-/* كلمة مفتوحة / منتهية / مغلقة */
-html body .mobile-status-pill,
-html body .wc-status-pill{
-  min-height: 36px !important;
-  padding: 7px 16px !important;
-  border-radius: 999px !important;
-  font-size: .84rem !important;
-  font-weight: 950 !important;
-  box-shadow: 0 8px 16px rgba(0,0,0,.18) !important;
-}
-
-html body .mobile-status-pill.open,
-html body .wc-status-pill.open{
-  background: linear-gradient(180deg, #f8f3de 0%, #ece2bf 100%) !important;
-  color: #6d5714 !important;
-  border: 1px solid rgba(212,175,55,.42) !important;
-}
-
-html body .mobile-status-pill.finished,
-html body .wc-status-pill.finished{
-  background: linear-gradient(180deg, #f8f3de 0%, #ece2bf 100%) !important;
-  color: #6d5714 !important;
-  border: 1px solid rgba(212,175,55,.42) !important;
-}
-
-html body .mobile-status-pill.locked,
-html body .wc-status-pill.locked{
-  background: linear-gradient(180deg, #f1f3f5 0%, #dfe3e8 100%) !important;
-  color: #4f5967 !important;
-  border: 1px solid rgba(160,170,185,.50) !important;
-}
-
-/* أسماء الفرق */
-html body .mobile-team-box strong,
-html body .wc-team-box strong{
-  color: #ffffff !important;
-  font-weight: 950 !important;
-  line-height: 1.3 !important;
-}
-
-/* الأعلام */
-html body .mobile-team-flag,
-html body .wc-team-flag{
-  border-radius: 14px !important;
-  box-shadow: 0 8px 18px rgba(0,0,0,.28) !important;
-}
-
-/* مربعات النتيجة */
-html body .mobile-score-inputs input,
-html body .mobile-score-display,
-html body .wc-score-inputs input,
-html body .wc-score-display span{
-  background: linear-gradient(180deg, #ffffff 0%, #f3f4f7 100%) !important;
-  color: #081126 !important;
-  border: 2px solid rgba(255,255,255,.88) !important;
-  border-radius: 20px !important;
-  box-shadow:
-    0 12px 24px rgba(0,0,0,.22),
-    inset 0 1px 0 rgba(255,255,255,.95) !important;
-  text-align: center !important;
-  line-height: 1 !important;
-  padding: 0 !important;
-}
-
-html body .mobile-score-inputs span,
-html body .wc-score-inputs span,
-html body .wc-score-display b{
-  color: #f0cf66 !important;
-  font-weight: 950 !important;
-}
-
-/* -----------------------------
-   المجموعة / التاريخ / الوقت
-   الترتيب: المجموعة ثم التاريخ ثم الوقت
------------------------------ */
-html body .mobile-match-meta,
-html body .wc-meta-row{
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 8px !important;
-  flex-wrap: wrap !important;
-  direction: rtl !important;
-  padding: 0 12px 18px !important;
-}
-
-html body .mobile-match-meta span,
-html body .wc-meta-row span{
-  min-height: 34px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 7px 13px !important;
-  border-radius: 999px !important;
-  background: linear-gradient(180deg, #0f0f0d 0%, #050505 100%) !important;
-  color: #f6d77a !important;
-  border: 1px solid rgba(212,175,55,.46) !important;
-  box-shadow:
-    0 8px 16px rgba(0,0,0,.20),
-    inset 0 1px 0 rgba(255,255,255,.05) !important;
-  font-size: .81rem !important;
-  font-weight: 950 !important;
-  line-height: 1 !important;
-}
-
-/* المجموعة أوسع قليلا */
-html body .mobile-match-meta span:nth-child(1),
-html body .wc-meta-row span:nth-child(1){
-  min-width: 88px !important;
-}
-
-/* التاريخ */
-html body .mobile-match-meta span:nth-child(2),
-html body .wc-meta-row span:nth-child(2){
-  min-width: 108px !important;
-}
-
-/* الوقت */
-html body .mobile-match-meta span:nth-child(3),
-html body .wc-meta-row span:nth-child(3){
-  min-width: 68px !important;
-}
-
-/* -----------------------------
-   صفحة كل المباريات
------------------------------ */
-html body .public-match-card{
-  background:
-    radial-gradient(circle at top center, rgba(212,175,55,.07), transparent 34%),
-    linear-gradient(180deg, #262520 0%, #171612 100%) !important;
-  border: 1px solid rgba(212,175,55,.34) !important;
-  border-radius: 24px !important;
-  box-shadow: 0 16px 34px rgba(0,0,0,.30) !important;
-  color: #fff !important;
-  padding: 16px !important;
-}
-
-/* أعلى الكرت */
-html body .public-match-top{
-  display: flex !important;
-  justify-content: flex-start !important;
-  align-items: center !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-  direction: rtl !important;
-  margin-bottom: 14px !important;
-}
-
-/* شارات المجموعة / التاريخ / الوقت / الحالة */
-html body .public-match-card .stage-pill,
-html body .public-match-card .date-pill,
-html body .public-match-card .time-pill,
-html body .public-match-card .status-pill{
-  min-height: 34px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 7px 13px !important;
-  border-radius: 999px !important;
-  background: linear-gradient(180deg, #0f0f0d 0%, #050505 100%) !important;
-  color: #f6d77a !important;
-  border: 1px solid rgba(212,175,55,.46) !important;
-  box-shadow:
-    0 8px 16px rgba(0,0,0,.20),
-    inset 0 1px 0 rgba(255,255,255,.05) !important;
-  font-size: .81rem !important;
-  font-weight: 950 !important;
-  line-height: 1 !important;
-}
-
-html body .public-match-card .date-pill{
-  min-width: 108px !important;
-}
-
-html body .public-match-card .time-pill{
-  min-width: 68px !important;
-}
-
-/* أسماء الفرق */
-html body .public-team-side,
-html body .public-team-side span{
-  color: #ffffff !important;
-  font-weight: 950 !important;
-}
-
-/* مربع النتيجة الأبيض */
-html body .public-score-box{
-  min-width: 58px !important;
-  height: 48px !important;
-  border-radius: 14px !important;
-  background: linear-gradient(180deg, #ffffff 0%, #f3f4f7 100%) !important;
-  color: #081126 !important;
-  border: 2px solid rgba(255,255,255,.88) !important;
-  box-shadow:
-    0 10px 20px rgba(0,0,0,.22),
-    inset 0 1px 0 rgba(255,255,255,.95) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  line-height: 1 !important;
-  padding: 0 !important;
-  font-size: 1.1rem !important;
-  font-weight: 950 !important;
-  direction: ltr !important;
-}
-
-/* الفوتر */
-html body .public-match-footer{
-  border-top: 1px solid rgba(212,175,55,.16) !important;
-  padding-top: 12px !important;
-  margin-top: 12px !important;
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  gap: 10px !important;
-  flex-wrap: wrap !important;
-}
-
-/* منع زر التوقعات/العرض من الاندماج مع الخلفية */
-html body .small-action-link{
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-height: 40px !important;
-  padding: 0 14px !important;
-  border-radius: 14px !important;
-}
-
-/* -----------------------------
-   موبايل
------------------------------ */
-@media (max-width:700px){
-
-  html body .mobile-focus-card,
-  html body .wc-match-card,
-  html body .public-match-card{
-    border-radius: 22px !important;
-  }
-
-  html body .mobile-score-inputs input,
-  html body .wc-score-inputs input,
-  html body .wc-score-display span{
-    width: 72px !important;
-    height: 72px !important;
-    border-radius: 18px !important;
-    font-size: 1.7rem !important;
-  }
-
-  html body .public-score-box{
-    min-width: 54px !important;
-    height: 44px !important;
-    font-size: 1rem !important;
-  }
-
-  html body .mobile-match-meta,
-  html body .wc-meta-row,
-  html body .public-match-top{
-    gap: 7px !important;
-  }
-
-  html body .mobile-match-meta span,
-  html body .wc-meta-row span,
-  html body .public-match-card .stage-pill,
-  html body .public-match-card .date-pill,
-  html body .public-match-card .time-pill,
-  html body .public-match-card .status-pill{
-    min-height: 32px !important;
-    padding: 7px 11px !important;
-    font-size: .78rem !important;
-  }
-
-  html body .bulk-save-btn{
-    min-height: 54px !important;
-    border-radius: 17px !important;
-  }
-
-  html body .public-match-footer{
-    justify-content: center !important;
-    text-align: center !important;
-  }
-}
-/* =====================================================
-   FORCE ORDER: group -> date -> time
-===================================================== */
-
-html body .public-match-top{
-  display:flex !important;
-  flex-direction:row !important;
-  justify-content:center !important;
-  align-items:center !important;
-  gap:8px !important;
-  flex-wrap:wrap !important;
-
-  /* مهم: نلغي تأثير RTL على ترتيب الفليكس */
-  direction:ltr !important;
-}
-
-html body .public-match-top .stage-pill{
-  order:3 !important;
-  direction:rtl !important;
-}
-
-html body .public-match-top .date-pill{
-  order:2 !important;
-  direction:ltr !important;
-}
-
-html body .public-match-top .time-pill{
-  order:1 !important;
-  direction:ltr !important;
-}
-
-/* نفس الشكل للشارات الثلاث */
-html body .public-match-top .stage-pill,
-html body .public-match-top .date-pill,
-html body .public-match-top .time-pill{
-  min-height:34px !important;
-  padding:7px 13px !important;
-  border-radius:999px !important;
-  background:linear-gradient(180deg,#0f0f0d 0%, #050505 100%) !important;
-  color:#f6d77a !important;
-  border:1px solid rgba(212,175,55,.46) !important;
-  font-size:.81rem !important;
-  font-weight:950 !important;
-  line-height:1 !important;
-}
-/* =====================================================
-   clean10
-   أزرار أصفر فاتح + تحسين كرت كل مباراة + ترتيب الشارات
-===================================================== */
-
-/* زر حفظ التوقعات + زر عرض توقعات الجميع */
-html body .bulk-save-btn,
-html body .wc-save-btn,
-html body .mobile-card-link a,
-html body .wc-view-link,
-html body .small-action-link{
-  background:linear-gradient(180deg,#f4d77a 0%, #d6ad37 100%) !important;
-  color:#151007 !important;
-  border:1.5px solid rgba(255,238,170,.75) !important;
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.45) !important;
-  font-weight:1000 !important;
-  text-decoration:none !important;
-  text-shadow:none !important;
-}
-
-html body .bulk-save-btn:hover,
-html body .wc-save-btn:hover,
-html body .mobile-card-link a:hover,
-html body .wc-view-link:hover,
-html body .small-action-link:hover{
-  background:linear-gradient(180deg,#ffe28a 0%, #c8941c 100%) !important;
-}
-
-/* إزالة أي كأس من زر الحفظ */
-html body .bulk-save-btn::before,
-html body .wc-save-btn::before{
-  content:"" !important;
-  display:none !important;
-}
-
-/* كرت كل مباراة: تباين أوضح عن الخلفية */
-html body .public-match-card.clean-match-card{
-  padding:0 !important;
-  overflow:hidden !important;
-  border-radius:26px !important;
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.10), transparent 34%),
-    linear-gradient(180deg,#2b2a25 0%, #171612 100%) !important;
-  border:1px solid rgba(212,175,55,.42) !important;
-  box-shadow:
-    0 18px 42px rgba(0,0,0,.36),
-    inset 0 1px 0 rgba(255,255,255,.04) !important;
-  color:#fff !important;
-}
-
-/* شريط الحالة أعلى الكرت */
-html body .public-status-row{
-  display:flex !important;
-  justify-content:center !important;
-  align-items:center !important;
-  padding:12px 12px 8px !important;
-  background:linear-gradient(180deg,#343229 0%, #25231d 100%) !important;
-  border-bottom:1px solid rgba(212,175,55,.18) !important;
-}
-
-/* مفتوحة خضراء، منتهية حمراء، مغلقة رمادية */
-html body .public-status-row .status-pill,
-html body .mobile-status-pill,
-html body .wc-status-pill{
-  min-height:34px !important;
-  padding:7px 16px !important;
-  border-radius:999px !important;
-  font-size:.82rem !important;
-  font-weight:1000 !important;
-  box-shadow:none !important;
-}
-
-html body .public-status-row .status-pill.upcoming,
-html body .mobile-status-pill.open,
-html body .wc-status-pill.open{
-  background:linear-gradient(180deg,#dcfce7,#86efac) !important;
-  color:#14532d !important;
-  border:1px solid rgba(34,197,94,.45) !important;
-}
-
-html body .public-status-row .status-pill.finished,
-html body .mobile-status-pill.finished,
-html body .wc-status-pill.finished{
-  background:linear-gradient(180deg,#fee2e2,#fca5a5) !important;
-  color:#7f1d1d !important;
-  border:1px solid rgba(239,68,68,.45) !important;
-}
-
-html body .public-status-row .status-pill.locked,
-html body .mobile-status-pill.locked,
-html body .wc-status-pill.locked{
-  background:linear-gradient(180deg,#f3f4f6,#d1d5db) !important;
-  color:#374151 !important;
-  border:1px solid rgba(156,163,175,.55) !important;
-}
-
-/* شريط المجموعة / التاريخ / الوقت */
-html body .public-meta-strip{
-  direction:ltr !important;
-  display:grid !important;
-  grid-template-columns:1fr 1fr 1fr !important;
-  grid-template-areas:"time date group" !important;
-  gap:8px !important;
-  padding:12px 12px 4px !important;
-  align-items:center !important;
-}
-
-html body .public-meta-strip .meta-group{
-  grid-area:group !important;
-  direction:rtl !important;
-}
-
-html body .public-meta-strip .meta-date{
-  grid-area:date !important;
-  direction:ltr !important;
-}
-
-html body .public-meta-strip .meta-time{
-  grid-area:time !important;
-  direction:ltr !important;
-}
-
-html body .public-meta-strip .meta-pill{
-  min-height:34px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  padding:7px 10px !important;
-  border-radius:999px !important;
-  background:linear-gradient(180deg,#11100d,#050505) !important;
-  color:#f4d77a !important;
-  border:1px solid rgba(212,175,55,.46) !important;
-  box-shadow:0 6px 14px rgba(0,0,0,.18) !important;
-  font-size:.78rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-}
-
-/* منطقة الفرق */
-html body .public-teams-row.clean{
-  display:grid !important;
-  grid-template-columns:1fr auto 1fr !important;
-  align-items:center !important;
-  gap:10px !important;
-  padding:18px 12px 16px !important;
-  margin:0 !important;
-}
-
-html body .public-team-side{
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:8px !important;
-  min-width:0 !important;
-  text-align:center !important;
-}
-
-html body .public-team-side span{
-  color:#fff !important;
-  font-size:.92rem !important;
-  font-weight:1000 !important;
-  line-height:1.25 !important;
-  text-shadow:0 2px 6px rgba(0,0,0,.45) !important;
-}
-
-html body .public-flag{
-  width:58px !important;
-  height:42px !important;
-  object-fit:cover !important;
-  border-radius:13px !important;
-  box-shadow:0 10px 22px rgba(0,0,0,.32) !important;
-}
-
-/* مربع النتيجة */
-html body .public-score-box{
-  width:64px !important;
-  min-width:64px !important;
-  max-width:64px !important;
-  height:58px !important;
-  min-height:58px !important;
-  max-height:58px !important;
-  padding:0 !important;
-  margin:0 auto !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  border-radius:17px !important;
-  background:linear-gradient(180deg,#ffffff,#f2f0e8) !important;
-  color:#071126 !important;
-  border:1.5px solid rgba(255,255,255,.90) !important;
-  box-shadow:0 10px 22px rgba(0,0,0,.28) !important;
-
-  text-align:center !important;
-  line-height:1 !important;
-  font-size:1.08rem !important;
-  font-weight:1000 !important;
-  direction:ltr !important;
-  unicode-bidi:isolate !important;
-}
-
-/* فوتر كرت المباراة */
-html body .public-match-footer{
-  display:flex !important;
-  justify-content:center !important;
-  align-items:center !important;
-  padding:0 12px 14px !important;
-  margin:0 !important;
-  border-top:0 !important;
-}
-
-html body .small-action-link{
-  width:100% !important;
-  max-width:330px !important;
-  min-height:46px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  border-radius:16px !important;
-  padding:0 14px !important;
-  font-size:.9rem !important;
-}
-
-/* نفس ترتيب الشارات في كرت المتسابق: المجموعة ثم التاريخ ثم الوقت */
-html body .mobile-match-meta,
-html body .wc-meta-row{
-  direction:ltr !important;
-  display:grid !important;
-  grid-template-columns:1fr 1fr 1fr !important;
-  grid-template-areas:"time date group" !important;
-  gap:8px !important;
-  padding:0 12px 16px !important;
-}
-
-html body .mobile-match-meta span:nth-child(1),
-html body .wc-meta-row span:nth-child(1){
-  grid-area:group !important;
-  direction:rtl !important;
-}
-
-html body .mobile-match-meta span:nth-child(2),
-html body .wc-meta-row span:nth-child(2){
-  grid-area:date !important;
-  direction:ltr !important;
-}
-
-html body .mobile-match-meta span:nth-child(3),
-html body .wc-meta-row span:nth-child(3){
-  grid-area:time !important;
-  direction:ltr !important;
-}
-
-html body .mobile-match-meta span,
-html body .wc-meta-row span{
-  min-width:0 !important;
-  min-height:34px !important;
-  padding:7px 9px !important;
-  font-size:.76rem !important;
-  white-space:nowrap !important;
-}
-
-/* موبايل */
-@media (max-width:700px){
-  html body .public-match-card.clean-match-card{
-    border-radius:22px !important;
-  }
-
-  html body .public-meta-strip,
-  html body .mobile-match-meta,
-  html body .wc-meta-row{
-    gap:6px !important;
-  }
-
-  html body .public-meta-strip .meta-pill,
-  html body .mobile-match-meta span,
-  html body .wc-meta-row span{
-    min-height:32px !important;
-    padding:7px 8px !important;
-    font-size:.72rem !important;
-  }
-
-  html body .public-score-box{
-    width:60px !important;
-    min-width:60px !important;
-    max-width:60px !important;
-    height:54px !important;
-    min-height:54px !important;
-    max-height:54px !important;
-  }
-}
-/* =====================================================
-   clean11
-   إصلاح نهائي لترتيب: المجموعة | التاريخ | الوقت
-===================================================== */
-
-/* صفحة كل المباريات */
-html body .public-meta-strip{
-  display:flex !important;
-  flex-direction:row !important;
-  direction:rtl !important;
-  justify-content:center !important;
-  align-items:center !important;
-  flex-wrap:wrap !important;
-  gap:8px !important;
-  padding:12px 12px 4px !important;
-  grid-template-areas:none !important;
-  grid-template-columns:none !important;
-}
-
-html body .public-meta-strip .meta-group,
-html body .public-meta-strip .meta-date,
-html body .public-meta-strip .meta-time{
-  order:initial !important;
-  grid-area:auto !important;
-}
-
-html body .public-meta-strip .meta-group{
-  direction:rtl !important;
-}
-
-html body .public-meta-strip .meta-date,
-html body .public-meta-strip .meta-time{
-  direction:ltr !important;
-}
-
-/* صفحة المتسابق */
-html body .mobile-match-meta,
-html body .wc-meta-row{
-  display:flex !important;
-  flex-direction:row !important;
-  direction:rtl !important;
-  justify-content:center !important;
-  align-items:center !important;
-  flex-wrap:wrap !important;
-  gap:8px !important;
-  grid-template-areas:none !important;
-  grid-template-columns:none !important;
-}
-
-html body .mobile-match-meta span,
-html body .wc-meta-row span{
-  order:initial !important;
-  grid-area:auto !important;
-}
-
-/* الأول = المجموعة */
-html body .mobile-match-meta span:nth-child(1),
-html body .wc-meta-row span:nth-child(1){
-  direction:rtl !important;
-}
-
-/* الثاني = التاريخ، الثالث = الوقت */
-html body .mobile-match-meta span:nth-child(2),
-html body .mobile-match-meta span:nth-child(3),
-html body .wc-meta-row span:nth-child(2),
-html body .wc-meta-row span:nth-child(3){
-  direction:ltr !important;
-}
-
-/* تثبيت شكل الشارات */
-html body .public-meta-strip .meta-pill,
-html body .mobile-match-meta span,
-html body .wc-meta-row span{
-  min-height:34px !important;
-  padding:7px 11px !important;
-  border-radius:999px !important;
-  background:linear-gradient(180deg,#0f0f0d 0%, #050505 100%) !important;
-  color:#f6d77a !important;
-  border:1px solid rgba(212,175,55,.46) !important;
-  font-size:.76rem !important;
-  font-weight:950 !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-}
-/* =====================================================
-   clean13
-   ترتيب معلومات المباراة في صفحة المتسابق:
-   المجموعة يمين | التاريخ وسط | الوقت يسار
-===================================================== */
-
-html body .final-card-meta-row{
-  display:flex !important;
-  flex-direction:row !important;
-  direction:rtl !important;
-  justify-content:center !important;
-  align-items:center !important;
-  gap:8px !important;
-  flex-wrap:wrap !important;
-  padding:0 12px 16px !important;
-  width:100% !important;
-  box-sizing:border-box !important;
-}
-
-html body .final-card-meta-pill{
-  min-height:34px !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  padding:7px 12px !important;
-  border-radius:999px !important;
-  background:linear-gradient(180deg,#0f0f0d 0%, #050505 100%) !important;
-  color:#f6d77a !important;
-  border:1px solid rgba(212,175,55,.46) !important;
-  box-shadow:0 6px 14px rgba(0,0,0,.18) !important;
-  font-size:.76rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-}
-
-html body .final-card-meta-stage{
-  direction:rtl !important;
-  min-width:86px !important;
-}
-
-html body .final-card-meta-date{
-  direction:ltr !important;
-  min-width:108px !important;
-}
-
-html body .final-card-meta-time{
-  direction:ltr !important;
-  min-width:64px !important;
-}
-
-@media (max-width:700px){
-  html body .final-card-meta-row{
-    gap:6px !important;
-    padding:0 10px 16px !important;
-  }
-
-  html body .final-card-meta-pill{
-    min-height:32px !important;
-    padding:7px 9px !important;
-    font-size:.72rem !important;
-  }
-
-  html body .final-card-meta-stage{
-    min-width:80px !important;
-  }
-
-  html body .final-card-meta-date{
-    min-width:100px !important;
-  }
-
-  html body .final-card-meta-time{
-    min-width:58px !important;
-  }
-}
-/* =====================================================
-   clean14
-   تحسين القائمة المنسدلة + كروت المباريات + الشارات
-   خصوصًا للهاتف
-===================================================== */
-
-/* =========================
-   القائمة المنسدلة
-========================= */
-
-html body details.clean-menu{
-  position:relative !important;
-  z-index:9999 !important;
-}
-
-html body details.clean-menu > summary{
-  list-style:none !important;
-  cursor:pointer !important;
-  user-select:none !important;
-}
-
-html body details.clean-menu > summary::-webkit-details-marker{
-  display:none !important;
-}
-
-html body .clean-menu-panel{
-  position:absolute !important;
-  top:calc(100% + 12px) !important;
-  left:0 !important;
-  right:auto !important;
-
-  width:330px !important;
-  max-width:calc(100vw - 28px) !important;
-
-  padding:16px !important;
-  border-radius:26px !important;
-
-  background:
-    radial-gradient(circle at top right, rgba(244,215,122,.22), transparent 36%),
-    linear-gradient(180deg,#fffaf0 0%,#f4ecd8 100%) !important;
-
-  color:#071126 !important;
-  border:1.5px solid rgba(212,175,55,.58) !important;
-
-  box-shadow:
-    0 24px 55px rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,.75) !important;
-
-  overflow:hidden !important;
-}
-
-html body details.clean-menu[open] .clean-menu-panel{
-  animation:cleanMenuIn .18s ease-out both !important;
-}
-
-@keyframes cleanMenuIn{
-  from{
-    opacity:0;
-    transform:translateY(-8px) scale(.98);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-}
-
-html body .clean-menu-panel::before{
-  content:"" !important;
-  position:absolute !important;
-  inset:0 !important;
-  pointer-events:none !important;
-  background:
-    linear-gradient(90deg, transparent, rgba(255,255,255,.42), transparent) !important;
-  opacity:.35 !important;
-}
-
-html body .clean-menu-panel a{
-  position:relative !important;
-  z-index:1 !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-
-  min-height:54px !important;
-  padding:0 14px !important;
-  margin:0 0 7px !important;
-
-  border-radius:18px !important;
-  color:#071126 !important;
-  background:rgba(255,255,255,.38) !important;
-  border:1px solid rgba(212,175,55,.18) !important;
-
-  text-decoration:none !important;
-  font-size:1.08rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-}
-
-html body .clean-menu-panel a:hover{
-  background:linear-gradient(180deg,#f4d77a,#d6ad37) !important;
-  color:#11100b !important;
-}
-
-html body .clean-menu-panel hr,
-html body .clean-menu-panel .menu-divider{
-  border:0 !important;
-  height:1px !important;
-  background:linear-gradient(90deg,transparent,rgba(166,124,32,.35),transparent) !important;
-  margin:12px 0 !important;
-}
-
-html body .clean-menu-panel form{
-  position:relative !important;
-  z-index:1 !important;
-
-  background:rgba(255,255,255,.46) !important;
-  border:1px solid rgba(212,175,55,.24) !important;
-  border-radius:22px !important;
-  padding:14px !important;
-  margin-top:10px !important;
-}
-
-html body .clean-menu-panel form h3,
-html body .clean-menu-panel form strong,
-html body .clean-menu-panel form label{
-  color:#071126 !important;
-  font-weight:1000 !important;
-}
-
-html body .clean-menu-panel select{
-  width:100% !important;
-  min-height:52px !important;
-  border-radius:16px !important;
-  padding:0 14px !important;
-
-  background:#fff !important;
-  color:#071126 !important;
-  border:1px solid rgba(212,175,55,.38) !important;
-
-  font-weight:900 !important;
-  font-size:1rem !important;
-}
-
-html body .clean-menu-panel button,
-html body .clean-menu-panel input[type="submit"]{
-  width:100% !important;
-  min-height:52px !important;
-  margin-top:10px !important;
-
-  border-radius:16px !important;
-  background:linear-gradient(180deg,#f4d77a 0%,#d6ad37 100%) !important;
-  color:#151007 !important;
-  border:1.5px solid rgba(255,238,170,.75) !important;
-
-  box-shadow:
-    0 10px 22px rgba(0,0,0,.20),
-    inset 0 1px 0 rgba(255,255,255,.45) !important;
-
-  font-weight:1000 !important;
-}
-
-/* =========================
-   أزرار الحفظ وعرض التوقعات
-========================= */
-
-html body .bulk-save-btn,
-html body .wc-save-btn,
-html body .mobile-card-link a,
-html body .wc-view-link,
-html body .small-action-link{
-  background:linear-gradient(180deg,#f4d77a 0%,#d6ad37 100%) !important;
-  color:#151007 !important;
-  border:1.5px solid rgba(255,238,170,.75) !important;
-
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.45) !important;
-
-  font-weight:1000 !important;
-  text-decoration:none !important;
-  text-shadow:none !important;
-}
-
-html body .bulk-save-btn:hover,
-html body .wc-save-btn:hover,
-html body .mobile-card-link a:hover,
-html body .wc-view-link:hover,
-html body .small-action-link:hover{
-  background:linear-gradient(180deg,#ffe28a 0%,#c8941c 100%) !important;
-}
-
-html body .bulk-save-btn::before,
-html body .wc-save-btn::before{
-  content:"" !important;
-  display:none !important;
-}
-
-/* =========================
-   كروت المباريات
-========================= */
-
-html body .mobile-focus-card,
-html body .wc-match-card,
-html body .public-match-card,
-html body .clean-match-card{
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.10), transparent 35%),
-    linear-gradient(180deg,#2f2d27 0%,#1c1b17 52%,#12110f 100%) !important;
-
-  border:1.5px solid rgba(212,175,55,.42) !important;
-  border-radius:28px !important;
-
-  box-shadow:
-    0 18px 42px rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,.04) !important;
-
-  overflow:hidden !important;
-}
-
-/* لمسة علوية للكرت */
-html body .mobile-focus-card::before,
-html body .wc-match-card::before,
-html body .public-match-card::before,
-html body .clean-match-card::before{
-  content:"" !important;
-  display:block !important;
-  height:1px !important;
-  background:linear-gradient(90deg,transparent,rgba(244,215,122,.55),transparent) !important;
-}
-
-/* =========================
-   كلمة مفتوحة / منتهية / مغلقة
-========================= */
-
-html body .mobile-status-pill,
-html body .wc-status-pill,
-html body .status-pill,
-html body .card-status-pill{
-  min-height:34px !important;
-  padding:7px 16px !important;
-  border-radius:999px !important;
-
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  font-size:.82rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  box-shadow:0 8px 18px rgba(0,0,0,.18) !important;
-}
-
-/* مفتوحة = أخضر */
-html body .mobile-status-pill.is-open,
-html body .wc-status-pill.is-open,
-html body .status-pill.is-open,
-html body .card-status-pill.is-open,
-html body .status-pill.upcoming{
-  background:linear-gradient(180deg,#dcfce7 0%,#86efac 100%) !important;
-  color:#14532d !important;
-  border:1px solid rgba(34,197,94,.48) !important;
-}
-
-/* منتهية = أحمر */
-html body .mobile-status-pill.is-finished,
-html body .wc-status-pill.is-finished,
-html body .status-pill.is-finished,
-html body .card-status-pill.is-finished,
-html body .status-pill.finished{
-  background:linear-gradient(180deg,#fee2e2 0%,#fca5a5 100%) !important;
-  color:#7f1d1d !important;
-  border:1px solid rgba(239,68,68,.48) !important;
-}
-
-/* مغلقة = رمادي */
-html body .mobile-status-pill.is-locked,
-html body .wc-status-pill.is-locked,
-html body .status-pill.is-locked,
-html body .card-status-pill.is-locked,
-html body .status-pill.locked,
-html body .status-pill.live{
-  background:linear-gradient(180deg,#f3f4f6 0%,#d1d5db 100%) !important;
-  color:#374151 !important;
-  border:1px solid rgba(156,163,175,.58) !important;
-}
-
-/* =========================
-   المجموعة / التاريخ / الوقت
-   تنوع بصري فاتح لكسر الداكن
-========================= */
-
-html body .final-card-meta-row{
-  display:flex !important;
-  flex-direction:row !important;
-  direction:rtl !important;
-  justify-content:center !important;
-  align-items:center !important;
-  gap:8px !important;
-  flex-wrap:wrap !important;
-  padding:0 12px 16px !important;
-  width:100% !important;
-  box-sizing:border-box !important;
-}
-
-html body .final-card-meta-pill,
-html body .mobile-match-meta span,
-html body .wc-meta-row span,
-html body .final-meta-pill,
-html body .meta-pill{
-  min-height:34px !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  padding:7px 12px !important;
-  border-radius:999px !important;
-
-  font-size:.76rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-
-  box-shadow:
-    0 8px 16px rgba(0,0,0,.14),
-    inset 0 1px 0 rgba(255,255,255,.55) !important;
-}
-
-/* المجموعة */
-html body .final-card-meta-stage,
-html body .mobile-match-meta span:nth-child(1),
-html body .wc-meta-row span:nth-child(1),
-html body .meta-group{
-  background:linear-gradient(180deg,#fff4bf 0%,#f4d77a 100%) !important;
-  color:#4a3710 !important;
-  border:1px solid rgba(212,175,55,.48) !important;
-  direction:rtl !important;
-  min-width:88px !important;
-}
-
-/* التاريخ */
-html body .final-card-meta-date,
-html body .mobile-match-meta span:nth-child(2),
-html body .wc-meta-row span:nth-child(2),
-html body .meta-date{
-  background:linear-gradient(180deg,#eef4ff 0%,#dbeafe 100%) !important;
-  color:#1e3a8a !important;
-  border:1px solid rgba(96,165,250,.35) !important;
-  direction:ltr !important;
-  min-width:108px !important;
-}
-
-/* الوقت */
-html body .final-card-meta-time,
-html body .mobile-match-meta span:nth-child(3),
-html body .wc-meta-row span:nth-child(3),
-html body .meta-time{
-  background:linear-gradient(180deg,#ecfdf5 0%,#bbf7d0 100%) !important;
-  color:#166534 !important;
-  border:1px solid rgba(34,197,94,.34) !important;
-  direction:ltr !important;
-  min-width:66px !important;
-}
-
-/* =========================
-   تحسين صفحة كل المباريات أيضًا
-========================= */
-
-html body .public-matches-grid{
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.08), transparent 38%),
-    linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01)) !important;
-
-  border-radius:30px !important;
-  padding:10px !important;
-}
-
-html body .public-team-side span,
-html body .mobile-team-box strong,
-html body .wc-team-box strong{
-  color:#ffffff !important;
-  font-weight:1000 !important;
-  text-shadow:0 2px 8px rgba(0,0,0,.40) !important;
-}
-
-html body .public-flag,
-html body .mobile-team-flag,
-html body .wc-team-flag{
-  border-radius:14px !important;
-  box-shadow:0 10px 22px rgba(0,0,0,.30) !important;
-}
-
-/* =========================
-   الهاتف تحديدًا
-========================= */
-
-@media (max-width:700px){
-
-  html body .clean-menu-panel{
-    position:fixed !important;
-    top:76px !important;
-    left:14px !important;
-    right:14px !important;
-    width:auto !important;
-    max-width:none !important;
-
-    padding:14px !important;
-    border-radius:24px !important;
-    max-height:calc(100vh - 96px) !important;
-    overflow-y:auto !important;
-  }
-
-  html body .clean-menu-panel a{
-    min-height:52px !important;
-    border-radius:17px !important;
-    font-size:1.02rem !important;
-  }
-
-  html body .mobile-focus-card,
-  html body .wc-match-card,
-  html body .public-match-card,
-  html body .clean-match-card{
-    border-radius:24px !important;
-  }
-
-  html body .final-card-meta-row,
-  html body .mobile-match-meta,
-  html body .wc-meta-row{
-    gap:6px !important;
-    padding:0 10px 16px !important;
-  }
-
-  html body .final-card-meta-pill,
-  html body .mobile-match-meta span,
-  html body .wc-meta-row span,
-  html body .final-meta-pill,
-  html body .meta-pill{
-    min-height:32px !important;
-    padding:7px 9px !important;
-    font-size:.71rem !important;
-  }
-
-  html body .final-card-meta-stage,
-  html body .mobile-match-meta span:nth-child(1),
-  html body .wc-meta-row span:nth-child(1),
-  html body .meta-group{
-    min-width:78px !important;
-  }
-
-  html body .final-card-meta-date,
-  html body .mobile-match-meta span:nth-child(2),
-  html body .wc-meta-row span:nth-child(2),
-  html body .meta-date{
-    min-width:98px !important;
-  }
-
-  html body .final-card-meta-time,
-  html body .mobile-match-meta span:nth-child(3),
-  html body .wc-meta-row span:nth-child(3),
-  html body .meta-time{
-    min-width:58px !important;
-  }
-
-  html body .bulk-save-btn,
-  html body .wc-save-btn{
-    min-height:54px !important;
-    border-radius:17px !important;
-  }
-
-  html body .mobile-card-link a,
-  html body .wc-view-link{
-    min-height:48px !important;
-    border-radius:16px !important;
-  }
-}
-/* =====================================================
-   clean15
-   تحسين القائمة + توسيط كرت الترحيب + توحيد الشارات
-   + تباين أفضل للكروت + زر حفظ ثابت للهاتف
-===================================================== */
-
-
-/* =====================================================
-   1) زر القائمة: مكان احترافي وحجم أفضل
-===================================================== */
-
-html body .wc-header,
-html body .clean-wc-header{
-  position:relative !important;
-  padding-top:64px !important;
-}
-
-html body details.clean-menu{
-  position:absolute !important;
-  top:14px !important;
-  right:16px !important;
-  left:auto !important;
-  z-index:9999 !important;
-  width:auto !important;
-}
-
-html body details.clean-menu > summary{
-  width:auto !important;
-  min-width:122px !important;
-  min-height:48px !important;
-  padding:0 18px !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:7px !important;
-
-  border-radius:18px !important;
-  background:linear-gradient(180deg,#2e2d28 0%,#1c1b18 100%) !important;
-  color:#ffffff !important;
-  border:1px solid rgba(212,175,55,.46) !important;
-
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.25),
-    inset 0 1px 0 rgba(255,255,255,.06) !important;
-
-  font-size:1.08rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  list-style:none !important;
-}
-
-html body details.clean-menu > summary::-webkit-details-marker{
-  display:none !important;
-}
-
-/* القائمة المنسدلة */
-html body .clean-menu-panel{
-  position:absolute !important;
-  top:calc(100% + 12px) !important;
-  right:0 !important;
-  left:auto !important;
-
-  width:330px !important;
-  max-width:calc(100vw - 28px) !important;
-
-  padding:16px !important;
-  border-radius:26px !important;
-
-  background:
-    radial-gradient(circle at top right, rgba(244,215,122,.20), transparent 34%),
-    linear-gradient(180deg,#fffaf0 0%,#f3ecd8 100%) !important;
-
-  color:#071126 !important;
-  border:1.5px solid rgba(212,175,55,.58) !important;
-
-  box-shadow:
-    0 24px 55px rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,.78) !important;
-
-  overflow:hidden !important;
-}
-
-html body details.clean-menu[open] .clean-menu-panel{
-  animation:cleanMenuIn .18s ease-out both !important;
-}
-
-@keyframes cleanMenuIn{
-  from{
-    opacity:0;
-    transform:translateY(-8px) scale(.98);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-}
-
-html body .clean-menu-panel a{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-
-  min-height:54px !important;
-  padding:0 14px !important;
-  margin:0 0 8px !important;
-
-  border-radius:18px !important;
-  color:#071126 !important;
-  background:rgba(255,255,255,.44) !important;
-  border:1px solid rgba(212,175,55,.18) !important;
-
-  text-decoration:none !important;
-  font-size:1.08rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-}
-
-html body .clean-menu-panel a:hover{
-  background:linear-gradient(180deg,#f4d77a,#d6ad37) !important;
-  color:#11100b !important;
-}
-
-html body .clean-menu-panel form{
-  background:rgba(255,255,255,.52) !important;
-  border:1px solid rgba(212,175,55,.24) !important;
-  border-radius:22px !important;
-  padding:14px !important;
-  margin-top:10px !important;
-}
-
-html body .clean-menu-panel select{
-  width:100% !important;
-  min-height:52px !important;
-  border-radius:16px !important;
-  padding:0 14px !important;
-  background:#fff !important;
-  color:#071126 !important;
-  border:1px solid rgba(212,175,55,.38) !important;
-  font-weight:900 !important;
-  font-size:1rem !important;
-}
-
-html body .clean-menu-panel button,
-html body .clean-menu-panel input[type="submit"]{
-  width:100% !important;
-  min-height:52px !important;
-  margin-top:10px !important;
-  border-radius:16px !important;
-  background:linear-gradient(180deg,#f4d77a 0%,#d6ad37 100%) !important;
-  color:#151007 !important;
-  border:1.5px solid rgba(255,238,170,.75) !important;
-  font-weight:1000 !important;
-}
-
-
-/* =====================================================
-   2) كرت الترحيب في المنتصف
-===================================================== */
-
-html body .player-hero,
-html body .wc-welcome-card,
-html body .welcome-card{
-  text-align:center !important;
-  justify-content:center !important;
-  align-items:center !important;
-}
-
-html body .player-hero > *,
-html body .wc-welcome-card > *,
-html body .welcome-card > *{
-  text-align:center !important;
-}
-
-html body .player-hero h2,
-html body .wc-welcome-card h2,
-html body .welcome-card h2{
-  text-align:center !important;
-  font-size:1.45rem !important;
-  line-height:1.25 !important;
-}
-
-html body .player-hero p,
-html body .wc-welcome-card p,
-html body .welcome-card p{
-  text-align:center !important;
-  margin-inline:auto !important;
-}
-
-
-/* =====================================================
-   3) توحيد ألوان المجموعة / التاريخ / الوقت
-   لون واحد ذهبي فاتح مثل خيار المباريات المفتوحة
-===================================================== */
-
-html body .final-card-meta-row,
-html body .mobile-match-meta,
-html body .wc-meta-row,
-html body .public-meta-strip{
-  display:flex !important;
-  flex-direction:row !important;
-  direction:rtl !important;
-  justify-content:center !important;
-  align-items:center !important;
-  gap:8px !important;
-  flex-wrap:wrap !important;
-  padding:0 12px 16px !important;
-  width:100% !important;
-  box-sizing:border-box !important;
-}
-
-html body .final-card-meta-pill,
-html body .mobile-match-meta span,
-html body .wc-meta-row span,
-html body .final-meta-pill,
-html body .meta-pill,
-html body .public-meta-strip .meta-pill{
-  min-height:34px !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  padding:7px 12px !important;
-  border-radius:999px !important;
-
-  background:linear-gradient(180deg,#f6e58f 0%,#d6ad37 100%) !important;
-  color:#211706 !important;
-  border:1px solid rgba(255,238,170,.72) !important;
-
-  box-shadow:
-    0 8px 16px rgba(0,0,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.48) !important;
-
-  font-size:.76rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-}
-
-/* أحجام الشارات */
-html body .final-card-meta-stage,
-html body .mobile-match-meta span:nth-child(1),
-html body .wc-meta-row span:nth-child(1),
-html body .meta-group{
-  min-width:88px !important;
-  direction:rtl !important;
-}
-
-html body .final-card-meta-date,
-html body .mobile-match-meta span:nth-child(2),
-html body .wc-meta-row span:nth-child(2),
-html body .meta-date{
-  min-width:108px !important;
-  direction:ltr !important;
-}
-
-html body .final-card-meta-time,
-html body .mobile-match-meta span:nth-child(3),
-html body .wc-meta-row span:nth-child(3),
-html body .meta-time{
-  min-width:66px !important;
-  direction:ltr !important;
-}
-
-
-/* =====================================================
-   4) كروت المباريات: تباين أفضل عن الخلفية
-===================================================== */
-
-html body .mobile-focus-card,
-html body .wc-match-card,
-html body .public-match-card,
-html body .clean-match-card{
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.12), transparent 36%),
-    linear-gradient(180deg,#34322b 0%,#24231e 48%,#171612 100%) !important;
-
-  border:1.5px solid rgba(244,215,122,.42) !important;
-  border-radius:28px !important;
-
-  box-shadow:
-    0 20px 48px rgba(0,0,0,.40),
-    inset 0 1px 0 rgba(255,255,255,.055) !important;
-
-  overflow:hidden !important;
-}
-
-/* خط علوي ناعم داخل الكرت */
-html body .mobile-focus-card::before,
-html body .wc-match-card::before,
-html body .public-match-card::before,
-html body .clean-match-card::before{
-  content:"" !important;
-  display:block !important;
-  height:1px !important;
-  background:linear-gradient(90deg,transparent,rgba(244,215,122,.65),transparent) !important;
-}
-
-/* الجزء العلوي لكرت المباراة */
-html body .mobile-card-topline,
-html body .wc-card-top,
-html body .public-status-row{
-  background:linear-gradient(180deg,#3b392f 0%,#2a2922 100%) !important;
-  border-bottom:1px solid rgba(244,215,122,.20) !important;
-}
-
-
-/* =====================================================
-   5) مفتوحة / منتهية / مغلقة بلمسة أجمل
-===================================================== */
-
-html body .mobile-status-pill,
-html body .wc-status-pill,
-html body .status-pill,
-html body .card-status-pill{
-  min-height:36px !important;
-  padding:8px 18px !important;
-  border-radius:999px !important;
-
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  font-size:.85rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-
-  box-shadow:
-    0 8px 18px rgba(0,0,0,.20),
-    inset 0 1px 0 rgba(255,255,255,.35) !important;
-}
-
-/* مفتوحة */
-html body .mobile-status-pill.is-open,
-html body .wc-status-pill.is-open,
-html body .status-pill.is-open,
-html body .card-status-pill.is-open,
-html body .status-pill.upcoming{
-  background:linear-gradient(180deg,#e9ffe9 0%,#9af0ad 100%) !important;
-  color:#124626 !important;
-  border:1px solid rgba(34,197,94,.50) !important;
-}
-
-/* منتهية */
-html body .mobile-status-pill.is-finished,
-html body .wc-status-pill.is-finished,
-html body .status-pill.is-finished,
-html body .card-status-pill.is-finished,
-html body .status-pill.finished{
-  background:linear-gradient(180deg,#ffe4e4 0%,#f6a5a5 100%) !important;
-  color:#751818 !important;
-  border:1px solid rgba(239,68,68,.50) !important;
-}
-
-/* مغلقة */
-html body .mobile-status-pill.is-locked,
-html body .wc-status-pill.is-locked,
-html body .status-pill.is-locked,
-html body .card-status-pill.is-locked,
-html body .status-pill.locked,
-html body .status-pill.live{
-  background:linear-gradient(180deg,#f4f4f5 0%,#d4d4d8 100%) !important;
-  color:#3f3f46 !important;
-  border:1px solid rgba(161,161,170,.58) !important;
-}
-
-
-/* =====================================================
-   6) أزرار الحفظ وعرض التوقعات
-===================================================== */
-
-html body .bulk-save-btn,
-html body .wc-save-btn,
-html body .mobile-card-link a,
-html body .wc-view-link,
-html body .small-action-link{
-  background:linear-gradient(180deg,#f4d77a 0%,#d6ad37 100%) !important;
-  color:#151007 !important;
-  border:1.5px solid rgba(255,238,170,.75) !important;
-
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.45) !important;
-
-  font-weight:1000 !important;
-  text-decoration:none !important;
-  text-shadow:none !important;
-}
-
-html body .bulk-save-btn:hover,
-html body .wc-save-btn:hover,
-html body .mobile-card-link a:hover,
-html body .wc-view-link:hover,
-html body .small-action-link:hover{
-  background:linear-gradient(180deg,#ffe28a 0%,#c8941c 100%) !important;
-}
-
-html body .bulk-save-btn::before,
-html body .wc-save-btn::before{
-  content:"" !important;
-  display:none !important;
-}
-
-
-/* =====================================================
-   7) صفحة كل المباريات: توحيد الخلفية والروح
-===================================================== */
-
-html body .public-matches-grid{
-  background:transparent !important;
-  border-radius:30px !important;
-  padding:0 !important;
-}
-
-html body .page-hero,
-html body .public-note,
-html body .empty-card{
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.08), transparent 38%),
-    linear-gradient(180deg,#26251f 0%,#181713 100%) !important;
-
-  border:1px solid rgba(244,215,122,.28) !important;
-  border-radius:24px !important;
-
-  box-shadow:0 16px 36px rgba(0,0,0,.28) !important;
-}
-
-
-/* =====================================================
-   8) الهاتف: زر الحفظ ثابت وتجربة أفضل
-===================================================== */
-
-@media (max-width:700px){
-
-  html body .wc-header,
-  html body .clean-wc-header{
-    padding-top:66px !important;
-  }
-
-  html body details.clean-menu{
-    top:12px !important;
-    right:14px !important;
-  }
-
-  html body details.clean-menu > summary{
-    min-width:118px !important;
-    min-height:46px !important;
-    padding:0 16px !important;
-    font-size:1.03rem !important;
-    border-radius:17px !important;
-  }
-
-  html body .clean-menu-panel{
-    position:fixed !important;
-    top:70px !important;
-    right:14px !important;
-    left:14px !important;
-    width:auto !important;
-    max-width:none !important;
-
-    padding:14px !important;
-    border-radius:24px !important;
-    max-height:calc(100vh - 92px) !important;
-    overflow-y:auto !important;
-  }
-
-  html body .clean-menu-panel a{
-    min-height:52px !important;
-    border-radius:17px !important;
-    font-size:1.02rem !important;
-  }
-
-  html body .player-hero,
-  html body .wc-welcome-card,
-  html body .welcome-card{
-    display:flex !important;
-    flex-direction:column !important;
-    text-align:center !important;
-    padding:22px 18px !important;
-  }
-
-  html body .mobile-focus-card,
-  html body .wc-match-card,
-  html body .public-match-card,
-  html body .clean-match-card{
-    border-radius:24px !important;
-    margin-bottom:18px !important;
-  }
-
-  html body .final-card-meta-row,
-  html body .mobile-match-meta,
-  html body .wc-meta-row,
-  html body .public-meta-strip{
-    gap:6px !important;
-    padding:0 10px 16px !important;
-  }
-
-  html body .final-card-meta-pill,
-  html body .mobile-match-meta span,
-  html body .wc-meta-row span,
-  html body .final-meta-pill,
-  html body .meta-pill,
-  html body .public-meta-strip .meta-pill{
-    min-height:32px !important;
-    padding:7px 9px !important;
-    font-size:.72rem !important;
-  }
-
-  html body .final-card-meta-stage,
-  html body .mobile-match-meta span:nth-child(1),
-  html body .wc-meta-row span:nth-child(1),
-  html body .meta-group{
-    min-width:78px !important;
-  }
-
-  html body .final-card-meta-date,
-  html body .mobile-match-meta span:nth-child(2),
-  html body .wc-meta-row span:nth-child(2),
-  html body .meta-date{
-    min-width:98px !important;
-  }
-
-  html body .final-card-meta-time,
-  html body .mobile-match-meta span:nth-child(3),
-  html body .wc-meta-row span:nth-child(3),
-  html body .meta-time{
-    min-width:58px !important;
-  }
-
-  /* زر الحفظ ثابت في أسفل الهاتف */
-  html body .bulk-save-bar,
-  html body .wc-save-bar{
-    position:fixed !important;
-    left:12px !important;
-    right:12px !important;
-    bottom:12px !important;
-    z-index:9998 !important;
-
-    width:auto !important;
-    max-width:none !important;
-    margin:0 !important;
-    padding:0 !important;
-
-    background:transparent !important;
-    border:0 !important;
-    box-shadow:none !important;
-  }
-
-  html body .bulk-save-btn,
-  html body .wc-save-btn{
-    width:100% !important;
-    min-height:56px !important;
-    border-radius:18px !important;
-    font-size:1.02rem !important;
-  }
-
-  /* مساحة حتى لا يغطي زر الحفظ آخر كرت */
-  html body main,
-  html body .container,
-  html body .page-wrap{
-    padding-bottom:92px !important;
-  }
-}
-/* =====================================================
-   clean16 - FINAL PROFESSIONAL THEME
-   ثيم نهائي احترافي: أسود ناعم + رمادي فحمي + أوف وايت + ذهبي
-===================================================== */
-
-:root{
-  --final-bg-1:#0b0b0a;
-  --final-bg-2:#050505;
-
-  --final-surface-1:#2b2a26;
-  --final-surface-2:#171714;
-  --final-surface-3:#35332d;
-
-  --final-ivory-1:#fff8e8;
-  --final-ivory-2:#eee3c9;
-
-  --final-gold-1:#f4d77a;
-  --final-gold-2:#d6ad37;
-  --final-gold-3:#a77716;
-
-  --final-text-light:#ffffff;
-  --final-text-muted:#d8d3c5;
-  --final-text-dark:#151007;
-
-  --final-border:rgba(244,215,122,.42);
-  --final-shadow:0 20px 48px rgba(0,0,0,.38);
-}
-
-/* =====================================================
-   الخلفية العامة
-===================================================== */
-
-html body{
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.08), transparent 34%),
-    linear-gradient(180deg,var(--final-bg-1),var(--final-bg-2)) !important;
-  color:var(--final-text-light) !important;
-}
-
-/* توحيد خلفية الصفحات */
-html body main,
-html body .container,
-html body .page-wrap{
-  background:transparent !important;
-}
-
-/* =====================================================
-   الهيدر وزر القائمة
-===================================================== */
-
-html body .wc-header,
-html body .clean-wc-header{
-  position:relative !important;
-  padding-top:64px !important;
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.08), transparent 36%),
-    linear-gradient(180deg,#11110f,var(--final-bg-1)) !important;
-  border-bottom:1px solid rgba(244,215,122,.18) !important;
-}
-
-html body details.clean-menu{
-  position:absolute !important;
-  top:12px !important;
-  right:14px !important;
-  left:auto !important;
-  z-index:9999 !important;
-  width:auto !important;
-}
-
-html body details.clean-menu > summary{
-  min-width:124px !important;
-  min-height:48px !important;
-  padding:0 18px !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:8px !important;
-
-  border-radius:18px !important;
-  background:linear-gradient(180deg,#2e2d29,#181815) !important;
-  color:#fff !important;
-  border:1px solid rgba(244,215,122,.44) !important;
-
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.26),
-    inset 0 1px 0 rgba(255,255,255,.06) !important;
-
-  font-size:1.08rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  list-style:none !important;
-  cursor:pointer !important;
-}
-
-html body details.clean-menu > summary::-webkit-details-marker{
-  display:none !important;
-}
-
-/* القائمة المنسدلة */
-html body .clean-menu-panel{
-  position:absolute !important;
-  top:calc(100% + 12px) !important;
-  right:0 !important;
-  left:auto !important;
-
-  width:330px !important;
-  max-width:calc(100vw - 28px) !important;
-
-  padding:16px !important;
-  border-radius:26px !important;
-
-  background:
-    radial-gradient(circle at top right, rgba(244,215,122,.16), transparent 34%),
-    linear-gradient(180deg,var(--final-ivory-1),var(--final-ivory-2)) !important;
-
-  color:var(--final-text-dark) !important;
-  border:1.5px solid rgba(214,173,55,.55) !important;
-
-  box-shadow:
-    0 24px 55px rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,.72) !important;
-
-  overflow:hidden !important;
-}
-
-html body .clean-menu-panel a{
-  min-height:54px !important;
-  padding:0 14px !important;
-  margin:0 0 8px !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-
-  border-radius:18px !important;
-  background:rgba(255,255,255,.42) !important;
-  color:var(--final-text-dark) !important;
-  border:1px solid rgba(166,124,32,.18) !important;
-
-  text-decoration:none !important;
-  font-size:1.08rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-}
-
-html body .clean-menu-panel a:hover{
-  background:linear-gradient(180deg,var(--final-gold-1),var(--final-gold-2)) !important;
-  color:var(--final-text-dark) !important;
-}
-
-html body .clean-menu-panel form{
-  background:rgba(255,255,255,.48) !important;
-  border:1px solid rgba(166,124,32,.22) !important;
-  border-radius:22px !important;
-  padding:14px !important;
-  margin-top:10px !important;
-}
-
-html body .clean-menu-panel select{
-  width:100% !important;
-  min-height:52px !important;
-  border-radius:16px !important;
-  padding:0 14px !important;
-  background:#fff !important;
-  color:var(--final-text-dark) !important;
-  border:1px solid rgba(166,124,32,.34) !important;
-  font-weight:900 !important;
-  font-size:1rem !important;
-}
-
-/* =====================================================
-   كرت الترحيب
-===================================================== */
-
-html body .player-hero,
-html body .wc-welcome-card,
-html body .welcome-card{
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.13), transparent 38%),
-    linear-gradient(180deg,var(--final-ivory-1),var(--final-ivory-2)) !important;
-
-  color:var(--final-text-dark) !important;
-  border:1px solid rgba(214,173,55,.45) !important;
-  border-radius:26px !important;
-
-  box-shadow:0 18px 42px rgba(0,0,0,.28) !important;
-
-  text-align:center !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
-}
-
-html body .player-hero *,
-html body .wc-welcome-card *,
-html body .welcome-card *{
-  text-align:center !important;
-  color:var(--final-text-dark) !important;
-}
-
-html body .player-hero h2,
-html body .wc-welcome-card h2,
-html body .welcome-card h2{
-  font-size:1.45rem !important;
-  line-height:1.25 !important;
-  font-weight:1000 !important;
-}
-
-/* =====================================================
-   التبويبات
-===================================================== */
-
-html body .match-tabs{
-  background:linear-gradient(180deg,#1f1f1c,#10100e) !important;
-  border:1px solid rgba(244,215,122,.22) !important;
-  border-radius:24px !important;
-  padding:8px !important;
-  box-shadow:0 14px 34px rgba(0,0,0,.24) !important;
-}
-
-html body .match-tab{
-  border-radius:17px !important;
-  min-height:48px !important;
-  border:1px solid rgba(244,215,122,.16) !important;
-  background:linear-gradient(180deg,#2b2a26,#171714) !important;
-  color:#fff !important;
-  font-weight:950 !important;
-}
-
-html body .match-tab.active{
-  background:linear-gradient(180deg,var(--final-gold-1),var(--final-gold-2)) !important;
-  color:var(--final-text-dark) !important;
-  border-color:rgba(255,238,170,.75) !important;
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.42) !important;
-}
-
-/* =====================================================
-   كروت المباريات
-===================================================== */
-
-html body .mobile-focus-card,
-html body .wc-match-card,
-html body .public-match-card,
-html body .clean-match-card{
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.10), transparent 36%),
-    linear-gradient(180deg,var(--final-surface-3) 0%,var(--final-surface-1) 42%,var(--final-surface-2) 100%) !important;
-
-  border:1.5px solid var(--final-border) !important;
-  border-radius:28px !important;
-  box-shadow:var(--final-shadow) !important;
-
-  overflow:hidden !important;
-  color:#fff !important;
-}
-
-/* خط علوي داخل الكرت يعطي فصل بصري */
-html body .mobile-focus-card::before,
-html body .wc-match-card::before,
-html body .public-match-card::before,
-html body .clean-match-card::before{
-  content:"" !important;
-  display:block !important;
-  height:1px !important;
-  background:linear-gradient(90deg,transparent,rgba(244,215,122,.62),transparent) !important;
-}
-
-/* رأس الكرت */
-html body .mobile-card-topline,
-html body .wc-card-top,
-html body .public-status-row{
-  background:linear-gradient(180deg,#3c3a32,#292822) !important;
-  border-bottom:1px solid rgba(244,215,122,.20) !important;
-}
-
-/* أسماء الفرق */
-html body .public-team-side span,
-html body .mobile-team-box strong,
-html body .wc-team-box strong{
-  color:#fff !important;
-  font-weight:1000 !important;
-  text-shadow:0 2px 8px rgba(0,0,0,.40) !important;
-}
-
-/* الأعلام */
-html body .public-flag,
-html body .mobile-team-flag,
-html body .wc-team-flag{
-  border-radius:14px !important;
-  box-shadow:0 10px 22px rgba(0,0,0,.30) !important;
-}
-
-/* =====================================================
-   المجموعة / التاريخ / الوقت
-===================================================== */
-
-html body .final-card-meta-row,
-html body .mobile-match-meta,
-html body .wc-meta-row,
-html body .public-meta-strip{
-  display:flex !important;
-  flex-direction:row !important;
-  direction:rtl !important;
-  justify-content:center !important;
-  align-items:center !important;
-  gap:8px !important;
-  flex-wrap:wrap !important;
-  padding:0 12px 16px !important;
-  width:100% !important;
-  box-sizing:border-box !important;
-}
-
-html body .final-card-meta-pill,
-html body .mobile-match-meta span,
-html body .wc-meta-row span,
-html body .final-meta-pill,
-html body .meta-pill,
-html body .public-meta-strip .meta-pill{
-  min-height:34px !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  padding:7px 12px !important;
-  border-radius:999px !important;
-
-  background:linear-gradient(180deg,var(--final-gold-1),var(--final-gold-2)) !important;
-  color:var(--final-text-dark) !important;
-  border:1px solid rgba(255,238,170,.70) !important;
-
-  box-shadow:
-    0 8px 16px rgba(0,0,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.42) !important;
-
-  font-size:.76rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-}
-
-html body .final-card-meta-stage,
-html body .mobile-match-meta span:nth-child(1),
-html body .wc-meta-row span:nth-child(1),
-html body .meta-group{
-  min-width:88px !important;
-  direction:rtl !important;
-}
-
-html body .final-card-meta-date,
-html body .mobile-match-meta span:nth-child(2),
-html body .wc-meta-row span:nth-child(2),
-html body .meta-date{
-  min-width:108px !important;
-  direction:ltr !important;
-}
-
-html body .final-card-meta-time,
-html body .mobile-match-meta span:nth-child(3),
-html body .wc-meta-row span:nth-child(3),
-html body .meta-time{
-  min-width:66px !important;
-  direction:ltr !important;
-}
-
-/* =====================================================
-   مربعات النتيجة
-===================================================== */
-
-html body .mobile-score-inputs input,
-html body .wc-score-inputs input,
-html body .mobile-score-display,
-html body .wc-score-display span,
-html body .public-score-box,
-html body .match-view-score{
-  background:linear-gradient(180deg,#ffffff,#f1ead7) !important;
-  color:#071126 !important;
-  border:1.5px solid rgba(255,255,255,.86) !important;
-  border-radius:18px !important;
-
-  box-shadow:
-    0 12px 24px rgba(0,0,0,.25),
-    inset 0 1px 0 rgba(255,255,255,.90) !important;
-
-  text-align:center !important;
-  font-weight:1000 !important;
-}
-
-/* =====================================================
-   حالة المباراة
-===================================================== */
-
-html body .mobile-status-pill,
-html body .wc-status-pill,
-html body .status-pill,
-html body .card-status-pill{
-  min-height:36px !important;
-  padding:8px 18px !important;
-  border-radius:999px !important;
-
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  font-size:.85rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-
-  box-shadow:
-    0 8px 18px rgba(0,0,0,.20),
-    inset 0 1px 0 rgba(255,255,255,.35) !important;
-}
-
-html body .mobile-status-pill.is-open,
-html body .wc-status-pill.is-open,
-html body .status-pill.is-open,
-html body .card-status-pill.is-open,
-html body .status-pill.upcoming{
-  background:linear-gradient(180deg,#e9ffe9,#9af0ad) !important;
-  color:#124626 !important;
-  border:1px solid rgba(34,197,94,.50) !important;
-}
-
-html body .mobile-status-pill.is-finished,
-html body .wc-status-pill.is-finished,
-html body .status-pill.is-finished,
-html body .card-status-pill.is-finished,
-html body .status-pill.finished{
-  background:linear-gradient(180deg,#ffe4e4,#f6a5a5) !important;
-  color:#751818 !important;
-  border:1px solid rgba(239,68,68,.50) !important;
-}
-
-html body .mobile-status-pill.is-locked,
-html body .wc-status-pill.is-locked,
-html body .status-pill.is-locked,
-html body .card-status-pill.is-locked,
-html body .status-pill.locked,
-html body .status-pill.live{
-  background:linear-gradient(180deg,#f4f4f5,#d4d4d8) !important;
-  color:#3f3f46 !important;
-  border:1px solid rgba(161,161,170,.58) !important;
-}
-
-/* =====================================================
-   الأزرار الرئيسية
-===================================================== */
-
-html body .bulk-save-btn,
-html body .wc-save-btn,
-html body .mobile-card-link a,
-html body .wc-view-link,
-html body .small-action-link,
-html body .clean-menu-panel button,
-html body .clean-menu-panel input[type="submit"]{
-  background:linear-gradient(180deg,var(--final-gold-1),var(--final-gold-2)) !important;
-  color:var(--final-text-dark) !important;
-  border:1.5px solid rgba(255,238,170,.75) !important;
-
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.45) !important;
-
-  font-weight:1000 !important;
-  text-decoration:none !important;
-  text-shadow:none !important;
-}
-
-html body .bulk-save-btn:hover,
-html body .wc-save-btn:hover,
-html body .mobile-card-link a:hover,
-html body .wc-view-link:hover,
-html body .small-action-link:hover{
-  background:linear-gradient(180deg,#ffe28a,var(--final-gold-3)) !important;
-}
-
-html body .bulk-save-btn::before,
-html body .wc-save-btn::before{
-  content:"" !important;
-  display:none !important;
-}
-
-/* =====================================================
-   صفحة كل المباريات
-===================================================== */
-
-html body .public-matches-grid{
-  background:transparent !important;
-  border-radius:30px !important;
-  padding:0 !important;
-}
-
-html body .page-hero,
-html body .public-note,
-html body .empty-card{
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.08), transparent 38%),
-    linear-gradient(180deg,#26251f,#171612) !important;
-
-  border:1px solid rgba(244,215,122,.28) !important;
-  border-radius:24px !important;
-  box-shadow:0 16px 36px rgba(0,0,0,.28) !important;
-  color:#fff !important;
-}
-
-html body .page-hero h1,
-html body .page-hero p{
-  color:#fff !important;
-}
-
-/* =====================================================
-   الهاتف
-===================================================== */
-
-@media (max-width:700px){
-
-  html body .wc-header,
-  html body .clean-wc-header{
-    padding-top:66px !important;
-  }
-
-  html body details.clean-menu{
-    top:12px !important;
-    right:14px !important;
-  }
-
-  html body details.clean-menu > summary{
-    min-width:118px !important;
-    min-height:46px !important;
-    padding:0 16px !important;
-    font-size:1.04rem !important;
-    border-radius:17px !important;
-  }
-
-  html body .clean-menu-panel{
-    position:fixed !important;
-    top:70px !important;
-    right:14px !important;
-    left:14px !important;
-    width:auto !important;
-    max-width:none !important;
-
-    padding:14px !important;
-    border-radius:24px !important;
-    max-height:calc(100vh - 92px) !important;
-    overflow-y:auto !important;
-  }
-
-  html body .mobile-focus-card,
-  html body .wc-match-card,
-  html body .public-match-card,
-  html body .clean-match-card{
-    border-radius:24px !important;
-    margin-bottom:18px !important;
-  }
-
-  html body .player-hero,
-  html body .wc-welcome-card,
-  html body .welcome-card{
-    padding:22px 18px !important;
-  }
-
-  html body .final-card-meta-row,
-  html body .mobile-match-meta,
-  html body .wc-meta-row,
-  html body .public-meta-strip{
-    gap:6px !important;
-    padding:0 10px 16px !important;
-  }
-
-  html body .final-card-meta-pill,
-  html body .mobile-match-meta span,
-  html body .wc-meta-row span,
-  html body .final-meta-pill,
-  html body .meta-pill,
-  html body .public-meta-strip .meta-pill{
-    min-height:32px !important;
-    padding:7px 9px !important;
-    font-size:.72rem !important;
-  }
-
-  html body .final-card-meta-stage,
-  html body .mobile-match-meta span:nth-child(1),
-  html body .wc-meta-row span:nth-child(1),
-  html body .meta-group{
-    min-width:78px !important;
-  }
-
-  html body .final-card-meta-date,
-  html body .mobile-match-meta span:nth-child(2),
-  html body .wc-meta-row span:nth-child(2),
-  html body .meta-date{
-    min-width:98px !important;
-  }
-
-  html body .final-card-meta-time,
-  html body .mobile-match-meta span:nth-child(3),
-  html body .wc-meta-row span:nth-child(3),
-  html body .meta-time{
-    min-width:58px !important;
-  }
-
-  /* زر حفظ ثابت في الهاتف */
-  html body .bulk-save-bar,
-  html body .wc-save-bar{
-    position:fixed !important;
-    left:12px !important;
-    right:12px !important;
-    bottom:12px !important;
-    z-index:9998 !important;
-
-    width:auto !important;
-    max-width:none !important;
-    margin:0 !important;
-    padding:0 !important;
-
-    background:transparent !important;
-    border:0 !important;
-    box-shadow:none !important;
-  }
-
-  html body .bulk-save-btn,
-  html body .wc-save-btn{
-    width:100% !important;
-    min-height:56px !important;
-    border-radius:18px !important;
-    font-size:1.02rem !important;
-  }
-
-  html body main,
-  html body .container,
-  html body .page-wrap{
-    padding-bottom:92px !important;
-  }
-}
-/* =====================================================
-   clean17 - FULL PROFESSIONAL RESET THEME
-   Theme: Off-white app + white cards + black header + yellow accents
-   Colors only: black / white / off-white / yellow / gray
-===================================================== */
-
-:root{
-  --app-bg:#f3efe6;
-  --app-bg-2:#e7dece;
-
-  --black:#0b0b0b;
-  --black-2:#151515;
-  --black-3:#222222;
-
-  --white:#ffffff;
-  --offwhite:#fbf6ea;
-  --offwhite-2:#eee3cc;
-
-  --gray-1:#f1f1f1;
-  --gray-2:#d7d7d7;
-  --gray-3:#8c8c8c;
-  --gray-4:#343434;
-
-  --yellow:#f4d77a;
-  --yellow-2:#d6ad37;
-  --yellow-3:#a97812;
-
-  --text:#111111;
-  --muted:#666666;
-  --border:rgba(17,17,17,.12);
-  --gold-border:rgba(214,173,55,.55);
-
-  --radius-lg:28px;
-  --radius-md:20px;
-  --radius-sm:14px;
-
-  --shadow-card:0 14px 34px rgba(0,0,0,.12);
-  --shadow-strong:0 18px 44px rgba(0,0,0,.22);
-}
-
-/* =====================================================
-   الصفحة العامة
-===================================================== */
-
-html,
-body{
-  background:
-    radial-gradient(circle at top center, rgba(214,173,55,.20), transparent 34%),
-    linear-gradient(180deg,var(--app-bg),var(--app-bg-2)) !important;
-  color:var(--text) !important;
-}
-
-html body main,
-html body .container,
-html body .page-wrap,
-html body .content,
-html body .main-content{
-  background:transparent !important;
-}
-
-/* =====================================================
-   الهيدر
-===================================================== */
-
-html body .wc-header,
-html body .clean-wc-header{
-  position:relative !important;
-  padding-top:66px !important;
-  background:
-    radial-gradient(circle at top center, rgba(244,215,122,.13), transparent 36%),
-    linear-gradient(180deg,#111,#050505) !important;
-  border-bottom:1px solid rgba(244,215,122,.25) !important;
-  color:#fff !important;
-  box-shadow:0 10px 28px rgba(0,0,0,.22) !important;
-}
-
-/* عنوان الموقع */
-html body .wc-header h1,
-html body .clean-wc-header h1,
-html body .brand-title,
-html body .site-title{
-  color:#fff !important;
-  font-weight:1000 !important;
-  letter-spacing:0 !important;
-}
-
-/* =====================================================
-   زر القائمة والقائمة المنسدلة
-===================================================== */
-
-html body details.clean-menu{
-  position:absolute !important;
-  top:12px !important;
-  right:14px !important;
-  left:auto !important;
-  z-index:9999 !important;
-  width:auto !important;
-}
-
-html body details.clean-menu > summary{
-  min-width:122px !important;
-  min-height:48px !important;
-  padding:0 18px !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:8px !important;
-
-  border-radius:18px !important;
-  background:linear-gradient(180deg,#252525,#0f0f0f) !important;
-  color:#fff !important;
-  border:1px solid rgba(244,215,122,.42) !important;
-
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.07) !important;
-
-  font-size:1.08rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  list-style:none !important;
-  cursor:pointer !important;
-}
-
-html body details.clean-menu > summary::-webkit-details-marker{
-  display:none !important;
-}
-
-html body .clean-menu-panel{
-  position:absolute !important;
-  top:calc(100% + 12px) !important;
-  right:0 !important;
-  left:auto !important;
-
-  width:330px !important;
-  max-width:calc(100vw - 28px) !important;
-
-  padding:16px !important;
-  border-radius:26px !important;
-
-  background:linear-gradient(180deg,#fff,#f4efe3) !important;
-  color:var(--text) !important;
-  border:1.5px solid var(--gold-border) !important;
-
-  box-shadow:
-    0 24px 55px rgba(0,0,0,.34),
-    inset 0 1px 0 rgba(255,255,255,.85) !important;
-
-  overflow:hidden !important;
-}
-
-html body details.clean-menu[open] .clean-menu-panel{
-  animation:menuFadeIn .16s ease-out both !important;
-}
-
-@keyframes menuFadeIn{
-  from{opacity:0; transform:translateY(-8px) scale(.98);}
-  to{opacity:1; transform:translateY(0) scale(1);}
-}
-
-html body .clean-menu-panel a{
-  min-height:54px !important;
-  padding:0 14px !important;
-  margin:0 0 8px !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-
-  border-radius:18px !important;
-  background:var(--white) !important;
-  color:var(--text) !important;
-  border:1px solid rgba(17,17,17,.09) !important;
-
-  text-decoration:none !important;
-  font-size:1.08rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-}
-
-html body .clean-menu-panel a:hover{
-  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
-  color:var(--text) !important;
-}
-
-html body .clean-menu-panel form{
-  background:#fff !important;
-  border:1px solid rgba(17,17,17,.10) !important;
-  border-radius:22px !important;
-  padding:14px !important;
-  margin-top:10px !important;
-}
-
-html body .clean-menu-panel select{
-  width:100% !important;
-  min-height:52px !important;
-  border-radius:16px !important;
-  padding:0 14px !important;
-  background:#fff !important;
-  color:var(--text) !important;
-  border:1px solid rgba(17,17,17,.16) !important;
-  font-weight:900 !important;
-  font-size:1rem !important;
-}
-
-/* =====================================================
-   كرت الترحيب
-===================================================== */
-
-html body .player-hero,
-html body .wc-welcome-card,
-html body .welcome-card{
-  background:linear-gradient(180deg,#fff,#f7f1e3) !important;
-  color:var(--text) !important;
-  border:1px solid rgba(17,17,17,.10) !important;
-  border-radius:28px !important;
-  box-shadow:var(--shadow-card) !important;
-
-  text-align:center !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
-}
-
-html body .player-hero *,
-html body .wc-welcome-card *,
-html body .welcome-card *{
-  text-align:center !important;
-  color:var(--text) !important;
-}
-
-html body .player-hero h2,
-html body .wc-welcome-card h2,
-html body .welcome-card h2{
-  font-size:1.45rem !important;
-  line-height:1.25 !important;
-  font-weight:1000 !important;
-}
-
-/* =====================================================
-   العناوين
-===================================================== */
-
-html body .section-title,
-html body .section-title h2,
-html body .page-hero h1{
-  color:var(--text) !important;
-  font-weight:1000 !important;
-}
-
-html body .page-hero p,
-html body .public-note{
-  color:var(--muted) !important;
-}
-
-/* =====================================================
-   التبويبات
-===================================================== */
-
-html body .match-tabs{
-  background:#fff !important;
-  border:1px solid rgba(17,17,17,.10) !important;
-  border-radius:24px !important;
-  padding:8px !important;
-  box-shadow:var(--shadow-card) !important;
-}
-
-html body .match-tab{
-  border-radius:17px !important;
-  min-height:48px !important;
-  border:1px solid rgba(17,17,17,.10) !important;
-  background:linear-gradient(180deg,#f7f7f7,#e9e9e9) !important;
-  color:var(--text) !important;
-  font-weight:950 !important;
-}
-
-html body .match-tab.active{
-  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
-  color:var(--text) !important;
-  border-color:rgba(214,173,55,.70) !important;
-  box-shadow:
-    0 10px 20px rgba(0,0,0,.15),
-    inset 0 1px 0 rgba(255,255,255,.45) !important;
-}
-
-/* عداد التبويبات */
-html body .match-tab small{
-  background:rgba(0,0,0,.09) !important;
-  color:inherit !important;
-  border-radius:999px !important;
-  padding:4px 8px !important;
-  font-weight:1000 !important;
-}
-
-/* =====================================================
-   كروت المباريات
-===================================================== */
-
-html body .mobile-focus-card,
-html body .wc-match-card,
-html body .public-match-card,
-html body .clean-match-card{
-  background:linear-gradient(180deg,#fff,#f7f1e3) !important;
-  color:var(--text) !important;
-  border:1px solid rgba(17,17,17,.12) !important;
-  border-radius:28px !important;
-  box-shadow:var(--shadow-card) !important;
-  overflow:hidden !important;
-}
-
-/* إزالة الخطوط الداكنة القديمة */
-html body .mobile-focus-card::before,
-html body .wc-match-card::before,
-html body .public-match-card::before,
-html body .clean-match-card::before{
-  content:"" !important;
-  display:block !important;
-  height:5px !important;
-  background:linear-gradient(90deg,var(--black),var(--yellow),var(--black)) !important;
-}
-
-/* رأس الكرت */
-html body .mobile-card-topline,
-html body .wc-card-top,
-html body .public-status-row{
-  background:linear-gradient(180deg,#111,#050505) !important;
-  border-bottom:1px solid rgba(214,173,55,.38) !important;
-  color:#fff !important;
-}
-
-/* أسماء الفرق */
-html body .public-team-side span,
-html body .mobile-team-box strong,
-html body .wc-team-box strong{
-  color:var(--text) !important;
-  font-weight:1000 !important;
-  text-shadow:none !important;
-}
-
-/* الأعلام */
-html body .public-flag,
-html body .mobile-team-flag,
-html body .wc-team-flag{
-  border-radius:14px !important;
-  box-shadow:0 10px 20px rgba(0,0,0,.16) !important;
-}
-
-/* =====================================================
-   المجموعة / التاريخ / الوقت
-===================================================== */
-
-html body .final-card-meta-row,
-html body .mobile-match-meta,
-html body .wc-meta-row,
-html body .public-meta-strip{
-  display:flex !important;
-  flex-direction:row !important;
-  direction:rtl !important;
-  justify-content:center !important;
-  align-items:center !important;
-  gap:8px !important;
-  flex-wrap:wrap !important;
-  padding:0 12px 16px !important;
-  width:100% !important;
-  box-sizing:border-box !important;
-}
-
-html body .final-card-meta-pill,
-html body .mobile-match-meta span,
-html body .wc-meta-row span,
-html body .final-meta-pill,
-html body .meta-pill,
-html body .public-meta-strip .meta-pill{
-  min-height:34px !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  padding:7px 12px !important;
-  border-radius:999px !important;
-
-  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
-  color:var(--text) !important;
-  border:1px solid rgba(214,173,55,.70) !important;
-
-  box-shadow:
-    0 8px 14px rgba(0,0,0,.12),
-    inset 0 1px 0 rgba(255,255,255,.44) !important;
-
-  font-size:.76rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-}
-
-html body .final-card-meta-stage,
-html body .mobile-match-meta span:nth-child(1),
-html body .wc-meta-row span:nth-child(1),
-html body .meta-group{
-  min-width:88px !important;
-  direction:rtl !important;
-}
-
-html body .final-card-meta-date,
-html body .mobile-match-meta span:nth-child(2),
-html body .wc-meta-row span:nth-child(2),
-html body .meta-date{
-  min-width:108px !important;
-  direction:ltr !important;
-}
-
-html body .final-card-meta-time,
-html body .mobile-match-meta span:nth-child(3),
-html body .wc-meta-row span:nth-child(3),
-html body .meta-time{
-  min-width:66px !important;
-  direction:ltr !important;
-}
-
-/* =====================================================
-   مربعات النتيجة
-===================================================== */
-
-html body .mobile-score-inputs input,
-html body .wc-score-inputs input,
-html body .mobile-score-display,
-html body .wc-score-display span,
-html body .public-score-box,
-html body .match-view-score{
-  background:linear-gradient(180deg,#111,#000) !important;
-  color:#fff !important;
-  border:2px solid rgba(214,173,55,.62) !important;
-  border-radius:18px !important;
-
-  box-shadow:
-    0 12px 24px rgba(0,0,0,.22),
-    inset 0 1px 0 rgba(255,255,255,.10) !important;
-
-  text-align:center !important;
-  font-weight:1000 !important;
-}
-
-/* علامة - بين النتيجتين */
-html body .mobile-score-inputs span,
-html body .wc-score-inputs span,
-html body .wc-score-display b{
-  color:var(--black) !important;
-  font-weight:1000 !important;
-}
-
-/* =====================================================
-   حالة المباراة
-===================================================== */
-
-html body .mobile-status-pill,
-html body .wc-status-pill,
-html body .status-pill,
-html body .card-status-pill{
-  min-height:36px !important;
-  padding:8px 18px !important;
-  border-radius:999px !important;
-
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  font-size:.85rem !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-
-  box-shadow:
-    0 8px 18px rgba(0,0,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.35) !important;
-}
-
-/* مفتوحة = أصفر */
-html body .mobile-status-pill.is-open,
-html body .wc-status-pill.is-open,
-html body .status-pill.is-open,
-html body .card-status-pill.is-open,
-html body .status-pill.upcoming{
-  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
-  color:var(--text) !important;
-  border:1px solid rgba(214,173,55,.70) !important;
-}
-
-/* منتهية = رمادي غامق */
-html body .mobile-status-pill.is-finished,
-html body .wc-status-pill.is-finished,
-html body .status-pill.is-finished,
-html body .card-status-pill.is-finished,
-html body .status-pill.finished{
-  background:linear-gradient(180deg,#3a3a3a,#111) !important;
-  color:#fff !important;
-  border:1px solid rgba(0,0,0,.55) !important;
-}
-
-/* مغلقة = رمادي فاتح */
-html body .mobile-status-pill.is-locked,
-html body .wc-status-pill.is-locked,
-html body .status-pill.is-locked,
-html body .card-status-pill.is-locked,
-html body .status-pill.locked,
-html body .status-pill.live{
-  background:linear-gradient(180deg,#f1f1f1,#d8d8d8) !important;
-  color:#333 !important;
-  border:1px solid rgba(0,0,0,.16) !important;
-}
-
-/* =====================================================
-   الأزرار
-===================================================== */
-
-html body .bulk-save-btn,
-html body .wc-save-btn,
-html body .mobile-card-link a,
-html body .wc-view-link,
-html body .small-action-link,
-html body .clean-menu-panel button,
-html body .clean-menu-panel input[type="submit"]{
-  background:linear-gradient(180deg,var(--yellow),var(--yellow-2)) !important;
-  color:var(--text) !important;
-  border:1.5px solid rgba(214,173,55,.78) !important;
-
-  box-shadow:
-    0 10px 22px rgba(0,0,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.48) !important;
-
-  font-weight:1000 !important;
-  text-decoration:none !important;
-  text-shadow:none !important;
-}
-
-html body .bulk-save-btn:hover,
-html body .wc-save-btn:hover,
-html body .mobile-card-link a:hover,
-html body .wc-view-link:hover,
-html body .small-action-link:hover{
-  background:linear-gradient(180deg,#ffe28a,var(--yellow-3)) !important;
-}
-
-html body .bulk-save-btn::before,
-html body .wc-save-btn::before{
-  content:"" !important;
-  display:none !important;
-}
-
-/* =====================================================
-   الصناديق الداخلية: توقعك الحالي / نقاطك
-===================================================== */
-
-html body .mobile-result-box,
-html body .wc-locked-extra,
-html body .wc-locked-box{
-  background:#fff !important;
-  color:var(--text) !important;
-  border:1px solid rgba(17,17,17,.10) !important;
-  border-radius:20px !important;
-  box-shadow:0 10px 22px rgba(0,0,0,.10) !important;
-}
-
-html body .mobile-result-box *,
-html body .wc-locked-extra *,
-html body .wc-locked-box *{
-  color:var(--text) !important;
-}
-
-/* =====================================================
-   صفحة كل المباريات
-===================================================== */
-
-html body .public-matches-grid{
-  background:transparent !important;
-  border-radius:30px !important;
-  padding:0 !important;
-}
-
-html body .page-hero,
-html body .public-note,
-html body .empty-card{
-  background:linear-gradient(180deg,#fff,#f7f1e3) !important;
-  border:1px solid rgba(17,17,17,.10) !important;
-  border-radius:24px !important;
-  box-shadow:var(--shadow-card) !important;
-  color:var(--text) !important;
-}
-
-html body .page-hero h1,
-html body .page-hero p{
-  color:var(--text) !important;
-}
-
-/* =====================================================
-   الهاتف
-===================================================== */
-
-@media (max-width:700px){
-
-  html body .wc-header,
-  html body .clean-wc-header{
-    padding-top:66px !important;
-  }
-
-  html body details.clean-menu{
-    top:12px !important;
-    right:14px !important;
-  }
-
-  html body details.clean-menu > summary{
-    min-width:118px !important;
-    min-height:46px !important;
-    padding:0 16px !important;
-    font-size:1.04rem !important;
-    border-radius:17px !important;
-  }
-
-  html body .clean-menu-panel{
-    position:fixed !important;
-    top:70px !important;
-    right:14px !important;
-    left:14px !important;
-    width:auto !important;
-    max-width:none !important;
-
-    padding:14px !important;
-    border-radius:24px !important;
-    max-height:calc(100vh - 92px) !important;
-    overflow-y:auto !important;
-  }
-
-  html body .clean-menu-panel a{
-    min-height:52px !important;
-    border-radius:17px !important;
-    font-size:1.02rem !important;
-  }
-
-  html body .player-hero,
-  html body .wc-welcome-card,
-  html body .welcome-card{
-    padding:22px 18px !important;
-  }
-
-  html body .mobile-focus-card,
-  html body .wc-match-card,
-  html body .public-match-card,
-  html body .clean-match-card{
-    border-radius:24px !important;
-    margin-bottom:18px !important;
-  }
-
-  html body .final-card-meta-row,
-  html body .mobile-match-meta,
-  html body .wc-meta-row,
-  html body .public-meta-strip{
-    gap:6px !important;
-    padding:0 10px 16px !important;
-  }
-
-  html body .final-card-meta-pill,
-  html body .mobile-match-meta span,
-  html body .wc-meta-row span,
-  html body .final-meta-pill,
-  html body .meta-pill,
-  html body .public-meta-strip .meta-pill{
-    min-height:32px !important;
-    padding:7px 9px !important;
-    font-size:.72rem !important;
-  }
-
-  html body .final-card-meta-stage,
-  html body .mobile-match-meta span:nth-child(1),
-  html body .wc-meta-row span:nth-child(1),
-  html body .meta-group{
-    min-width:78px !important;
-  }
-
-  html body .final-card-meta-date,
-  html body .mobile-match-meta span:nth-child(2),
-  html body .wc-meta-row span:nth-child(2),
-  html body .meta-date{
-    min-width:98px !important;
-  }
-
-  html body .final-card-meta-time,
-  html body .mobile-match-meta span:nth-child(3),
-  html body .wc-meta-row span:nth-child(3),
-  html body .meta-time{
-    min-width:58px !important;
-  }
-
-  /* زر الحفظ ثابت أسفل الهاتف */
-  html body .bulk-save-bar,
-  html body .wc-save-bar{
-    position:fixed !important;
-    left:12px !important;
-    right:12px !important;
-    bottom:12px !important;
-    z-index:9998 !important;
-
-    width:auto !important;
-    max-width:none !important;
-    margin:0 !important;
-    padding:0 !important;
-
-    background:transparent !important;
-    border:0 !important;
-    box-shadow:none !important;
-  }
-
-  html body .bulk-save-btn,
-  html body .wc-save-btn{
-    width:100% !important;
-    min-height:56px !important;
-    border-radius:18px !important;
-    font-size:1.02rem !important;
-  }
-
-  html body main,
-  html body .container,
-  html body .page-wrap{
-    padding-bottom:92px !important;
-  }
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:88px;
+  min-height:46px;
+  padding:0 14px;
+  border-radius:16px;
+  background:#fff;
+  border:1px solid rgba(17,17,17,.10);
+  color:var(--text);
+  font-size:1.2rem;
+  font-weight:1000;
+  direction:ltr;
+}
+.result-chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  min-height:36px;
+  padding:0 10px;
+  border-radius:999px;
+  background:rgba(230,211,156,.52);
+  color:var(--accent-text);
+  border:1px solid rgba(198,168,75,.24);
+  font-size:.84rem;
+  font-weight:1000;
+}
+
+/* leaderboard */
+.top-podium{display:grid;grid-template-columns:1fr;gap:12px;margin:16px 0}
+.podium-card{padding:18px;text-align:center}
+.podium-medal{font-size:2rem;margin-bottom:8px}
+.podium-name{font-size:1.15rem;color:var(--text);font-weight:1000;margin-bottom:6px}
+.podium-points{font-size:1.8rem;font-weight:1000;color:var(--accent-text)}
+.podium-points span{display:block;font-size:.76rem;color:var(--muted);margin-top:4px}
+.podium-meta{margin-top:8px;color:var(--muted);font-weight:900}
+.mobile-leader-list{display:grid;gap:12px}
+.leader-card{display:grid;grid-template-columns:44px 1fr 74px;gap:10px;align-items:center;padding:14px}
+.leader-rank{
+  width:42px;height:42px;border-radius:14px;background:rgba(230,211,156,.52);color:var(--accent-text);
+  display:flex;align-items:center;justify-content:center;font-weight:1000
+}
+.leader-info strong{display:block;color:var(--text);font-size:1rem;font-weight:1000;margin-bottom:6px}
+.leader-stats{display:flex;flex-wrap:wrap;gap:6px}
+.leader-points{
+  min-width:72px;padding:10px;border-radius:18px;background:#fff;border:1px solid rgba(17,17,17,.08);text-align:center
+}
+.leader-points strong{display:block;font-size:1.45rem;line-height:1;color:var(--text)}
+.leader-points span{display:block;margin-top:4px;color:var(--muted);font-size:.74rem;font-weight:900}
+.desktop-leader-table{display:none}
+
+/* tables */
+table{width:100%;border-collapse:collapse}
+thead th,
+tbody td{padding:14px 12px;text-align:center}
+thead th{color:var(--muted);font-size:.84rem;font-weight:1000;border-bottom:1px solid rgba(17,17,17,.08)}
+tbody td{color:var(--text);font-weight:900;border-bottom:1px solid rgba(17,17,17,.06)}
+tbody tr:last-child td{border-bottom:none}
+
+/* stats */
+.stats-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.stats-summary-card,
+.stats-card{padding:16px}
+.stats-summary-card{text-align:center}
+.stats-summary-card span{display:block;color:var(--muted);font-size:.84rem;font-weight:900;margin-bottom:8px}
+.stats-summary-card strong{font-size:1.6rem;color:var(--text);font-weight:1000}
+.stats-grid{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0}
+.stats-card-title{margin-bottom:12px;color:var(--text);font-size:1.04rem;font-weight:1000}
+.stats-list{display:grid;gap:10px}
+.stats-row{
+  display:grid;
+  grid-template-columns:38px 1fr auto;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border-radius:18px;
+  background:#fff;
+  border:1px solid rgba(17,17,17,.08);
+}
+.stats-rank{
+  width:38px;height:38px;border-radius:14px;background:rgba(230,211,156,.52);color:var(--accent-text);
+  display:flex;align-items:center;justify-content:center;font-weight:1000
+}
+.stats-name{color:var(--text);font-weight:1000}
+.stats-value{
+  min-width:72px;
+  padding:10px 12px;
+  border-radius:16px;
+  background:#fff;
+  border:1px solid rgba(17,17,17,.10);
+  text-align:center;
+  color:var(--text);
+  font-weight:1000;
+}
+.stats-value span{display:block;color:var(--muted);font-size:.72rem;font-weight:900;margin-top:4px}
+.stats-match-list{display:grid;gap:12px}
+.stats-match-row{background:#fff;border:1px solid rgba(17,17,17,.08);border-radius:20px;padding:14px}
+.stats-match-teams{display:grid;gap:8px;text-align:center;color:var(--text);font-weight:1000}
+.stats-match-teams strong{
+  margin:auto;
+  min-width:88px;
+  min-height:44px;
+  padding:0 18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:16px;
+  background:rgba(230,211,156,.52);
+  color:var(--accent-text);
+  border:1px solid rgba(198,168,75,.24);
+}
+.stats-mini-flag{width:24px;height:18px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:6px;object-fit:cover}
+.stats-match-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:12px}
+
+@media (min-width:760px){
+  .site-main,main,.clean-wc-header{width:min(100%, 980px)}
+  .public-matches-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .top-podium{grid-template-columns:1fr 1.15fr 1fr}
+  .desktop-leader-table{display:block}
+  .mobile-leader-list{display:none}
+  .predictions-table.desktop-table{display:block}
+  .match-prediction-cards.mobile-cards{display:none}
+}
+
+@media (max-width:520px){
+  .clean-title{padding-top:72px}
+  .clean-title h1{font-size:1.75rem}
+  .clean-subtitle{font-size:.94rem}
+  .clean-menu summary{min-height:50px;padding:0 18px;font-size:1rem}
+  .wc-welcome-card h2{font-size:1.75rem}
+  .wc-section-head h3{font-size:1.72rem}
+  .wc-match-main,
+  .public-teams-row.clean,
+  .match-view-teams{gap:8px;padding-inline:10px}
+  .wc-team-box strong,
+  .public-team-side span,
+  .match-view-team strong{font-size:.98rem}
+  .wc-team-flag,
+  .public-flag,
+  .match-view-team img{width:56px;height:42px}
+  .wc-score-inputs input,
+  .wc-score-display span,
+  .public-score-box,
+  .match-view-score{width:56px;height:56px;font-size:1.6rem;border-radius:16px}
+  .wc-meta-row span,
+  .public-meta-pill{font-size:.78rem;padding:7px 12px;min-height:36px}
+  .leader-card{grid-template-columns:40px 1fr 68px}
+}
+
+@media (max-width:370px){
+  .match-tab,
+  .wc-tab{font-size:.94rem}
+  .match-tab small,
+  .wc-tab small{width:32px;height:32px;min-width:32px}
+  .wc-score-inputs input,
+  .wc-score-display span,
+  .public-score-box,
+  .match-view-score{width:52px;height:52px;font-size:1.45rem}
 }
