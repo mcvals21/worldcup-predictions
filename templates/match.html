@@ -24,19 +24,17 @@
       </div>
 
       <div class="mv-score-center">
-        {% if match_finished %}
-          <div class="mv-score-boxes">
+        <div class="mv-score-boxes">
+          {% if match_finished %}
             <span>{{ match.home_score }}</span>
             <b>-</b>
             <span>{{ match.away_score }}</span>
-          </div>
-        {% else %}
-          <div class="mv-score-boxes">
+          {% else %}
             <span class="empty-score">؟</span>
             <b>-</b>
             <span class="empty-score">؟</span>
-          </div>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
 
       <div class="mv-team">
@@ -78,42 +76,25 @@
 
           <div class="mv-player-block">
             <strong>{{ p.name }}</strong>
-
             {% if pred.is_double %}
               <small>⭐ مضاعفة</small>
-            {% else %}
-              <small>بدون مضاعفة</small>
             {% endif %}
           </div>
 
-          <div class="mv-pred-score">
-            <span>{{ pred.home_score }}</span>
-            <b>-</b>
-            <span>{{ pred.away_score }}</span>
+          <div class="mv-pred-score" dir="ltr">
+            {{ pred.home_score }} - {{ pred.away_score }}
           </div>
 
           <div class="mv-result-block">
             {% if not match_finished %}
-  <span class="mv-result-chip pending">
-    <b>—</b>
-    <small>بانتظار</small>
-  </span>
-{% elif exact %}
-  <span class="mv-result-chip exact">
-    <b>+{{ pts }}</b>
-    <small>دقيق</small>
-  </span>
-{% elif pts > 0 %}
-  <span class="mv-result-chip partial">
-    <b>+{{ pts }}</b>
-    <small>صحيح</small>
-  </span>
-{% else %}
-  <span class="mv-result-chip wrong">
-    <b>0</b>
-    <small>خطأ</small>
-  </span>
-{% endif %}
+              <span class="mv-result-chip pending"><b>—</b></span>
+            {% elif exact %}
+              <span class="mv-result-chip exact"><b dir="ltr">+{{ pts }}</b></span>
+            {% elif pts > 0 %}
+              <span class="mv-result-chip partial"><b dir="ltr">+{{ pts }}</b></span>
+            {% else %}
+              <span class="mv-result-chip wrong"><b>0</b></span>
+            {% endif %}
           </div>
 
         </article>
