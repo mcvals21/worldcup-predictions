@@ -208,6 +208,10 @@
   margin-top:4px;
 }
 
+.rank-solo-exact strong{
+  margin-top:0;
+}
+
 /* الهاتف */
 @media (max-width:640px){
   .rank-solo-head h1{
@@ -283,10 +287,8 @@
           </div>
 
           <div class="rank-solo-exact">
-            <strong>{{ r.exact }}</strong>
-            <span>دقيقة</span>
-          </div>
-
+  <strong>{{ r.exact }}</strong>
+</div>
         </article>
       {% endfor %}
 
