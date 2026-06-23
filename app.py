@@ -453,6 +453,7 @@ def filter_matches_for_view(matches, selected_filter):
     tomorrow_start = today_start + timedelta(days=1)
 
     if selected_filter in ['open', 'current', 'upcoming']:
+        # Show the nearest open matches first.
         return [
             m for m in matches
             if not match_locked(m)
@@ -465,10 +466,19 @@ def filter_matches_for_view(matches, selected_filter):
         ]
 
     if selected_filter == 'finished':
-        return [
-            m for m in matches
-            if m.home_score is not None and m.away_score is not None
-        ]
+        # Finished matches: newest first.
+        return sorted(
+            [
+                m for m in matches
+                if m.home_score is not None and m.away_score is not None
+            ],
+            key=lambda m: m.start_time,
+            reverse=True
+        )
+
+    if selected_filter == 'all':
+        # All matches: newest first so users do not need to scroll down.
+        return sorted(matches, key=lambda m: m.start_time, reverse=True)
 
     return matches
 
