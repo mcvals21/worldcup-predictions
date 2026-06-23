@@ -1336,3 +1336,48 @@ html body .small-action-link{
     text-align: center !important;
   }
 }
+/* =====================================================
+   FORCE ORDER: group -> date -> time
+===================================================== */
+
+html body .public-match-top{
+  display:flex !important;
+  flex-direction:row !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex-wrap:wrap !important;
+
+  /* مهم: نلغي تأثير RTL على ترتيب الفليكس */
+  direction:ltr !important;
+}
+
+html body .public-match-top .stage-pill{
+  order:3 !important;
+  direction:rtl !important;
+}
+
+html body .public-match-top .date-pill{
+  order:2 !important;
+  direction:ltr !important;
+}
+
+html body .public-match-top .time-pill{
+  order:1 !important;
+  direction:ltr !important;
+}
+
+/* نفس الشكل للشارات الثلاث */
+html body .public-match-top .stage-pill,
+html body .public-match-top .date-pill,
+html body .public-match-top .time-pill{
+  min-height:34px !important;
+  padding:7px 13px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#0f0f0d 0%, #050505 100%) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+  font-size:.81rem !important;
+  font-weight:950 !important;
+  line-height:1 !important;
+}
