@@ -108,12 +108,19 @@
         </div>
       </div>
 
-      <div class="wc-meta-row">
-        <span>{{ m.start_time.strftime('%H:%M') }}</span>
-        <span>{{ m.start_time.strftime('%Y-%m-%d') }}</span>
-        <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
-      </div>
+      <div class="final-card-meta-row">
+  <span class="final-card-meta-pill final-card-meta-stage">
+    {{ stage_labels.get(m.stage, m.stage) }}
+  </span>
 
+  <span class="final-card-meta-pill final-card-meta-date">
+    {{ m.start_time.strftime('%Y-%m-%d') }}
+  </span>
+
+  <span class="final-card-meta-pill final-card-meta-time">
+    {{ m.start_time.strftime('%H:%M') }}
+  </span>
+</div>
       {% if is_locked and pred %}
         <div class="wc-locked-extra">
           <div class="wc-locked-box">
