@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, abort, flash
+from flask import Flask, render_template, request, redirect, url_for, abort, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -453,14 +453,14 @@ def filter_matches_for_view(matches, selected_filter):
     tomorrow_start = today_start + timedelta(days=1)
 
     if selected_filter in ['open', 'current', 'upcoming']:
-        # المباريات الحالية = التي لم تبدأ بعد ويمكن توقعها
+        # Current matches: matches still open for prediction, nearest first.
         return [
             m for m in matches
             if not match_locked(m)
         ]
 
     if selected_filter == 'previous':
-        # المباريات السابقة = بدأت أو أُغلقت، والأحدث أولًا
+        # Previous matches: any match already locked/started, newest first.
         return sorted(
             [
                 m for m in matches
@@ -566,6 +566,8 @@ def participant_page(token):
     if not t:
         abort(404)
 
+    session['participant_token'] = p.token
+
     selected_filter = request.args.get('filter', 'open')
 
     if selected_filter not in MATCH_FILTER_LABELS:
@@ -620,12 +622,27 @@ def participant_page(token):
                     skipped_locked += 1
                     continue
 
+                raw_hs = (request.form.get(f'home_score_{match.id}') or '').strip()
+                raw_aw = (request.form.get(f'away_score_{match.id}') or '').strip()
+
+                if raw_hs == '' or raw_aw == '':
+                    flash('تنبيه: يرجى إدخال نتيجة لكل المباريات الحالية قبل الحفظ.')
+                    return redirect(url_for(
+                        'participant_page',
+                        token=token,
+                        filter=selected_filter
+                    ))
+
                 try:
-                    hs = int(request.form.get(f'home_score_{match.id}', 0) or 0)
-                    aw = int(request.form.get(f'away_score_{match.id}', 0) or 0)
+                    hs = int(raw_hs)
+                    aw = int(raw_aw)
                 except ValueError:
-                    hs = 0
-                    aw = 0
+                    flash('تنبيه: يرجى إدخال أرقام صحيحة فقط في مربعات التوقع.')
+                    return redirect(url_for(
+                        'participant_page',
+                        token=token,
+                        filter=selected_filter
+                    ))
 
                 is_double = request.form.get(f'is_double_{match.id}') == 'on'
 
@@ -772,37 +789,22 @@ def rules():
 
 @app.route('/matches')
 def matches_page():
-    t = tournament()
+    # The public matches page is no longer used.
+    # If the visitor came from a participant page, return them to their own matches page.
+    participant_token = session.get('participant_token')
 
-    if not t:
-        abort(404)
+    if participant_token:
+        selected_filter = request.args.get('filter', 'open')
+        if selected_filter not in MATCH_FILTER_LABELS:
+            selected_filter = 'open'
 
-    selected_filter = request.args.get('filter', 'open')
+        return redirect(url_for(
+            'participant_page',
+            token=participant_token,
+            filter=selected_filter
+        ))
 
-    if selected_filter not in MATCH_FILTER_LABELS:
-        selected_filter = 'open'
-
-    all_matches = Match.query.filter_by(
-        tournament_id=t.id
-    ).order_by(Match.start_time).all()
-
-    matches = filter_matches_for_view(all_matches, selected_filter)
-
-    match_counts = {
-        key: len(filter_matches_for_view(all_matches, key))
-        for key in MATCH_FILTER_LABELS
-    }
-
-    return render_template(
-        'matches.html',
-        t=t,
-        matches=matches,
-        selected_filter=selected_filter,
-        match_filter_labels=MATCH_FILTER_LABELS,
-        match_counts=match_counts,
-        locked=match_locked,
-        stage_labels=STAGE_LABELS
-    )
+    return redirect(url_for('leaderboard'))
 
 
 @app.route('/today')
