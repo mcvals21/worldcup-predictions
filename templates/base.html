@@ -153,7 +153,21 @@ document.addEventListener('DOMContentLoaded', function () {
         toast.remove();
       }, 260);
     }, 4200);
+  document.querySelectorAll('.prediction-save-overlay').forEach(function (overlay) {
+  function closeSaveModal() {
+    overlay.style.opacity = '0';
+    overlay.style.transition = '.22s ease';
+    setTimeout(function () {
+      overlay.remove();
+    }, 240);
+  }
+
+  overlay.querySelectorAll('[data-close-save-modal]').forEach(function (button) {
+    button.addEventListener('click', closeSaveModal);
   });
+
+  setTimeout(closeSaveModal, 2600);
+});});
 
   document.querySelectorAll('.clean-menu').forEach(function(menu){
     document.addEventListener('click', function (event) {
@@ -180,3 +194,18 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 </body>
 </html>
+
+<style>
+.prediction-save-icon{
+  background:linear-gradient(180deg,#d7f0dc,#9ee5af) !important;
+  color:#245d36 !important;
+}
+
+.prediction-save-card h3{
+  color:#131313 !important;
+}
+
+.prediction-save-card p{
+  color:#5f584d !important;
+}
+</style>
