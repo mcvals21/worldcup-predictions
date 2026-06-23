@@ -421,8 +421,8 @@ def inject_team_helpers():
 
 
 MATCH_FILTER_LABELS = {
-    'open': 'المفتوحة',
-    'all': 'كل المباريات'
+    'open': 'المباريات الحالية',
+    'previous': 'المباريات السابقة'
 }
 
 ADMIN_MATCH_FILTER_LABELS = {
@@ -453,11 +453,22 @@ def filter_matches_for_view(matches, selected_filter):
     tomorrow_start = today_start + timedelta(days=1)
 
     if selected_filter in ['open', 'current', 'upcoming']:
-        # Show the nearest open matches first.
+        # المباريات الحالية = التي لم تبدأ بعد ويمكن توقعها
         return [
             m for m in matches
             if not match_locked(m)
         ]
+
+    if selected_filter == 'previous':
+        # المباريات السابقة = بدأت أو أُغلقت، والأحدث أولًا
+        return sorted(
+            [
+                m for m in matches
+                if match_locked(m)
+            ],
+            key=lambda m: m.start_time,
+            reverse=True
+        )
 
     if selected_filter == 'today':
         return [
@@ -466,7 +477,6 @@ def filter_matches_for_view(matches, selected_filter):
         ]
 
     if selected_filter == 'finished':
-        # Finished matches: newest first.
         return sorted(
             [
                 m for m in matches
@@ -475,10 +485,6 @@ def filter_matches_for_view(matches, selected_filter):
             key=lambda m: m.start_time,
             reverse=True
         )
-
-    if selected_filter == 'all':
-        # All matches: newest first so users do not need to scroll down.
-        return sorted(matches, key=lambda m: m.start_time, reverse=True)
 
     return matches
 
