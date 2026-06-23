@@ -94,14 +94,26 @@
 
           <div class="mv-result-block">
             {% if not match_finished %}
-              <span class="mv-result-chip pending">بانتظار</span>
-            {% elif exact %}
-              <span class="mv-result-chip exact">+{{ pts }} مطابقة</span>
-            {% elif pts > 0 %}
-              <span class="mv-result-chip partial">+{{ pts }}</span>
-            {% else %}
-              <span class="mv-result-chip wrong">0</span>
-            {% endif %}
+  <span class="mv-result-chip pending">
+    <b>—</b>
+    <small>بانتظار</small>
+  </span>
+{% elif exact %}
+  <span class="mv-result-chip exact">
+    <b>+{{ pts }}</b>
+    <small>دقيق</small>
+  </span>
+{% elif pts > 0 %}
+  <span class="mv-result-chip partial">
+    <b>+{{ pts }}</b>
+    <small>صحيح</small>
+  </span>
+{% else %}
+  <span class="mv-result-chip wrong">
+    <b>0</b>
+    <small>خطأ</small>
+  </span>
+{% endif %}
           </div>
 
         </article>
