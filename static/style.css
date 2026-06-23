@@ -702,3 +702,95 @@ main{max-width:520px;margin:0 auto;padding:14px 12px 34px}
 .bulk-predictions-form{
   padding-bottom:8px !important;
 }
+/* =====================================================
+   FIX: زر عرض التوقعات + توسيط أرقام النتيجة
+===================================================== */
+
+/* 1) إعطاء الكرت مساحة سفلية أفضل */
+.mobile-focus-card,
+.wc-match-card {
+  padding-bottom: 14px !important;
+}
+
+/* 2) حاوية زر عرض التوقعات */
+.mobile-card-link,
+.wc-view-link-wrap {
+  margin: 12px 14px 0 !important;
+}
+
+/* 3) شكل زر "عرض توقعات الجميع" */
+.mobile-card-link a,
+.wc-view-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-height: 52px !important;
+  padding: 0 16px !important;
+  border-radius: 18px !important;
+
+  background: linear-gradient(180deg, #0f0f10 0%, #090909 100%) !important;
+  color: #f0d97a !important;
+  border: 1.5px solid rgba(212, 175, 55, 0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.03),
+    0 6px 18px rgba(0,0,0,0.22) !important;
+
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  text-decoration: none !important;
+  line-height: 1 !important;
+}
+
+/* hover بسيط إن وجد */
+.mobile-card-link a:hover,
+.wc-view-link:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #141415 0%, #0b0b0c 100%) !important;
+}
+
+/* 4) توسيط أرقام مربعات النتيجة البيضاء */
+.mobile-score-inputs input,
+.wc-score-inputs input,
+.mobile-score-display,
+.wc-score-display span,
+.score-box,
+.match-score-box {
+  text-align: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  height: 58px !important;
+}
+
+/* لإبعاد الرقم قليلًا عن الأعلى لو بقي مرتفعًا */
+.mobile-score-inputs input,
+.wc-score-inputs input {
+  vertical-align: middle !important;
+}
+
+/* 5) لو عندك عنصر داخل المربع نفسه يحمل الرقم */
+.mobile-score-display b,
+.wc-score-display b,
+.score-box b,
+.match-score-box b {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+/* 6) لو كان النص داخل مربعات توقعك/نقاطك مرتفع قليلًا */
+.mobile-result-box > div,
+.wc-locked-box {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
