@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080808">
   <title>{{ t.name if t else 'توقعات المباريات' }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=ref-sports-4">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=ref-sports-5">
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
@@ -22,7 +22,13 @@
       <div class="clean-menu-panel">
         <nav class="menu-links">
           <a href="/leaderboard">🏅 الترتيب</a>
-          <a href="/matches?filter=open">⚽ المباريات</a>
+          {% if p is defined %}
+            <a href="{{ url_for('participant_page', token=p.token, filter='open') }}">⚽ المباريات</a>
+          {% elif session.get('participant_token') %}
+            <a href="{{ url_for('participant_page', token=session.get('participant_token'), filter='open') }}">⚽ المباريات</a>
+          {% else %}
+            <a href="/leaderboard">⚽ المباريات</a>
+          {% endif %}
           <a href="/rules">📖 القوانين</a>
           <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
         </nav>
@@ -81,7 +87,7 @@
     <div class="toast-area" id="toastArea">
       {% for message in messages %}
         {% set is_error = 'لا يمكن' in message or 'فشل' in message or 'خطأ' in message or 'لم يتم' in message %}
-        {% set is_warning = 'مسح' in message or 'حذف' in message or 'تنبيه' in message or 'إغلاق' in message %}
+        {% set is_warning = 'مسح' in message or 'حذف' in message or 'تنبيه' in message or 'إغلاق' in message or 'يرجى' in message %}
 
         <div class="premium-toast-simple {% if is_error %}toast-error{% elif is_warning %}toast-warning{% else %}toast-success{% endif %}">
           <span class="toast-simple-icon">
