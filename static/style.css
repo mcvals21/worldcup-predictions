@@ -1676,3 +1676,87 @@ html body .wc-meta-row span{
     max-height:54px !important;
   }
 }
+/* =====================================================
+   clean11
+   إصلاح نهائي لترتيب: المجموعة | التاريخ | الوقت
+===================================================== */
+
+/* صفحة كل المباريات */
+html body .public-meta-strip{
+  display:flex !important;
+  flex-direction:row !important;
+  direction:rtl !important;
+  justify-content:center !important;
+  align-items:center !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+  padding:12px 12px 4px !important;
+  grid-template-areas:none !important;
+  grid-template-columns:none !important;
+}
+
+html body .public-meta-strip .meta-group,
+html body .public-meta-strip .meta-date,
+html body .public-meta-strip .meta-time{
+  order:initial !important;
+  grid-area:auto !important;
+}
+
+html body .public-meta-strip .meta-group{
+  direction:rtl !important;
+}
+
+html body .public-meta-strip .meta-date,
+html body .public-meta-strip .meta-time{
+  direction:ltr !important;
+}
+
+/* صفحة المتسابق */
+html body .mobile-match-meta,
+html body .wc-meta-row{
+  display:flex !important;
+  flex-direction:row !important;
+  direction:rtl !important;
+  justify-content:center !important;
+  align-items:center !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+  grid-template-areas:none !important;
+  grid-template-columns:none !important;
+}
+
+html body .mobile-match-meta span,
+html body .wc-meta-row span{
+  order:initial !important;
+  grid-area:auto !important;
+}
+
+/* الأول = المجموعة */
+html body .mobile-match-meta span:nth-child(1),
+html body .wc-meta-row span:nth-child(1){
+  direction:rtl !important;
+}
+
+/* الثاني = التاريخ، الثالث = الوقت */
+html body .mobile-match-meta span:nth-child(2),
+html body .mobile-match-meta span:nth-child(3),
+html body .wc-meta-row span:nth-child(2),
+html body .wc-meta-row span:nth-child(3){
+  direction:ltr !important;
+}
+
+/* تثبيت شكل الشارات */
+html body .public-meta-strip .meta-pill,
+html body .mobile-match-meta span,
+html body .wc-meta-row span{
+  min-height:34px !important;
+  padding:7px 11px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#0f0f0d 0%, #050505 100%) !important;
+  color:#f6d77a !important;
+  border:1px solid rgba(212,175,55,.46) !important;
+  font-size:.76rem !important;
+  font-weight:950 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
