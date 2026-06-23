@@ -2,20 +2,250 @@
 
 {% block content %}
 
-<section class="rank-clean-page">
+<style>
+/* =====================================================
+   leaderboard isolated style
+   هذا التنسيق خاص بصفحة الترتيب فقط ولا يؤثر على باقي الصفحات
+===================================================== */
 
-  <header class="rank-clean-header">
+.rank-solo-page,
+.rank-solo-page *{
+  box-sizing:border-box;
+}
+
+.rank-solo-page{
+  display:grid;
+  gap:14px;
+  direction:rtl;
+}
+
+/* عنوان بسيط بدون كرت كبير */
+.rank-solo-head{
+  text-align:center;
+  margin:6px 0 12px;
+}
+
+.rank-solo-head h1{
+  margin:0;
+  color:#fff;
+  font-size:1.75rem;
+  line-height:1.2;
+  font-weight:1000;
+}
+
+.rank-solo-head p{
+  margin:8px 0 0;
+  color:#d8d3c5;
+  font-size:.9rem;
+  line-height:1.6;
+  font-weight:850;
+}
+
+/* قائمة الترتيب */
+.rank-solo-list{
+  display:grid;
+  gap:10px;
+}
+
+/* صف المتسابق */
+.rank-solo-row{
+  position:relative;
+
+  display:grid;
+  grid-template-columns:44px minmax(0,1fr) 68px 68px;
+  align-items:center;
+  gap:10px;
+
+  min-height:66px;
+  padding:12px 14px;
+  border-radius:17px;
+
+  background:#e2dfd7;
+  border:1px solid #d0cbc0;
+  color:#171717;
+
+  box-shadow:none;
+  overflow:hidden;
+}
+
+/* شريط جانبي بسيط */
+.rank-solo-row::before{
+  content:"";
+  position:absolute;
+  right:0;
+  top:10px;
+  bottom:10px;
+  width:4px;
+  border-radius:999px 0 0 999px;
+  background:#8f949e;
+}
+
+.rank-solo-row.rank-1::before{
+  background:#d0b255;
+}
+
+.rank-solo-row.rank-2::before{
+  background:#aeb4bf;
+}
+
+.rank-solo-row.rank-3::before{
+  background:#b88a5a;
+}
+
+/* الترتيب */
+.rank-solo-place{
+  width:38px;
+  height:38px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:13px;
+  background:#f3efe3;
+  border:1px solid rgba(0,0,0,.08);
+
+  color:#171717;
+  font-size:.95rem;
+  font-weight:1000;
+}
+
+/* الاسم */
+.rank-solo-name{
+  color:#171717;
+  font-size:1.02rem;
+  line-height:1.2;
+  font-weight:1000;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+
+  padding-right:6px;
+}
+
+/* النقاط */
+.rank-solo-points{
+  height:42px;
+  min-width:66px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:14px;
+  background:linear-gradient(180deg,#3a3c42,#25272c);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.rank-solo-points strong{
+  color:#fff;
+  font-size:1.05rem;
+  line-height:1;
+  font-weight:1000;
+}
+
+.rank-solo-points span{
+  color:#d8d3c5;
+  font-size:.56rem;
+  line-height:1;
+  font-weight:850;
+  margin-top:4px;
+}
+
+/* التوقعات الدقيقة */
+.rank-solo-exact{
+  height:42px;
+  min-width:66px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:14px;
+  background:#e7d79d;
+  border:1px solid rgba(167,131,37,.18);
+}
+
+.rank-solo-exact strong{
+  color:#33280f;
+  font-size:1rem;
+  line-height:1;
+  font-weight:1000;
+}
+
+.rank-solo-exact span{
+  color:#5f4a16;
+  font-size:.56rem;
+  line-height:1;
+  font-weight:850;
+  margin-top:4px;
+}
+
+/* الهاتف */
+@media (max-width:640px){
+  .rank-solo-head h1{
+    font-size:1.5rem;
+  }
+
+  .rank-solo-head p{
+    font-size:.82rem;
+  }
+
+  .rank-solo-row{
+    grid-template-columns:40px minmax(0,1fr) 58px 58px;
+    gap:8px;
+    min-height:64px;
+    padding:11px 12px;
+    border-radius:16px;
+  }
+
+  .rank-solo-place{
+    width:36px;
+    height:36px;
+    border-radius:13px;
+    font-size:.88rem;
+  }
+
+  .rank-solo-name{
+    font-size:.96rem;
+  }
+
+  .rank-solo-points,
+  .rank-solo-exact{
+    min-width:56px;
+    height:40px;
+    border-radius:13px;
+  }
+
+  .rank-solo-points strong,
+  .rank-solo-exact strong{
+    font-size:.96rem;
+  }
+
+  .rank-solo-points span,
+  .rank-solo-exact span{
+    font-size:.52rem;
+  }
+}
+</style>
+
+<section class="rank-solo-page">
+
+  <header class="rank-solo-head">
     <h1>الترتيب العام</h1>
     <p>النقاط والتوقعات الصحيحة بين المشاركين</p>
   </header>
 
   {% if rows %}
-    <div class="rank-clean-list">
+    <div class="rank-solo-list">
 
       {% for r in rows %}
-        <article class="rank-clean-row {% if loop.index == 1 %}rank-gold{% elif loop.index == 2 %}rank-silver{% elif loop.index == 3 %}rank-bronze{% endif %}">
+        <article class="rank-solo-row rank-{{ loop.index }}">
 
-          <div class="rank-clean-place">
+          <div class="rank-solo-place">
             {% if loop.index == 1 %}
               🥇
             {% elif loop.index == 2 %}
@@ -27,16 +257,16 @@
             {% endif %}
           </div>
 
-          <div class="rank-clean-name">
+          <div class="rank-solo-name">
             {{ r.name }}
           </div>
 
-          <div class="rank-clean-points">
+          <div class="rank-solo-points">
             <strong>{{ r.points }}</strong>
             <span>نقطة</span>
           </div>
 
-          <div class="rank-clean-exact">
+          <div class="rank-solo-exact">
             <strong>{{ r.exact }}</strong>
             <span>دقيقة</span>
           </div>
