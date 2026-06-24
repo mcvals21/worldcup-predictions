@@ -1,9 +1,42 @@
 
+
 {% extends 'base.html' %}
 
 {% block body_class %}{% if selected_filter == 'open' and has_open_matches %}has-save-bar{% endif %}{% endblock %}
 
 {% block content %}
+
+<style>
+  .wc-x2-option{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:10px !important;
+  }
+
+  .wc-x2-option .wc-x2-badge{
+    direction:ltr;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:42px;
+    height:30px;
+    padding:0 10px;
+    border-radius:999px;
+    background:linear-gradient(135deg,#e3cf92,#c9a84d);
+    color:#17130a;
+    border:1px solid rgba(0,0,0,.08);
+    font-size:.95rem;
+    font-weight:1000;
+    letter-spacing:.2px;
+  }
+
+  .wc-x2-option strong{
+    color:inherit;
+    font-size:.95rem;
+    font-weight:1000;
+  }
+</style>
 
 <section class="wc-welcome-card">
   <div class="wc-welcome-icon">👋</div>
@@ -144,13 +177,14 @@
       {% endif %}
 
       {% if not is_locked and m.stage in knockout %}
-        <label class="wc-double-option">
+        <label class="wc-double-option wc-x2-option">
           <input
             type="checkbox"
             name="is_double_{{ m.id }}"
             {% if pred and pred.is_double %}checked{% endif %}
           >
-          <span>⭐ مباراة مضاعفة</span>
+          <span class="wc-x2-badge" aria-hidden="true">×2</span>
+          <strong>ضاعف نقاطك</strong>
         </label>
       {% endif %}
     </section>
@@ -183,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <p>${message}</p>
         <div class="prediction-warning-actions">
           <button type="button" class="prediction-warning-secondary">تعديل التوقع</button>
-          ${options.allowContinue ? '<button type="button" class="prediction-warning-primary">الحفظ رغم ذلك</button>' : ''}
+          ${options.allowContinue ? '<button type="button" class="prediction-warning-primary">' + (options.primaryText || 'الحفظ رغم ذلك') + '</button>' : ''}
         </div>
       </div>
     `;
@@ -198,7 +232,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (primary) {
       primary.addEventListener('click', function () {
         overlay.remove();
-        form.dataset.confirmedLargeScore = '1';
+        const confirmKey = options.confirmKey || 'confirmedLargeScore';
+        form.dataset[confirmKey] = '1';
         form.requestSubmit();
       });
     }
@@ -240,7 +275,24 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
+    const doubleInput = form.querySelector('.wc-double-option input[type="checkbox"]:checked');
+
+    if (doubleInput && form.dataset.confirmedDouble !== '1') {
+      event.preventDefault();
+      showPredictionWarning(
+        '×2 تأكيد مضاعفة النقاط',
+        'أنت اخترت مضاعفة نقاطك لهذه المباراة.<br>إذا كان توقعك دقيقًا تحصل على +10<br>وإذا كان توقعك قريبًا تحصل على +4<br>ولا يمكنك اختيار أكثر من مباراة مضاعفة في نفس الدور.<br><br>هل تريد حفظ التوقعات؟',
+        {
+          allowContinue: true,
+          confirmKey: 'confirmedDouble',
+          primaryText: 'نعم، حفظ التوقعات'
+        }
+      );
+      return;
+    }
+
     delete form.dataset.confirmedLargeScore;
+    delete form.dataset.confirmedDouble;
   });
 });
 </script>
