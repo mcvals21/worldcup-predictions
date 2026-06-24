@@ -12,6 +12,12 @@ app.config['SECRET_KEY'] = 'change-this-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(     'DATABASE_URL',     'sqlite:///predictions.db' )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+@app.context_processor
+def inject_current_participant_token():
+    return {
+        'current_participant_token': session.get('participant_token')
+    }
+
 db = SQLAlchemy(app)
 
 KUWAIT_TZ = ZoneInfo("Asia/Kuwait")
@@ -561,12 +567,12 @@ def index():
 @app.route('/p/<token>', methods=['GET', 'POST'])
 def participant_page(token):
     p = participant_by_token(token)
+    session['participant_token'] = p.token
+
     t = tournament()
 
     if not t:
         abort(404)
-
-    session['participant_token'] = p.token
 
     selected_filter = request.args.get('filter', 'open')
 
@@ -789,15 +795,14 @@ def rules():
 
 @app.route('/matches')
 def matches_page():
-    # The public matches page is no longer used.
-    # If the visitor came from a participant page, return them to their own matches page.
+    selected_filter = request.args.get('filter', 'open')
+
+    if selected_filter not in MATCH_FILTER_LABELS:
+        selected_filter = 'open'
+
     participant_token = session.get('participant_token')
 
     if participant_token:
-        selected_filter = request.args.get('filter', 'open')
-        if selected_filter not in MATCH_FILTER_LABELS:
-            selected_filter = 'open'
-
         return redirect(url_for(
             'participant_page',
             token=participant_token,
@@ -1193,27 +1198,7 @@ def admin(code):
 
 @app.cli.command('init-db')
 def init_db():
-    db.drop_all()
-    db.create_all()
-
-    t = Tournament(name='كأس العالم 2026')
-    db.session.add(t)
-    db.session.flush()
-
-    for name in PARTICIPANT_NAMES:
-        db.session.add(
-            Participant(
-                name=name,
-                token=PARTICIPANT_TOKENS[name]
-            )
-        )
-
-    db.session.commit()
-
-    print('Database initialized. Admin:', f'/admin/{ADMIN_CODE}')
-
-    for p in Participant.query.order_by(Participant.name).all():
-        print(p.name, f'/p/{p.token}')
+    print('تم تعطيل init-db لحماية قاعدة البيانات. لا يتم حذف أي بيانات.')
 
 
 if __name__ == "__main__":
