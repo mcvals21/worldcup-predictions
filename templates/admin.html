@@ -760,55 +760,157 @@
   }
 }
 
+
+/* =====================================================
+   Admin ref v3 - cleaner collapsible sections
+   Only admin.html, same approved theme.
+===================================================== */
+.admin-ref-page{
+  padding-top:0 !important;
+}
+
+.admin-ref-hero{
+  display:none !important;
+}
+
+.admin-ref-toggle-card{
+  padding:0 !important;
+}
+
+.admin-ref-toggle-card > summary{
+  list-style:none;
+  cursor:pointer;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.admin-ref-toggle-card > summary::-webkit-details-marker{
+  display:none;
+}
+
+.admin-ref-toggle-card > summary .admin-ref-card-title{
+  display:grid;
+  gap:6px;
+}
+
+.admin-ref-toggle-icon{
+  width:36px;
+  height:36px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#e3cf92;
+  color:#17130a;
+  border:1px solid rgba(0,0,0,.08);
+  font-weight:1000;
+  flex:0 0 auto;
+  transition:.18s ease;
+}
+
+.admin-ref-toggle-icon::before{
+  content:"+";
+}
+
+.admin-ref-toggle-card[open] > summary .admin-ref-toggle-icon::before{
+  content:"−";
+}
+
+.admin-ref-toggle-body{
+  padding:0 16px 16px;
+}
+
+.admin-ref-summary-line{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.admin-ref-summary-line .admin-ref-chip{
+  min-height:32px;
+  padding:6px 11px;
+  font-size:.8rem;
+}
+
+.admin-ref-deadline-card .admin-ref-deadline-top{
+  margin-bottom:12px;
+}
+
+.admin-ref-manage-card .admin-ref-tabs{
+  margin-top:0 !important;
+}
+
+@media (max-width:760px){
+  .admin-ref-toggle-card > summary{
+    padding:15px;
+  }
+
+  .admin-ref-toggle-body{
+    padding:0 15px 15px;
+  }
+
+  .admin-ref-summary-line{
+    gap:7px;
+  }
+}
+
 </style>
 
 <div class="admin-ref-page">
 
-  <section class="admin-ref-hero">
-    <div class="admin-ref-hero-inner">
-      <div class="admin-ref-title-block">
-        <span class="admin-ref-badge">لوحة التحكم</span>
-        <h2>إدارة المسابقة</h2>
-        <p>أضف المباريات، أدخل النتائج، وعدّل الإعدادات المهمة بدون تغيير تجربة المشاركين.</p>
-      </div>
-      <span class="admin-ref-chip">{{ matches|length }} مباراة ظاهرة</span>
-    </div>
-  </section>
-
-  <section class="admin-ref-card admin-ref-deadline-card is-compact">
-    <div class="admin-ref-deadline-top">
+  <details class="admin-ref-card admin-ref-toggle-card admin-ref-deadline-card">
+    <summary>
       <div class="admin-ref-card-title">
         <span class="admin-ref-badge">🏆 توقع البطل</span>
         <h3>موعد إغلاق توقع البطل</h3>
-        <p>بعد هذا الموعد لن يستطيع المشاركون تغيير اختيار البطل.</p>
+        <div class="admin-ref-summary-line">
+          {% if t.champion_pick_deadline %}
+            <span class="admin-ref-chip" dir="ltr">{{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}</span>
+          {% else %}
+            <span class="admin-ref-chip">لم يتم تحديد موعد</span>
+          {% endif %}
+        </div>
+      </div>
+      <span class="admin-ref-toggle-icon" aria-hidden="true"></span>
+    </summary>
+
+    <div class="admin-ref-toggle-body">
+      <div class="admin-ref-deadline-top">
+        <div class="admin-ref-card-title">
+          <p>بعد هذا الموعد لن يستطيع المشاركون تغيير اختيار البطل.</p>
+        </div>
+
+        <div class="admin-ref-deadline-current">
+          <span>الموعد الحالي</span>
+          {% if t.champion_pick_deadline %}
+            <b dir="ltr">{{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}</b>
+          {% else %}
+            <b>لم يتم تحديد موعد</b>
+          {% endif %}
+        </div>
       </div>
 
-      <div class="admin-ref-deadline-current">
-        <span>الموعد الحالي</span>
-        {% if t.champion_pick_deadline %}
-          <b dir="ltr">{{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}</b>
-        {% else %}
-          <b>لم يتم تحديد موعد</b>
-        {% endif %}
-      </div>
-    </div>
-
-    <form method="post" class="admin-ref-deadline-actions">
-      <input type="hidden" name="action" value="champion_deadline">
-      <label>
-        <span>تحديد أو تغيير الموعد</span>
-        <input type="datetime-local" name="deadline" value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}">
-      </label>
-      <button type="submit" class="admin-ref-primary">حفظ الموعد</button>
-    </form>
-
-    {% if t.champion_pick_deadline %}
-      <form method="post" style="margin-top:10px" onsubmit="return confirm('هل تريد مسح موعد إغلاق توقع البطل؟')">
-        <input type="hidden" name="action" value="clear_champion_deadline">
-        <button type="submit" class="admin-ref-secondary">مسح الموعد</button>
+      <form method="post" class="admin-ref-deadline-actions">
+        <input type="hidden" name="action" value="champion_deadline">
+        <label>
+          <span>تحديد أو تغيير الموعد</span>
+          <input type="datetime-local" name="deadline" value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}">
+        </label>
+        <button type="submit" class="admin-ref-primary">حفظ الموعد</button>
       </form>
-    {% endif %}
-  </section>
+
+      {% if t.champion_pick_deadline %}
+        <form method="post" style="margin-top:10px" onsubmit="return confirm('هل تريد مسح موعد إغلاق توقع البطل؟')">
+          <input type="hidden" name="action" value="clear_champion_deadline">
+          <button type="submit" class="admin-ref-secondary">مسح الموعد</button>
+        </form>
+      {% endif %}
+    </div>
+  </details>
 
   <details class="admin-ref-card admin-ref-add-card">
     <summary>
@@ -860,14 +962,21 @@
         </form>
   </details>
 
-  <section class="admin-ref-card">
-    <div class="admin-ref-card-head">
+  <details class="admin-ref-card admin-ref-toggle-card admin-ref-manage-card" open>
+    <summary>
       <div class="admin-ref-card-title">
         <span class="admin-ref-badge">إدارة المباريات</span>
         <h3>المباريات والنتائج</h3>
-        <p>أدخل النتيجة النهائية، أو عدّل بيانات المباراة عند الحاجة.</p>
+        <div class="admin-ref-summary-line">
+          <span class="admin-ref-chip">{{ matches|length }} مباراة ظاهرة</span>
+          <span class="admin-ref-chip">{{ match_filter_labels[selected_filter] }}</span>
+        </div>
       </div>
-    </div>
+      <span class="admin-ref-toggle-icon" aria-hidden="true"></span>
+    </summary>
+
+    <div class="admin-ref-toggle-body">
+      <p style="margin-bottom:12px">أدخل النتيجة النهائية، أو عدّل بيانات المباراة عند الحاجة.</p>
 
     <div class="admin-ref-tabs">
       {% for key, label in match_filter_labels.items() %}
@@ -991,9 +1100,8 @@
         </section>
       {% endfor %}
     </div>
-  </section>
-
-
+    </div>
+  </details>
 
   <details class="admin-ref-card admin-ref-links-card">
     <summary>روابط المشاركين</summary>
