@@ -1,40 +1,383 @@
+
 {% extends "base.html" %}
 
 {% block content %}
 
-<div class="card">
-    <h2>📖 قوانين المسابقة</h2>
+<style>
+  /* =====================================================
+     Rules page - consistent with approved theme
+     Scoped only to rules.html
+  ===================================================== */
 
-    <h3>⚽ توقع نتائج المباريات</h3>
+  .rules-page{
+    width:min(980px, 100%);
+    margin:0 auto;
+    padding:0 0 24px;
+  }
 
-    <ul>
-        <li>النتيجة الدقيقة = 3 نقاط</li>
-        <li>توقع الفائز فقط = 1 نقطة</li>
-        <li>التوقع الخاطئ = 0 نقطة</li>
-    </ul>
+  .rules-hero{
+    background:linear-gradient(180deg,#3a3c42,#25272c);
+    border:1px solid rgba(230,211,156,.22);
+    border-radius:28px;
+    padding:22px 18px;
+    margin:0 0 14px;
+    color:#f6f1e5;
+    box-shadow:0 14px 28px rgba(0,0,0,.14);
+  }
 
-    <h3>⭐ مضاعفة النقاط</h3>
+  .rules-kicker{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:7px 14px;
+    border-radius:999px;
+    background:#e3cf92;
+    color:#17130a;
+    font-size:.82rem;
+    font-weight:1000;
+    margin-bottom:12px;
+  }
 
-    <ul>
-        <li>مباراة واحدة فقط في كل دور إقصائي</li>
-        <li>النتيجة الدقيقة = 6 نقاط</li>
-        <li>توقع الفائز = نقطتان</li>
-    </ul>
+  .rules-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.65rem;
+    font-weight:1000;
+    line-height:1.25;
+  }
 
-    <h3>🏆 توقع البطل</h3>
+  .rules-hero p{
+    margin:10px 0 0;
+    color:#d8d1c2;
+    font-size:.98rem;
+    line-height:1.75;
+    font-weight:750;
+  }
 
-    <ul>
-        <li>توقع البطل الصحيح = 10 نقاط</li>
-        <li>يغلق الاختيار مع بداية دور الـ32</li>
-    </ul>
+  .rules-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+  }
 
-    <h3>⏱ إغلاق التوقعات</h3>
+  .rules-card{
+    background:#f3efe4;
+    border:1px solid rgba(0,0,0,.08);
+    border-radius:24px;
+    padding:16px;
+    color:#171717;
+    box-shadow:0 8px 20px rgba(0,0,0,.07);
+    overflow:hidden;
+  }
 
-    <ul>
-        <li>يغلق التوقع مع بداية المباراة مباشرة</li>
-        <li>يمكن تعديل التوقع قبل الإغلاق</li>
-    </ul>
+  .rules-card.dark{
+    background:linear-gradient(180deg,#3a3c42,#25272c);
+    border-color:rgba(230,211,156,.22);
+    color:#f6f1e5;
+  }
 
-</div>
+  .rules-card h3{
+    margin:0 0 12px;
+    font-size:1.18rem;
+    font-weight:1000;
+    color:#171717;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .rules-card.dark h3{
+    color:#fff;
+  }
+
+  .rules-card p{
+    margin:0;
+    line-height:1.75;
+    color:#4c473e;
+    font-size:.95rem;
+    font-weight:760;
+  }
+
+  .rules-card.dark p{
+    color:#d8d1c2;
+  }
+
+  .rules-score-table{
+    display:grid;
+    gap:8px;
+  }
+
+  .rules-score-row{
+    display:grid;
+    grid-template-columns:1fr auto auto auto;
+    align-items:center;
+    gap:8px;
+    background:#e8e5de;
+    border:1px solid #d6d1c6;
+    border-radius:16px;
+    padding:10px;
+  }
+
+  .rules-score-row.header{
+    background:#2f3239;
+    color:#f6f1e5;
+    border-color:rgba(230,211,156,.22);
+    font-weight:1000;
+  }
+
+  .rules-stage{
+    font-weight:1000;
+    color:#171717;
+  }
+
+  .rules-score-row.header .rules-stage{
+    color:#f6f1e5;
+  }
+
+  .rules-pill{
+    direction:ltr;
+    min-width:46px;
+    height:34px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+    font-weight:1000;
+    font-size:.95rem;
+    border:1px solid rgba(0,0,0,.08);
+  }
+
+  .rules-pill.exact{
+    background:#d7f0dc;
+    color:#245d36;
+  }
+
+  .rules-pill.close{
+    background:#e7d79d;
+    color:#33280f;
+  }
+
+  .rules-pill.zero{
+    background:#5a5f69;
+    color:#fff;
+  }
+
+  .rules-score-row.header .rules-pill{
+    background:transparent;
+    color:#f6f1e5;
+    border:0;
+  }
+
+  .rules-list{
+    display:grid;
+    gap:9px;
+    margin:0;
+    padding:0;
+    list-style:none;
+  }
+
+  .rules-list li{
+    position:relative;
+    background:#e8e5de;
+    border:1px solid #d6d1c6;
+    border-radius:16px;
+    padding:11px 14px;
+    color:#302d27;
+    font-size:.95rem;
+    line-height:1.6;
+    font-weight:800;
+  }
+
+  .rules-list li::before{
+    content:"";
+    position:absolute;
+    right:0;
+    top:11px;
+    bottom:11px;
+    width:4px;
+    border-radius:999px 0 0 999px;
+    background:#d0b255;
+  }
+
+  .rules-x2-banner{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:12px;
+    margin-top:12px;
+  }
+
+  .rules-x2-mark{
+    direction:ltr;
+    width:62px;
+    height:42px;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#e8d89c,#c9a84d);
+    color:#17130a;
+    font-size:1.3rem;
+    font-weight:1000;
+    flex:0 0 auto;
+  }
+
+  .rules-deadline{
+    margin-top:12px;
+    background:#e8e5de;
+    border:1px solid #d6d1c6;
+    border-radius:18px;
+    padding:12px;
+    display:grid;
+    gap:4px;
+  }
+
+  .rules-deadline span{
+    color:#716b5d;
+    font-size:.82rem;
+    font-weight:900;
+  }
+
+  .rules-deadline b{
+    color:#171717;
+    font-size:1rem;
+    font-weight:1000;
+  }
+
+  @media (min-width:760px){
+    .rules-grid.two{
+      grid-template-columns:1fr 1fr;
+    }
+
+    .rules-hero{
+      padding:26px 24px;
+    }
+
+    .rules-hero h2{
+      font-size:1.9rem;
+    }
+  }
+
+  @media (max-width:520px){
+    .rules-card{
+      border-radius:22px;
+      padding:14px;
+    }
+
+    .rules-score-row{
+      grid-template-columns:1fr 44px 44px 40px;
+      gap:6px;
+      padding:9px;
+    }
+
+    .rules-stage{
+      font-size:.85rem;
+    }
+
+    .rules-pill{
+      min-width:40px;
+      height:32px;
+      font-size:.85rem;
+    }
+  }
+</style>
+
+<section class="rules-page">
+
+  <section class="rules-hero">
+    <div class="rules-kicker">📖 قوانين المسابقة</div>
+    <h2>طريقة احتساب النقاط والتوقعات</h2>
+    <p>
+      هذه الصفحة هي المرجع المختصر لقوانين المسابقة. صفحة التوقعات ستعرض الخيارات المتاحة فقط حسب المرحلة.
+    </p>
+  </section>
+
+  <section class="rules-card">
+    <h3>⚽ النقاط الأساسية</h3>
+
+    <div class="rules-score-table">
+      <div class="rules-score-row header">
+        <div class="rules-stage">المرحلة</div>
+        <div class="rules-pill">دقيق</div>
+        <div class="rules-pill">قريب</div>
+        <div class="rules-pill">خطأ</div>
+      </div>
+
+      <div class="rules-score-row">
+        <div class="rules-stage">دور المجموعات</div>
+        <div class="rules-pill exact">+3</div>
+        <div class="rules-pill close">+1</div>
+        <div class="rules-pill zero">0</div>
+      </div>
+
+      <div class="rules-score-row">
+        <div class="rules-stage">الأدوار الإقصائية</div>
+        <div class="rules-pill exact">+5</div>
+        <div class="rules-pill close">+2</div>
+        <div class="rules-pill zero">0</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rules-grid two">
+
+    <section class="rules-card dark">
+      <h3>×2 مضاعفة النقاط</h3>
+      <p>
+        تبدأ المضاعفة من دور الـ32 وما بعده. يحق لكل مشارك اختيار مباراة واحدة فقط في كل دور إقصائي.
+      </p>
+
+      <div class="rules-x2-banner">
+        <span class="rules-x2-mark">×2</span>
+        <p>
+          عند اختيار المضاعفة تصبح نقاط المباراة مضاعفة. لا تظهر خاصية المضاعفة في دور المجموعات.
+        </p>
+      </div>
+    </section>
+
+    <section class="rules-card">
+      <h3>🏆 توقع بطل البطولة</h3>
+      <ul class="rules-list">
+        <li>توقع البطل الصحيح يمنح المشارك +10 نقاط.</li>
+        <li>يمكن تغيير اختيار البطل قبل موعد الإغلاق فقط.</li>
+      </ul>
+
+      <div class="rules-deadline">
+        <span>آخر موعد لاختيار البطل</span>
+        {% if t and t.champion_pick_deadline %}
+          <b dir="ltr">{{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}</b>
+        {% else %}
+          <b>لم يتم تحديد موعد الإغلاق</b>
+        {% endif %}
+      </div>
+    </section>
+
+  </section>
+
+  <section class="rules-grid two">
+
+    <section class="rules-card">
+      <h3>🎯 ما معنى توقع قريب؟</h3>
+      <ul class="rules-list">
+        <li>التوقع القريب يعني أن اتجاه المباراة صحيح بدون إصابة النتيجة الدقيقة.</li>
+        <li>مثال: توقعت 2 - 1 وانتهت 3 - 1، الفائز صحيح لكن النتيجة ليست دقيقة.</li>
+      </ul>
+    </section>
+
+    <section class="rules-card">
+      <h3>⏱ إغلاق التوقعات</h3>
+      <ul class="rules-list">
+        <li>يغلق توقع كل مباراة مع بداية وقتها مباشرة.</li>
+        <li>يمكن تعديل التوقع قبل بداية المباراة فقط.</li>
+        <li>بعد الإغلاق تظهر توقعات المشاركين في صفحة المباراة.</li>
+      </ul>
+    </section>
+
+  </section>
+
+</section>
 
 {% endblock %}
