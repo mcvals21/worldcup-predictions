@@ -515,14 +515,21 @@ def points_for(pred, match):
     if match.home_score is None or match.away_score is None:
         return 0
 
+    is_knockout = match.stage in KNOCKOUT_STAGES
+
+    exact_points = 5 if is_knockout else 3
+    close_points = 2 if is_knockout else 1
+
     base = 0
 
     if pred.home_score == match.home_score and pred.away_score == match.away_score:
-        base = 3
+        base = exact_points
     elif winner(pred.home_score, pred.away_score) == winner(match.home_score, match.away_score):
-        base = 1
+        base = close_points
 
-    return base * (2 if pred.is_double else 1)
+    multiplier = 2 if pred.is_double and is_knockout else 1
+
+    return base * multiplier
 
 
 def tournament():
