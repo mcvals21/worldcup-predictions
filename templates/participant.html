@@ -7,11 +7,11 @@
 {% block content %}
 
 <style>
-  /* خيار مضاعفة النقاط - علامة مختصرة وواضحة فقط */
+  /* خيار مضاعفة النقاط - علامة ×2 واضحة في المنتصف */
   .wc-x2-option{
-    width:76px !important;
-    height:44px !important;
-    margin:18px auto 0 !important;
+    width:108px !important;
+    height:64px !important;
+    margin:20px auto 0 !important;
     padding:0 !important;
 
     display:flex !important;
@@ -32,36 +32,52 @@
   }
 
   .wc-x2-option .wc-x2-badge{
-    direction:ltr;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:76px;
-    height:44px;
-    border-radius:999px;
+    direction:ltr !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
 
-    background:linear-gradient(180deg,#ebe6da,#d6d1c6);
-    color:#2b2a26;
-    border:1px solid rgba(0,0,0,.12);
+    width:96px !important;
+    height:54px !important;
+    border-radius:999px !important;
 
-    font-size:1.25rem;
-    font-weight:1000;
-    letter-spacing:.4px;
-    line-height:1;
+    background:linear-gradient(180deg,#3a3c42,#25272c) !important;
+    color:#f6f1e5 !important;
+    border:1px solid rgba(230,211,156,.22) !important;
 
-    transition:transform .16s ease, background .16s ease, box-shadow .16s ease, border-color .16s ease;
+    font-size:1.95rem !important;
+    font-weight:1000 !important;
+    letter-spacing:.4px !important;
+    line-height:1 !important;
+
+    box-shadow:0 8px 18px rgba(0,0,0,.12) !important;
+    transition:transform .16s ease, background .16s ease, box-shadow .16s ease, border-color .16s ease, color .16s ease;
   }
 
   .wc-x2-option input:checked + .wc-x2-badge{
-    background:linear-gradient(135deg,#e8d89c,#c9a84d);
-    color:#17130a;
-    border-color:rgba(120,88,15,.28);
-    box-shadow:0 8px 18px rgba(0,0,0,.13), inset 0 1px 0 rgba(255,255,255,.45);
-    transform:translateY(-1px);
+    background:linear-gradient(135deg,#e8d89c,#c9a84d) !important;
+    color:#17130a !important;
+    border-color:rgba(120,88,15,.32) !important;
+    box-shadow:0 10px 22px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.45) !important;
+    transform:translateY(-1px) !important;
   }
 
   .wc-x2-option:active .wc-x2-badge{
-    transform:scale(.97);
+    transform:scale(.97) !important;
+  }
+
+  @media (max-width:520px){
+    .wc-x2-option{
+      width:96px !important;
+      height:58px !important;
+      margin-top:18px !important;
+    }
+
+    .wc-x2-option .wc-x2-badge{
+      width:86px !important;
+      height:50px !important;
+      font-size:1.75rem !important;
+    }
   }
 </style>
 
@@ -208,7 +224,8 @@
           <input
             type="checkbox"
             name="is_double_{{ m.id }}"
-            aria-label="ضاعف نقاطك لهذه المباراة"
+            data-stage="{{ m.stage }}"
+            aria-label="مضاعفة النقاط لهذه المباراة"
             {% if pred and pred.is_double %}checked{% endif %}
           >
           <span class="wc-x2-badge" aria-hidden="true">×2</span>
@@ -281,8 +298,8 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
       emptyInput.focus();
       showPredictionWarning(
-        'أكمل التوقع أولاً',
-        'يوجد مربع نتيجة فارغ. يرجى إدخال نتيجة الفريقين لكل مباراة قبل الحفظ.'
+        'أكمل النتائج',
+        'يوجد توقع ناقص.'
       );
       return;
     }
@@ -295,24 +312,49 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
       largeInput.focus();
       showPredictionWarning(
-        'تنبيه: النتيجة كبيرة',
-        'أدخلت نتيجة أكبر من 3 أهداف. هذا ممكن، لكن تأكد أنها مقصودة قبل الحفظ.',
-        { allowContinue: true }
+        'تأكيد النتيجة',
+        'هناك نتيجة أكبر من 3. هل تريد الحفظ؟',
+        {
+          allowContinue: true,
+          primaryText: 'حفظ'
+        }
       );
       return;
     }
 
-    const doubleInput = form.querySelector('.wc-double-option input[type="checkbox"]:checked');
+    const checkedDoubles = Array.from(
+      form.querySelectorAll('.wc-double-option input[type="checkbox"]:checked')
+    );
+
+    const usedStages = {};
+    const duplicateStage = checkedDoubles.find(function (input) {
+      const stage = input.dataset.stage || '';
+      if (!stage) return false;
+      if (usedStages[stage]) return true;
+      usedStages[stage] = true;
+      return false;
+    });
+
+    if (duplicateStage) {
+      event.preventDefault();
+      showPredictionWarning(
+        'مضاعفة واحدة فقط',
+        'اختر مباراة واحدة في نفس الدور.'
+      );
+      return;
+    }
+
+    const doubleInput = checkedDoubles[0];
 
     if (doubleInput && form.dataset.confirmedDouble !== '1') {
       event.preventDefault();
       showPredictionWarning(
-        '×2 تأكيد مضاعفة النقاط',
-        'أنت اخترت مضاعفة نقاطك لهذه المباراة.<br>إذا كان توقعك دقيقًا تحصل على +10<br>وإذا كان توقعك قريبًا تحصل على +4<br>ولا يمكنك اختيار أكثر من مباراة مضاعفة في نفس الدور.<br><br>هل تريد حفظ التوقعات؟',
+        'تأكيد ×2',
+        'أنت اخترت مضاعفة هذه المباراة.<br>الدقيق +10، والقريب +4.',
         {
           allowContinue: true,
           confirmKey: 'confirmedDouble',
-          primaryText: 'نعم، حفظ التوقعات'
+          primaryText: 'حفظ'
         }
       );
       return;
