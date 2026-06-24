@@ -11,7 +11,7 @@
   .wc-x2-option{
     width:108px !important;
     height:64px !important;
-    margin:20px auto 0 !important;
+    margin:10px auto 8px !important;
     padding:0 !important;
 
     display:flex !important;
@@ -51,6 +51,7 @@
     line-height:1 !important;
 
     box-shadow:0 8px 18px rgba(0,0,0,.12) !important;
+    transform:translateY(-5px) !important;
     transition:transform .16s ease, background .16s ease, box-shadow .16s ease, border-color .16s ease, color .16s ease;
   }
 
@@ -59,7 +60,7 @@
     color:#17130a !important;
     border-color:rgba(120,88,15,.32) !important;
     box-shadow:0 10px 22px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.45) !important;
-    transform:translateY(-1px) !important;
+    transform:translateY(-6px) !important;
   }
 
   .wc-x2-option:active .wc-x2-badge{
@@ -70,7 +71,7 @@
     .wc-x2-option{
       width:96px !important;
       height:58px !important;
-      margin-top:18px !important;
+      margin:8px auto 8px !important;
     }
 
     .wc-x2-option .wc-x2-badge{
@@ -350,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
       showPredictionWarning(
         'تأكيد ×2',
-        'أنت اخترت مضاعفة هذه المباراة.<br>الدقيق +10، والقريب +4.',
+        'أنت اخترت مضاعفة هذه المباراة.',
         {
           allowContinue: true,
           confirmKey: 'confirmedDouble',
