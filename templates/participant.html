@@ -80,6 +80,14 @@
       font-size:1.75rem !important;
     }
   }
+
+  .prediction-warning-card p b{
+    display:block !important;
+    margin-top:8px !important;
+    color:#171717 !important;
+    font-size:1.05rem !important;
+    font-weight:1000 !important;
+  }
 </style>
 
 <section class="wc-welcome-card">
@@ -226,6 +234,7 @@
             type="checkbox"
             name="is_double_{{ m.id }}"
             data-stage="{{ m.stage }}"
+            data-match-title="{{ m.home_team }} ضد {{ m.away_team }}"
             aria-label="مضاعفة النقاط لهذه المباراة"
             {% if pred and pred.is_double %}checked{% endif %}
           >
@@ -349,13 +358,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (doubleInput && form.dataset.confirmedDouble !== '1') {
       event.preventDefault();
+
+      const matchTitle = doubleInput.dataset.matchTitle || 'هذه المباراة';
+
       showPredictionWarning(
         'تأكيد ×2',
-        'أنت اخترت مضاعفة هذه المباراة.',
+        'هل تريد مضاعفة مباراة<br><b dir="rtl">' + matchTitle + '</b>؟',
         {
           allowContinue: true,
           confirmKey: 'confirmedDouble',
-          primaryText: 'حفظ'
+          primaryText: 'نعم، حفظ'
         }
       );
       return;
