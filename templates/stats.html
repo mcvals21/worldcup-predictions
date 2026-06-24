@@ -40,42 +40,13 @@
     font-weight:760;
   }
 
-  .stats2-summary{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    margin-bottom:12px;
-  }
-
-  .stats2-summary-card,
   .stats2-card{
     background:#f3efe4;
     border:1px solid rgba(0,0,0,.08);
     border-radius:24px;
     box-shadow:0 8px 20px rgba(0,0,0,.07);
   }
-
-  .stats2-summary-card{
-    padding:14px;
-    display:grid;
-    gap:5px;
-  }
-
-  .stats2-summary-card span{
-    color:#6c6558;
-    font-size:.8rem;
-    font-weight:900;
-  }
-
-  .stats2-summary-card strong{
-    direction:ltr;
-    color:#171717;
-    font-size:1.5rem;
-    line-height:1;
-    font-weight:1000;
-  }
-
-  .stats2-grid{
+.stats2-grid{
     display:grid;
     grid-template-columns:1fr;
     gap:12px;
@@ -292,10 +263,6 @@
   }
 
   @media (min-width:780px){
-    .stats2-summary{
-      grid-template-columns:repeat(4,1fr);
-    }
-
     .stats2-grid{
       grid-template-columns:1fr 1fr;
     }
@@ -348,36 +315,14 @@
 
   <section class="stats2-hero">
     <h2>إحصائيات المسابقة 📊</h2>
-    <p>أهم الأرقام فقط: النتائج الصحيحة، التوقعات الفائتة، المضاعفة، وأسهل وأصعب المباريات.</p>
-  </section>
-
-  <section class="stats2-summary">
-    <div class="stats2-summary-card">
-      <span>المشاركون</span>
-      <strong>{{ total_participants }}</strong>
-    </div>
-
-    <div class="stats2-summary-card">
-      <span>المباريات المنتهية</span>
-      <strong>{{ completed_matches_count }}</strong>
-    </div>
-
-    <div class="stats2-summary-card">
-      <span>إجمالي التوقعات</span>
-      <strong>{{ total_predictions }}</strong>
-    </div>
-
-    <div class="stats2-summary-card">
-      <span>نسبة المشاركة</span>
-      <strong>{{ participation_rate }}%</strong>
-    </div>
+    <p>أهم الإحصائيات في التوقعات والمباريات.</p>
   </section>
 
   <section class="stats2-grid">
 
     <section class="stats2-card">
       <div class="stats2-title">
-        <h3>✅ الأكثر إصابة للنتيجة الصحيحة</h3>
+        <h3>✅ عدد التوقعات الصحيحة</h3>
         <span class="stats2-badge">Top</span>
       </div>
 
@@ -398,51 +343,9 @@
       {% endif %}
     </section>
 
-    <section class="stats2-card">
-      <div class="stats2-title">
-        <h3>📝 الأكثر مشاركة بالتوقعات</h3>
-        <span class="stats2-badge">نشاط</span>
-      </div>
-
-      {% if top_participation %}
-        <div class="stats2-list">
-          {% for r in top_participation %}
-            <div class="stats2-row">
-              <div class="stats2-rank">{{ loop.index }}</div>
-              <div class="stats2-name">{{ r.name }}</div>
-              <div class="stats2-value gold">{{ r.predictions_count }}</div>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <div class="stats2-empty">لا توجد بيانات بعد.</div>
-      {% endif %}
-    </section>
-
-    <section class="stats2-card">
-      <div class="stats2-title">
-        <h3>⚠️ الأكثر تفويتًا للتوقعات</h3>
-        <span class="stats2-badge">سلبي</span>
-      </div>
-
-      {% if most_missed %}
-        <div class="stats2-list">
-          {% for r in most_missed %}
-            <div class="stats2-row">
-              <div class="stats2-rank">{{ loop.index }}</div>
-              <div class="stats2-name">{{ r.name }}</div>
-              <div class="stats2-value red">{{ r.missed_locked }}</div>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <div class="stats2-empty">لا توجد توقعات فائتة حتى الآن.</div>
-      {% endif %}
-    </section>
-
     <section class="stats2-card dark">
       <div class="stats2-title">
-        <h3>×2 أفضل استخدام للمضاعفة</h3>
+        <h3>افضل من استخدم خاصية ×2</h3>
         <span class="stats2-badge">×2</span>
       </div>
 
@@ -463,7 +366,7 @@
 
     <section class="stats2-card wide">
       <div class="stats2-title">
-        <h3>🔥 أكثر مباراة وزعت نقاط</h3>
+        <h3>🔥 أسهل مباراة بالتوقع</h3>
         <span class="stats2-badge">أسهل</span>
       </div>
 
@@ -491,7 +394,7 @@
 
               <div class="stats2-match-meta">
                 <span>{{ r.total_points }} نقطة</span>
-                <span>{{ r.exact_count }} نتيجة صحيحة</span>
+                <span>{{ r.exact_count }} توقعات صحيحة</span>
                 <span>{{ r.total_predictions }} توقع</span>
               </div>
             </div>
@@ -504,7 +407,7 @@
 
     <section class="stats2-card wide">
       <div class="stats2-title">
-        <h3>🧊 أصعب مباراة في التوقع</h3>
+        <h3>🧊 أصعب مباراة بالتوقع</h3>
         <span class="stats2-badge">أصعب</span>
       </div>
 
@@ -532,7 +435,7 @@
 
               <div class="stats2-match-meta">
                 <span>{{ r.total_points }} نقطة</span>
-                <span>{{ r.exact_count }} نتيجة صحيحة</span>
+                <span>{{ r.exact_count }} توقعات صحيحة</span>
                 <span>{{ r.total_predictions }} توقع</span>
               </div>
             </div>
