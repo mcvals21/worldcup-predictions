@@ -297,6 +297,35 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+
+
+  /* منع تفعيل أكثر من مضاعفة واحدة في نفس الدور فور الضغط */
+  form.querySelectorAll('.wc-double-option input[type="checkbox"]').forEach(function (input) {
+    input.addEventListener('change', function () {
+      if (!input.checked) return;
+
+      const stage = input.dataset.stage || '';
+      if (!stage) return;
+
+      const existingDouble = Array.from(
+        form.querySelectorAll('.wc-double-option input[type="checkbox"]:checked')
+      ).find(function (otherInput) {
+        return otherInput !== input && (otherInput.dataset.stage || '') === stage;
+      });
+
+      if (existingDouble) {
+        input.checked = false;
+
+        const existingMatchTitle = existingDouble.dataset.matchTitle || 'مباراة أخرى';
+
+        showPredictionWarning(
+          'مضاعفة واحدة فقط',
+          'تم اختيار مضاعفة مباراة<br><b dir="rtl">' + existingMatchTitle + '</b><br>في هذا الدور.'
+        );
+      }
+    });
+  });
+
   form.addEventListener('submit', function (event) {
     const inputs = Array.from(form.querySelectorAll('.wc-score-input'));
 
@@ -349,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
       showPredictionWarning(
         'مضاعفة واحدة فقط',
-        'اختر مباراة واحدة في نفس الدور.'
+        'تم اختيار مضاعفة بالفعل في هذا الدور.'
       );
       return;
     }
