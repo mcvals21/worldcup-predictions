@@ -7,11 +7,28 @@
 {% block content %}
 
 <style>
+  /* خيار مضاعفة النقاط - علامة مختصرة وواضحة فقط */
   .wc-x2-option{
+    width:76px !important;
+    height:44px !important;
+    margin:18px auto 0 !important;
+    padding:0 !important;
+
     display:flex !important;
     align-items:center !important;
     justify-content:center !important;
-    gap:10px !important;
+
+    border:0 !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    cursor:pointer !important;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .wc-x2-option input{
+    position:absolute !important;
+    opacity:0 !important;
+    pointer-events:none !important;
   }
 
   .wc-x2-option .wc-x2-badge{
@@ -19,22 +36,32 @@
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    min-width:42px;
-    height:30px;
-    padding:0 10px;
+    width:76px;
+    height:44px;
     border-radius:999px;
-    background:linear-gradient(135deg,#e3cf92,#c9a84d);
-    color:#17130a;
-    border:1px solid rgba(0,0,0,.08);
-    font-size:.95rem;
+
+    background:linear-gradient(180deg,#ebe6da,#d6d1c6);
+    color:#2b2a26;
+    border:1px solid rgba(0,0,0,.12);
+
+    font-size:1.25rem;
     font-weight:1000;
-    letter-spacing:.2px;
+    letter-spacing:.4px;
+    line-height:1;
+
+    transition:transform .16s ease, background .16s ease, box-shadow .16s ease, border-color .16s ease;
   }
 
-  .wc-x2-option strong{
-    color:inherit;
-    font-size:.95rem;
-    font-weight:1000;
+  .wc-x2-option input:checked + .wc-x2-badge{
+    background:linear-gradient(135deg,#e8d89c,#c9a84d);
+    color:#17130a;
+    border-color:rgba(120,88,15,.28);
+    box-shadow:0 8px 18px rgba(0,0,0,.13), inset 0 1px 0 rgba(255,255,255,.45);
+    transform:translateY(-1px);
+  }
+
+  .wc-x2-option:active .wc-x2-badge{
+    transform:scale(.97);
   }
 </style>
 
@@ -177,14 +204,14 @@
       {% endif %}
 
       {% if not is_locked and m.stage in knockout %}
-        <label class="wc-double-option wc-x2-option">
+        <label class="wc-double-option wc-x2-option" title="ضاعف نقاطك">
           <input
             type="checkbox"
             name="is_double_{{ m.id }}"
+            aria-label="ضاعف نقاطك لهذه المباراة"
             {% if pred and pred.is_double %}checked{% endif %}
           >
           <span class="wc-x2-badge" aria-hidden="true">×2</span>
-          <strong>ضاعف نقاطك</strong>
         </label>
       {% endif %}
     </section>
