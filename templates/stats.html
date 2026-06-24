@@ -1,162 +1,550 @@
+
 {% extends "base.html" %}
 
 {% block content %}
 
-<div class="stats-hero">
-  <h1>إحصائيات المسابقة 📊</h1>
-  <p>أرقام ممتعة عن التوقعات، النتائج المطابقة، والمباريات الأكثر تأثيرًا.</p>
-</div>
+<style>
+  /* =====================================================
+     Stats page v1 - focused useful statistics only
+     Scoped only to stats.html
+  ===================================================== */
 
-<div class="stats-summary-grid">
-  <div class="stats-summary-card">
-    <span>المشاركون</span>
-    <strong>{{ total_participants }}</strong>
-  </div>
+  .stats2-page{
+    width:min(980px,100%);
+    margin:0 auto;
+    padding:0 0 24px;
+  }
 
-  <div class="stats-summary-card">
-    <span>المباريات</span>
-    <strong>{{ total_matches }}</strong>
-  </div>
+  .stats2-hero{
+    background:linear-gradient(180deg,#3a3c42,#25272c);
+    border:1px solid rgba(230,211,156,.22);
+    border-radius:28px;
+    padding:20px 16px;
+    margin-bottom:12px;
+    color:#f6f1e5;
+    box-shadow:0 14px 28px rgba(0,0,0,.14);
+  }
 
-  <div class="stats-summary-card">
-    <span>المنتهية</span>
-    <strong>{{ completed_matches_count }}</strong>
-  </div>
+  .stats2-hero h2{
+    margin:0;
+    font-size:1.55rem;
+    font-weight:1000;
+    color:#fff;
+  }
 
-  <div class="stats-summary-card">
-    <span>إجمالي التوقعات</span>
-    <strong>{{ total_predictions }}</strong>
-  </div>
-</div>
+  .stats2-hero p{
+    margin:8px 0 0;
+    color:#d8d1c2;
+    line-height:1.7;
+    font-size:.94rem;
+    font-weight:760;
+  }
 
-<div class="stats-grid">
+  .stats2-summary{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:12px;
+  }
 
-  <div class="stats-card">
-    <div class="stats-card-title">
-      ✅ أكثر نتائج مطابقة
+  .stats2-summary-card,
+  .stats2-card{
+    background:#f3efe4;
+    border:1px solid rgba(0,0,0,.08);
+    border-radius:24px;
+    box-shadow:0 8px 20px rgba(0,0,0,.07);
+  }
+
+  .stats2-summary-card{
+    padding:14px;
+    display:grid;
+    gap:5px;
+  }
+
+  .stats2-summary-card span{
+    color:#6c6558;
+    font-size:.8rem;
+    font-weight:900;
+  }
+
+  .stats2-summary-card strong{
+    direction:ltr;
+    color:#171717;
+    font-size:1.5rem;
+    line-height:1;
+    font-weight:1000;
+  }
+
+  .stats2-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .stats2-card{
+    padding:14px;
+    overflow:hidden;
+  }
+
+  .stats2-card.dark{
+    background:linear-gradient(180deg,#3a3c42,#25272c);
+    border-color:rgba(230,211,156,.22);
+    color:#f6f1e5;
+  }
+
+  .stats2-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+  }
+
+  .stats2-title h3{
+    margin:0;
+    color:#171717;
+    font-size:1.12rem;
+    font-weight:1000;
+    line-height:1.25;
+  }
+
+  .stats2-card.dark .stats2-title h3{
+    color:#fff;
+  }
+
+  .stats2-badge{
+    min-width:38px;
+    min-height:30px;
+    padding:5px 11px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+    background:#e3cf92;
+    color:#17130a;
+    border:1px solid rgba(0,0,0,.08);
+    font-size:.82rem;
+    font-weight:1000;
+    white-space:nowrap;
+  }
+
+  .stats2-list{
+    display:grid;
+    gap:8px;
+  }
+
+  .stats2-row{
+    display:grid;
+    grid-template-columns:42px 1fr auto;
+    align-items:center;
+    gap:8px;
+    background:#e8e5de;
+    border:1px solid #d6d1c6;
+    border-radius:16px;
+    padding:10px;
+  }
+
+  .stats2-card.dark .stats2-row{
+    background:rgba(255,255,255,.07);
+    border-color:rgba(255,255,255,.08);
+  }
+
+  .stats2-rank{
+    width:34px;
+    height:34px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    background:#2f3239;
+    color:#f6f1e5;
+    font-weight:1000;
+    font-size:.86rem;
+  }
+
+  .stats2-name{
+    color:#171717;
+    font-size:.95rem;
+    font-weight:1000;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
+
+  .stats2-card.dark .stats2-name{
+    color:#f6f1e5;
+  }
+
+  .stats2-value{
+    direction:ltr;
+    min-width:58px;
+    min-height:34px;
+    padding:6px 10px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+    background:#d7f0dc;
+    color:#245d36;
+    border:1px solid rgba(61,141,83,.18);
+    font-weight:1000;
+    font-size:.92rem;
+  }
+
+  .stats2-value.gold{
+    background:#e7d79d;
+    color:#33280f;
+  }
+
+  .stats2-value.red{
+    background:#f1c5c5;
+    color:#7f1d1d;
+  }
+
+  .stats2-empty{
+    background:#e8e5de;
+    border:1px solid #d6d1c6;
+    border-radius:16px;
+    padding:14px;
+    color:#5f584d;
+    font-weight:850;
+    line-height:1.6;
+    text-align:center;
+  }
+
+  .stats2-match-row{
+    display:grid;
+    gap:8px;
+    background:#e8e5de;
+    border:1px solid #d6d1c6;
+    border-radius:16px;
+    padding:11px;
+  }
+
+  .stats2-match-main{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:8px;
+  }
+
+  .stats2-team{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    min-width:0;
+    color:#171717;
+    font-weight:1000;
+    font-size:.9rem;
+  }
+
+  .stats2-team:last-child{
+    justify-content:flex-end;
+    text-align:left;
+  }
+
+  .stats2-team span{
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
+
+  .stats2-flag{
+    width:22px;
+    height:16px;
+    object-fit:cover;
+    border-radius:4px;
+    flex:0 0 auto;
+  }
+
+  .stats2-score{
+    direction:ltr;
+    min-width:58px;
+    height:34px;
+    padding:0 10px;
+    border-radius:999px;
+    background:#2f3239;
+    color:#f6f1e5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:1000;
+  }
+
+  .stats2-match-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+
+  .stats2-match-meta span{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:28px;
+    padding:5px 10px;
+    border-radius:999px;
+    background:#f3efe4;
+    color:#4e473b;
+    border:1px solid rgba(0,0,0,.06);
+    font-size:.78rem;
+    font-weight:900;
+  }
+
+  @media (min-width:780px){
+    .stats2-summary{
+      grid-template-columns:repeat(4,1fr);
+    }
+
+    .stats2-grid{
+      grid-template-columns:1fr 1fr;
+    }
+
+    .stats2-card.wide{
+      grid-column:1 / -1;
+    }
+
+    .stats2-hero{
+      padding:24px 20px;
+    }
+  }
+
+  @media (max-width:520px){
+    .stats2-row{
+      grid-template-columns:36px 1fr auto;
+      padding:9px;
+      gap:7px;
+    }
+
+    .stats2-rank{
+      width:30px;
+      height:30px;
+      border-radius:10px;
+    }
+
+    .stats2-name{
+      font-size:.9rem;
+    }
+
+    .stats2-value{
+      min-width:50px;
+      min-height:32px;
+      font-size:.84rem;
+    }
+
+    .stats2-team{
+      font-size:.82rem;
+    }
+
+    .stats2-score{
+      min-width:52px;
+      height:32px;
+      font-size:.86rem;
+    }
+  }
+</style>
+
+<section class="stats2-page">
+
+  <section class="stats2-hero">
+    <h2>إحصائيات المسابقة 📊</h2>
+    <p>أهم الأرقام فقط: النتائج الصحيحة، التوقعات الفائتة، المضاعفة، وأسهل وأصعب المباريات.</p>
+  </section>
+
+  <section class="stats2-summary">
+    <div class="stats2-summary-card">
+      <span>المشاركون</span>
+      <strong>{{ total_participants }}</strong>
     </div>
 
-    {% if top_exact %}
-      <div class="stats-list">
-        {% for r in top_exact %}
-          <div class="stats-row">
-            <div class="stats-rank">
-              {% if loop.index == 1 %}
-                🥇
-              {% elif loop.index == 2 %}
-                🥈
-              {% elif loop.index == 3 %}
-                🥉
-              {% else %}
-                {{ loop.index }}
-              {% endif %}
-            </div>
-
-            <div class="stats-name">{{ r.name }}</div>
-
-            <div class="stats-value">
-              {{ r.exact }}
-              <span>مطابقة</span>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="empty-card">لا توجد بيانات بعد.</div>
-    {% endif %}
-  </div>
-
-  <div class="stats-card">
-    <div class="stats-card-title">
-      📝 الأكثر مشاركة بالتوقعات
+    <div class="stats2-summary-card">
+      <span>المباريات المنتهية</span>
+      <strong>{{ completed_matches_count }}</strong>
     </div>
 
-    {% if top_participation %}
-      <div class="stats-list">
-        {% for r in top_participation %}
-          <div class="stats-row">
-            <div class="stats-rank">{{ loop.index }}</div>
-            <div class="stats-name">{{ r.name }}</div>
-
-            <div class="stats-value">
-              {{ r.predictions_count }}
-              <span>توقع</span>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="empty-card">لا توجد بيانات بعد.</div>
-    {% endif %}
-  </div>
-
-  <div class="stats-card">
-    <div class="stats-card-title">
-      ⚠️ أكثر من فوّت توقعات مغلقة
+    <div class="stats2-summary-card">
+      <span>إجمالي التوقعات</span>
+      <strong>{{ total_predictions }}</strong>
     </div>
 
-    {% if most_missed %}
-      <div class="stats-list">
-        {% for r in most_missed %}
-          <div class="stats-row">
-            <div class="stats-rank">{{ loop.index }}</div>
-            <div class="stats-name">{{ r.name }}</div>
-
-            <div class="stats-value missed">
-              {{ r.missed_locked }}
-              <span>مباراة</span>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="empty-card">لا توجد بيانات بعد.</div>
-    {% endif %}
-  </div>
-
-  <div class="stats-card">
-    <div class="stats-card-title">
-      🔥 أكثر مباريات وزّعت نقاط
+    <div class="stats2-summary-card">
+      <span>نسبة المشاركة</span>
+      <strong>{{ participation_rate }}%</strong>
     </div>
+  </section>
 
-    {% if top_point_matches %}
-      <div class="stats-match-list">
-        {% for r in top_point_matches %}
-          {% set m = r.match %}
-          {% set home_flag = team_flag_code(m.home_team) %}
-          {% set away_flag = team_flag_code(m.away_team) %}
+  <section class="stats2-grid">
 
-          <div class="stats-match-row">
-            <div class="stats-match-teams">
-              <span>
-                {% if home_flag %}
-                  <img class="stats-mini-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
-                {% endif %}
-                {{ m.home_team }}
-              </span>
-
-              <strong>{{ m.home_score }} - {{ m.away_score }}</strong>
-
-              <span>
-                {% if away_flag %}
-                  <img class="stats-mini-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
-                {% endif %}
-                {{ m.away_team }}
-              </span>
-            </div>
-
-            <div class="stats-match-meta">
-              <span>{{ r.total_points }} نقطة موزعة</span>
-              <span>{{ r.exact_count }} نتيجة مطابقة</span>
-            </div>
-          </div>
-        {% endfor %}
+    <section class="stats2-card">
+      <div class="stats2-title">
+        <h3>✅ الأكثر إصابة للنتيجة الصحيحة</h3>
+        <span class="stats2-badge">Top</span>
       </div>
-    {% else %}
-      <div class="empty-card">لا توجد مباريات منتهية بعد.</div>
-    {% endif %}
-  </div>
 
-</div>
+      {% if top_exact %}
+        <div class="stats2-list">
+          {% for r in top_exact %}
+            <div class="stats2-row">
+              <div class="stats2-rank">
+                {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
+              </div>
+              <div class="stats2-name">{{ r.name }}</div>
+              <div class="stats2-value">{{ r.exact }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="stats2-empty">لا توجد بيانات بعد.</div>
+      {% endif %}
+    </section>
+
+    <section class="stats2-card">
+      <div class="stats2-title">
+        <h3>📝 الأكثر مشاركة بالتوقعات</h3>
+        <span class="stats2-badge">نشاط</span>
+      </div>
+
+      {% if top_participation %}
+        <div class="stats2-list">
+          {% for r in top_participation %}
+            <div class="stats2-row">
+              <div class="stats2-rank">{{ loop.index }}</div>
+              <div class="stats2-name">{{ r.name }}</div>
+              <div class="stats2-value gold">{{ r.predictions_count }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="stats2-empty">لا توجد بيانات بعد.</div>
+      {% endif %}
+    </section>
+
+    <section class="stats2-card">
+      <div class="stats2-title">
+        <h3>⚠️ الأكثر تفويتًا للتوقعات</h3>
+        <span class="stats2-badge">سلبي</span>
+      </div>
+
+      {% if most_missed %}
+        <div class="stats2-list">
+          {% for r in most_missed %}
+            <div class="stats2-row">
+              <div class="stats2-rank">{{ loop.index }}</div>
+              <div class="stats2-name">{{ r.name }}</div>
+              <div class="stats2-value red">{{ r.missed_locked }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="stats2-empty">لا توجد توقعات فائتة حتى الآن.</div>
+      {% endif %}
+    </section>
+
+    <section class="stats2-card dark">
+      <div class="stats2-title">
+        <h3>×2 أفضل استخدام للمضاعفة</h3>
+        <span class="stats2-badge">×2</span>
+      </div>
+
+      {% if top_x2 %}
+        <div class="stats2-list">
+          {% for r in top_x2 %}
+            <div class="stats2-row">
+              <div class="stats2-rank">{{ loop.index }}</div>
+              <div class="stats2-name">{{ r.name }}</div>
+              <div class="stats2-value gold">+{{ r.x2_extra_points }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="stats2-empty">لم تُحتسب أي مضاعفة ناجحة حتى الآن.</div>
+      {% endif %}
+    </section>
+
+    <section class="stats2-card wide">
+      <div class="stats2-title">
+        <h3>🔥 أكثر مباراة وزعت نقاط</h3>
+        <span class="stats2-badge">أسهل</span>
+      </div>
+
+      {% if top_point_matches %}
+        <div class="stats2-list">
+          {% for r in top_point_matches %}
+            {% set m = r.match %}
+            {% set home_flag = team_flag_code(m.home_team) %}
+            {% set away_flag = team_flag_code(m.away_team) %}
+
+            <div class="stats2-match-row">
+              <div class="stats2-match-main">
+                <div class="stats2-team">
+                  {% if home_flag %}<img class="stats2-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">{% endif %}
+                  <span>{{ m.home_team }}</span>
+                </div>
+
+                <div class="stats2-score">{{ m.home_score }} - {{ m.away_score }}</div>
+
+                <div class="stats2-team">
+                  <span>{{ m.away_team }}</span>
+                  {% if away_flag %}<img class="stats2-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">{% endif %}
+                </div>
+              </div>
+
+              <div class="stats2-match-meta">
+                <span>{{ r.total_points }} نقطة</span>
+                <span>{{ r.exact_count }} نتيجة صحيحة</span>
+                <span>{{ r.total_predictions }} توقع</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="stats2-empty">لا توجد مباريات منتهية بتوقعات حتى الآن.</div>
+      {% endif %}
+    </section>
+
+    <section class="stats2-card wide">
+      <div class="stats2-title">
+        <h3>🧊 أصعب مباراة في التوقع</h3>
+        <span class="stats2-badge">أصعب</span>
+      </div>
+
+      {% if hardest_matches %}
+        <div class="stats2-list">
+          {% for r in hardest_matches %}
+            {% set m = r.match %}
+            {% set home_flag = team_flag_code(m.home_team) %}
+            {% set away_flag = team_flag_code(m.away_team) %}
+
+            <div class="stats2-match-row">
+              <div class="stats2-match-main">
+                <div class="stats2-team">
+                  {% if home_flag %}<img class="stats2-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">{% endif %}
+                  <span>{{ m.home_team }}</span>
+                </div>
+
+                <div class="stats2-score">{{ m.home_score }} - {{ m.away_score }}</div>
+
+                <div class="stats2-team">
+                  <span>{{ m.away_team }}</span>
+                  {% if away_flag %}<img class="stats2-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">{% endif %}
+                </div>
+              </div>
+
+              <div class="stats2-match-meta">
+                <span>{{ r.total_points }} نقطة</span>
+                <span>{{ r.exact_count }} نتيجة صحيحة</span>
+                <span>{{ r.total_predictions }} توقع</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="stats2-empty">لا توجد مباريات منتهية بتوقعات حتى الآن.</div>
+      {% endif %}
+    </section>
+
+  </section>
+
+</section>
 
 {% endblock %}
