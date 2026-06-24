@@ -583,6 +583,183 @@
     min-width:0 !important;
   }
 }
+
+
+/* =====================================================
+   Admin ref v2 - compact management improvements
+   Same approved theme, scoped only to admin page.
+===================================================== */
+.admin-ref-page{
+  gap:16px !important;
+}
+
+.admin-ref-hero,
+.admin-ref-card{
+  box-shadow:0 12px 30px rgba(0,0,0,.16) !important;
+}
+
+.admin-ref-card.is-compact{
+  padding:14px !important;
+}
+
+.admin-ref-add-card{
+  padding:0 !important;
+}
+
+.admin-ref-add-card > summary{
+  list-style:none;
+  cursor:pointer;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.admin-ref-add-card > summary::-webkit-details-marker{
+  display:none;
+}
+
+.admin-ref-add-summary-title{
+  display:grid;
+  gap:6px;
+}
+
+.admin-ref-add-summary-icon{
+  width:36px;
+  height:36px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#e3cf92;
+  color:#17130a;
+  font-weight:1000;
+  border:1px solid rgba(0,0,0,.08);
+  flex:0 0 auto;
+}
+
+.admin-ref-add-card .admin-ref-form{
+  padding:0 16px 16px;
+}
+
+.admin-ref-deadline-card{
+  border-color:rgba(226,208,153,.58) !important;
+}
+
+.admin-ref-deadline-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.admin-ref-deadline-current{
+  display:grid;
+  gap:4px;
+  padding:10px 12px;
+  border-radius:16px;
+  background:#e8e5de;
+  border:1px solid #d6d1c6;
+  color:#4f493d;
+  font-weight:950;
+}
+
+.admin-ref-deadline-current span{
+  color:#6f695d;
+  font-size:.78rem;
+  font-weight:950;
+}
+
+.admin-ref-deadline-current b{
+  color:#151515;
+  font-size:.94rem;
+  font-weight:1000;
+}
+
+.admin-ref-deadline-actions{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:end;
+}
+
+.admin-ref-deadline-actions .admin-ref-primary,
+.admin-ref-deadline-actions .admin-ref-secondary{
+  min-width:132px !important;
+}
+
+.admin-ref-match{
+  padding:12px !important;
+  border-radius:20px !important;
+}
+
+.admin-ref-status-row{
+  margin-bottom:10px !important;
+}
+
+.admin-ref-score-row{
+  gap:8px !important;
+}
+
+.admin-ref-meta{
+  margin-top:2px !important;
+}
+
+.admin-ref-result-form{
+  gap:8px !important;
+}
+
+.admin-ref-result-form > .admin-ref-primary{
+  min-height:46px !important;
+  border-radius:15px !important;
+}
+
+.admin-ref-actions{
+  grid-template-columns:1fr 1fr !important;
+  margin-top:8px !important;
+}
+
+.admin-ref-actions button,
+.admin-ref-edit summary{
+  min-height:46px !important;
+  border-radius:15px !important;
+}
+
+.admin-ref-edit-form{
+  margin-top:9px !important;
+}
+
+@media (max-width:760px){
+  .admin-ref-tabs{
+    gap:8px !important;
+  }
+
+  .admin-ref-tab{
+    min-height:50px !important;
+    border-radius:16px !important;
+  }
+
+  .admin-ref-actions{
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
+  }
+
+  .admin-ref-deadline-actions{
+    grid-template-columns:1fr !important;
+  }
+
+  .admin-ref-deadline-actions .admin-ref-primary,
+  .admin-ref-deadline-actions .admin-ref-secondary{
+    min-width:0 !important;
+  }
+
+  .admin-ref-add-card > summary{
+    padding:15px;
+  }
+}
+
 </style>
 
 <div class="admin-ref-page">
@@ -598,54 +775,90 @@
     </div>
   </section>
 
-  <section class="admin-ref-card">
-    <div class="admin-ref-card-head">
+  <section class="admin-ref-card admin-ref-deadline-card is-compact">
+    <div class="admin-ref-deadline-top">
       <div class="admin-ref-card-title">
-        <span class="admin-ref-badge">＋ إضافة مباراة</span>
-        <h3>مباراة جديدة</h3>
-        <p>أدخل الفرق والتاريخ والوقت والدور.</p>
+        <span class="admin-ref-badge">🏆 توقع البطل</span>
+        <h3>موعد إغلاق توقع البطل</h3>
+        <p>بعد هذا الموعد لن يستطيع المشاركون تغيير اختيار البطل.</p>
+      </div>
+
+      <div class="admin-ref-deadline-current">
+        <span>الموعد الحالي</span>
+        {% if t.champion_pick_deadline %}
+          <b dir="ltr">{{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}</b>
+        {% else %}
+          <b>لم يتم تحديد موعد</b>
+        {% endif %}
       </div>
     </div>
 
-    <form method="post" class="admin-ref-form">
-      <input type="hidden" name="action" value="add_match">
-
-      <div class="admin-ref-grid-2">
-        <label>
-          <span>الفريق الأول</span>
-          <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
-        </label>
-
-        <label>
-          <span>الفريق الثاني</span>
-          <input type="text" name="away_team" placeholder="مثال: العراق" required>
-        </label>
-      </div>
-
-      <div class="admin-ref-grid-2 admin-ref-dt-grid">
-        <label>
-          <span>تاريخ المباراة</span>
-          <input type="date" name="match_date" required>
-        </label>
-
-        <label>
-          <span>وقت المباراة</span>
-          <input type="time" name="match_time" required>
-        </label>
-      </div>
-
+    <form method="post" class="admin-ref-deadline-actions">
+      <input type="hidden" name="action" value="champion_deadline">
       <label>
-        <span>الدور</span>
-        <select name="stage" required>
-          {% for key, label in stage_labels.items() %}
-            <option value="{{ key }}">{{ label }}</option>
-          {% endfor %}
-        </select>
+        <span>تحديد أو تغيير الموعد</span>
+        <input type="datetime-local" name="deadline" value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}">
       </label>
-
-      <button type="submit" class="admin-ref-primary">إضافة المباراة</button>
+      <button type="submit" class="admin-ref-primary">حفظ الموعد</button>
     </form>
+
+    {% if t.champion_pick_deadline %}
+      <form method="post" style="margin-top:10px" onsubmit="return confirm('هل تريد مسح موعد إغلاق توقع البطل؟')">
+        <input type="hidden" name="action" value="clear_champion_deadline">
+        <button type="submit" class="admin-ref-secondary">مسح الموعد</button>
+      </form>
+    {% endif %}
   </section>
+
+  <details class="admin-ref-card admin-ref-add-card">
+    <summary>
+      <div class="admin-ref-add-summary-title">
+        <span class="admin-ref-badge">＋ إضافة مباراة</span>
+        <h3>مباراة جديدة</h3>
+        <p>افتح هذا القسم فقط عند الحاجة لإضافة مباراة جديدة.</p>
+      </div>
+      <span class="admin-ref-add-summary-icon">+</span>
+    </summary>
+
+    <form method="post" class="admin-ref-form">
+          <input type="hidden" name="action" value="add_match">
+    
+          <div class="admin-ref-grid-2">
+            <label>
+              <span>الفريق الأول</span>
+              <input type="text" name="home_team" placeholder="مثال: فرنسا" required>
+            </label>
+    
+            <label>
+              <span>الفريق الثاني</span>
+              <input type="text" name="away_team" placeholder="مثال: العراق" required>
+            </label>
+          </div>
+    
+          <div class="admin-ref-grid-2 admin-ref-dt-grid">
+            <label>
+              <span>تاريخ المباراة</span>
+              <input type="date" name="match_date" required>
+            </label>
+    
+            <label>
+              <span>وقت المباراة</span>
+              <input type="time" name="match_time" required>
+            </label>
+          </div>
+    
+          <label>
+            <span>الدور</span>
+            <select name="stage" required>
+              {% for key, label in stage_labels.items() %}
+                <option value="{{ key }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </label>
+    
+          <button type="submit" class="admin-ref-primary">إضافة المباراة</button>
+        </form>
+  </details>
 
   <section class="admin-ref-card">
     <div class="admin-ref-card-head">
@@ -780,39 +993,7 @@
     </div>
   </section>
 
-  <section class="admin-ref-card">
-    <div class="admin-ref-card-head">
-      <div class="admin-ref-card-title">
-        <span class="admin-ref-badge">🏆 توقع البطل</span>
-        <h3>موعد إغلاق توقع البطل</h3>
-        <p>بعد هذا الموعد لن يستطيع المشاركون تغيير اختيار البطل.</p>
-      </div>
-    </div>
 
-    <form method="post" class="admin-ref-deadline-grid">
-      <input type="hidden" name="action" value="champion_deadline">
-      <label>
-        <span>الموعد</span>
-        <input type="datetime-local" name="deadline" value="{{ t.champion_pick_deadline.strftime('%Y-%m-%dT%H:%M') if t.champion_pick_deadline else '' }}">
-      </label>
-      <button type="submit" class="admin-ref-primary">حفظ الموعد</button>
-    </form>
-
-    <div class="admin-ref-deadline-note">
-      {% if t.champion_pick_deadline %}
-        الموعد الحالي: <b>{{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}</b>
-      {% else %}
-        لا يوجد موعد إغلاق محدد حاليًا.
-      {% endif %}
-    </div>
-
-    {% if t.champion_pick_deadline %}
-      <form method="post" style="margin-top:10px" onsubmit="return confirm('هل تريد مسح موعد إغلاق توقع البطل؟')">
-        <input type="hidden" name="action" value="clear_champion_deadline">
-        <button type="submit" class="admin-ref-secondary">مسح الموعد</button>
-      </form>
-    {% endif %}
-  </section>
 
   <details class="admin-ref-card admin-ref-links-card">
     <summary>روابط المشاركين</summary>
