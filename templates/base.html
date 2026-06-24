@@ -14,16 +14,13 @@
     background:transparent !important;
     border:none !important;
     box-shadow:none !important;
-
     width:auto !important;
     height:auto !important;
     min-width:0 !important;
     min-height:0 !important;
-
     border-radius:0 !important;
     margin:0 auto 10px !important;
     padding:0 !important;
-
     color:inherit !important;
     font-size:3rem !important;
     line-height:1 !important;
@@ -39,6 +36,67 @@
 
   .prediction-save-card p{
     display:none !important;
+  }
+
+  /* كرت توقع البطل داخل القائمة */
+  .clean-menu .menu-champion-box{
+    background:linear-gradient(180deg,#3a3c42,#25272c) !important;
+    border:1px solid rgba(230,211,156,.22) !important;
+    border-radius:20px !important;
+    padding:14px !important;
+    color:#f6f1e5 !important;
+  }
+
+  .clean-menu .menu-champion-title{
+    color:#f6f1e5 !important;
+    font-weight:1000 !important;
+    margin-bottom:10px !important;
+  }
+
+  .clean-menu .menu-champion-note{
+    color:#ddd6c5 !important;
+    line-height:1.7 !important;
+  }
+
+  .clean-menu .menu-champion-note b{
+    color:#e6d39c !important;
+  }
+
+  .clean-menu .menu-champion-deadline{
+    display:grid !important;
+    gap:4px !important;
+    background:rgba(255,255,255,.07) !important;
+    border:1px solid rgba(255,255,255,.08) !important;
+    border-radius:14px !important;
+    padding:10px 12px !important;
+    margin-bottom:12px !important;
+  }
+
+  .clean-menu .menu-champion-deadline span{
+    color:#bdb7aa !important;
+    font-size:.78rem !important;
+    font-weight:800 !important;
+  }
+
+  .clean-menu .menu-champion-deadline b{
+    color:#e6d39c !important;
+    font-size:.9rem !important;
+    font-weight:1000 !important;
+  }
+
+  .clean-menu .menu-champion-form select{
+    background:#eee8dc !important;
+    color:#181818 !important;
+    border:1px solid rgba(230,211,156,.35) !important;
+    border-radius:14px !important;
+  }
+
+  .clean-menu .menu-champion-form button{
+    background:#e1ce92 !important;
+    color:#181818 !important;
+    border:0 !important;
+    border-radius:14px !important;
+    font-weight:1000 !important;
   }
 </style>
 </head>
@@ -68,6 +126,17 @@
 
           <div class="menu-champion-box">
             <div class="menu-champion-title">🏆 توقع بطل البطولة</div>
+            {% if t and t.champion_pick_deadline %}
+  <div class="menu-champion-deadline">
+    <span>آخر موعد للاختيار</span>
+    <b dir="ltr">{{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}</b>
+  </div>
+{% else %}
+  <div class="menu-champion-deadline is-open">
+    <span>آخر موعد للاختيار</span>
+    <b>لم يتم تحديد موعد الإغلاق</b>
+  </div>
+{% endif %}
 
             {% if champion_locked %}
               <div class="menu-champion-note">
