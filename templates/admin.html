@@ -867,6 +867,7 @@
 .admin-ref-page[data-admin-view="manage"] .admin-ref-admin-section:not([data-admin-section="manage"]),
 .admin-ref-page[data-admin-view="add"] .admin-ref-admin-section:not([data-admin-section="add"]),
 .admin-ref-page[data-admin-view="deadline"] .admin-ref-admin-section:not([data-admin-section="deadline"]),
+.admin-ref-page[data-admin-view="doublelab"] .admin-ref-admin-section:not([data-admin-section="doublelab"]),
 .admin-ref-page[data-admin-view="links"] .admin-ref-admin-section:not([data-admin-section="links"]){
   display:none !important;
 }
@@ -901,6 +902,164 @@
 
 .clean-menu .menu-links .admin-menu-secondary{
   opacity:.86;
+}
+
+
+
+/* =====================================================
+   Admin ref v5 - مختبر المضاعفة الآمن
+   لا يحفظ أي شيء ولا يؤثر على قاعدة البيانات.
+===================================================== */
+.admin-ref-double-lab-grid{
+  display:grid;
+  gap:12px;
+}
+
+.admin-ref-lab-score-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.admin-ref-lab-score-box{
+  display:grid;
+  gap:10px;
+  padding:12px;
+  border-radius:20px;
+  background:#e8e5de;
+  border:1px solid #d6d1c6;
+}
+
+.admin-ref-lab-score-box h4{
+  margin:0;
+  color:#171717;
+  font-size:.95rem;
+  font-weight:1000;
+}
+
+.admin-ref-lab-score-inputs{
+  direction:ltr;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+}
+
+.admin-ref-lab-score-inputs input{
+  text-align:center !important;
+  font-size:1.25rem !important;
+  font-weight:1000 !important;
+}
+
+.admin-ref-lab-score-inputs span{
+  color:#5b554a;
+  font-weight:1000;
+}
+
+.admin-ref-lab-check{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  min-height:56px;
+  padding:12px;
+  border-radius:18px;
+  background:#e8e5de;
+  border:1px solid #d6d1c6;
+  color:#171717 !important;
+  font-weight:1000 !important;
+}
+
+.admin-ref-lab-check input{
+  width:24px !important;
+  height:24px !important;
+  min-height:24px !important;
+  accent-color:#d4af37;
+}
+
+.admin-ref-lab-result{
+  display:grid;
+  gap:8px;
+  padding:14px;
+  border-radius:22px;
+  background:linear-gradient(180deg,#3a3c42,#25272c);
+  border:1px solid rgba(226,208,153,.24);
+  color:#f5f2ea;
+}
+
+.admin-ref-lab-result span{
+  color:#ddd6c5;
+  font-size:.82rem;
+  font-weight:900;
+}
+
+.admin-ref-lab-points{
+  width:max-content;
+  min-width:72px;
+  min-height:46px;
+  padding:10px 18px;
+  border-radius:16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#e3cf92;
+  color:#17130a;
+  font-size:1.35rem;
+  font-weight:1000;
+  direction:ltr;
+}
+
+.admin-ref-lab-points.is-exact{
+  background:#d7f0dc;
+  color:#245d36;
+}
+
+.admin-ref-lab-points.is-partial{
+  background:#e7d79d;
+  color:#33280f;
+}
+
+.admin-ref-lab-points.is-wrong{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.admin-ref-lab-points.is-disabled{
+  background:#d8d2c4;
+  color:#5b554a;
+}
+
+.admin-ref-lab-explain{
+  color:#eee7d8 !important;
+  font-weight:850 !important;
+}
+
+.admin-ref-lab-warning{
+  display:none;
+  padding:11px 12px;
+  border-radius:16px;
+  background:#fff0cc;
+  border:1px solid rgba(167,131,37,.20);
+  color:#6f4e08;
+  font-weight:950;
+  line-height:1.6;
+}
+
+.admin-ref-lab-warning.is-visible{
+  display:block;
+}
+
+.admin-ref-double-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+@media (max-width:760px){
+  .admin-ref-lab-score-grid,
+  .admin-ref-double-actions{
+    grid-template-columns:1fr;
+  }
 }
 
 </style>
@@ -954,6 +1113,81 @@
           <button type="submit" class="admin-ref-secondary">مسح الموعد</button>
         </form>
       {% endif %}
+    </div>
+  </details>
+
+
+  <details class="admin-ref-card admin-ref-toggle-card admin-ref-admin-section" data-admin-section="doublelab">
+    <summary>
+      <div class="admin-ref-card-title">
+        <span class="admin-ref-badge">⭐ مختبر المضاعفة</span>
+        <h3>اختبار آمن للنقاط والرسالة</h3>
+        <div class="admin-ref-summary-line">
+          <span class="admin-ref-chip">لا يحفظ أي بيانات</span>
+          <span class="admin-ref-chip">لا يظهر للمتسابقين</span>
+        </div>
+      </div>
+      <span class="admin-ref-toggle-icon" aria-hidden="true"></span>
+    </summary>
+
+    <div class="admin-ref-toggle-body">
+      <p style="margin-bottom:12px">
+        هذا المختبر يحسب نتيجة المضاعفة ويعرض نفس رسالة التأكيد التي ستظهر للمتسابق، لكنه لا يضيف مباراة ولا يحفظ توقعًا.
+      </p>
+
+      <div class="admin-ref-double-lab-grid" id="doubleLab">
+        <label>
+          <span>الدور</span>
+          <select id="doubleLabStage">
+            <option value="group">المجموعات</option>
+            <option value="round32" selected>دور الـ32</option>
+            <option value="round16">دور الـ16</option>
+            <option value="quarter">ربع النهائي</option>
+            <option value="semi">نصف النهائي</option>
+            <option value="final">النهائي</option>
+          </select>
+        </label>
+
+        <label class="admin-ref-lab-check">
+          <span>⭐ تفعيل المضاعفة</span>
+          <input type="checkbox" id="doubleLabIsDouble" checked>
+        </label>
+
+        <div class="admin-ref-lab-score-grid">
+          <div class="admin-ref-lab-score-box">
+            <h4>توقع المتسابق</h4>
+            <div class="admin-ref-lab-score-inputs">
+              <input type="number" min="0" id="doubleLabPredHome" value="2" inputmode="numeric">
+              <span>-</span>
+              <input type="number" min="0" id="doubleLabPredAway" value="1" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="admin-ref-lab-score-box">
+            <h4>النتيجة النهائية</h4>
+            <div class="admin-ref-lab-score-inputs">
+              <input type="number" min="0" id="doubleLabRealHome" value="2" inputmode="numeric">
+              <span>-</span>
+              <input type="number" min="0" id="doubleLabRealAway" value="1" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-ref-lab-warning" id="doubleLabWarning">
+          المضاعفة غير مسموحة في دور المجموعات. لذلك سيتم احتساب النقاط بدون مضاعفة.
+        </div>
+
+        <div class="admin-ref-lab-result">
+          <span>الناتج المتوقع</span>
+          <strong class="admin-ref-lab-points" id="doubleLabPoints">+6</strong>
+          <p class="admin-ref-lab-explain" id="doubleLabExplain">نتيجة دقيقة مع المضاعفة.</p>
+        </div>
+
+        <div class="admin-ref-double-actions">
+          <button type="button" class="admin-ref-secondary" id="doubleLabReset">إعادة المثال الأساسي</button>
+          <button type="button" class="admin-ref-primary" id="doubleLabPreviewConfirm">عرض رسالة التأكيد</button>
+        </div>
+      </div>
     </div>
   </details>
 
@@ -1165,7 +1399,7 @@
 
 <script>
 (function(){
-  const allowedViews = ['manage', 'add', 'deadline', 'links'];
+  const allowedViews = ['manage', 'add', 'deadline', 'doublelab', 'links'];
 
   function normalizeAdminView(view){
     return allowedViews.includes(view) ? view : 'manage';
@@ -1217,6 +1451,7 @@
       <a href="#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
       <a href="#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
       <a href="#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
+      <a href="#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">⭐ مختبر المضاعفة</a>
       <a href="#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
       <span class="admin-menu-divider"></span>
       <a href="/leaderboard" class="admin-menu-secondary">🏅 الترتيب</a>
@@ -1253,6 +1488,138 @@
 
   window.setAdminView = setAdminView;
 })();
+
+
+const DOUBLE_CONFIRM_MESSAGE = 'أنت اخترت مباراة مضاعفة. إذا كان توقعك دقيقًا تحصل على +6، وإذا كان الفائز صحيحًا تحصل على +2. لا يمكنك اختيار أكثر من مباراة مضاعفة في نفس الدور. هل تريد حفظ التوقعات؟';
+
+function adminDoubleWinner(home, away) {
+  if (home > away) return 'home';
+  if (home < away) return 'away';
+  return 'draw';
+}
+
+function adminDoubleUpdateLab() {
+  const stage = document.getElementById('doubleLabStage');
+  const isDoubleInput = document.getElementById('doubleLabIsDouble');
+  const predHome = document.getElementById('doubleLabPredHome');
+  const predAway = document.getElementById('doubleLabPredAway');
+  const realHome = document.getElementById('doubleLabRealHome');
+  const realAway = document.getElementById('doubleLabRealAway');
+  const pointsBox = document.getElementById('doubleLabPoints');
+  const explain = document.getElementById('doubleLabExplain');
+  const warning = document.getElementById('doubleLabWarning');
+
+  if (!stage || !isDoubleInput || !pointsBox || !explain) return;
+
+  const knockoutStages = ['round32', 'round16', 'quarter', 'semi', 'final'];
+  const stageValue = stage.value;
+  const doubleAllowed = knockoutStages.includes(stageValue);
+  const requestedDouble = isDoubleInput.checked;
+  const isDouble = requestedDouble && doubleAllowed;
+
+  const ph = Number(predHome.value || 0);
+  const pa = Number(predAway.value || 0);
+  const rh = Number(realHome.value || 0);
+  const ra = Number(realAway.value || 0);
+
+  let base = 0;
+  let state = 'wrong';
+  let reason = 'توقع خاطئ.';
+
+  if (ph === rh && pa === ra) {
+    base = 3;
+    state = 'exact';
+    reason = 'نتيجة دقيقة';
+  } else if (adminDoubleWinner(ph, pa) === adminDoubleWinner(rh, ra)) {
+    base = 1;
+    state = 'partial';
+    reason = 'الفائز أو اتجاه المباراة صحيح';
+  }
+
+  const points = base * (isDouble ? 2 : 1);
+
+  pointsBox.classList.remove('is-exact', 'is-partial', 'is-wrong', 'is-disabled');
+
+  if (points === 0) {
+    pointsBox.classList.add('is-wrong');
+    pointsBox.textContent = '0';
+  } else {
+    pointsBox.classList.add(state === 'exact' ? 'is-exact' : 'is-partial');
+    pointsBox.textContent = '+' + points;
+  }
+
+  if (requestedDouble && !doubleAllowed) {
+    warning.classList.add('is-visible');
+    explain.textContent = reason + ' لكن المضاعفة غير مسموحة في دور المجموعات، لذلك تم احتساب النقاط بدون مضاعفة.';
+  } else {
+    warning.classList.remove('is-visible');
+    explain.textContent = reason + (isDouble ? ' مع المضاعفة.' : ' بدون مضاعفة.');
+  }
+}
+
+function showDoubleConfirmationModal() {
+  document.querySelector('.prediction-warning-overlay')?.remove();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'prediction-warning-overlay';
+  overlay.innerHTML = `
+    <div class="prediction-warning-card" role="dialog" aria-modal="true">
+      <div class="prediction-warning-icon">⭐</div>
+      <h3>تأكيد المضاعفة</h3>
+      <p>${DOUBLE_CONFIRM_MESSAGE}</p>
+      <div class="prediction-warning-actions">
+        <button type="button" class="prediction-warning-secondary">مراجعة</button>
+        <button type="button" class="prediction-warning-primary">تأكيد الحفظ</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  overlay.querySelector('.prediction-warning-secondary').addEventListener('click', function () {
+    overlay.remove();
+  });
+
+  overlay.querySelector('.prediction-warning-primary').addEventListener('click', function () {
+    overlay.remove();
+  });
+
+  overlay.addEventListener('click', function (event) {
+    if (event.target === overlay) overlay.remove();
+  });
+}
+
+function initAdminDoubleLab() {
+  const lab = document.getElementById('doubleLab');
+  if (!lab) return;
+
+  lab.querySelectorAll('input, select').forEach(function (field) {
+    field.addEventListener('input', adminDoubleUpdateLab);
+    field.addEventListener('change', adminDoubleUpdateLab);
+  });
+
+  const resetButton = document.getElementById('doubleLabReset');
+  if (resetButton) {
+    resetButton.addEventListener('click', function () {
+      document.getElementById('doubleLabStage').value = 'round32';
+      document.getElementById('doubleLabIsDouble').checked = true;
+      document.getElementById('doubleLabPredHome').value = 2;
+      document.getElementById('doubleLabPredAway').value = 1;
+      document.getElementById('doubleLabRealHome').value = 2;
+      document.getElementById('doubleLabRealAway').value = 1;
+      adminDoubleUpdateLab();
+    });
+  }
+
+  const previewButton = document.getElementById('doubleLabPreviewConfirm');
+  if (previewButton) {
+    previewButton.addEventListener('click', showDoubleConfirmationModal);
+  }
+
+  adminDoubleUpdateLab();
+}
+
+document.addEventListener('DOMContentLoaded', initAdminDoubleLab);
 
 function copyAdminRefLink(id) {
   const el = document.getElementById(id);
