@@ -908,6 +908,11 @@ def stats():
 
     match_ids = [m.id for m in all_matches]
 
+    match_map = {
+        m.id: m
+        for m in all_matches
+    }
+
     completed_matches = [
         m for m in all_matches
         if m.home_score is not None and m.away_score is not None
@@ -925,6 +930,15 @@ def stats():
     else:
         total_predictions = 0
 
+    total_possible_predictions = len(participants) * len(locked_matches)
+
+    if total_possible_predictions:
+        participation_rate = round(
+            (total_predictions / total_possible_predictions) * 100
+        )
+    else:
+        participation_rate = 0
+
     player_rows = []
 
     for p in participants:
@@ -940,6 +954,9 @@ def stats():
 
         exact = 0
         match_points = 0
+        x2_used = 0
+        x2_extra_points = 0
+        x2_total_points = 0
 
         for m in completed_matches:
             pred = preds_by_match.get(m.id)
@@ -947,10 +964,18 @@ def stats():
             if not pred:
                 continue
 
-            match_points += points_for(pred, m)
+            pts = points_for(pred, m)
+            match_points += pts
 
             if pred.home_score == m.home_score and pred.away_score == m.away_score:
                 exact += 1
+
+            if pred.is_double and m.stage in KNOCKOUT_STAGES:
+                x2_used += 1
+                base_points = pts // 2
+                extra_points = pts - base_points
+                x2_extra_points += extra_points
+                x2_total_points += pts
 
         missed_locked = sum(
             1 for m in locked_matches
@@ -962,7 +987,10 @@ def stats():
             'exact': exact,
             'predictions_count': len(preds_by_match),
             'missed_locked': missed_locked,
-            'match_points': match_points
+            'match_points': match_points,
+            'x2_used': x2_used,
+            'x2_extra_points': x2_extra_points,
+            'x2_total_points': x2_total_points
         })
 
     top_exact = sorted(
@@ -978,8 +1006,24 @@ def stats():
     )[:5]
 
     most_missed = sorted(
-        player_rows,
+        [
+            r for r in player_rows
+            if r['missed_locked'] > 0
+        ],
         key=lambda r: r['missed_locked'],
+        reverse=True
+    )[:5]
+
+    top_x2 = sorted(
+        [
+            r for r in player_rows
+            if r['x2_extra_points'] > 0
+        ],
+        key=lambda r: (
+            r['x2_extra_points'],
+            r['x2_total_points'],
+            r['x2_used']
+        ),
         reverse=True
     )[:5]
 
@@ -1002,10 +1046,28 @@ def stats():
             'exact_count': exact_count
         })
 
+    predicted_match_rows = [
+        r for r in match_rows
+        if r['total_predictions'] > 0
+    ]
+
     top_point_matches = sorted(
-        match_rows,
-        key=lambda r: (r['total_points'], r['exact_count']),
+        predicted_match_rows,
+        key=lambda r: (
+            r['total_points'],
+            r['exact_count'],
+            r['total_predictions']
+        ),
         reverse=True
+    )[:5]
+
+    hardest_matches = sorted(
+        predicted_match_rows,
+        key=lambda r: (
+            r['total_points'],
+            r['exact_count'],
+            r['total_predictions']
+        )
     )[:5]
 
     return render_template(
@@ -1016,10 +1078,13 @@ def stats():
         completed_matches_count=len(completed_matches),
         locked_matches_count=len(locked_matches),
         total_predictions=total_predictions,
+        participation_rate=participation_rate,
         top_exact=top_exact,
         top_participation=top_participation,
         most_missed=most_missed,
+        top_x2=top_x2,
         top_point_matches=top_point_matches,
+        hardest_matches=hardest_matches,
         stage_labels=STAGE_LABELS
     )
 
