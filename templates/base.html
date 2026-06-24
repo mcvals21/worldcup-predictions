@@ -57,11 +57,7 @@
         <nav class="menu-links">
           <a href="/leaderboard">🏅 الترتيب</a>
 
-          {% if p is defined %}
-            <a href="{{ url_for('participant_page', token=p.token, filter='open') }}">⚽ المباريات</a>
-          {% else %}
-            <a href="/leaderboard">⚽ المباريات</a>
-          {% endif %}
+          <a href="{{ url_for('matches_page', filter='open') }}">⚽ المباريات</a>
 
           <a href="/rules">📖 القوانين</a>
           <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
