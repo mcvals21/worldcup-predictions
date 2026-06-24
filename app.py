@@ -1127,6 +1127,29 @@ def admin(code):
 
             flash('تم حذف المباراة.')
             
+        elif action == 'champion_deadline':
+            raw_deadline = request.form.get('deadline', '').strip()
+
+            if raw_deadline:
+                try:
+                    t.champion_pick_deadline = datetime.strptime(
+                        raw_deadline,
+                        '%Y-%m-%dT%H:%M'
+                    )
+                    db.session.commit()
+                    flash('تم حفظ موعد إغلاق توقع البطل.')
+                except ValueError:
+                    flash('صيغة موعد إغلاق توقع البطل غير صحيحة.')
+            else:
+                t.champion_pick_deadline = None
+                db.session.commit()
+                flash('تم مسح موعد إغلاق توقع البطل.')
+
+        elif action == 'clear_champion_deadline':
+            t.champion_pick_deadline = None
+            db.session.commit()
+            flash('تم مسح موعد إغلاق توقع البطل.')
+
         elif action == 'delete_empty_english_matches':
             all_matches = Match.query.filter_by(tournament_id=t.id).all()
 
