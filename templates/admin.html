@@ -858,11 +858,56 @@
   }
 }
 
+
+
+/* =====================================================
+   Admin ref v4 - القائمة تختار قسمًا واحدًا فقط
+   لا يؤثر على باقي صفحات الموقع.
+===================================================== */
+.admin-ref-page[data-admin-view="manage"] .admin-ref-admin-section:not([data-admin-section="manage"]),
+.admin-ref-page[data-admin-view="add"] .admin-ref-admin-section:not([data-admin-section="add"]),
+.admin-ref-page[data-admin-view="deadline"] .admin-ref-admin-section:not([data-admin-section="deadline"]),
+.admin-ref-page[data-admin-view="links"] .admin-ref-admin-section:not([data-admin-section="links"]){
+  display:none !important;
+}
+
+.admin-ref-admin-section{
+  animation:adminRefSectionIn .18s ease both;
+}
+
+@keyframes adminRefSectionIn{
+  from{opacity:.65; transform:translateY(8px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.clean-menu .menu-links .admin-menu-section{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(230,211,156,.14);
+}
+
+.clean-menu .menu-links .admin-menu-section.active{
+  background:#e3cf92 !important;
+  color:#17130a !important;
+  border-color:rgba(0,0,0,.08) !important;
+  font-weight:1000 !important;
+}
+
+.clean-menu .menu-links .admin-menu-divider{
+  height:1px;
+  background:rgba(230,211,156,.18);
+  margin:7px 0;
+  border-radius:999px;
+}
+
+.clean-menu .menu-links .admin-menu-secondary{
+  opacity:.86;
+}
+
 </style>
 
 <div class="admin-ref-page">
 
-  <details class="admin-ref-card admin-ref-toggle-card admin-ref-deadline-card">
+  <details class="admin-ref-card admin-ref-toggle-card admin-ref-deadline-card admin-ref-admin-section" data-admin-section="deadline">
     <summary>
       <div class="admin-ref-card-title">
         <span class="admin-ref-badge">🏆 توقع البطل</span>
@@ -912,7 +957,7 @@
     </div>
   </details>
 
-  <details class="admin-ref-card admin-ref-add-card">
+  <details class="admin-ref-card admin-ref-add-card admin-ref-admin-section" data-admin-section="add">
     <summary>
       <div class="admin-ref-add-summary-title">
         <span class="admin-ref-badge">＋ إضافة مباراة</span>
@@ -962,7 +1007,7 @@
         </form>
   </details>
 
-  <details class="admin-ref-card admin-ref-toggle-card admin-ref-manage-card" open>
+  <details class="admin-ref-card admin-ref-toggle-card admin-ref-manage-card admin-ref-admin-section" data-admin-section="manage" open>
     <summary>
       <div class="admin-ref-card-title">
         <span class="admin-ref-badge">إدارة المباريات</span>
@@ -1103,7 +1148,7 @@
     </div>
   </details>
 
-  <details class="admin-ref-card admin-ref-links-card">
+  <details class="admin-ref-card admin-ref-links-card admin-ref-admin-section" data-admin-section="links">
     <summary>روابط المشاركين</summary>
     <div class="admin-ref-links-list">
       {% for p in participants %}
@@ -1119,6 +1164,96 @@
 </div>
 
 <script>
+(function(){
+  const allowedViews = ['manage', 'add', 'deadline', 'links'];
+
+  function normalizeAdminView(view){
+    return allowedViews.includes(view) ? view : 'manage';
+  }
+
+  function setAdminView(view, updateHash){
+    const page = document.querySelector('.admin-ref-page');
+    if (!page) return;
+
+    const selectedView = normalizeAdminView(view);
+    page.setAttribute('data-admin-view', selectedView);
+
+    page.querySelectorAll('[data-admin-section]').forEach(function(section){
+      const isActive = section.getAttribute('data-admin-section') === selectedView;
+
+      if (isActive) {
+        section.style.display = '';
+        if (section.tagName.toLowerCase() === 'details') {
+          section.setAttribute('open', '');
+        }
+      } else {
+        section.style.display = 'none';
+      }
+    });
+
+    document.querySelectorAll('[data-admin-menu-view]').forEach(function(link){
+      link.classList.toggle('active', link.getAttribute('data-admin-menu-view') === selectedView);
+    });
+
+    try {
+      localStorage.setItem('adminSelectedView', selectedView);
+    } catch (error) {}
+
+    if (updateHash) {
+      history.replaceState(null, '', '#admin-' + selectedView);
+    }
+
+    const menu = document.querySelector('.clean-menu');
+    if (menu) menu.removeAttribute('open');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function buildAdminMenu(){
+    const links = document.querySelector('.clean-menu-panel .menu-links');
+    if (!links) return;
+
+    links.innerHTML = `
+      <a href="#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
+      <a href="#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
+      <a href="#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
+      <a href="#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
+      <span class="admin-menu-divider"></span>
+      <a href="/leaderboard" class="admin-menu-secondary">🏅 الترتيب</a>
+      <a href="/rules" class="admin-menu-secondary">📖 القوانين</a>
+      <a href="{{ url_for('stats') }}" class="admin-menu-secondary">📊 الإحصائيات</a>
+    `;
+
+    links.addEventListener('click', function(event){
+      const sectionLink = event.target.closest('[data-admin-menu-view]');
+      if (!sectionLink) return;
+
+      event.preventDefault();
+      setAdminView(sectionLink.getAttribute('data-admin-menu-view'), true);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    buildAdminMenu();
+
+    let initialView = '';
+
+    if (window.location.hash && window.location.hash.indexOf('#admin-') === 0) {
+      initialView = window.location.hash.replace('#admin-', '');
+    }
+
+    if (!initialView) {
+      try {
+        initialView = localStorage.getItem('adminSelectedView') || '';
+      } catch (error) {}
+    }
+
+    setAdminView(normalizeAdminView(initialView || 'manage'), false);
+  });
+
+  window.setAdminView = setAdminView;
+})();
+
 function copyAdminRefLink(id) {
   const el = document.getElementById(id);
   if (!el) return;
