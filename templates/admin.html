@@ -907,7 +907,7 @@
 
 
 /* =====================================================
-   Admin ref v5 - مختبر المضاعفة الآمن
+   Admin ref v6 - مختبر المضاعفة الآمن
    لا يحفظ أي شيء ولا يؤثر على قاعدة البيانات.
 ===================================================== */
 .admin-ref-double-lab-grid{
@@ -1120,7 +1120,7 @@
   <details class="admin-ref-card admin-ref-toggle-card admin-ref-admin-section" data-admin-section="doublelab">
     <summary>
       <div class="admin-ref-card-title">
-        <span class="admin-ref-badge">⭐ مختبر المضاعفة</span>
+        <span class="admin-ref-badge">×2 مختبر المضاعفة</span>
         <h3>اختبار آمن للنقاط والرسالة</h3>
         <div class="admin-ref-summary-line">
           <span class="admin-ref-chip">لا يحفظ أي بيانات</span>
@@ -1149,7 +1149,7 @@
         </label>
 
         <label class="admin-ref-lab-check">
-          <span>⭐ تفعيل المضاعفة</span>
+          <span><b dir="ltr">×2</b> ضاعف نقاطك</span>
           <input type="checkbox" id="doubleLabIsDouble" checked>
         </label>
 
@@ -1174,12 +1174,12 @@
         </div>
 
         <div class="admin-ref-lab-warning" id="doubleLabWarning">
-          المضاعفة غير مسموحة في دور المجموعات. لذلك سيتم احتساب النقاط بدون مضاعفة.
+          خاصية ضاعف نقاطك لا تظهر في دور المجموعات. لذلك يتم احتساب نقاط المجموعات فقط.
         </div>
 
         <div class="admin-ref-lab-result">
           <span>الناتج المتوقع</span>
-          <strong class="admin-ref-lab-points" id="doubleLabPoints">+6</strong>
+          <strong class="admin-ref-lab-points" id="doubleLabPoints">+10</strong>
           <p class="admin-ref-lab-explain" id="doubleLabExplain">نتيجة دقيقة مع المضاعفة.</p>
         </div>
 
@@ -1451,7 +1451,7 @@
       <a href="#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
       <a href="#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
       <a href="#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
-      <a href="#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">⭐ مختبر المضاعفة</a>
+      <a href="#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
       <a href="#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
       <span class="admin-menu-divider"></span>
       <a href="/leaderboard" class="admin-menu-secondary">🏅 الترتيب</a>
@@ -1490,7 +1490,7 @@
 })();
 
 
-const DOUBLE_CONFIRM_MESSAGE = 'أنت اخترت مباراة مضاعفة. إذا كان توقعك دقيقًا تحصل على +6، وإذا كان الفائز صحيحًا تحصل على +2. لا يمكنك اختيار أكثر من مباراة مضاعفة في نفس الدور. هل تريد حفظ التوقعات؟';
+const DOUBLE_CONFIRM_MESSAGE = 'أنت اخترت مضاعفة نقاطك لهذه المباراة. إذا كان توقعك دقيقًا تحصل على +10، وإذا كان توقعك قريبًا تحصل على +4. لا يمكنك اختيار أكثر من مباراة مضاعفة في نفس الدور. هل تريد حفظ التوقعات؟';
 
 function adminDoubleWinner(home, away) {
   if (home > away) return 'home';
@@ -1514,6 +1514,12 @@ function adminDoubleUpdateLab() {
   const knockoutStages = ['round32', 'round16', 'quarter', 'semi', 'final'];
   const stageValue = stage.value;
   const doubleAllowed = knockoutStages.includes(stageValue);
+
+  isDoubleInput.disabled = !doubleAllowed;
+  if (!doubleAllowed) {
+    isDoubleInput.checked = false;
+  }
+
   const requestedDouble = isDoubleInput.checked;
   const isDouble = requestedDouble && doubleAllowed;
 
@@ -1527,13 +1533,13 @@ function adminDoubleUpdateLab() {
   let reason = 'توقع خاطئ.';
 
   if (ph === rh && pa === ra) {
-    base = 3;
+    base = doubleAllowed ? 5 : 3;
     state = 'exact';
     reason = 'نتيجة دقيقة';
   } else if (adminDoubleWinner(ph, pa) === adminDoubleWinner(rh, ra)) {
-    base = 1;
+    base = doubleAllowed ? 2 : 1;
     state = 'partial';
-    reason = 'الفائز أو اتجاه المباراة صحيح';
+    reason = 'توقع قريب أو اتجاه المباراة صحيح';
   }
 
   const points = base * (isDouble ? 2 : 1);
@@ -1548,12 +1554,12 @@ function adminDoubleUpdateLab() {
     pointsBox.textContent = '+' + points;
   }
 
-  if (requestedDouble && !doubleAllowed) {
+  if (!doubleAllowed) {
     warning.classList.add('is-visible');
-    explain.textContent = reason + ' لكن المضاعفة غير مسموحة في دور المجموعات، لذلك تم احتساب النقاط بدون مضاعفة.';
+    explain.textContent = reason + ' في دور المجموعات. خاصية ضاعف نقاطك لا تظهر في هذا الدور.';
   } else {
     warning.classList.remove('is-visible');
-    explain.textContent = reason + (isDouble ? ' مع المضاعفة.' : ' بدون مضاعفة.');
+    explain.textContent = reason + (isDouble ? ' مع مضاعفة النقاط.' : ' بدون مضاعفة.');
   }
 }
 
@@ -1564,8 +1570,8 @@ function showDoubleConfirmationModal() {
   overlay.className = 'prediction-warning-overlay';
   overlay.innerHTML = `
     <div class="prediction-warning-card" role="dialog" aria-modal="true">
-      <div class="prediction-warning-icon">⭐</div>
-      <h3>تأكيد المضاعفة</h3>
+      <div class="prediction-warning-icon">×2</div>
+      <h3>تأكيد مضاعفة النقاط</h3>
       <p>${DOUBLE_CONFIRM_MESSAGE}</p>
       <div class="prediction-warning-actions">
         <button type="button" class="prediction-warning-secondary">مراجعة</button>
