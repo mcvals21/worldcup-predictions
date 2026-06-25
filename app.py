@@ -1128,10 +1128,19 @@ def parse_match_id_list(raw_ids):
     return ids[:12]
 
 
+ROUND_STATS_EXCLUDED_NAMES = {'الحميدي', 'العومي'}
+
+
 def build_round_dashboard(matches, participants):
+    participants = [
+        p for p in participants
+        if p.name not in ROUND_STATS_EXCLUDED_NAMES
+    ]
+
+    active_participant_ids = [p.id for p in participants]
     match_ids = [m.id for m in matches]
 
-    if not match_ids:
+    if not match_ids or not active_participant_ids:
         return {
             'player_rows': [],
             'top_players': [],
@@ -1146,7 +1155,8 @@ def build_round_dashboard(matches, participants):
         }
 
     predictions = Prediction.query.filter(
-        Prediction.match_id.in_(match_ids)
+        Prediction.match_id.in_(match_ids),
+        Prediction.participant_id.in_(active_participant_ids)
     ).all()
 
     match_map = {
