@@ -13,16 +13,23 @@
   direction:rtl;
   display:grid;
   gap:14px;
-  padding:0 0 24px;
+  padding:0 0 26px;
 }
 
-.round-builder-hero,
-.round-builder-card{
-  background:#f3efe4;
-  border:1px solid rgba(226,208,153,.44);
+.round-builder-hero{
+  background:linear-gradient(180deg,#f6f1e7,#eee7d8);
+  border:1px solid rgba(226,208,153,.50);
   border-radius:28px;
   box-shadow:0 14px 36px rgba(0,0,0,.18);
   overflow:hidden;
+}
+
+.round-builder-card{
+  background:transparent;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  overflow:visible;
 }
 
 .round-builder-hero{
@@ -77,21 +84,21 @@
 }
 
 .round-builder-card{
-  padding:14px;
+  padding:0;
 }
 
 .round-builder-toolbar{
   position:sticky;
-  top:10px;
+  top:8px;
   z-index:5;
   display:grid;
   gap:10px;
   padding:12px;
   margin-bottom:12px;
   border-radius:24px;
-  background:linear-gradient(180deg,#3a3c42,#25272c);
-  border:1px solid rgba(230,211,156,.22);
-  box-shadow:0 12px 28px rgba(0,0,0,.20);
+  background:linear-gradient(180deg,#34373e,#252830);
+  border:1px solid rgba(230,211,156,.24);
+  box-shadow:0 12px 28px rgba(0,0,0,.24);
 }
 
 .round-builder-toolbar-title{
@@ -101,6 +108,7 @@
   gap:10px;
   color:#f6f1e5;
   font-weight:1000;
+  padding:0 2px;
 }
 
 .round-builder-toolbar-title span{
@@ -111,7 +119,7 @@
 
 .round-builder-actions{
   display:grid;
-  grid-template-columns:1.15fr 1fr 1fr;
+  grid-template-columns:1.2fr 1fr 1fr;
   gap:8px;
 }
 
@@ -153,8 +161,9 @@
 }
 
 .round-builder-btn:disabled{
-  opacity:.45;
+  opacity:.55;
   cursor:not-allowed;
+  filter:grayscale(.15);
 }
 
 .round-builder-help{
@@ -164,10 +173,10 @@
   justify-content:center;
   padding:8px 10px;
   border-radius:16px;
-  background:rgba(255,255,255,.06);
-  color:#ded6c4;
+  background:rgba(255,255,255,.08);
+  color:#eee7d8;
   font-size:.8rem;
-  font-weight:850;
+  font-weight:900;
   text-align:center;
 }
 
@@ -189,6 +198,7 @@
   border:1px solid #d6d1c6;
   cursor:pointer;
   transition:.15s ease;
+  box-shadow:0 6px 16px rgba(0,0,0,.05);
 }
 
 .round-builder-match:hover{
@@ -198,7 +208,7 @@
 .round-builder-match:has(input:checked){
   background:#eee5c9;
   border-color:#d2b454;
-  box-shadow:inset 0 0 0 1px rgba(210,180,84,.22);
+  box-shadow:inset 0 0 0 1px rgba(210,180,84,.25), 0 8px 18px rgba(0,0,0,.07);
 }
 
 .round-builder-check{
@@ -299,8 +309,9 @@
   margin:0 0 12px;
   padding:12px;
   border-radius:22px;
-  background:#343840;
+  background:linear-gradient(180deg,#34373e,#252830);
   border:1px solid rgba(226,208,153,.25);
+  box-shadow:0 12px 26px rgba(0,0,0,.18);
 }
 
 .round-link-box.is-visible{
@@ -362,8 +373,8 @@
   }
 
   .round-builder-card{
-    padding:10px;
-    border-radius:24px;
+    padding:0;
+    border-radius:0;
   }
 
   .round-builder-toolbar{
