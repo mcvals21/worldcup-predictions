@@ -868,6 +868,7 @@
 .admin-ref-page[data-admin-view="manage"] .admin-ref-admin-section:not([data-admin-section="manage"]),
 .admin-ref-page[data-admin-view="add"] .admin-ref-admin-section:not([data-admin-section="add"]),
 .admin-ref-page[data-admin-view="deadline"] .admin-ref-admin-section:not([data-admin-section="deadline"]),
+.admin-ref-page[data-admin-view="championlab"] .admin-ref-admin-section:not([data-admin-section="championlab"]),
 .admin-ref-page[data-admin-view="doublelab"] .admin-ref-admin-section:not([data-admin-section="doublelab"]),
 .admin-ref-page[data-admin-view="links"] .admin-ref-admin-section:not([data-admin-section="links"]){
   display:none !important;
@@ -887,7 +888,6 @@
   border:1px solid rgba(230,211,156,.14);
 }
 
-.clean-menu .menu-links .admin-menu-section.is-featured,
 .clean-menu .menu-links .admin-menu-section.active{
   background:#e3cf92 !important;
   color:#17130a !important;
@@ -906,6 +906,145 @@
   opacity:.86;
 }
 
+
+
+/* =====================================================
+   Admin ref v7 - مختبر توقع البطل الآمن
+   لا يحفظ أي شيء ولا يظهر للمتسابقين.
+===================================================== */
+.admin-ref-champion-lab{
+  display:grid;
+  gap:12px;
+}
+
+.admin-ref-champion-status{
+  display:grid;
+  gap:8px;
+  padding:12px;
+  border-radius:20px;
+  background:#e8e5de;
+  border:1px solid #d6d1c6;
+  color:#171717;
+}
+
+.admin-ref-champion-status strong{
+  font-size:1rem;
+  font-weight:1000;
+}
+
+.admin-ref-champion-preview{
+  display:grid;
+  gap:12px;
+  padding:14px;
+  border-radius:24px;
+  background:linear-gradient(180deg,#3a3c42,#25272c);
+  border:1px solid rgba(226,208,153,.24);
+  color:#f5f2ea;
+}
+
+.admin-ref-champion-preview-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.admin-ref-champion-preview-head h4{
+  margin:0;
+  color:#fff;
+  font-size:1.05rem;
+  font-weight:1000;
+}
+
+.admin-ref-champion-preview-head span{
+  min-height:28px;
+  padding:5px 10px;
+  border-radius:999px;
+  background:#e3cf92;
+  color:#17130a;
+  font-size:.74rem;
+  font-weight:1000;
+}
+
+.admin-ref-champion-disabled{
+  padding:12px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  color:#eee7d8;
+  font-weight:900;
+  line-height:1.65;
+}
+
+.admin-ref-champion-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
+}
+
+.admin-ref-champion-team{
+  width:100% !important;
+  min-height:58px !important;
+  padding:8px 10px !important;
+  border-radius:18px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:9px !important;
+  background:#f3efe4 !important;
+  color:#171717 !important;
+  border:1px solid rgba(226,208,153,.35) !important;
+  text-align:right !important;
+}
+
+.admin-ref-champion-team.is-selected{
+  background:#e3cf92 !important;
+  border-color:rgba(0,0,0,.10) !important;
+  box-shadow:0 0 0 3px rgba(227,207,146,.22) !important;
+}
+
+.admin-ref-champion-team img{
+  width:34px;
+  height:24px;
+  border-radius:7px;
+  object-fit:cover;
+  flex:0 0 auto;
+  box-shadow:0 1px 5px rgba(0,0,0,.18);
+}
+
+.admin-ref-champion-team span{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-weight:1000;
+}
+
+.admin-ref-champion-selected{
+  padding:12px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  color:#eee7d8;
+  font-weight:950;
+}
+
+.admin-ref-champion-selected b{
+  color:#e3cf92;
+}
+
+.admin-ref-champion-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+@media (max-width:760px){
+  .admin-ref-champion-grid,
+  .admin-ref-champion-actions{
+    grid-template-columns:1fr;
+  }
+}
 
 
 /* =====================================================
@@ -1118,6 +1257,76 @@
     </div>
   </details>
 
+
+  <details class="admin-ref-card admin-ref-toggle-card admin-ref-admin-section" data-admin-section="championlab">
+    <summary>
+      <div class="admin-ref-card-title">
+        <span class="admin-ref-badge">🏆 مختبر توقع البطل</span>
+        <h3>اختبار الشكل والرسالة</h3>
+        <div class="admin-ref-summary-line">
+          <span class="admin-ref-chip">لا يحفظ أي بيانات</span>
+          <span class="admin-ref-chip">خاص بالمدير فقط</span>
+        </div>
+      </div>
+      <span class="admin-ref-toggle-icon" aria-hidden="true"></span>
+    </summary>
+
+    <div class="admin-ref-toggle-body">
+      {% set eligible_count = champion_test_teams|length if champion_test_teams is defined else 0 %}
+      {% set preview_teams = champion_preview_teams if champion_preview_teams is defined else [] %}
+
+      <div class="admin-ref-champion-lab" id="championLab">
+        <div class="admin-ref-champion-status">
+          <strong>حالة القائمة الحقيقية</strong>
+          {% if eligible_count > 0 %}
+            <span class="admin-ref-chip">{{ eligible_count }} منتخب متاح من دور الـ32</span>
+          {% else %}
+            <span class="admin-ref-chip">لم تُفتح بعد للمتسابقين</span>
+          {% endif %}
+        </div>
+
+        <div class="admin-ref-champion-preview">
+          <div class="admin-ref-champion-preview-head">
+            <h4>توقع بطل البطولة</h4>
+            <span>معاينة</span>
+          </div>
+
+          {% if eligible_count == 0 %}
+            <div class="admin-ref-champion-disabled">
+              سيتم فتح توقع بطل البطولة بعد تحديد المتأهلين لدور الـ32.
+            </div>
+          {% endif %}
+
+          {% if preview_teams %}
+            <div class="admin-ref-champion-grid">
+              {% for team in preview_teams %}
+                {% set flag = team_flag_code(team) %}
+                <button type="button" class="admin-ref-champion-team" data-champion-team="{{ team }}">
+                  {% if flag %}
+                    <img src="https://flagcdn.com/w80/{{ flag }}.png" alt="">
+                  {% endif %}
+                  <span>{{ team }}</span>
+                </button>
+              {% endfor %}
+            </div>
+
+            <div class="admin-ref-champion-selected">
+              اختيار الاختبار: <b id="championLabSelected">لم يتم الاختيار</b>
+            </div>
+          {% else %}
+            <div class="admin-ref-champion-disabled">
+              لا توجد منتخبات متاحة للمعاينة حاليًا.
+            </div>
+          {% endif %}
+
+          <div class="admin-ref-champion-actions">
+            <button type="button" class="admin-ref-secondary" id="championLabPreviewClosed">اختبار رسالة عدم الفتح</button>
+            <button type="button" class="admin-ref-primary" id="championLabPreviewSave">عرض رسالة الاختيار</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
 
   <details class="admin-ref-card admin-ref-toggle-card admin-ref-admin-section" data-admin-section="doublelab">
     <summary>
@@ -1401,7 +1610,7 @@
 
 <script>
 (function(){
-  const allowedViews = ['manage', 'add', 'deadline', 'doublelab', 'links'];
+  const allowedViews = ['manage', 'add', 'deadline', 'championlab', 'doublelab', 'links'];
 
   function normalizeAdminView(view){
     return allowedViews.includes(view) ? view : 'manage';
@@ -1453,8 +1662,9 @@
       <a href="#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
       <a href="#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
       <a href="#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
+      <a href="#admin-championlab" class="admin-menu-section" data-admin-menu-view="championlab">🏆 مختبر توقع البطل</a>
       <a href="#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
-      <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء داشبورد الجولة</a>
+      <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section">📊 إنشاء إحصائيات الجولة</a>
       <a href="#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
     `;
 
@@ -1625,6 +1835,99 @@ function initAdminDoubleLab() {
 }
 
 document.addEventListener('DOMContentLoaded', initAdminDoubleLab);
+
+function showChampionLabModal(type, teamName) {
+  document.querySelector('.prediction-warning-overlay')?.remove();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'prediction-warning-overlay prediction-save-overlay';
+
+  let icon = '👍';
+  let title = 'تم اختيار البطل';
+  let text = teamName || '';
+
+  if (type === 'closed') {
+    icon = '🏆';
+    title = 'توقع البطل غير متاح الآن';
+    text = 'سيتم فتح الاختيار بعد تحديد المتأهلين لدور الـ32.';
+  }
+
+  if (type === 'empty') {
+    icon = '⚠️';
+    title = 'اختر منتخبًا أولًا';
+    text = '';
+  }
+
+  overlay.innerHTML = `
+    <div class="prediction-warning-card prediction-save-card" role="dialog" aria-modal="true">
+      <div class="prediction-warning-icon prediction-save-icon">${icon}</div>
+      <h3>${title}</h3>
+      ${text ? `<p>${text}</p>` : ''}
+      <div class="prediction-warning-actions">
+        <button type="button" class="prediction-warning-primary">حسنًا</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  overlay.querySelector('.prediction-warning-primary').addEventListener('click', function(){
+    overlay.remove();
+  });
+
+  overlay.addEventListener('click', function(event){
+    if (event.target === overlay) overlay.remove();
+  });
+}
+
+function initAdminChampionLab() {
+  const lab = document.getElementById('championLab');
+  if (!lab) return;
+
+  const selectedLabel = document.getElementById('championLabSelected');
+  let selectedTeam = '';
+
+  lab.querySelectorAll('[data-champion-team]').forEach(function(button){
+    button.addEventListener('click', function(){
+      lab.querySelectorAll('[data-champion-team]').forEach(function(other){
+        other.classList.remove('is-selected');
+      });
+
+      button.classList.add('is-selected');
+      selectedTeam = button.getAttribute('data-champion-team') || '';
+
+      if (selectedLabel) {
+        selectedLabel.textContent = selectedTeam || 'لم يتم الاختيار';
+      }
+    });
+  });
+
+  const firstTeam = lab.querySelector('[data-champion-team]');
+  if (firstTeam) {
+    firstTeam.click();
+  }
+
+  const saveButton = document.getElementById('championLabPreviewSave');
+  if (saveButton) {
+    saveButton.addEventListener('click', function(){
+      if (!selectedTeam) {
+        showChampionLabModal('empty');
+        return;
+      }
+
+      showChampionLabModal('saved', selectedTeam);
+    });
+  }
+
+  const closedButton = document.getElementById('championLabPreviewClosed');
+  if (closedButton) {
+    closedButton.addEventListener('click', function(){
+      showChampionLabModal('closed');
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initAdminChampionLab);
 
 function copyAdminRefLink(id) {
   const el = document.getElementById(id);
