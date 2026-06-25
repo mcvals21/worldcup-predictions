@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080808">
   <title>{{ t.name if t else 'توقعات المباريات' }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=champion-page-safe-1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=champion-page-safe-2">
 
  <style>
   /* رسالة حفظ التوقعات - بدون دائرة خلف الإيموجي */
@@ -289,11 +289,6 @@
           <a href="{{ url_for('participant_champion_page', token=p.token) }}" class="menu-champion-shortcut">
             <span>🏆</span>
             <strong>توقع بطل البطولة</strong>
-            {% if champion %}
-              <small>اختيارك: {{ champion.team_name }}</small>
-            {% else %}
-              <small>صفحة اختيار مستقلة وآمنة</small>
-            {% endif %}
           </a>
         {% endif %}
       </div>
