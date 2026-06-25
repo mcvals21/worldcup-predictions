@@ -1,5 +1,6 @@
 
 
+
 {% extends 'base.html' %}
 
 {% block body_class %}{% if selected_filter == 'open' and has_open_matches %}has-save-bar{% endif %}{% endblock %}
@@ -88,6 +89,69 @@
     font-size:1.05rem !important;
     font-weight:1000 !important;
   }
+
+  /* شريط توقع البطل - اختصار فقط لصفحة مستقلة */
+  .champion-mini-card{
+    margin:14px 0 18px !important;
+    padding:14px !important;
+    border-radius:24px !important;
+    display:grid !important;
+    grid-template-columns:1fr auto !important;
+    gap:12px !important;
+    align-items:center !important;
+    background:linear-gradient(180deg,#f3efe4,#e8e2d4) !important;
+    color:#171717 !important;
+    border:1px solid rgba(226,208,153,.35) !important;
+    box-shadow:0 10px 24px rgba(0,0,0,.08) !important;
+  }
+
+  .champion-mini-text{
+    display:grid !important;
+    gap:4px !important;
+    min-width:0 !important;
+  }
+
+  .champion-mini-text strong{
+    color:#171717 !important;
+    font-size:1.05rem !important;
+    line-height:1.25 !important;
+    font-weight:1000 !important;
+  }
+
+  .champion-mini-text span{
+    color:#6b6458 !important;
+    font-size:.82rem !important;
+    line-height:1.45 !important;
+    font-weight:850 !important;
+  }
+
+  .champion-mini-link{
+    min-height:42px !important;
+    padding:9px 14px !important;
+    border-radius:999px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    background:linear-gradient(180deg,#343840,#252930) !important;
+    color:#f6f1e5 !important;
+    border:1px solid rgba(226,208,153,.22) !important;
+    text-decoration:none !important;
+    font-size:.9rem !important;
+    font-weight:1000 !important;
+    white-space:nowrap !important;
+  }
+
+  @media (max-width:520px){
+    .champion-mini-card{
+      grid-template-columns:1fr !important;
+      text-align:center !important;
+    }
+
+    .champion-mini-link{
+      width:100% !important;
+    }
+  }
+
 </style>
 
 <section class="wc-welcome-card">
@@ -98,6 +162,25 @@
     <h2>أهلاً {{ p.name }}</h2>
     <p>يمكنك تعديل توقعاتك حتى بداية المباراة فقط</p>
   </div>
+</section>
+
+<section class="champion-mini-card">
+  <div class="champion-mini-text">
+    <strong>🏆 توقع بطل البطولة</strong>
+    {% if champion_locked %}
+      <span>تم إغلاق توقع البطل{% if champion %} · اختيارك: {{ champion.team_name }}{% endif %}</span>
+    {% elif champion %}
+      <span>اختيارك الحالي: {{ champion.team_name }}</span>
+    {% elif teams %}
+      <span>اختيار بطل البطولة مفتوح الآن</span>
+    {% else %}
+      <span>سيتم فتح الاختيار بعد تحديد المتأهلين لدور الـ32</span>
+    {% endif %}
+  </div>
+
+  <a href="{{ url_for('participant_champion_page', token=p.token) }}" class="champion-mini-link">
+    {% if champion %}تعديل الاختيار{% else %}اختيار البطل{% endif %}
+  </a>
 </section>
 
 <section class="wc-section-head">
