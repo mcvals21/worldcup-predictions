@@ -1,536 +1,683 @@
-
 {% extends "base.html" %}
+
+{% block body_class %}round-stats-public{% endblock %}
 
 {% block content %}
 
+{% set matches_count = matches|length %}
+{% set top_name = dashboard.top_players[0].name if dashboard.top_players else '-' %}
+{% set top_points = dashboard.top_players[0].points if dashboard.top_players else 0 %}
+{% set accuracy = ((dashboard.total_exact / dashboard.total_predictions) * 100) if dashboard.total_predictions else 0 %}
+
 <style>
-.round-dash-page,
-.round-dash-page *{
+body.round-stats-public .wc-header,
+body.round-stats-public .clean-wc-header{
+  display:none !important;
+}
+
+body.round-stats-public .site-main{
+  padding-top:18px !important;
+}
+
+.rs-page,
+.rs-page *{
   box-sizing:border-box;
 }
 
-.round-dash-page{
+.rs-page{
   direction:rtl;
-  display:grid;
-  gap:14px;
-  padding-bottom:24px;
-}
-
-.round-dash-frame{
-  display:grid;
-  gap:14px;
-}
-
-.round-dash-hero,
-.round-dash-card{
-  background:#f3efe4;
-  border:1px solid rgba(226,208,153,.44);
-  border-radius:28px;
-  box-shadow:0 14px 36px rgba(0,0,0,.18);
-  overflow:hidden;
-}
-
-.round-dash-hero{
-  padding:18px;
-  background:linear-gradient(180deg,#f3efe4,#e3dfd4);
-}
-
-.round-dash-kicker{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:32px;
-  padding:6px 12px;
-  border-radius:999px;
-  background:#343840;
+  max-width:780px;
+  margin:0 auto 28px;
+  padding:0 14px 24px;
   color:#f6f1e5;
-  font-size:.82rem;
-  font-weight:1000;
 }
 
-.round-dash-hero h2{
-  margin:10px 0 0;
-  color:#171717;
-  font-size:1.7rem;
-  font-weight:1000;
-}
-
-.round-dash-hero p{
-  margin:8px 0 0;
-  color:#5f584d;
-  font-size:.92rem;
-  font-weight:850;
-  line-height:1.7;
-}
-
-.round-dash-matches{
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-  margin-top:12px;
-}
-
-.round-dash-match-pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:30px;
-  padding:5px 10px;
-  border-radius:999px;
-  background:#343840;
-  color:#f6f1e5;
-  font-size:.76rem;
-  font-weight:900;
-}
-
-.round-dash-summary{
+.rs-frame{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-}
-
-.round-dash-stat{
-  background:#343840;
-  color:#fff;
-  border-radius:24px;
+  gap:12px;
   padding:14px;
+  border-radius:30px;
+  background:
+    radial-gradient(circle at top right, rgba(226,208,153,.10), transparent 34%),
+    linear-gradient(180deg,#202227,#141519);
+  border:1px solid rgba(226,208,153,.16);
+  box-shadow:0 26px 70px rgba(0,0,0,.36);
+}
+
+.rs-top{
   display:grid;
-  gap:6px;
-  min-height:96px;
-  border:1px solid rgba(226,208,153,.18);
+  grid-template-columns:1fr auto;
+  align-items:start;
+  gap:12px;
+  padding:18px;
+  border-radius:24px;
+  background:linear-gradient(180deg,#2f3239,#22252b);
+  border:1px solid rgba(255,255,255,.08);
 }
 
-.round-dash-stat.gold{
-  background:linear-gradient(180deg,#d9c16f,#b99a3d);
-  color:#2e2309;
-}
-
-.round-dash-stat.green{
-  background:linear-gradient(180deg,#5b9367,#2f6f43);
-}
-
-.round-dash-stat span{
+.rs-kicker{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:max-content;
+  min-height:30px;
+  padding:5px 12px;
+  border-radius:999px;
+  background:rgba(226,208,153,.14);
+  border:1px solid rgba(226,208,153,.28);
+  color:#e6d39c;
   font-size:.78rem;
-  font-weight:950;
-  opacity:.9;
+  font-weight:1000;
 }
 
-.round-dash-stat strong{
+.rs-top h1{
+  margin:10px 0 0;
+  color:#fff;
+  font-size:2rem;
+  line-height:1.15;
+  font-weight:1000;
+  letter-spacing:-.4px;
+}
+
+.rs-subtitle{
+  margin:8px 0 0;
+  color:#cfc8b8;
+  font-size:.9rem;
+  line-height:1.7;
+  font-weight:850;
+}
+
+.rs-datebox{
   direction:ltr;
-  font-size:1.85rem;
+  min-width:112px;
+  min-height:88px;
+  padding:12px;
+  border-radius:20px;
+  display:grid;
+  align-content:center;
+  justify-items:center;
+  background:#f3efe4;
+  color:#171717;
+  border:1px solid rgba(226,208,153,.38);
+}
+
+.rs-datebox strong{
+  font-size:1.55rem;
   line-height:1;
   font-weight:1000;
 }
 
-.round-dash-card{
-  padding:14px;
+.rs-datebox span{
+  margin-top:5px;
+  font-size:.76rem;
+  font-weight:950;
+  color:#5f584d;
 }
 
-.round-dash-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.round-dash-title h3{
-  margin:0;
-  color:#171717;
-  font-size:1.1rem;
-  font-weight:1000;
-}
-
-.round-dash-badge{
-  min-height:30px;
-  padding:5px 11px;
-  border-radius:999px;
-  background:#d8bd63;
-  color:#2f250b;
-  font-size:.8rem;
-  font-weight:1000;
-}
-
-.round-dash-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.round-dash-list{
-  display:grid;
-  gap:8px;
-}
-
-.round-dash-row{
-  display:grid;
-  grid-template-columns:36px 1fr auto auto;
-  align-items:center;
-  gap:8px;
-  background:#e8e5de;
-  border:1px solid #d6d1c6;
-  border-radius:16px;
-  padding:9px;
-}
-
-.round-dash-rank{
-  width:32px;
-  height:32px;
-  border-radius:12px;
-  background:#343840;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:1000;
-}
-
-.round-dash-name{
-  color:#171717;
-  font-weight:1000;
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-}
-
-.round-dash-num{
-  direction:ltr;
-  min-width:48px;
-  min-height:32px;
-  padding:5px 9px;
-  border-radius:999px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:1000;
-  background:#343840;
-  color:#fff;
-}
-
-.round-dash-num.green{
-  background:#3f7b50;
-}
-
-.round-dash-num.gold{
-  background:#d8bd63;
-  color:#2f250b;
-}
-
-.round-dash-match-row{
-  display:grid;
-  gap:8px;
-  background:#e8e5de;
-  border:1px solid #d6d1c6;
-  border-radius:16px;
-  padding:11px;
-}
-
-.round-dash-match-main{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  gap:8px;
-}
-
-.round-dash-team{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  min-width:0;
-  color:#171717;
-  font-weight:1000;
-  font-size:.88rem;
-}
-
-.round-dash-team:last-child{
-  justify-content:flex-end;
-  text-align:left;
-}
-
-.round-dash-team span{
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-}
-
-.round-dash-flag{
-  width:22px;
-  height:16px;
-  object-fit:cover;
-  border-radius:4px;
-  flex:0 0 auto;
-}
-
-.round-dash-score{
-  direction:ltr;
-  min-width:58px;
-  height:34px;
-  padding:0 10px;
-  border-radius:999px;
-  background:#343840;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:1000;
-}
-
-.round-dash-meta{
+.rs-match-strip{
   display:flex;
   flex-wrap:wrap;
-  gap:6px;
+  gap:7px;
+  padding:2px 2px 0;
 }
 
-.round-dash-meta span{
+.rs-match-pill{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   min-height:28px;
   padding:5px 10px;
   border-radius:999px;
-  background:#f3efe4;
-  color:#4e473b;
-  border:1px solid rgba(0,0,0,.06);
-  font-size:.77rem;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  color:#dcd5c6;
+  font-size:.74rem;
   font-weight:900;
 }
 
-.round-dash-share{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  justify-content:center;
+.rs-kpis{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
 }
 
-.round-dash-btn{
+.rs-kpi{
+  min-height:112px;
+  padding:14px;
+  border-radius:22px;
+  display:grid;
+  align-content:space-between;
+  background:#f3efe4;
+  color:#171717;
+  border:1px solid rgba(226,208,153,.32);
+}
+
+.rs-kpi.is-dark{
+  background:linear-gradient(180deg,#343840,#2a2e35);
+  color:#fff;
+  border-color:rgba(255,255,255,.08);
+}
+
+.rs-kpi.is-accent{
+  background:linear-gradient(180deg,#e6d39c,#cfb760);
+  color:#17130a;
+}
+
+.rs-kpi span{
+  color:inherit;
+  opacity:.75;
+  font-size:.76rem;
+  font-weight:1000;
+}
+
+.rs-kpi strong{
+  margin-top:8px;
+  direction:ltr;
+  font-size:1.9rem;
+  line-height:1;
+  font-weight:1000;
+}
+
+.rs-kpi .rs-name{
+  direction:rtl;
+  font-size:1.28rem;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.rs-grid{
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:12px;
+  align-items:start;
+}
+
+.rs-panel{
+  border-radius:24px;
+  background:#f3efe4;
+  color:#171717;
+  border:1px solid rgba(226,208,153,.30);
+  overflow:hidden;
+}
+
+.rs-panel-head{
+  min-height:58px;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+
+.rs-panel-head h2{
+  margin:0;
+  font-size:1.12rem;
+  line-height:1.2;
+  font-weight:1000;
+}
+
+.rs-mini-label{
+  min-height:28px;
+  padding:5px 10px;
+  border-radius:999px;
+  background:#343840;
+  color:#fff;
+  font-size:.74rem;
+  font-weight:1000;
+}
+
+.rs-table{
+  display:grid;
+  padding:10px;
+  gap:6px;
+}
+
+.rs-player-row{
+  display:grid;
+  grid-template-columns:36px 1fr 54px 44px;
+  align-items:center;
+  gap:8px;
+  min-height:44px;
+  padding:6px 8px;
+  border-radius:14px;
+  background:#e8e5de;
+  border:1px solid rgba(0,0,0,.05);
+}
+
+.rs-rank{
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#343840;
+  color:#fff;
+  font-weight:1000;
+}
+
+.rs-player-name{
+  min-width:0;
+  color:#171717;
+  font-weight:1000;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.rs-points,
+.rs-exact{
+  direction:ltr;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:30px;
+  border-radius:999px;
+  font-weight:1000;
+}
+
+.rs-points{
+  background:#343840;
+  color:#fff;
+}
+
+.rs-exact{
+  background:#d8c16f;
+  color:#201806;
+}
+
+.rs-side{
+  display:grid;
+  gap:12px;
+}
+
+.rs-insight{
+  padding:14px;
+  display:grid;
+  gap:8px;
+  border-radius:20px;
+  background:#e8e5de;
+  border:1px solid rgba(0,0,0,.05);
+}
+
+.rs-insight span{
+  color:#676154;
+  font-size:.75rem;
+  font-weight:950;
+}
+
+.rs-insight strong{
+  color:#171717;
+  font-size:1.12rem;
+  line-height:1.25;
+  font-weight:1000;
+}
+
+.rs-match-card{
+  padding:12px;
+  display:grid;
+  gap:8px;
+  border-radius:18px;
+  background:#e8e5de;
+  border:1px solid rgba(0,0,0,.05);
+}
+
+.rs-match-main{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+}
+
+.rs-team{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+  font-size:.82rem;
+  color:#171717;
+  font-weight:1000;
+}
+
+.rs-team:last-child{
+  justify-content:flex-end;
+}
+
+.rs-team span{
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.rs-flag{
+  width:22px;
+  height:16px;
+  border-radius:4px;
+  object-fit:cover;
+}
+
+.rs-score{
+  direction:ltr;
+  min-width:54px;
+  min-height:32px;
+  padding:5px 8px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#343840;
+  color:#fff;
+  font-weight:1000;
+}
+
+.rs-match-meta{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.rs-match-meta span{
+  min-height:26px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#f3efe4;
+  color:#5f584d;
+  font-size:.7rem;
+  font-weight:900;
+}
+
+.rs-footer{
+  display:flex;
+  justify-content:center;
+  padding:2px 0 0;
+}
+
+.rs-link-btn{
   min-height:40px;
   padding:9px 14px;
   border-radius:999px;
-  border:0;
-  background:#343840;
-  color:#fff;
+  border:1px solid rgba(226,208,153,.22);
+  background:rgba(255,255,255,.06);
+  color:#e6d39c;
   cursor:pointer;
   font-weight:1000;
 }
 
-.round-dash-empty{
-  padding:16px;
-  border-radius:18px;
-  background:#e8e5de;
-  border:1px solid #d6d1c6;
+.rs-empty{
+  padding:18px;
+  border-radius:22px;
+  text-align:center;
+  background:#f3efe4;
   color:#5f584d;
   font-weight:900;
-  line-height:1.7;
-  text-align:center;
+  line-height:1.8;
 }
 
 @media (max-width:720px){
-  .round-dash-summary{
+  .rs-page{
+    padding:0 10px 22px;
+  }
+
+  .rs-frame{
+    padding:10px;
+    border-radius:26px;
+  }
+
+  .rs-top{
+    grid-template-columns:1fr;
+    padding:16px;
+  }
+
+  .rs-datebox{
+    width:100%;
+    min-height:64px;
+    grid-template-columns:auto auto;
+    justify-content:center;
+    gap:10px;
+  }
+
+  .rs-datebox span{
+    margin:0;
+  }
+
+  .rs-top h1{
+    font-size:1.68rem;
+  }
+
+  .rs-kpis{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .rs-kpi{
+    min-height:94px;
+    padding:12px;
+    border-radius:20px;
+  }
+
+  .rs-kpi strong{
+    font-size:1.58rem;
+  }
+
+  .rs-kpi .rs-name{
+    font-size:1.12rem;
+  }
+
+  .rs-grid{
     grid-template-columns:1fr;
   }
 
-  .round-dash-grid{
-    grid-template-columns:1fr;
+  .rs-player-row{
+    grid-template-columns:32px 1fr 48px 40px;
+    gap:6px;
   }
 
-  .round-dash-hero h2{
-    font-size:1.42rem;
-  }
-
-  .round-dash-row{
-    grid-template-columns:32px 1fr auto auto;
-  }
-
-  .round-dash-match-main{
-    grid-template-columns:1fr auto 1fr;
-  }
-
-  .round-dash-team{
-    font-size:.8rem;
-  }
-
-  .round-dash-score{
-    min-width:52px;
-    height:32px;
-    font-size:.84rem;
+  .rs-panel-head h2{
+    font-size:1.02rem;
   }
 }
 </style>
 
-<section class="round-dash-page">
+<section class="rs-page">
+  <div class="rs-frame" id="roundStatsFrame">
 
-  <div class="round-dash-frame" id="roundDashboardFrame">
+    <section class="rs-top">
+      <div>
+        <span class="rs-kicker">إحصائيات الجولة</span>
+        <h1>ملخص الجولة</h1>
+        {% if matches %}
+          <p class="rs-subtitle">لوحة مختصرة بأسلوب تقارير الأعمال: ترتيب الجولة، النقاط، ودقة التوقعات للمباريات المختارة.</p>
+        {% else %}
+          <p class="rs-subtitle">لا توجد مباريات صحيحة في الرابط الحالي.</p>
+        {% endif %}
+      </div>
 
-    <section class="round-dash-hero">
-      <span class="round-dash-kicker">داشبورد الجولة</span>
-      <h2>إحصائيات الجولة</h2>
-
-      {% if matches %}
-        <p>ملخص سريع للمباريات المختارة في هذه الجولة.</p>
-
-        <div class="round-dash-matches">
-          {% for m in matches %}
-            <span class="round-dash-match-pill">{{ m.home_team }} × {{ m.away_team }}</span>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p>لا توجد مباريات صحيحة في رابط الداشبورد.</p>
-      {% endif %}
+      <div class="rs-datebox">
+        <strong>{{ matches_count }}</strong>
+        <span>مباريات</span>
+      </div>
     </section>
 
     {% if matches %}
-      <section class="round-dash-summary">
-        <div class="round-dash-stat gold">
-          <span>أفضل لاعب في الجولة</span>
-          <strong style="font-size:1.35rem; direction:rtl;">
-            {% if dashboard.top_players %}{{ dashboard.top_players[0].name }}{% else %}-{% endif %}
-          </strong>
+      <div class="rs-match-strip">
+        {% for m in matches %}
+          <span class="rs-match-pill">{{ m.home_team }} × {{ m.away_team }}</span>
+        {% endfor %}
+      </div>
+
+      <section class="rs-kpis">
+        <div class="rs-kpi is-accent">
+          <span>متصدر الجولة</span>
+          <strong class="rs-name">{{ top_name }}</strong>
         </div>
 
-        <div class="round-dash-stat">
-          <span>مجموع نقاط الجولة</span>
+        <div class="rs-kpi is-dark">
+          <span>نقاط المتصدر</span>
+          <strong>{{ top_points }}</strong>
+        </div>
+
+        <div class="rs-kpi">
+          <span>مجموع النقاط</span>
           <strong>{{ dashboard.total_points }}</strong>
         </div>
 
-        <div class="round-dash-stat green">
-          <span>التوقعات الصحيحة</span>
-          <strong>{{ dashboard.total_exact }}</strong>
+        <div class="rs-kpi">
+          <span>دقة التوقعات</span>
+          <strong>{{ accuracy|round(0) }}%</strong>
         </div>
       </section>
 
-      <section class="round-dash-grid">
-
-        <section class="round-dash-card">
-          <div class="round-dash-title">
-            <h3>ترتيب الجولة</h3>
-            <span class="round-dash-badge">النقاط</span>
+      <section class="rs-grid">
+        <section class="rs-panel">
+          <div class="rs-panel-head">
+            <h2>ترتيب الجولة</h2>
+            <span class="rs-mini-label">النقاط / الدقيق</span>
           </div>
 
           {% if dashboard.player_rows %}
-            <div class="round-dash-list">
-              {% for r in dashboard.player_rows %}
-                <div class="round-dash-row">
-                  <div class="round-dash-rank">{{ loop.index }}</div>
-                  <div class="round-dash-name">{{ r.name }}</div>
-                  <div class="round-dash-num">{{ r.points }}</div>
-                  <div class="round-dash-num green">{{ r.exact }}</div>
+            <div class="rs-table">
+              {% for r in dashboard.player_rows[:10] %}
+                <div class="rs-player-row">
+                  <div class="rs-rank">{{ loop.index }}</div>
+                  <div class="rs-player-name">{{ r.name }}</div>
+                  <div class="rs-points">{{ r.points }}</div>
+                  <div class="rs-exact">{{ r.exact }}</div>
                 </div>
               {% endfor %}
             </div>
           {% else %}
-            <div class="round-dash-empty">لا توجد بيانات لهذه الجولة.</div>
+            <div class="rs-empty">لا توجد بيانات لهذه الجولة.</div>
           {% endif %}
         </section>
 
-        <section class="round-dash-card">
-          <div class="round-dash-title">
-            <h3>افضل من استخدم خاصية ×2</h3>
-            <span class="round-dash-badge">×2</span>
-          </div>
-
-          {% if dashboard.top_x2 %}
-            <div class="round-dash-list">
-              {% for r in dashboard.top_x2 %}
-                <div class="round-dash-row">
-                  <div class="round-dash-rank">{{ loop.index }}</div>
-                  <div class="round-dash-name">{{ r.name }}</div>
-                  <div class="round-dash-num gold">+{{ r.x2_extra_points }}</div>
-                  <div class="round-dash-num">{{ r.x2_total_points }}</div>
-                </div>
-              {% endfor %}
+        <aside class="rs-side">
+          <section class="rs-panel">
+            <div class="rs-panel-head">
+              <h2>مؤشرات سريعة</h2>
+              <span class="rs-mini-label">ملخص</span>
             </div>
-          {% else %}
-            <div class="round-dash-empty">لا توجد مضاعفة ناجحة في هذه الجولة.</div>
-          {% endif %}
-        </section>
 
-        <section class="round-dash-card">
-          <div class="round-dash-title">
-            <h3>أسهل مباراة بالتوقع</h3>
-            <span class="round-dash-badge">أسهل</span>
-          </div>
+            <div class="rs-table">
+              <div class="rs-insight">
+                <span>التوقعات الدقيقة</span>
+                <strong>{{ dashboard.total_exact }}</strong>
+              </div>
 
-          {% if dashboard.easiest_matches %}
-            <div class="round-dash-list">
-              {% for r in dashboard.easiest_matches %}
-                {% set m = r.match %}
+              <div class="rs-insight">
+                <span>إجمالي التوقعات</span>
+                <strong>{{ dashboard.total_predictions }}</strong>
+              </div>
+
+              {% if dashboard.top_x2 %}
+                <div class="rs-insight">
+                  <span>أفضل استفادة من ×2</span>
+                  <strong>{{ dashboard.top_x2[0].name }} · +{{ dashboard.top_x2[0].x2_extra_points }}</strong>
+                </div>
+              {% else %}
+                <div class="rs-insight">
+                  <span>أفضل استفادة من ×2</span>
+                  <strong>لا يوجد</strong>
+                </div>
+              {% endif %}
+            </div>
+          </section>
+
+          <section class="rs-panel">
+            <div class="rs-panel-head">
+              <h2>مباريات بارزة</h2>
+              <span class="rs-mini-label">تحليل</span>
+            </div>
+
+            <div class="rs-table">
+              {% if dashboard.easiest_matches %}
+                {% set e = dashboard.easiest_matches[0] %}
+                {% set m = e.match %}
                 {% set home_flag = team_flag_code(m.home_team) %}
                 {% set away_flag = team_flag_code(m.away_team) %}
-                <div class="round-dash-match-row">
-                  <div class="round-dash-match-main">
-                    <div class="round-dash-team">
-                      {% if home_flag %}<img class="round-dash-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">{% endif %}
+
+                <div class="rs-match-card">
+                  <div class="rs-match-meta">
+                    <span>الأكثر نجاحًا في التوقع</span>
+                  </div>
+
+                  <div class="rs-match-main">
+                    <div class="rs-team">
+                      {% if home_flag %}
+                        <img class="rs-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+                      {% endif %}
                       <span>{{ m.home_team }}</span>
                     </div>
-                    <div class="round-dash-score">{{ m.home_score }} - {{ m.away_score }}</div>
-                    <div class="round-dash-team">
+
+                    <div class="rs-score">{{ m.home_score }} - {{ m.away_score }}</div>
+
+                    <div class="rs-team">
                       <span>{{ m.away_team }}</span>
-                      {% if away_flag %}<img class="round-dash-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">{% endif %}
+                      {% if away_flag %}
+                        <img class="rs-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+                      {% endif %}
                     </div>
                   </div>
-                  <div class="round-dash-meta">
-                    <span>{{ r.total_points }} نقطة</span>
-                    <span>{{ r.exact_count }} توقعات صحيحة</span>
-                    <span>{{ r.total_predictions }} توقع</span>
+
+                  <div class="rs-match-meta">
+                    <span>{{ e.exact_count }} دقيق</span>
+                    <span>{{ e.total_points }} نقطة</span>
                   </div>
                 </div>
-              {% endfor %}
-            </div>
-          {% else %}
-            <div class="round-dash-empty">لا توجد بيانات كافية.</div>
-          {% endif %}
-        </section>
+              {% endif %}
 
-        <section class="round-dash-card">
-          <div class="round-dash-title">
-            <h3>أصعب مباراة بالتوقع</h3>
-            <span class="round-dash-badge">أصعب</span>
-          </div>
-
-          {% if dashboard.hardest_matches %}
-            <div class="round-dash-list">
-              {% for r in dashboard.hardest_matches %}
-                {% set m = r.match %}
+              {% if dashboard.hardest_matches %}
+                {% set h = dashboard.hardest_matches[0] %}
+                {% set m = h.match %}
                 {% set home_flag = team_flag_code(m.home_team) %}
                 {% set away_flag = team_flag_code(m.away_team) %}
-                <div class="round-dash-match-row">
-                  <div class="round-dash-match-main">
-                    <div class="round-dash-team">
-                      {% if home_flag %}<img class="round-dash-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">{% endif %}
+
+                <div class="rs-match-card">
+                  <div class="rs-match-meta">
+                    <span>الأصعب في التوقع</span>
+                  </div>
+
+                  <div class="rs-match-main">
+                    <div class="rs-team">
+                      {% if home_flag %}
+                        <img class="rs-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+                      {% endif %}
                       <span>{{ m.home_team }}</span>
                     </div>
-                    <div class="round-dash-score">{{ m.home_score }} - {{ m.away_score }}</div>
-                    <div class="round-dash-team">
+
+                    <div class="rs-score">{{ m.home_score }} - {{ m.away_score }}</div>
+
+                    <div class="rs-team">
                       <span>{{ m.away_team }}</span>
-                      {% if away_flag %}<img class="round-dash-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">{% endif %}
+                      {% if away_flag %}
+                        <img class="rs-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+                      {% endif %}
                     </div>
                   </div>
-                  <div class="round-dash-meta">
-                    <span>{{ r.total_points }} نقطة</span>
-                    <span>{{ r.exact_count }} توقعات صحيحة</span>
-                    <span>{{ r.total_predictions }} توقع</span>
+
+                  <div class="rs-match-meta">
+                    <span>{{ h.exact_count }} دقيق</span>
+                    <span>{{ h.total_points }} نقطة</span>
                   </div>
                 </div>
-              {% endfor %}
+              {% endif %}
             </div>
-          {% else %}
-            <div class="round-dash-empty">لا توجد بيانات كافية.</div>
-          {% endif %}
-        </section>
-
+          </section>
+        </aside>
       </section>
 
-      <div class="round-dash-share">
-        <button type="button" class="round-dash-btn" id="copyRoundDashboardLink">نسخ رابط الداشبورد</button>
+      <div class="rs-footer">
+        <button type="button" class="rs-link-btn" id="copyRoundDashboardLink">
+          نسخ رابط إحصائيات الجولة
+        </button>
       </div>
     {% else %}
-      <div class="round-dash-empty">
+      <div class="rs-empty">
         الرابط لا يحتوي على مباريات صحيحة أو أن المباريات لم تُسجل نتائجها بعد.
       </div>
     {% endif %}
-
   </div>
-
 </section>
 
 <script>
@@ -543,7 +690,7 @@
       try{
         await navigator.clipboard.writeText(shareUrl);
         btn.textContent = 'تم نسخ الرابط';
-        setTimeout(() => btn.textContent = 'نسخ رابط الداشبورد', 1400);
+        setTimeout(() => btn.textContent = 'نسخ رابط إحصائيات الجولة', 1400);
       }catch(e){
         alert('انسخ الرابط من شريط المتصفح.');
       }
