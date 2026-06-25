@@ -1,10 +1,11 @@
+
 {% extends "base.html" %}
 
 {% block content %}
 
 <style>
 /* =====================================================
-   leaderboard isolated final
+   leaderboard isolated final v2
    خاص بصفحة الترتيب فقط ولا يؤثر على باقي الصفحات
 ===================================================== */
 
@@ -22,7 +23,7 @@
 /* عنوان بسيط بدون كرت كبير */
 .rank-solo-head{
   text-align:center;
-  margin:6px 0 16px;
+  margin:6px 0 12px;
   padding:0;
   background:transparent;
   border:0;
@@ -45,6 +46,28 @@
   font-weight:850;
 }
 
+/* رأس الأعمدة */
+.rank-solo-table-head{
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr) 86px 86px;
+  align-items:center;
+  gap:12px;
+  padding:0 14px 2px;
+  color:#d8d3c5;
+  font-size:.72rem;
+  line-height:1.25;
+  font-weight:1000;
+}
+
+.rank-solo-table-head span{
+  text-align:center;
+}
+
+.rank-solo-table-head .head-name{
+  text-align:right;
+  padding-right:6px;
+}
+
 /* القائمة */
 .rank-solo-list{
   display:grid;
@@ -56,7 +79,7 @@
   position:relative;
 
   display:grid;
-  grid-template-columns:46px minmax(0,1fr) 86px;
+  grid-template-columns:46px minmax(0,1fr) 86px 86px;
   align-items:center;
   gap:12px;
 
@@ -155,18 +178,21 @@
 }
 
 /* النقاط */
-.rank-solo-points{
+.rank-solo-points,
+.rank-solo-correct{
   height:46px;
   min-width:82px;
 
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
 
   border-radius:15px;
-  background:linear-gradient(180deg,#3a3c42,#25272c);
   border:1px solid rgba(255,255,255,.08);
+}
+
+.rank-solo-points{
+  background:linear-gradient(180deg,#3a3c42,#25272c);
 }
 
 .rank-solo-points strong{
@@ -176,12 +202,17 @@
   font-weight:1000;
 }
 
-.rank-solo-points span{
-  color:#d8d3c5;
-  font-size:.62rem;
+/* التوقعات الصحيحة */
+.rank-solo-correct{
+  background:linear-gradient(180deg,#2f7d4d,#1f5f38);
+  border-color:rgba(255,255,255,.10);
+}
+
+.rank-solo-correct strong{
+  color:#fff;
+  font-size:1.18rem;
   line-height:1;
-  font-weight:850;
-  margin-top:4px;
+  font-weight:1000;
 }
 
 /* تمييز بسيط للصف الأول */
@@ -200,37 +231,45 @@
     font-size:.82rem;
   }
 
+  .rank-solo-table-head,
   .rank-solo-row{
-    grid-template-columns:40px minmax(0,1fr) 74px;
-    gap:10px;
+    grid-template-columns:36px minmax(0,1fr) 62px 62px;
+    gap:8px;
+  }
+
+  .rank-solo-table-head{
+    padding:0 12px 0;
+    font-size:.58rem;
+    line-height:1.2;
+  }
+
+  .rank-solo-row{
     min-height:64px;
     padding:11px 12px;
     border-radius:16px;
   }
 
   .rank-solo-place{
-    width:38px;
-    height:38px;
-    border-radius:13px;
-    font-size:.9rem;
+    width:34px;
+    height:34px;
+    border-radius:12px;
+    font-size:.86rem;
   }
 
   .rank-solo-name{
-    font-size:1rem;
+    font-size:.96rem;
   }
 
-  .rank-solo-points{
-    min-width:70px;
-    height:42px;
+  .rank-solo-points,
+  .rank-solo-correct{
+    min-width:58px;
+    height:40px;
     border-radius:14px;
   }
 
-  .rank-solo-points strong{
-    font-size:1.08rem;
-  }
-
-  .rank-solo-points span{
-    font-size:.56rem;
+  .rank-solo-points strong,
+  .rank-solo-correct strong{
+    font-size:1rem;
   }
 }
 </style>
@@ -243,6 +282,14 @@
   </header>
 
   {% if rows %}
+
+    <div class="rank-solo-table-head" aria-hidden="true">
+      <span></span>
+      <span class="head-name">المشارك</span>
+      <span>عدد النقاط</span>
+      <span>عدد التوقعات الصحيحة</span>
+    </div>
+
     <div class="rank-solo-list">
 
       {% for r in rows %}
@@ -256,9 +303,12 @@
             {{ r.name }}
           </div>
 
-          <div class="rank-solo-points">
+          <div class="rank-solo-points" title="عدد النقاط">
             <strong>{{ r.points }}</strong>
-            <span>نقطة</span>
+          </div>
+
+          <div class="rank-solo-correct" title="عدد التوقعات الصحيحة">
+            <strong>{{ r.exact }}</strong>
           </div>
 
         </article>
