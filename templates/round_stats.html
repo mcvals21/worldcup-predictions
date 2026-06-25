@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block body_class %}round-stats-public{% endblock %}
@@ -7,7 +6,7 @@
 
 {% set matches_count = matches|length %}
 {% set top_player = dashboard.player_rows[0] if dashboard.player_rows else none %}
-{% set last_player = dashboard.player_rows[-1] if dashboard.player_rows else none %}
+{% set worst_player = dashboard.player_rows[-1] if dashboard.player_rows else none %}
 
 <style>
 body.round-stats-public .wc-header,
@@ -44,21 +43,22 @@ body.round-stats-public .site-main{
   box-shadow:0 26px 70px rgba(0,0,0,.36);
 }
 
+/* العنوان */
 .rs-title-box{
   text-align:center;
-  padding:18px 14px 4px;
+  padding:20px 14px 10px;
 }
 
 .rs-title-box h1{
   margin:0;
   color:#fff;
-  font-size:2.18rem;
+  font-size:2.15rem;
   line-height:1.2;
   font-weight:1000;
   letter-spacing:-.6px;
 }
 
-.rs-count{
+.rs-title-box .rs-count{
   margin:12px auto 0;
   width:max-content;
   min-height:34px;
@@ -71,7 +71,8 @@ body.round-stats-public .site-main{
   font-weight:1000;
 }
 
-.rs-flags-card{
+/* أعلام المباريات */
+.rs-matches-flags{
   padding:14px;
   border-radius:24px;
   background:#f3efe4;
@@ -137,6 +138,7 @@ body.round-stats-public .site-main{
   font-weight:1000;
 }
 
+/* متصدر الجولة / أقل نقاط */
 .rs-hero-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -144,14 +146,14 @@ body.round-stats-public .site-main{
 }
 
 .rs-hero{
-  min-height:132px;
-  padding:16px;
+  min-height:142px;
+  padding:16px 14px;
   border-radius:24px;
   display:grid;
-  align-content:space-between;
-  background:#f3efe4;
-  color:#171717;
-  border:1px solid rgba(226,208,153,.28);
+  align-content:center;
+  gap:10px;
+  text-align:center;
+  border:1px solid rgba(226,208,153,.25);
 }
 
 .rs-hero.best{
@@ -159,23 +161,22 @@ body.round-stats-public .site-main{
   color:#17130a;
 }
 
-.rs-hero.low{
+.rs-hero.worst{
   background:linear-gradient(180deg,#3b3f47,#2b2f36);
   color:#fff;
   border-color:rgba(255,255,255,.08);
 }
 
 .rs-hero-label{
-  text-align:center;
-  font-size:.9rem;
+  font-size:.92rem;
+  line-height:1.2;
   font-weight:1000;
-  opacity:.80;
+  opacity:.78;
 }
 
 .rs-hero-name{
-  text-align:center;
-  font-size:1.55rem;
-  line-height:1.25;
+  font-size:1.62rem;
+  line-height:1.2;
   font-weight:1000;
   white-space:nowrap;
   overflow:hidden;
@@ -183,22 +184,28 @@ body.round-stats-public .site-main{
 }
 
 .rs-hero-points{
-  direction:ltr;
+  direction:rtl;
   width:max-content;
   margin:0 auto;
-  min-height:34px;
-  padding:7px 16px;
+  min-height:38px;
+  padding:8px 18px;
   border-radius:999px;
-  background:rgba(255,255,255,.55);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  background:rgba(255,255,255,.70);
   color:#17130a;
+  font-size:1rem;
   font-weight:1000;
 }
 
-.rs-hero.low .rs-hero-points{
-  background:rgba(255,255,255,.10);
+.rs-hero.worst .rs-hero-points{
+  background:rgba(255,255,255,.12);
   color:#fff;
 }
 
+/* جدول ترتيب الجولة */
 .rs-table-panel{
   border-radius:26px;
   background:#f3efe4;
@@ -208,7 +215,7 @@ body.round-stats-public .site-main{
 }
 
 .rs-section-title{
-  min-height:62px;
+  min-height:64px;
   padding:16px;
   display:flex;
   align-items:center;
@@ -219,7 +226,7 @@ body.round-stats-public .site-main{
 
 .rs-section-title h2{
   margin:0;
-  font-size:1.35rem;
+  font-size:1.45rem;
   line-height:1.2;
   font-weight:1000;
 }
@@ -227,22 +234,24 @@ body.round-stats-public .site-main{
 .rs-table-head,
 .rs-player-row{
   display:grid;
-  grid-template-columns:42px 1fr 62px 60px;
+  grid-template-columns:42px 1fr 72px 72px;
   align-items:center;
   gap:8px;
 }
 
 .rs-table-head{
-  padding:10px 12px;
-  color:#6b6458;
-  font-size:.74rem;
+  margin:10px 10px 8px;
+  padding:12px 10px;
+  border-radius:16px;
+  background:#343840;
+  color:#fff;
+  font-size:.86rem;
   font-weight:1000;
 }
 
 .rs-table-head .rs-head-correct{
-  color:#2f7a45;
-  font-size:1rem;
-  line-height:1;
+  color:#9ee5af;
+  font-size:1.05rem;
 }
 
 .rs-table{
@@ -298,11 +307,12 @@ body.round-stats-public .site-main{
 }
 
 .rs-correct{
-  background:#d7f0dc;
-  color:#245d36;
-  border:1px solid rgba(61,141,83,.18);
+  background:#dff1df;
+  color:#2d7b42;
+  border:1px solid rgba(45,123,66,.14);
 }
 
+/* المباريات البارزة */
 .rs-featured-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -390,24 +400,10 @@ body.round-stats-public .site-main{
   font-weight:1000;
 }
 
-.rs-featured-meta .rs-correct-text{
-  color:#245d36;
-}
-
-.rs-footer{
-  display:flex;
-  justify-content:center;
-}
-
-.rs-copy-btn{
-  min-height:42px;
-  padding:9px 16px;
-  border-radius:999px;
-  border:1px solid rgba(226,208,153,.22);
-  background:rgba(255,255,255,.06);
-  color:#e6d39c;
-  cursor:pointer;
-  font-weight:1000;
+.rs-featured-meta .correct-meta{
+  color:#2d7b42;
+  background:#dff1df;
+  border:1px solid rgba(45,123,66,.14);
 }
 
 .rs-empty{
@@ -446,24 +442,35 @@ body.round-stats-public .site-main{
   }
 
   .rs-hero{
-    min-height:120px;
-    padding:13px;
+    min-height:126px;
+    padding:14px 10px;
     border-radius:22px;
   }
 
+  .rs-hero-label{
+    font-size:.84rem;
+  }
+
   .rs-hero-name{
-    font-size:1.24rem;
+    font-size:1.28rem;
+  }
+
+  .rs-hero-points{
+    min-height:34px;
+    padding:7px 14px;
+    font-size:.92rem;
   }
 
   .rs-table-head,
   .rs-player-row{
-    grid-template-columns:36px 1fr 54px 48px;
+    grid-template-columns:36px 1fr 58px 58px;
     gap:6px;
   }
 
   .rs-table-head{
-    padding:9px 10px;
-    font-size:.68rem;
+    margin:9px 8px 8px;
+    padding:11px 8px;
+    font-size:.78rem;
   }
 
   .rs-player-row{
@@ -506,7 +513,7 @@ body.round-stats-public .site-main{
 
     {% if matches %}
 
-      <section class="rs-flags-card">
+      <section class="rs-matches-flags">
         <div class="rs-flags-grid">
           {% for m in matches %}
             {% set home_flag = team_flag_code(m.home_team) %}
@@ -537,13 +544,19 @@ body.round-stats-public .site-main{
         <div class="rs-hero best">
           <div class="rs-hero-label">متصدر الجولة</div>
           <div class="rs-hero-name">{{ top_player.name if top_player else '-' }}</div>
-          <div class="rs-hero-points">{{ top_player.points if top_player else 0 }} نقطة</div>
+          <div class="rs-hero-points">
+            {{ top_player.points if top_player else 0 }}
+            {{ 'نقطة' if (top_player and top_player.points == 1) else 'نقاط' }}
+          </div>
         </div>
 
-        <div class="rs-hero low">
+        <div class="rs-hero worst">
           <div class="rs-hero-label">أقل نقاط</div>
-          <div class="rs-hero-name">{{ last_player.name if last_player else '-' }}</div>
-          <div class="rs-hero-points">{{ last_player.points if last_player else 0 }} نقطة</div>
+          <div class="rs-hero-name">{{ worst_player.name if worst_player else '-' }}</div>
+          <div class="rs-hero-points">
+            {{ worst_player.points if worst_player else 0 }}
+            {{ 'نقطة' if (worst_player and worst_player.points == 1) else 'نقاط' }}
+          </div>
         </div>
       </section>
 
@@ -553,7 +566,7 @@ body.round-stats-public .site-main{
         </div>
 
         <div class="rs-table-head">
-          <div>#</div>
+          <div></div>
           <div>المشارك</div>
           <div>النقاط</div>
           <div class="rs-head-correct">✓</div>
@@ -606,8 +619,14 @@ body.round-stats-public .site-main{
               </div>
 
               <div class="rs-featured-meta">
-                <span class="rs-correct-text">✓ {{ e.exact_count }} توقعات صحيحة</span>
-                <span>{{ e.total_points }} نقطة</span>
+                <span class="correct-meta">
+                  ✓ {{ e.exact_count }}
+                  {{ 'توقع صحيح' if e.exact_count == 1 else 'توقعات صحيحة' }}
+                </span>
+                <span>
+                  {{ e.total_points }}
+                  {{ 'نقطة' if e.total_points == 1 else 'نقاط' }}
+                </span>
               </div>
             </div>
           </div>
@@ -642,20 +661,20 @@ body.round-stats-public .site-main{
               </div>
 
               <div class="rs-featured-meta">
-                <span class="rs-correct-text">✓ {{ h.exact_count }} توقعات صحيحة</span>
-                <span>{{ h.total_points }} نقطة</span>
+                <span class="correct-meta">
+                  ✓ {{ h.exact_count }}
+                  {{ 'توقع صحيح' if h.exact_count == 1 else 'توقعات صحيحة' }}
+                </span>
+                <span>
+                  {{ h.total_points }}
+                  {{ 'نقطة' if h.total_points == 1 else 'نقاط' }}
+                </span>
               </div>
             </div>
           </div>
         {% endif %}
 
       </section>
-
-      <div class="rs-footer">
-        <button type="button" class="rs-copy-btn" id="copyRoundDashboardLink">
-          نسخ رابط إحصائيات الجولة
-        </button>
-      </div>
 
     {% else %}
 
@@ -667,24 +686,5 @@ body.round-stats-public .site-main{
 
   </div>
 </section>
-
-<script>
-(function(){
-  const btn = document.getElementById('copyRoundDashboardLink');
-  const shareUrl = "{{ share_url }}";
-
-  if(btn){
-    btn.addEventListener('click', async function(){
-      try{
-        await navigator.clipboard.writeText(shareUrl);
-        btn.textContent = 'تم نسخ الرابط';
-        setTimeout(() => btn.textContent = 'نسخ رابط إحصائيات الجولة', 1400);
-      }catch(e){
-        alert('انسخ الرابط من شريط المتصفح.');
-      }
-    });
-  }
-})();
-</script>
 
 {% endblock %}
