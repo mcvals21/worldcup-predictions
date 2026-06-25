@@ -118,6 +118,39 @@ STAGE_LABELS = {
     'final': 'النهائي'
 }
 
+
+
+CHAMPION_TEAM_EXCLUDED_WORDS = [
+    'TBD', 'To Be Determined', 'تحدد', 'لم يتحدد', 'غير محدد', 'غير معروف'
+]
+
+
+def champion_eligible_teams(tournament_id=None):
+    """Return teams eligible for champion picks: only real teams in Round of 32 matches.
+    This is read-only and does not change the database.
+    """
+    query = Match.query
+
+    if tournament_id is not None:
+        query = query.filter(Match.tournament_id == tournament_id)
+
+    round32_matches = query.filter(Match.stage == 'round32').all()
+    teams = set()
+
+    for m in round32_matches:
+        for team in (m.home_team, m.away_team):
+            team = (team or '').strip()
+            if not team:
+                continue
+
+            if any(word.lower() in team.lower() for word in CHAMPION_TEAM_EXCLUDED_WORDS):
+                continue
+
+            teams.add(team)
+
+    return sorted(teams)
+
+
 RAW_TEAM_FLAG_CODES = {
     # Group A
     'المكسيك': 'mx',
@@ -747,9 +780,16 @@ def participant_page(token):
             if t.champion_pick_deadline and now_kw() >= t.champion_pick_deadline:
                 flash('تم إغلاق توقع البطل.')
             else:
+                eligible_teams = champion_eligible_teams(t.id)
                 team = request.form.get('team_name', '').strip()
 
-                if team:
+                if not eligible_teams:
+                    flash('سيتم فتح توقع بطل البطولة بعد تحديد المتأهلين لدور الـ32.')
+                elif not team:
+                    flash('اختر منتخبًا أولًا.')
+                elif team not in eligible_teams:
+                    flash('هذا المنتخب غير متاح لتوقع البطل.')
+                else:
                     pick = champion or ChampionPick(
                         participant_id=p.id,
                         tournament_id=t.id
@@ -768,10 +808,7 @@ def participant_page(token):
             filter=selected_filter
         ))
 
-    teams = sorted(
-        {m.home_team for m in all_matches} |
-        {m.away_team for m in all_matches}
-    )
+    teams = champion_eligible_teams(t.id)
 
     return render_template(
         'participant.html',
