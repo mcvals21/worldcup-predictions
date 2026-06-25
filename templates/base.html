@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080808">
   <title>{{ t.name if t else 'توقعات المباريات' }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=admin-menu-builder-modal-v2">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=round-stats-powerbi-1">
 
  <style>
   /* رسالة حفظ التوقعات - بدون دائرة خلف الإيموجي */
@@ -203,7 +203,7 @@
             <a href="{{ url_for('admin', code=code) }}#admin-add" class="admin-menu-section">＋ إضافة مباراة</a>
             <a href="{{ url_for('admin', code=code) }}#admin-deadline" class="admin-menu-section">🏆 موعد إغلاق توقع البطل</a>
             <a href="{{ url_for('admin', code=code) }}#admin-doublelab" class="admin-menu-section">×2 مختبر المضاعفة</a>
-            <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء داشبورد الجولة</a>
+            <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
             <a href="{{ url_for('admin', code=code) }}#admin-links" class="admin-menu-section">🔗 روابط المشاركين</a>
           {% else %}
             <a href="/leaderboard">🏅 الترتيب</a>
