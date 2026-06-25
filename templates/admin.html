@@ -1,4 +1,5 @@
 
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -886,6 +887,7 @@
   border:1px solid rgba(230,211,156,.14);
 }
 
+.clean-menu .menu-links .admin-menu-section.is-featured,
 .clean-menu .menu-links .admin-menu-section.active{
   background:#e3cf92 !important;
   color:#17130a !important;
@@ -1452,12 +1454,8 @@
       <a href="#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
       <a href="#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
       <a href="#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
+      <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء داشبورد الجولة</a>
       <a href="#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
-      <span class="admin-menu-divider"></span>
-      <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-secondary">📊 إنشاء داشبورد الجولة</a>
-      <a href="/leaderboard" class="admin-menu-secondary">🏅 الترتيب</a>
-      <a href="/rules" class="admin-menu-secondary">📖 القوانين</a>
-      <a href="{{ url_for('stats') }}" class="admin-menu-secondary">📊 إحصائيات البطولة</a>
     `;
 
     links.addEventListener('click', function(event){
