@@ -1454,9 +1454,10 @@
       <a href="#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
       <a href="#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
       <span class="admin-menu-divider"></span>
+      <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-secondary">📊 إنشاء داشبورد الجولة</a>
       <a href="/leaderboard" class="admin-menu-secondary">🏅 الترتيب</a>
       <a href="/rules" class="admin-menu-secondary">📖 القوانين</a>
-      <a href="{{ url_for('stats') }}" class="admin-menu-secondary">📊 الإحصائيات</a>
+      <a href="{{ url_for('stats') }}" class="admin-menu-secondary">📊 إحصائيات البطولة</a>
     `;
 
     links.addEventListener('click', function(event){
