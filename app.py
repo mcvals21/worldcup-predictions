@@ -118,11 +118,21 @@ STAGE_LABELS = {
     'final': 'النهائي'
 }
 
-
-
 CHAMPION_TEAM_EXCLUDED_WORDS = [
     'TBD', 'To Be Determined', 'تحدد', 'لم يتحدد', 'غير محدد', 'غير معروف'
 ]
+
+
+def is_real_champion_team(team_name):
+    team = (team_name or '').strip()
+
+    if not team:
+        return False
+
+    return not any(
+        word.lower() in team.lower()
+        for word in CHAMPION_TEAM_EXCLUDED_WORDS
+    )
 
 
 def champion_eligible_teams(tournament_id=None):
@@ -139,14 +149,32 @@ def champion_eligible_teams(tournament_id=None):
 
     for m in round32_matches:
         for team in (m.home_team, m.away_team):
-            team = (team or '').strip()
-            if not team:
-                continue
+            if is_real_champion_team(team):
+                teams.add(team.strip())
 
-            if any(word.lower() in team.lower() for word in CHAMPION_TEAM_EXCLUDED_WORDS):
-                continue
+    return sorted(teams)
 
-            teams.add(team)
+
+def champion_preview_teams(tournament_id=None):
+    """Teams used only in the admin visual tester.
+    If Round of 32 teams exist, use them. Otherwise use current real teams so the design can be tested safely.
+    """
+    eligible = champion_eligible_teams(tournament_id)
+
+    if eligible:
+        return eligible
+
+    query = Match.query
+
+    if tournament_id is not None:
+        query = query.filter(Match.tournament_id == tournament_id)
+
+    teams = set()
+
+    for m in query.all():
+        for team in (m.home_team, m.away_team):
+            if is_real_champion_team(team):
+                teams.add(team.strip())
 
     return sorted(teams)
 
@@ -1603,7 +1631,9 @@ def admin(code):
         match_filter_labels=ADMIN_MATCH_FILTER_LABELS,
         match_counts=match_counts,
         locked=match_locked,
-        prediction_counts=prediction_counts
+        prediction_counts=prediction_counts,
+        champion_test_teams=champion_eligible_teams(t.id),
+        champion_preview_teams=champion_preview_teams(t.id)
     )
 
 @app.cli.command('init-db')
