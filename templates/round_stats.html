@@ -5,9 +5,8 @@
 {% block content %}
 
 {% set matches_count = matches|length %}
-{% set top_name = dashboard.top_players[0].name if dashboard.top_players else '-' %}
-{% set top_points = dashboard.top_players[0].points if dashboard.top_players else 0 %}
-{% set accuracy = ((dashboard.total_exact / dashboard.total_predictions) * 100) if dashboard.total_predictions else 0 %}
+{% set top_player = dashboard.player_rows[0] if dashboard.player_rows else none %}
+{% set worst_player = dashboard.player_rows[-1] if dashboard.player_rows else none %}
 
 <style>
 body.round-stats-public .wc-header,
@@ -16,241 +15,259 @@ body.round-stats-public .clean-wc-header{
 }
 
 body.round-stats-public .site-main{
-  padding-top:18px !important;
+  padding-top:14px !important;
 }
 
-.rs-page,
-.rs-page *{
+.round-shot,
+.round-shot *{
   box-sizing:border-box;
 }
 
-.rs-page{
+.round-shot{
   direction:rtl;
-  max-width:780px;
+  max-width:760px;
   margin:0 auto 28px;
   padding:0 14px 24px;
   color:#f6f1e5;
 }
 
-.rs-frame{
+.round-card{
   display:grid;
-  gap:12px;
-  padding:14px;
+  gap:14px;
+  padding:16px;
   border-radius:30px;
   background:
-    radial-gradient(circle at top right, rgba(226,208,153,.10), transparent 34%),
-    linear-gradient(180deg,#202227,#141519);
+    radial-gradient(circle at top, rgba(226,208,153,.10), transparent 38%),
+    linear-gradient(180deg,#24262b,#15161a);
   border:1px solid rgba(226,208,153,.16);
   box-shadow:0 26px 70px rgba(0,0,0,.36);
 }
 
-.rs-top{
-  display:grid;
-  grid-template-columns:1fr auto;
-  align-items:start;
-  gap:12px;
-  padding:18px;
-  border-radius:24px;
-  background:linear-gradient(180deg,#2f3239,#22252b);
-  border:1px solid rgba(255,255,255,.08);
+/* العنوان */
+.rs-title-box{
+  text-align:center;
+  padding:20px 14px 12px;
 }
 
-.rs-kicker{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:max-content;
-  min-height:30px;
-  padding:5px 12px;
-  border-radius:999px;
-  background:rgba(226,208,153,.14);
-  border:1px solid rgba(226,208,153,.28);
-  color:#e6d39c;
-  font-size:.78rem;
-  font-weight:1000;
-}
-
-.rs-top h1{
-  margin:10px 0 0;
+.rs-title-box h1{
+  margin:0;
   color:#fff;
-  font-size:2rem;
-  line-height:1.15;
+  font-size:2.15rem;
+  line-height:1.2;
   font-weight:1000;
-  letter-spacing:-.4px;
+  letter-spacing:-.6px;
 }
 
-.rs-subtitle{
-  margin:8px 0 0;
-  color:#cfc8b8;
-  font-size:.9rem;
-  line-height:1.7;
-  font-weight:850;
+.rs-title-box .rs-count{
+  margin:12px auto 0;
+  width:max-content;
+  min-height:34px;
+  padding:7px 15px;
+  border-radius:999px;
+  background:#e2d099;
+  color:#19150c;
+  border:1px solid rgba(0,0,0,.08);
+  font-size:.88rem;
+  font-weight:1000;
 }
 
-.rs-datebox{
-  direction:ltr;
-  min-width:112px;
-  min-height:88px;
-  padding:12px;
-  border-radius:20px;
-  display:grid;
-  align-content:center;
-  justify-items:center;
+/* أعلام المباريات */
+.rs-matches-flags{
+  padding:14px;
+  border-radius:24px;
   background:#f3efe4;
-  color:#171717;
-  border:1px solid rgba(226,208,153,.38);
+  border:1px solid rgba(226,208,153,.30);
 }
 
-.rs-datebox strong{
-  font-size:1.55rem;
-  line-height:1;
+.rs-flags-title{
+  margin:0 0 12px;
+  text-align:center;
+  color:#171717;
+  font-size:1.05rem;
   font-weight:1000;
 }
 
-.rs-datebox span{
-  margin-top:5px;
-  font-size:.76rem;
-  font-weight:950;
-  color:#5f584d;
+.rs-flags-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
 }
 
-.rs-match-strip{
+.rs-flag-match{
+  min-height:52px;
+  padding:8px 10px;
+  border-radius:17px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:8px;
+  background:#e8e5de;
+  border:1px solid rgba(0,0,0,.06);
+}
+
+.rs-mini-team{
   display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-  padding:2px 2px 0;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+  color:#171717;
+  font-size:.76rem;
+  font-weight:1000;
 }
 
-.rs-match-pill{
-  display:inline-flex;
+.rs-mini-team:last-child{
+  justify-content:flex-end;
+}
+
+.rs-mini-team span{
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.rs-mini-flag{
+  width:28px;
+  height:20px;
+  border-radius:6px;
+  object-fit:cover;
+  box-shadow:0 1px 4px rgba(0,0,0,.16);
+}
+
+.rs-vs{
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  display:flex;
   align-items:center;
   justify-content:center;
-  min-height:28px;
-  padding:5px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.08);
-  color:#dcd5c6;
-  font-size:.74rem;
-  font-weight:900;
+  background:#343840;
+  color:#fff;
+  font-size:.7rem;
+  font-weight:1000;
 }
 
-.rs-kpis{
+/* المتصدر وأسوأ لاعب */
+.rs-hero-grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
 }
 
-.rs-kpi{
-  min-height:112px;
-  padding:14px;
-  border-radius:22px;
+.rs-hero{
+  min-height:138px;
+  padding:16px;
+  border-radius:24px;
   display:grid;
   align-content:space-between;
   background:#f3efe4;
   color:#171717;
-  border:1px solid rgba(226,208,153,.32);
+  border:1px solid rgba(226,208,153,.28);
 }
 
-.rs-kpi.is-dark{
-  background:linear-gradient(180deg,#343840,#2a2e35);
+.rs-hero.best{
+  background:linear-gradient(180deg,#e7d79d,#cfb760);
+  color:#17130a;
+}
+
+.rs-hero.worst{
+  background:linear-gradient(180deg,#3b3f47,#2b2f36);
   color:#fff;
   border-color:rgba(255,255,255,.08);
 }
 
-.rs-kpi.is-accent{
-  background:linear-gradient(180deg,#e6d39c,#cfb760);
-  color:#17130a;
-}
-
-.rs-kpi span{
-  color:inherit;
-  opacity:.75;
-  font-size:.76rem;
+.rs-hero-label{
+  text-align:center;
+  font-size:.86rem;
   font-weight:1000;
+  opacity:.78;
 }
 
-.rs-kpi strong{
-  margin-top:8px;
-  direction:ltr;
-  font-size:1.9rem;
-  line-height:1;
-  font-weight:1000;
-}
-
-.rs-kpi .rs-name{
-  direction:rtl;
-  font-size:1.28rem;
+.rs-hero-name{
+  text-align:center;
+  font-size:1.55rem;
   line-height:1.25;
+  font-weight:1000;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
 
-.rs-grid{
-  display:grid;
-  grid-template-columns:1.25fr .75fr;
-  gap:12px;
-  align-items:start;
+.rs-hero-points{
+  direction:ltr;
+  width:max-content;
+  margin:0 auto;
+  min-height:34px;
+  padding:7px 16px;
+  border-radius:999px;
+  background:rgba(255,255,255,.55);
+  color:#17130a;
+  font-weight:1000;
 }
 
-.rs-panel{
-  border-radius:24px;
+.rs-hero.worst .rs-hero-points{
+  background:rgba(255,255,255,.10);
+  color:#fff;
+}
+
+/* جدول ترتيب الجولة */
+.rs-table-panel{
+  border-radius:26px;
   background:#f3efe4;
   color:#171717;
   border:1px solid rgba(226,208,153,.30);
   overflow:hidden;
 }
 
-.rs-panel-head{
-  min-height:58px;
-  padding:14px 16px;
+.rs-section-title{
+  min-height:62px;
+  padding:16px;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:12px;
+  justify-content:center;
+  text-align:center;
   border-bottom:1px solid rgba(0,0,0,.08);
 }
 
-.rs-panel-head h2{
+.rs-section-title h2{
   margin:0;
-  font-size:1.12rem;
+  font-size:1.35rem;
   line-height:1.2;
   font-weight:1000;
 }
 
-.rs-mini-label{
-  min-height:28px;
-  padding:5px 10px;
-  border-radius:999px;
-  background:#343840;
-  color:#fff;
+.rs-table-head,
+.rs-player-row{
+  display:grid;
+  grid-template-columns:42px 1fr 62px 72px;
+  align-items:center;
+  gap:8px;
+}
+
+.rs-table-head{
+  padding:10px 12px;
+  color:#6b6458;
   font-size:.74rem;
   font-weight:1000;
 }
 
 .rs-table{
   display:grid;
-  padding:10px;
-  gap:6px;
+  gap:7px;
+  padding:0 10px 12px;
 }
 
 .rs-player-row{
-  display:grid;
-  grid-template-columns:36px 1fr 54px 44px;
-  align-items:center;
-  gap:8px;
-  min-height:44px;
-  padding:6px 8px;
-  border-radius:14px;
+  min-height:48px;
+  padding:7px 8px;
+  border-radius:16px;
   background:#e8e5de;
-  border:1px solid rgba(0,0,0,.05);
+  border:1px solid rgba(0,0,0,.055);
 }
 
 .rs-rank{
-  width:30px;
-  height:30px;
-  border-radius:10px;
+  width:32px;
+  height:32px;
+  border-radius:11px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -259,23 +276,24 @@ body.round-stats-public .site-main{
   font-weight:1000;
 }
 
-.rs-player-name{
+.rs-name{
   min-width:0;
-  color:#171717;
+  font-size:.98rem;
   font-weight:1000;
+  color:#171717;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
 
 .rs-points,
-.rs-exact{
+.rs-correct{
   direction:ltr;
+  min-height:32px;
+  border-radius:999px;
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:30px;
-  border-radius:999px;
   font-weight:1000;
 }
 
@@ -284,87 +302,74 @@ body.round-stats-public .site-main{
   color:#fff;
 }
 
-.rs-exact{
+.rs-correct{
   background:#d8c16f;
   color:#201806;
 }
 
-.rs-side{
+/* المباريات البارزة */
+.rs-featured-grid{
   display:grid;
+  grid-template-columns:1fr 1fr;
   gap:12px;
 }
 
-.rs-insight{
+.rs-featured-card{
   padding:14px;
-  display:grid;
-  gap:8px;
-  border-radius:20px;
-  background:#e8e5de;
-  border:1px solid rgba(0,0,0,.05);
-}
-
-.rs-insight span{
-  color:#676154;
-  font-size:.75rem;
-  font-weight:950;
-}
-
-.rs-insight strong{
+  border-radius:24px;
+  background:#f3efe4;
   color:#171717;
-  font-size:1.12rem;
-  line-height:1.25;
+  border:1px solid rgba(226,208,153,.30);
+}
+
+.rs-featured-card h3{
+  margin:0 0 12px;
+  text-align:center;
+  font-size:1.08rem;
   font-weight:1000;
 }
 
-.rs-match-card{
-  padding:12px;
+.rs-featured-match{
   display:grid;
-  gap:8px;
+  gap:10px;
+  padding:12px;
   border-radius:18px;
   background:#e8e5de;
-  border:1px solid rgba(0,0,0,.05);
+  border:1px solid rgba(0,0,0,.055);
 }
 
-.rs-match-main{
+.rs-featured-main{
   display:grid;
   grid-template-columns:1fr auto 1fr;
   align-items:center;
   gap:8px;
 }
 
-.rs-team{
+.rs-featured-team{
   display:flex;
   align-items:center;
   gap:6px;
   min-width:0;
-  font-size:.82rem;
-  color:#171717;
+  font-size:.78rem;
   font-weight:1000;
 }
 
-.rs-team:last-child{
+.rs-featured-team:last-child{
   justify-content:flex-end;
 }
 
-.rs-team span{
+.rs-featured-team span{
   overflow:hidden;
   white-space:nowrap;
   text-overflow:ellipsis;
 }
 
-.rs-flag{
-  width:22px;
-  height:16px;
-  border-radius:4px;
-  object-fit:cover;
-}
-
 .rs-score{
   direction:ltr;
-  min-width:54px;
-  min-height:32px;
-  padding:5px 8px;
-  border-radius:12px;
+  min-width:58px;
+  min-height:34px;
+  padding:6px 10px;
+  border-radius:13px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -373,31 +378,31 @@ body.round-stats-public .site-main{
   font-weight:1000;
 }
 
-.rs-match-meta{
+.rs-featured-meta{
   display:flex;
-  gap:6px;
+  justify-content:center;
   flex-wrap:wrap;
+  gap:6px;
 }
 
-.rs-match-meta span{
-  min-height:26px;
-  padding:4px 8px;
+.rs-featured-meta span{
+  min-height:28px;
+  padding:5px 10px;
   border-radius:999px;
   background:#f3efe4;
   color:#5f584d;
-  font-size:.7rem;
-  font-weight:900;
+  font-size:.74rem;
+  font-weight:1000;
 }
 
 .rs-footer{
   display:flex;
   justify-content:center;
-  padding:2px 0 0;
 }
 
-.rs-link-btn{
-  min-height:40px;
-  padding:9px 14px;
+.rs-copy-btn{
+  min-height:42px;
+  padding:9px 16px;
   border-radius:999px;
   border:1px solid rgba(226,208,153,.22);
   background:rgba(255,255,255,.06);
@@ -417,266 +422,252 @@ body.round-stats-public .site-main{
 }
 
 @media (max-width:720px){
-  .rs-page{
+  .round-shot{
     padding:0 10px 22px;
   }
 
-  .rs-frame{
-    padding:10px;
+  .round-card{
+    padding:12px;
     border-radius:26px;
+    gap:12px;
   }
 
-  .rs-top{
+  .rs-title-box h1{
+    font-size:1.82rem;
+  }
+
+  .rs-flags-grid{
     grid-template-columns:1fr;
-    padding:16px;
   }
 
-  .rs-datebox{
-    width:100%;
-    min-height:64px;
-    grid-template-columns:auto auto;
-    justify-content:center;
+  .rs-hero-grid,
+  .rs-featured-grid{
+    grid-template-columns:1fr 1fr;
     gap:10px;
   }
 
-  .rs-datebox span{
-    margin:0;
+  .rs-hero{
+    min-height:120px;
+    padding:13px;
+    border-radius:22px;
   }
 
-  .rs-top h1{
-    font-size:1.68rem;
+  .rs-hero-name{
+    font-size:1.24rem;
   }
 
-  .rs-kpis{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .rs-kpi{
-    min-height:94px;
-    padding:12px;
-    border-radius:20px;
-  }
-
-  .rs-kpi strong{
-    font-size:1.58rem;
-  }
-
-  .rs-kpi .rs-name{
-    font-size:1.12rem;
-  }
-
-  .rs-grid{
-    grid-template-columns:1fr;
-  }
-
+  .rs-table-head,
   .rs-player-row{
-    grid-template-columns:32px 1fr 48px 40px;
+    grid-template-columns:36px 1fr 54px 62px;
     gap:6px;
   }
 
-  .rs-panel-head h2{
-    font-size:1.02rem;
+  .rs-table-head{
+    padding:9px 10px;
+    font-size:.68rem;
+  }
+
+  .rs-player-row{
+    min-height:46px;
+  }
+
+  .rs-name{
+    font-size:.93rem;
+  }
+
+  .rs-featured-card{
+    padding:12px;
+    border-radius:22px;
+  }
+
+  .rs-featured-card h3{
+    font-size:.96rem;
+  }
+
+  .rs-featured-main{
+    grid-template-columns:1fr;
+    justify-items:center;
+    text-align:center;
+  }
+
+  .rs-featured-team,
+  .rs-featured-team:last-child{
+    justify-content:center;
   }
 }
 </style>
 
-<section class="rs-page">
-  <div class="rs-frame" id="roundStatsFrame">
+<section class="round-shot">
+  <div class="round-card">
 
-    <section class="rs-top">
-      <div>
-        <span class="rs-kicker">إحصائيات الجولة</span>
-        <h1>ملخص الجولة</h1>
-        {% if matches %}
-          <p class="rs-subtitle">لوحة مختصرة بأسلوب تقارير الأعمال: ترتيب الجولة، النقاط، ودقة التوقعات للمباريات المختارة.</p>
-        {% else %}
-          <p class="rs-subtitle">لا توجد مباريات صحيحة في الرابط الحالي.</p>
-        {% endif %}
-      </div>
-
-      <div class="rs-datebox">
-        <strong>{{ matches_count }}</strong>
-        <span>مباريات</span>
-      </div>
-    </section>
+    <header class="rs-title-box">
+      <h1>ملخص الجولة</h1>
+      <div class="rs-count">{{ matches_count }} مباريات</div>
+    </header>
 
     {% if matches %}
-      <div class="rs-match-strip">
-        {% for m in matches %}
-          <span class="rs-match-pill">{{ m.home_team }} × {{ m.away_team }}</span>
-        {% endfor %}
-      </div>
 
-      <section class="rs-kpis">
-        <div class="rs-kpi is-accent">
-          <span>متصدر الجولة</span>
-          <strong class="rs-name">{{ top_name }}</strong>
-        </div>
+      <section class="rs-matches-flags">
+        <h2 class="rs-flags-title">المباريات المشمولة</h2>
 
-        <div class="rs-kpi is-dark">
-          <span>نقاط المتصدر</span>
-          <strong>{{ top_points }}</strong>
-        </div>
+        <div class="rs-flags-grid">
+          {% for m in matches %}
+            {% set home_flag = team_flag_code(m.home_team) %}
+            {% set away_flag = team_flag_code(m.away_team) %}
 
-        <div class="rs-kpi">
-          <span>مجموع النقاط</span>
-          <strong>{{ dashboard.total_points }}</strong>
-        </div>
+            <div class="rs-flag-match">
+              <div class="rs-mini-team">
+                {% if home_flag %}
+                  <img class="rs-mini-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+                {% endif %}
+                <span>{{ m.home_team }}</span>
+              </div>
 
-        <div class="rs-kpi">
-          <span>دقة التوقعات</span>
-          <strong>{{ accuracy|round(0) }}%</strong>
+              <div class="rs-vs">×</div>
+
+              <div class="rs-mini-team">
+                <span>{{ m.away_team }}</span>
+                {% if away_flag %}
+                  <img class="rs-mini-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
         </div>
       </section>
 
-      <section class="rs-grid">
-        <section class="rs-panel">
-          <div class="rs-panel-head">
-            <h2>ترتيب الجولة</h2>
-            <span class="rs-mini-label">النقاط / الدقيق</span>
+      <section class="rs-hero-grid">
+        <div class="rs-hero best">
+          <div class="rs-hero-label">متصدر الجولة</div>
+          <div class="rs-hero-name">{{ top_player.name if top_player else '-' }}</div>
+          <div class="rs-hero-points">{{ top_player.points if top_player else 0 }} نقطة</div>
+        </div>
+
+        <div class="rs-hero worst">
+          <div class="rs-hero-label">أقل نقاط</div>
+          <div class="rs-hero-name">{{ worst_player.name if worst_player else '-' }}</div>
+          <div class="rs-hero-points">{{ worst_player.points if worst_player else 0 }} نقطة</div>
+        </div>
+      </section>
+
+      <section class="rs-table-panel">
+        <div class="rs-section-title">
+          <h2>ترتيب الجولة</h2>
+        </div>
+
+        <div class="rs-table-head">
+          <div>#</div>
+          <div>المشارك</div>
+          <div>النقاط</div>
+          <div>✓ صحيحة</div>
+        </div>
+
+        {% if dashboard.player_rows %}
+          <div class="rs-table">
+            {% for r in dashboard.player_rows %}
+              <div class="rs-player-row">
+                <div class="rs-rank">{{ loop.index }}</div>
+                <div class="rs-name">{{ r.name }}</div>
+                <div class="rs-points">{{ r.points }}</div>
+                <div class="rs-correct">{{ r.exact }}</div>
+              </div>
+            {% endfor %}
           </div>
+        {% else %}
+          <div class="rs-empty">لا توجد بيانات لهذه الجولة.</div>
+        {% endif %}
+      </section>
 
-          {% if dashboard.player_rows %}
-            <div class="rs-table">
-              {% for r in dashboard.player_rows[:10] %}
-                <div class="rs-player-row">
-                  <div class="rs-rank">{{ loop.index }}</div>
-                  <div class="rs-player-name">{{ r.name }}</div>
-                  <div class="rs-points">{{ r.points }}</div>
-                  <div class="rs-exact">{{ r.exact }}</div>
+      <section class="rs-featured-grid">
+
+        {% if dashboard.easiest_matches %}
+          {% set e = dashboard.easiest_matches[0] %}
+          {% set m = e.match %}
+          {% set home_flag = team_flag_code(m.home_team) %}
+          {% set away_flag = team_flag_code(m.away_team) %}
+
+          <div class="rs-featured-card">
+            <h3>أكثر مباراة بتوقعات صحيحة</h3>
+
+            <div class="rs-featured-match">
+              <div class="rs-featured-main">
+                <div class="rs-featured-team">
+                  {% if home_flag %}
+                    <img class="rs-mini-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+                  {% endif %}
+                  <span>{{ m.home_team }}</span>
                 </div>
-              {% endfor %}
-            </div>
-          {% else %}
-            <div class="rs-empty">لا توجد بيانات لهذه الجولة.</div>
-          {% endif %}
-        </section>
 
-        <aside class="rs-side">
-          <section class="rs-panel">
-            <div class="rs-panel-head">
-              <h2>مؤشرات سريعة</h2>
-              <span class="rs-mini-label">ملخص</span>
-            </div>
+                <div class="rs-score">{{ m.home_score }} - {{ m.away_score }}</div>
 
-            <div class="rs-table">
-              <div class="rs-insight">
-                <span>التوقعات الدقيقة</span>
-                <strong>{{ dashboard.total_exact }}</strong>
+                <div class="rs-featured-team">
+                  <span>{{ m.away_team }}</span>
+                  {% if away_flag %}
+                    <img class="rs-mini-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+                  {% endif %}
+                </div>
               </div>
 
-              <div class="rs-insight">
-                <span>إجمالي التوقعات</span>
-                <strong>{{ dashboard.total_predictions }}</strong>
+              <div class="rs-featured-meta">
+                <span>✓ {{ e.exact_count }} توقعات صحيحة</span>
+                <span>{{ e.total_points }} نقطة</span>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if dashboard.hardest_matches %}
+          {% set h = dashboard.hardest_matches[0] %}
+          {% set m = h.match %}
+          {% set home_flag = team_flag_code(m.home_team) %}
+          {% set away_flag = team_flag_code(m.away_team) %}
+
+          <div class="rs-featured-card">
+            <h3>أقل مباراة بتوقعات صحيحة</h3>
+
+            <div class="rs-featured-match">
+              <div class="rs-featured-main">
+                <div class="rs-featured-team">
+                  {% if home_flag %}
+                    <img class="rs-mini-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+                  {% endif %}
+                  <span>{{ m.home_team }}</span>
+                </div>
+
+                <div class="rs-score">{{ m.home_score }} - {{ m.away_score }}</div>
+
+                <div class="rs-featured-team">
+                  <span>{{ m.away_team }}</span>
+                  {% if away_flag %}
+                    <img class="rs-mini-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+                  {% endif %}
+                </div>
               </div>
 
-              {% if dashboard.top_x2 %}
-                <div class="rs-insight">
-                  <span>أفضل استفادة من ×2</span>
-                  <strong>{{ dashboard.top_x2[0].name }} · +{{ dashboard.top_x2[0].x2_extra_points }}</strong>
-                </div>
-              {% else %}
-                <div class="rs-insight">
-                  <span>أفضل استفادة من ×2</span>
-                  <strong>لا يوجد</strong>
-                </div>
-              {% endif %}
+              <div class="rs-featured-meta">
+                <span>✓ {{ h.exact_count }} توقعات صحيحة</span>
+                <span>{{ h.total_points }} نقطة</span>
+              </div>
             </div>
-          </section>
+          </div>
+        {% endif %}
 
-          <section class="rs-panel">
-            <div class="rs-panel-head">
-              <h2>مباريات بارزة</h2>
-              <span class="rs-mini-label">تحليل</span>
-            </div>
-
-            <div class="rs-table">
-              {% if dashboard.easiest_matches %}
-                {% set e = dashboard.easiest_matches[0] %}
-                {% set m = e.match %}
-                {% set home_flag = team_flag_code(m.home_team) %}
-                {% set away_flag = team_flag_code(m.away_team) %}
-
-                <div class="rs-match-card">
-                  <div class="rs-match-meta">
-                    <span>الأكثر نجاحًا في التوقع</span>
-                  </div>
-
-                  <div class="rs-match-main">
-                    <div class="rs-team">
-                      {% if home_flag %}
-                        <img class="rs-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
-                      {% endif %}
-                      <span>{{ m.home_team }}</span>
-                    </div>
-
-                    <div class="rs-score">{{ m.home_score }} - {{ m.away_score }}</div>
-
-                    <div class="rs-team">
-                      <span>{{ m.away_team }}</span>
-                      {% if away_flag %}
-                        <img class="rs-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
-                      {% endif %}
-                    </div>
-                  </div>
-
-                  <div class="rs-match-meta">
-                    <span>{{ e.exact_count }} دقيق</span>
-                    <span>{{ e.total_points }} نقطة</span>
-                  </div>
-                </div>
-              {% endif %}
-
-              {% if dashboard.hardest_matches %}
-                {% set h = dashboard.hardest_matches[0] %}
-                {% set m = h.match %}
-                {% set home_flag = team_flag_code(m.home_team) %}
-                {% set away_flag = team_flag_code(m.away_team) %}
-
-                <div class="rs-match-card">
-                  <div class="rs-match-meta">
-                    <span>الأصعب في التوقع</span>
-                  </div>
-
-                  <div class="rs-match-main">
-                    <div class="rs-team">
-                      {% if home_flag %}
-                        <img class="rs-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
-                      {% endif %}
-                      <span>{{ m.home_team }}</span>
-                    </div>
-
-                    <div class="rs-score">{{ m.home_score }} - {{ m.away_score }}</div>
-
-                    <div class="rs-team">
-                      <span>{{ m.away_team }}</span>
-                      {% if away_flag %}
-                        <img class="rs-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
-                      {% endif %}
-                    </div>
-                  </div>
-
-                  <div class="rs-match-meta">
-                    <span>{{ h.exact_count }} دقيق</span>
-                    <span>{{ h.total_points }} نقطة</span>
-                  </div>
-                </div>
-              {% endif %}
-            </div>
-          </section>
-        </aside>
       </section>
 
       <div class="rs-footer">
-        <button type="button" class="rs-link-btn" id="copyRoundDashboardLink">
+        <button type="button" class="rs-copy-btn" id="copyRoundDashboardLink">
           نسخ رابط إحصائيات الجولة
         </button>
       </div>
+
     {% else %}
+
       <div class="rs-empty">
         الرابط لا يحتوي على مباريات صحيحة أو أن المباريات لم تُسجل نتائجها بعد.
       </div>
+
     {% endif %}
+
   </div>
 </section>
 
