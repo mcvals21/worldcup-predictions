@@ -6,7 +6,6 @@
 {% block content %}
 
 {% set current_team = champion.team_name if champion and champion_is_valid else '' %}
-{% set old_invalid_team = champion.team_name if champion and not champion_is_valid else '' %}
 {% set is_open = teams and not champion_locked %}
 
 <style>
@@ -335,23 +334,12 @@
       </div>
     </section>
 
-    {% if old_invalid_team and not champion_locked %}
-      <section class="champ-not-ready">
-        <h3>اختيارك السابق لم يعد متاحًا</h3>
-        <p>
-          الاختيار السابق: <b>{{ old_invalid_team }}</b><br>
-          اختر منتخبًا جديدًا من المنتخبات المتأهلة إلى دور الـ32.
-        </p>
-      </section>
-    {% endif %}
 
     {% if champion_locked %}
       <section class="champ-closed">
         <h3>تم إغلاق توقع البطل</h3>
         {% if current_team %}
           <p>اختيارك: <b>{{ current_team }}</b></p>
-        {% elif old_invalid_team %}
-          <p>اختيارك السابق لم يعد متاحًا: <b>{{ old_invalid_team }}</b></p>
         {% else %}
           <p>لم يتم الاختيار</p>
         {% endif %}
