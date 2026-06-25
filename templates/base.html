@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080808">
   <title>{{ t.name if t else 'توقعات المباريات' }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=round-stats-powerbi-1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=champion-round32-1">
 
  <style>
   /* رسالة حفظ التوقعات - بدون دائرة خلف الإيموجي */
@@ -183,6 +183,33 @@
     font-size:2.55rem !important;
   }
 
+
+  .clean-menu .menu-champion-note.is-disabled{
+    background:rgba(255,255,255,.07) !important;
+    border:1px solid rgba(230,211,156,.14) !important;
+    border-radius:14px !important;
+    padding:11px 12px !important;
+    color:#ddd6c5 !important;
+    font-size:.9rem !important;
+    font-weight:850 !important;
+  }
+
+  .clean-menu .menu-champion-count{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:max-content !important;
+    margin:8px 0 10px !important;
+    min-height:28px !important;
+    padding:5px 11px !important;
+    border-radius:999px !important;
+    background:rgba(226,208,153,.16) !important;
+    border:1px solid rgba(226,208,153,.25) !important;
+    color:#e6d39c !important;
+    font-size:.78rem !important;
+    font-weight:1000 !important;
+  }
+
 </style>
 </head>
 
@@ -203,7 +230,7 @@
             <a href="{{ url_for('admin', code=code) }}#admin-add" class="admin-menu-section">＋ إضافة مباراة</a>
             <a href="{{ url_for('admin', code=code) }}#admin-deadline" class="admin-menu-section">🏆 موعد إغلاق توقع البطل</a>
             <a href="{{ url_for('admin', code=code) }}#admin-doublelab" class="admin-menu-section">×2 مختبر المضاعفة</a>
-            <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
+            <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء داشبورد الجولة</a>
             <a href="{{ url_for('admin', code=code) }}#admin-links" class="admin-menu-section">🔗 روابط المشاركين</a>
           {% else %}
             <a href="/leaderboard">🏅 الترتيب</a>
@@ -238,28 +265,38 @@
                 اختيارك: <b>{{ champion.team_name if champion else 'لم يتم الاختيار' }}</b>
               </div>
             {% else %}
-              <div class="menu-champion-note">
-                {% if champion %}
-                  اختيارك الحالي: <b>{{ champion.team_name }}</b>
-                {% else %}
-                  لم تختر البطل بعد
-                {% endif %}
-              </div>
+              {% if teams %}
+                <div class="menu-champion-note">
+                  {% if champion %}
+                    اختيارك الحالي: <b>{{ champion.team_name }}</b>
+                  {% else %}
+                    لم تختر البطل بعد
+                  {% endif %}
+                </div>
 
-              <form method="post" class="menu-champion-form">
-                <input type="hidden" name="action" value="champion">
+                <div class="menu-champion-count">
+                  {{ teams|length }} منتخب متاح من دور الـ32
+                </div>
 
-                <select name="team_name" required>
-                  <option value="">اختر المنتخب</option>
-                  {% for team in teams %}
-                    <option value="{{ team }}" {% if champion and champion.team_name == team %}selected{% endif %}>
-                      {{ team }}
-                    </option>
-                  {% endfor %}
-                </select>
+                <form method="post" class="menu-champion-form">
+                  <input type="hidden" name="action" value="champion">
 
-                <button type="submit">حفظ البطل</button>
-              </form>
+                  <select name="team_name" required>
+                    <option value="">اختر البطل</option>
+                    {% for team in teams %}
+                      <option value="{{ team }}" {% if champion and champion.team_name == team %}selected{% endif %}>
+                        {{ team }}
+                      </option>
+                    {% endfor %}
+                  </select>
+
+                  <button type="submit">حفظ البطل</button>
+                </form>
+              {% else %}
+                <div class="menu-champion-note is-disabled">
+                  سيتم فتح توقع بطل البطولة بعد تحديد المتأهلين لدور الـ32.
+                </div>
+              {% endif %}
             {% endif %}
           </div>
         {% endif %}
