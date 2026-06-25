@@ -837,6 +837,10 @@ def participant_page(token):
         ))
 
     teams = champion_eligible_teams(t.id)
+    champion_is_valid = (
+        champion is not None
+        and champion.team_name in teams
+    )
 
     return render_template(
         'participant.html',
@@ -847,6 +851,7 @@ def participant_page(token):
         locked=match_locked,
         points_for=points_for,
         champion=champion,
+        champion_is_valid=champion_is_valid,
         teams=teams,
         stage_labels=STAGE_LABELS,
         knockout=KNOCKOUT_STAGES,
@@ -883,6 +888,10 @@ def participant_champion_page(token):
     champion_locked = (
         t.champion_pick_deadline is not None
         and now_kw() >= t.champion_pick_deadline
+    )
+    champion_is_valid = (
+        champion is not None
+        and champion.team_name in teams
     )
 
     if request.method == 'POST':
@@ -925,6 +934,7 @@ def participant_champion_page(token):
         p=p,
         t=t,
         champion=champion,
+        champion_is_valid=champion_is_valid,
         teams=teams,
         champion_locked=champion_locked
     )
