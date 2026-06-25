@@ -28,7 +28,7 @@
   padding:16px;
   border-radius:30px;
   background:
-    radial-gradient(circle at top, rgba(226,208,153,.12), transparent 38%),
+    radial-gradient(circle at top, rgba(226,208,153,.10), transparent 38%),
     linear-gradient(180deg,#24262b,#15161a);
   border:1px solid rgba(226,208,153,.16);
   box-shadow:0 24px 70px rgba(0,0,0,.34);
@@ -36,7 +36,7 @@
 
 .champ-head{
   text-align:center;
-  padding:20px 14px 14px;
+  padding:18px 14px 8px;
 }
 
 .champ-icon{
@@ -62,13 +62,19 @@
   letter-spacing:-.4px;
 }
 
-.champ-head p{
-  margin:10px auto 0;
-  max-width:480px;
-  color:#cfc8b8;
-  font-size:.94rem;
-  line-height:1.8;
-  font-weight:850;
+.champ-note{
+  margin:12px auto 0;
+  width:max-content;
+  max-width:100%;
+  min-height:34px;
+  padding:7px 14px;
+  border-radius:999px;
+  background:rgba(226,208,153,.14);
+  border:1px solid rgba(226,208,153,.22);
+  color:#e6d39c;
+  font-size:.84rem;
+  line-height:1.2;
+  font-weight:1000;
 }
 
 .champ-status{
@@ -86,6 +92,7 @@
 .champ-status-main{
   display:grid;
   gap:5px;
+  min-width:0;
 }
 
 .champ-status-main span{
@@ -96,9 +103,12 @@
 
 .champ-status-main strong{
   color:#171717;
-  font-size:1.12rem;
+  font-size:1.15rem;
   font-weight:1000;
   line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .champ-deadline{
@@ -115,9 +125,8 @@
   white-space:nowrap;
 }
 
-.champ-closed,
-.champ-not-ready{
-  padding:18px;
+.champ-message{
+  padding:22px 18px;
   border-radius:24px;
   background:#f3efe4;
   color:#171717;
@@ -125,18 +134,19 @@
   border:1px solid rgba(226,208,153,.30);
 }
 
-.champ-closed h3,
-.champ-not-ready h3{
-  margin:0 0 8px;
-  font-size:1.3rem;
+.champ-message h3{
+  margin:0;
+  font-size:1.5rem;
+  line-height:1.35;
   font-weight:1000;
+  color:#171717;
 }
 
-.champ-closed p,
-.champ-not-ready p{
-  margin:0;
+.champ-message p{
+  margin:10px auto 0;
+  max-width:420px;
   color:#5f584d;
-  font-size:.92rem;
+  font-size:.95rem;
   line-height:1.8;
   font-weight:850;
 }
@@ -276,6 +286,15 @@
   white-space:nowrap;
 }
 
+.champ-back-only{
+  display:flex;
+  justify-content:center;
+}
+
+.champ-back-only .champ-back-link{
+  min-width:190px;
+}
+
 @media (max-width:620px){
   .champ-page{
     padding:0 10px 22px;
@@ -284,6 +303,10 @@
   .champ-shell{
     padding:12px;
     border-radius:26px;
+  }
+
+  .champ-head{
+    padding:16px 10px 6px;
   }
 
   .champ-head h2{
@@ -316,27 +339,19 @@
     <header class="champ-head">
       <div class="champ-icon">🏆</div>
       <h2>توقع بطل البطولة</h2>
-      <p>اختر المنتخب الذي تتوقع أن يحقق البطولة. القائمة تظهر فقط المنتخبات المتأهلة إلى دور الـ32.</p>
+
+      {% if champion_locked %}
+        <div class="champ-note">تم الإغلاق</div>
+      {% elif teams %}
+        <div class="champ-note">اختر منتخبًا واحدًا</div>
+      {% else %}
+        <div class="champ-note">غير مفتوح حاليًا</div>
+      {% endif %}
     </header>
 
-    <section class="champ-status">
-      <div class="champ-status-main">
-        <span>اختيارك الحالي</span>
-        <strong>{{ current_team if current_team else 'لم يتم الاختيار بعد' }}</strong>
-      </div>
-
-      <div class="champ-deadline">
-        {% if t and t.champion_pick_deadline %}
-          يغلق {{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}
-        {% else %}
-          مفتوح حتى تحديد موعد الإغلاق
-        {% endif %}
-      </div>
-    </section>
-
-
     {% if champion_locked %}
-      <section class="champ-closed">
+
+      <section class="champ-message">
         <h3>تم إغلاق توقع البطل</h3>
         {% if current_team %}
           <p>اختيارك: <b>{{ current_team }}</b></p>
@@ -344,12 +359,43 @@
           <p>لم يتم الاختيار</p>
         {% endif %}
       </section>
+
+      <div class="champ-back-only">
+        <a href="{{ url_for('participant_page', token=p.token, filter='open') }}" class="champ-back-link">
+          رجوع للمباريات
+        </a>
+      </div>
+
     {% elif not teams %}
-      <section class="champ-not-ready">
+
+      <section class="champ-message">
         <h3>لم يفتح اختيار البطل بعد</h3>
-        <p>سيتم فتح اختيار بطل البطولة بعد تحديد المنتخبات المتأهلة إلى دور الـ32.</p>
+        <p>سيتم فتح الاختيار بعد تحديد المتأهلين إلى دور الـ32.</p>
       </section>
+
+      <div class="champ-back-only">
+        <a href="{{ url_for('participant_page', token=p.token, filter='open') }}" class="champ-back-link">
+          رجوع للمباريات
+        </a>
+      </div>
+
     {% else %}
+
+      <section class="champ-status">
+        <div class="champ-status-main">
+          <span>اختيارك الحالي</span>
+          <strong>{{ current_team if current_team else 'لم يتم الاختيار بعد' }}</strong>
+        </div>
+
+        <div class="champ-deadline">
+          {% if t and t.champion_pick_deadline %}
+            يغلق {{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}
+          {% else %}
+            مفتوح
+          {% endif %}
+        </div>
+      </section>
+
       <form method="post" class="champ-form">
         <div class="champ-grid">
           {% for team in teams %}
@@ -379,6 +425,7 @@
           </a>
         </div>
       </form>
+
     {% endif %}
 
   </div>
