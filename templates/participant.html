@@ -1,6 +1,7 @@
 
 
 
+
 {% extends 'base.html' %}
 
 {% block body_class %}{% if selected_filter == 'open' and has_open_matches %}has-save-bar{% endif %}{% endblock %}
@@ -167,10 +168,19 @@
 <section class="champion-mini-card">
   <div class="champion-mini-text">
     <strong>🏆 توقع بطل البطولة</strong>
+
     {% if champion_locked %}
-      <span>تم إغلاق توقع البطل{% if champion %} · اختيارك: {{ champion.team_name }}{% endif %}</span>
-    {% elif champion %}
+      {% if champion and champion_is_valid %}
+        <span>تم إغلاق توقع البطل · اختيارك: {{ champion.team_name }}</span>
+      {% elif champion %}
+        <span>تم إغلاق توقع البطل · اختيارك السابق لم يعد متاحًا</span>
+      {% else %}
+        <span>تم إغلاق توقع البطل</span>
+      {% endif %}
+    {% elif champion and champion_is_valid %}
       <span>اختيارك الحالي: {{ champion.team_name }}</span>
+    {% elif champion %}
+      <span>اختيارك السابق لم يعد متاحًا · اختر منتخبًا جديدًا</span>
     {% elif teams %}
       <span>اختيار بطل البطولة مفتوح الآن</span>
     {% else %}
@@ -179,7 +189,7 @@
   </div>
 
   <a href="{{ url_for('participant_champion_page', token=p.token) }}" class="champion-mini-link">
-    {% if champion %}تعديل الاختيار{% else %}اختيار البطل{% endif %}
+    {% if champion and champion_is_valid %}تعديل الاختيار{% elif champion %}اختيار بطل جديد{% else %}اختيار البطل{% endif %}
   </a>
 </section>
 
