@@ -1107,6 +1107,274 @@ def match_view(match_id):
     )
 
 
+def parse_match_id_list(raw_ids):
+    ids = []
+
+    for part in (raw_ids or '').split(','):
+        part = part.strip()
+
+        if not part:
+            continue
+
+        try:
+            match_id = int(part)
+        except ValueError:
+            continue
+
+        if match_id not in ids:
+            ids.append(match_id)
+
+    # Safety limit: this dashboard is for one round, not the full tournament.
+    return ids[:12]
+
+
+def build_round_dashboard(matches, participants):
+    match_ids = [m.id for m in matches]
+
+    if not match_ids:
+        return {
+            'player_rows': [],
+            'top_players': [],
+            'top_x2': [],
+            'match_rows': [],
+            'easiest_matches': [],
+            'hardest_matches': [],
+            'total_points': 0,
+            'total_exact': 0,
+            'total_predictions': 0,
+            'total_missed': 0
+        }
+
+    predictions = Prediction.query.filter(
+        Prediction.match_id.in_(match_ids)
+    ).all()
+
+    match_map = {
+        m.id: m
+        for m in matches
+    }
+
+    preds_by_participant = {}
+
+    for pred in predictions:
+        preds_by_participant.setdefault(
+            pred.participant_id,
+            {}
+        )[pred.match_id] = pred
+
+    player_rows = []
+
+    for p in participants:
+        participant_preds = preds_by_participant.get(p.id, {})
+
+        points = 0
+        exact = 0
+        predictions_count = 0
+        missed = 0
+        x2_used = 0
+        x2_extra_points = 0
+        x2_total_points = 0
+
+        for m in matches:
+            pred = participant_preds.get(m.id)
+
+            if not pred:
+                missed += 1
+                continue
+
+            predictions_count += 1
+
+            pts = points_for(pred, m)
+            points += pts
+
+            if pred.home_score == m.home_score and pred.away_score == m.away_score:
+                exact += 1
+
+            if pred.is_double and m.stage in KNOCKOUT_STAGES:
+                x2_used += 1
+                extra = pts // 2
+                x2_extra_points += extra
+                x2_total_points += pts
+
+        player_rows.append({
+            'name': p.name,
+            'points': points,
+            'exact': exact,
+            'predictions_count': predictions_count,
+            'missed': missed,
+            'x2_used': x2_used,
+            'x2_extra_points': x2_extra_points,
+            'x2_total_points': x2_total_points
+        })
+
+    player_rows.sort(
+        key=lambda r: (
+            r['points'],
+            r['exact'],
+            r['predictions_count']
+        ),
+        reverse=True
+    )
+
+    top_players = player_rows[:5]
+
+    top_x2 = sorted(
+        [
+            r for r in player_rows
+            if r['x2_extra_points'] > 0
+        ],
+        key=lambda r: (
+            r['x2_extra_points'],
+            r['x2_total_points'],
+            r['x2_used']
+        ),
+        reverse=True
+    )[:5]
+
+    match_rows = []
+
+    for m in matches:
+        match_predictions = [
+            pred
+            for pred in predictions
+            if pred.match_id == m.id
+        ]
+
+        total_points = sum(
+            points_for(pred, m)
+            for pred in match_predictions
+        )
+
+        exact_count = sum(
+            1
+            for pred in match_predictions
+            if pred.home_score == m.home_score and pred.away_score == m.away_score
+        )
+
+        match_rows.append({
+            'match': m,
+            'total_predictions': len(match_predictions),
+            'total_points': total_points,
+            'exact_count': exact_count
+        })
+
+    predicted_match_rows = [
+        r for r in match_rows
+        if r['total_predictions'] > 0
+    ]
+
+    easiest_matches = sorted(
+        predicted_match_rows,
+        key=lambda r: (
+            r['total_points'],
+            r['exact_count'],
+            r['total_predictions']
+        ),
+        reverse=True
+    )[:3]
+
+    hardest_matches = sorted(
+        predicted_match_rows,
+        key=lambda r: (
+            r['total_points'],
+            r['exact_count'],
+            r['total_predictions']
+        )
+    )[:3]
+
+    return {
+        'player_rows': player_rows,
+        'top_players': top_players,
+        'top_x2': top_x2,
+        'match_rows': match_rows,
+        'easiest_matches': easiest_matches,
+        'hardest_matches': hardest_matches,
+        'total_points': sum(r['points'] for r in player_rows),
+        'total_exact': sum(r['exact'] for r in player_rows),
+        'total_predictions': sum(r['predictions_count'] for r in player_rows),
+        'total_missed': sum(r['missed'] for r in player_rows)
+    }
+
+
+@app.route('/admin/<code>/round-stats')
+def round_stats_builder(code):
+    if code != ADMIN_CODE:
+        abort(404)
+
+    t = tournament()
+
+    if not t:
+        abort(404)
+
+    completed_matches = Match.query.filter_by(
+        tournament_id=t.id
+    ).filter(
+        Match.home_score.isnot(None),
+        Match.away_score.isnot(None)
+    ).order_by(
+        Match.start_time.desc()
+    ).all()
+
+    return render_template(
+        'round_stats_builder.html',
+        t=t,
+        code=code,
+        matches=completed_matches,
+        round_stats_url=url_for('round_stats', _external=True),
+        stage_labels=STAGE_LABELS
+    )
+
+
+@app.route('/stats/round')
+def round_stats():
+    t = tournament()
+
+    if not t:
+        abort(404)
+
+    raw_ids = request.args.get('matches', '')
+    match_ids = parse_match_id_list(raw_ids)
+
+    matches = []
+
+    if match_ids:
+        found_matches = Match.query.filter(
+            Match.tournament_id == t.id,
+            Match.id.in_(match_ids)
+        ).all()
+
+        match_map = {
+            m.id: m
+            for m in found_matches
+            if m.home_score is not None and m.away_score is not None
+        }
+
+        matches = [
+            match_map[match_id]
+            for match_id in match_ids
+            if match_id in match_map
+        ]
+
+    participants = Participant.query.order_by(Participant.name).all()
+
+    dashboard = build_round_dashboard(matches, participants)
+
+    share_url = url_for(
+        'round_stats',
+        matches=','.join(str(m.id) for m in matches),
+        _external=True
+    )
+
+    return render_template(
+        'round_stats.html',
+        t=t,
+        matches=matches,
+        dashboard=dashboard,
+        share_url=share_url,
+        stage_labels=STAGE_LABELS
+    )
+
+
 @app.route('/admin/<code>', methods=['GET', 'POST'])
 def admin(code):
     if code != ADMIN_CODE:
