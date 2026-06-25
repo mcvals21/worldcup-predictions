@@ -13,7 +13,7 @@
   direction:rtl;
   display:grid;
   gap:14px;
-  padding-bottom:22px;
+  padding:0 0 24px;
 }
 
 .round-builder-hero,
@@ -26,117 +26,238 @@
 }
 
 .round-builder-hero{
-  padding:18px;
+  padding:20px 18px;
 }
 
-.round-builder-kicker{
+.round-builder-hero-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.round-builder-kicker,
+.round-builder-counter{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:32px;
-  padding:6px 12px;
+  min-height:34px;
+  padding:7px 13px;
   border-radius:999px;
-  background:#343840;
-  color:#f6f1e5;
   font-size:.82rem;
   font-weight:1000;
 }
 
+.round-builder-kicker{
+  background:#343840;
+  color:#f6f1e5;
+}
+
+.round-builder-counter{
+  background:#e3cf92;
+  color:#17130a;
+  border:1px solid rgba(0,0,0,.08);
+}
+
 .round-builder-hero h2{
-  margin:10px 0 0;
+  margin:0;
   color:#171717;
-  font-size:1.55rem;
+  font-size:1.52rem;
   font-weight:1000;
+  line-height:1.25;
 }
 
 .round-builder-hero p{
   margin:8px 0 0;
   color:#5f584d;
   font-size:.92rem;
-  font-weight:800;
-  line-height:1.7;
+  font-weight:850;
+  line-height:1.75;
 }
 
 .round-builder-card{
   padding:14px;
 }
 
-.round-builder-card h3{
-  margin:0 0 10px;
-  color:#171717;
-  font-size:1.12rem;
+.round-builder-toolbar{
+  position:sticky;
+  top:10px;
+  z-index:5;
+  display:grid;
+  gap:10px;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:24px;
+  background:linear-gradient(180deg,#3a3c42,#25272c);
+  border:1px solid rgba(230,211,156,.22);
+  box-shadow:0 12px 28px rgba(0,0,0,.20);
+}
+
+.round-builder-toolbar-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:#f6f1e5;
   font-weight:1000;
+}
+
+.round-builder-toolbar-title span{
+  color:#ded6c4;
+  font-size:.82rem;
+  font-weight:850;
 }
 
 .round-builder-actions{
-  display:flex;
-  flex-wrap:wrap;
+  display:grid;
+  grid-template-columns:1.15fr 1fr 1fr;
   gap:8px;
-  margin:0 0 12px;
 }
 
-.round-builder-btn{
+.round-builder-btn,
+.round-builder-link-btn{
   border:0;
-  border-radius:999px;
-  min-height:40px;
-  padding:9px 14px;
+  border-radius:16px;
+  min-height:44px;
+  padding:10px 13px;
   cursor:pointer;
   font-weight:1000;
-  font-size:.86rem;
-}
-
-.round-builder-btn.primary{
-  background:#343840;
-  color:#fff;
+  font-size:.88rem;
+  text-align:center;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
 }
 
 .round-builder-btn.gold{
-  background:#d8bd63;
-  color:#2f250b;
+  background:#e3cf92;
+  color:#191509;
+  border:1px solid rgba(0,0,0,.10);
 }
 
-.round-builder-btn.light{
-  background:#e4ded0;
+.round-builder-btn.light,
+.round-builder-link-btn.light{
+  background:#eee9dd;
   color:#211f1c;
   border:1px solid #d1c7b6;
 }
 
+.round-builder-btn.dark,
+.round-builder-link-btn.dark{
+  background:#343840;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.10);
+}
+
+.round-builder-btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.round-builder-help{
+  min-height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 10px;
+  border-radius:16px;
+  background:rgba(255,255,255,.06);
+  color:#ded6c4;
+  font-size:.8rem;
+  font-weight:850;
+  text-align:center;
+}
+
 .round-builder-list{
   display:grid;
-  gap:8px;
+  gap:9px;
 }
 
 .round-builder-match{
+  position:relative;
   display:grid;
-  grid-template-columns:30px 1fr;
+  grid-template-columns:34px 1fr;
   gap:10px;
   align-items:center;
-  padding:10px;
-  border-radius:18px;
+  min-height:84px;
+  padding:12px;
+  border-radius:20px;
   background:#e8e5de;
   border:1px solid #d6d1c6;
+  cursor:pointer;
+  transition:.15s ease;
+}
+
+.round-builder-match:hover{
+  border-color:#cbb86d;
+}
+
+.round-builder-match:has(input:checked){
+  background:#eee5c9;
+  border-color:#d2b454;
+  box-shadow:inset 0 0 0 1px rgba(210,180,84,.22);
+}
+
+.round-builder-check{
+  width:26px;
+  height:26px;
+  border-radius:9px;
+  border:2px solid #a7a292;
+  background:#f8f5ec;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:transparent;
+  font-weight:1000;
 }
 
 .round-builder-match input{
-  width:22px;
-  height:22px;
-  accent-color:#3e7a4e;
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.round-builder-match input:checked + .round-builder-check{
+  background:#343840;
+  border-color:#343840;
+  color:#f6f1e5;
+}
+
+.round-builder-match input:checked + .round-builder-check::before{
+  content:"✓";
 }
 
 .round-builder-match-main{
   display:grid;
-  gap:6px;
+  gap:7px;
   min-width:0;
 }
 
 .round-builder-teams{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:8px;
   align-items:center;
   color:#171717;
-  font-size:.98rem;
+  font-size:1rem;
   font-weight:1000;
+}
+
+.round-builder-team.home{
+  text-align:left;
+}
+
+.round-builder-team.away{
+  text-align:right;
+}
+
+.round-builder-team{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .round-builder-score{
@@ -144,10 +265,10 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-width:54px;
-  min-height:28px;
-  padding:4px 9px;
-  border-radius:999px;
+  min-width:62px;
+  min-height:34px;
+  padding:5px 10px;
+  border-radius:14px;
   background:#343840;
   color:#fff;
   font-weight:1000;
@@ -166,7 +287,7 @@
   min-height:26px;
   padding:4px 9px;
   border-radius:999px;
-  background:#f3efe4;
+  background:#f7f4ec;
   color:#5f584d;
   font-size:.76rem;
   font-weight:900;
@@ -175,9 +296,9 @@
 .round-link-box{
   display:none;
   gap:10px;
-  margin-top:14px;
+  margin:0 0 12px;
   padding:12px;
-  border-radius:20px;
+  border-radius:22px;
   background:#343840;
   border:1px solid rgba(226,208,153,.25);
 }
@@ -194,7 +315,7 @@
 
 .round-link-box input{
   width:100%;
-  min-height:44px;
+  min-height:46px;
   padding:10px 12px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.12);
@@ -202,6 +323,13 @@
   color:#171717;
   font-weight:900;
   direction:ltr;
+  font-size:.82rem;
+}
+
+.round-link-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
 }
 
 .round-empty{
@@ -216,12 +344,60 @@
 }
 
 @media (max-width:560px){
+  .round-builder-page{
+    gap:12px;
+  }
+
+  .round-builder-hero{
+    padding:18px 16px;
+    border-radius:26px;
+  }
+
   .round-builder-hero h2{
-    font-size:1.32rem;
+    font-size:1.28rem;
+  }
+
+  .round-builder-hero p{
+    font-size:.86rem;
+  }
+
+  .round-builder-card{
+    padding:10px;
+    border-radius:24px;
+  }
+
+  .round-builder-toolbar{
+    top:8px;
+    border-radius:22px;
+    padding:10px;
+  }
+
+  .round-builder-actions{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .round-builder-actions .gold{
+    grid-column:1 / -1;
+    order:-1;
   }
 
   .round-builder-match{
-    grid-template-columns:28px 1fr;
+    grid-template-columns:30px 1fr;
+    min-height:78px;
+    padding:10px;
+    border-radius:18px;
+  }
+
+  .round-builder-teams{
+    grid-template-columns:1fr auto 1fr;
+    gap:6px;
+    font-size:.92rem;
+  }
+
+  .round-builder-score{
+    min-width:56px;
+    min-height:32px;
+    border-radius:13px;
   }
 }
 </style>
@@ -229,53 +405,65 @@
 <section class="round-builder-page">
 
   <section class="round-builder-hero">
-    <span class="round-builder-kicker">خاص بالمدير</span>
+    <div class="round-builder-hero-top">
+      <span class="round-builder-kicker">خاص بالمدير</span>
+      <span class="round-builder-counter" id="selectedRoundCount">0 محددة</span>
+    </div>
+
     <h2>إنشاء داشبورد إحصائيات الجولة</h2>
     <p>
-      اختر المباريات المنتهية التي تريد إدخالها في الجولة، ثم أنشئ رابطًا جاهزًا للمشاركة.
-      لا يتم حفظ أي شيء في قاعدة البيانات.
+      اختر مباريات الجولة المنتهية، ثم أنشئ رابطًا جاهزًا للمشاركة. هذه الصفحة تقرأ البيانات فقط ولا تحفظ شيئًا في قاعدة البيانات.
     </p>
   </section>
 
   <section class="round-builder-card">
-    <h3>اختيار مباريات الجولة</h3>
 
-    <div class="round-builder-actions">
-      <button type="button" class="round-builder-btn light" id="selectLastFour">اختيار آخر 4 مباريات</button>
-      <button type="button" class="round-builder-btn light" id="clearSelection">مسح الاختيار</button>
-      <button type="button" class="round-builder-btn gold" id="buildRoundLink">إنشاء الرابط</button>
+    <div class="round-builder-toolbar">
+      <div class="round-builder-toolbar-title">
+        <strong>اختيار مباريات الجولة</strong>
+        <span>اختر المباريات ثم أنشئ الرابط</span>
+      </div>
+
+      <div class="round-builder-actions">
+        <button type="button" class="round-builder-btn gold" id="buildRoundLink" disabled>إنشاء الرابط</button>
+        <button type="button" class="round-builder-btn light" id="selectLastFour">آخر 4 مباريات</button>
+        <button type="button" class="round-builder-btn light" id="clearSelection">مسح الاختيار</button>
+      </div>
+
+      <div class="round-builder-help" id="roundBuilderHelp">اختر مباراة واحدة على الأقل</div>
     </div>
 
     {% if matches %}
-      <div class="round-builder-list" id="roundMatchesList">
-        {% for m in matches %}
-          <label class="round-builder-match">
-            <input type="checkbox" value="{{ m.id }}" class="round-match-checkbox">
-
-            <div class="round-builder-match-main">
-              <div class="round-builder-teams">
-                <span>{{ m.home_team }}</span>
-                <span class="round-builder-score">{{ m.home_score }} - {{ m.away_score }}</span>
-                <span>{{ m.away_team }}</span>
-              </div>
-
-              <div class="round-builder-meta">
-                <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
-                <span dir="ltr">{{ m.start_time.strftime('%Y-%m-%d %H:%M') }}</span>
-              </div>
-            </div>
-          </label>
-        {% endfor %}
-      </div>
-
       <div class="round-link-box" id="roundLinkBox">
         <label>رابط داشبورد الجولة</label>
         <input id="roundLinkInput" readonly value="">
 
-        <div class="round-builder-actions">
+        <div class="round-link-actions">
           <button type="button" class="round-builder-btn gold" id="copyRoundLink">نسخ الرابط</button>
-          <a href="#" class="round-builder-btn primary" id="openRoundLink" target="_blank" rel="noopener">فتح الداشبورد</a>
+          <a href="#" class="round-builder-link-btn dark" id="openRoundLink" target="_blank" rel="noopener">فتح الداشبورد</a>
         </div>
+      </div>
+
+      <div class="round-builder-list" id="roundMatchesList">
+        {% for m in matches %}
+          <label class="round-builder-match">
+            <input type="checkbox" value="{{ m.id }}" class="round-match-checkbox">
+            <span class="round-builder-check"></span>
+
+            <div class="round-builder-match-main">
+              <div class="round-builder-teams">
+                <span class="round-builder-team home">{{ m.home_team }}</span>
+                <span class="round-builder-score">{{ m.home_score }} - {{ m.away_score }}</span>
+                <span class="round-builder-team away">{{ m.away_team }}</span>
+              </div>
+
+              <div class="round-builder-meta">
+                <span>{{ stage_labels.get(m.stage, m.stage) }}</span>
+                <span dir="ltr">{{ m.start_time.strftime('%Y-%m-%d %I:%M %p') }}</span>
+              </div>
+            </div>
+          </label>
+        {% endfor %}
       </div>
     {% else %}
       <div class="round-empty">
@@ -296,6 +484,8 @@
   const linkInput = document.getElementById('roundLinkInput');
   const copyBtn = document.getElementById('copyRoundLink');
   const openLink = document.getElementById('openRoundLink');
+  const countBox = document.getElementById('selectedRoundCount');
+  const helpBox = document.getElementById('roundBuilderHelp');
   const baseUrl = "{{ round_stats_url }}";
 
   function selectedIds(){
@@ -304,11 +494,36 @@
       .map(cb => cb.value);
   }
 
+  function refreshState(){
+    const ids = selectedIds();
+    const count = ids.length;
+
+    if(countBox){
+      countBox.textContent = count === 1 ? '1 محددة' : count + ' محددة';
+    }
+
+    if(buildBtn){
+      buildBtn.disabled = count === 0;
+    }
+
+    if(helpBox){
+      helpBox.textContent = count
+        ? 'تم اختيار ' + count + ' مباراة. اضغط إنشاء الرابط.'
+        : 'اختر مباراة واحدة على الأقل';
+    }
+
+    if(!count && linkBox){
+      linkBox.classList.remove('is-visible');
+      if(linkInput) linkInput.value = '';
+      if(openLink) openLink.href = '#';
+    }
+  }
+
   function updateLink(){
     const ids = selectedIds();
 
     if(!ids.length){
-      alert('اختر مباراة واحدة على الأقل.');
+      refreshState();
       return;
     }
 
@@ -317,22 +532,31 @@
     linkInput.value = url;
     openLink.href = url;
     linkBox.classList.add('is-visible');
+
+    if(helpBox){
+      helpBox.textContent = 'تم إنشاء الرابط. يمكنك نسخه أو فتح الداشبورد.';
+    }
+
+    linkBox.scrollIntoView({ behavior:'smooth', block:'nearest' });
   }
+
+  checkboxes.forEach(function(cb){
+    cb.addEventListener('change', refreshState);
+  });
 
   if(selectLastFourBtn){
     selectLastFourBtn.addEventListener('click', function(){
       checkboxes.forEach((cb, index) => {
         cb.checked = index < 4;
       });
+      refreshState();
     });
   }
 
   if(clearBtn){
     clearBtn.addEventListener('click', function(){
       checkboxes.forEach(cb => cb.checked = false);
-      linkBox.classList.remove('is-visible');
-      linkInput.value = '';
-      openLink.href = '#';
+      refreshState();
     });
   }
 
@@ -353,9 +577,13 @@
       }catch(e){
         linkInput.select();
         document.execCommand('copy');
+        copyBtn.textContent = 'تم النسخ';
+        setTimeout(() => copyBtn.textContent = 'نسخ الرابط', 1400);
       }
     });
   }
+
+  refreshState();
 })();
 </script>
 
