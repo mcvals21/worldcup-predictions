@@ -172,15 +172,11 @@
     {% if champion_locked %}
       {% if champion and champion_is_valid %}
         <span>تم إغلاق توقع البطل · اختيارك: {{ champion.team_name }}</span>
-      {% elif champion %}
-        <span>تم إغلاق توقع البطل · اختيارك السابق لم يعد متاحًا</span>
       {% else %}
         <span>تم إغلاق توقع البطل</span>
       {% endif %}
     {% elif champion and champion_is_valid %}
       <span>اختيارك الحالي: {{ champion.team_name }}</span>
-    {% elif champion %}
-      <span>اختيارك السابق لم يعد متاحًا · اختر منتخبًا جديدًا</span>
     {% elif teams %}
       <span>اختيار بطل البطولة مفتوح الآن</span>
     {% else %}
@@ -189,7 +185,7 @@
   </div>
 
   <a href="{{ url_for('participant_champion_page', token=p.token) }}" class="champion-mini-link">
-    {% if champion and champion_is_valid %}تعديل الاختيار{% elif champion %}اختيار بطل جديد{% else %}اختيار البطل{% endif %}
+    {% if champion and champion_is_valid %}تعديل الاختيار{% else %}اختيار البطل{% endif %}
   </a>
 </section>
 
