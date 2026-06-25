@@ -1,0 +1,382 @@
+
+{% extends "base.html" %}
+
+{% block body_class %}champion-pick-page{% endblock %}
+
+{% block content %}
+
+{% set current_team = champion.team_name if champion else '' %}
+{% set is_open = teams and not champion_locked %}
+
+<style>
+.champ-page,
+.champ-page *{
+  box-sizing:border-box;
+}
+
+.champ-page{
+  direction:rtl;
+  max-width:760px;
+  margin:0 auto 34px;
+  padding:0 14px 24px;
+  color:#f6f1e5;
+}
+
+.champ-shell{
+  display:grid;
+  gap:14px;
+  padding:16px;
+  border-radius:30px;
+  background:
+    radial-gradient(circle at top, rgba(226,208,153,.12), transparent 38%),
+    linear-gradient(180deg,#24262b,#15161a);
+  border:1px solid rgba(226,208,153,.16);
+  box-shadow:0 24px 70px rgba(0,0,0,.34);
+}
+
+.champ-head{
+  text-align:center;
+  padding:20px 14px 14px;
+}
+
+.champ-icon{
+  width:58px;
+  height:58px;
+  margin:0 auto 12px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg,#e7d79d,#cfb760);
+  color:#17130a;
+  font-size:1.8rem;
+  box-shadow:0 10px 24px rgba(0,0,0,.18);
+}
+
+.champ-head h2{
+  margin:0;
+  color:#fff;
+  font-size:2rem;
+  line-height:1.2;
+  font-weight:1000;
+  letter-spacing:-.4px;
+}
+
+.champ-head p{
+  margin:10px auto 0;
+  max-width:480px;
+  color:#cfc8b8;
+  font-size:.94rem;
+  line-height:1.8;
+  font-weight:850;
+}
+
+.champ-status{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  border-radius:22px;
+  background:#f3efe4;
+  color:#171717;
+  border:1px solid rgba(226,208,153,.30);
+}
+
+.champ-status-main{
+  display:grid;
+  gap:5px;
+}
+
+.champ-status-main span{
+  color:#6b6458;
+  font-size:.78rem;
+  font-weight:1000;
+}
+
+.champ-status-main strong{
+  color:#171717;
+  font-size:1.12rem;
+  font-weight:1000;
+  line-height:1.25;
+}
+
+.champ-deadline{
+  min-height:36px;
+  padding:7px 12px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#343840;
+  color:#fff;
+  font-size:.78rem;
+  font-weight:1000;
+  white-space:nowrap;
+}
+
+.champ-closed,
+.champ-not-ready{
+  padding:18px;
+  border-radius:24px;
+  background:#f3efe4;
+  color:#171717;
+  text-align:center;
+  border:1px solid rgba(226,208,153,.30);
+}
+
+.champ-closed h3,
+.champ-not-ready h3{
+  margin:0 0 8px;
+  font-size:1.3rem;
+  font-weight:1000;
+}
+
+.champ-closed p,
+.champ-not-ready p{
+  margin:0;
+  color:#5f584d;
+  font-size:.92rem;
+  line-height:1.8;
+  font-weight:850;
+}
+
+.champ-form{
+  display:grid;
+  gap:14px;
+}
+
+.champ-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.champ-team-card{
+  position:relative;
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border-radius:20px;
+  background:#f3efe4;
+  color:#171717;
+  border:2px solid transparent;
+  cursor:pointer;
+  transition:transform .14s ease, border-color .14s ease, background .14s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.champ-team-card:active{
+  transform:scale(.985);
+}
+
+.champ-team-card input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.champ-flag{
+  width:38px;
+  height:28px;
+  border-radius:8px;
+  object-fit:cover;
+  box-shadow:0 2px 7px rgba(0,0,0,.16);
+  flex:0 0 auto;
+}
+
+.champ-flag-placeholder{
+  width:38px;
+  height:28px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#343840;
+  color:#e6d39c;
+  font-size:.9rem;
+  font-weight:1000;
+  flex:0 0 auto;
+}
+
+.champ-team-name{
+  min-width:0;
+  font-size:1rem;
+  font-weight:1000;
+  color:#171717;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.champ-check{
+  margin-right:auto;
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#e3ddd0;
+  color:transparent;
+  font-weight:1000;
+}
+
+.champ-team-card:has(input:checked){
+  background:linear-gradient(180deg,#e7d79d,#cfb760);
+  border-color:rgba(255,255,255,.28);
+}
+
+.champ-team-card:has(input:checked) .champ-check{
+  background:#343840;
+  color:#fff;
+}
+
+.champ-actions{
+  position:sticky;
+  bottom:10px;
+  z-index:10;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:center;
+  padding:10px;
+  border-radius:22px;
+  background:rgba(28,30,35,.92);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(226,208,153,.18);
+}
+
+.champ-save-btn,
+.champ-back-link{
+  min-height:48px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(226,208,153,.22);
+  font-weight:1000;
+  text-decoration:none;
+}
+
+.champ-save-btn{
+  width:100%;
+  background:linear-gradient(180deg,#e7d79d,#cfb760);
+  color:#17130a;
+  cursor:pointer;
+  font-size:1rem;
+}
+
+.champ-back-link{
+  padding:0 14px;
+  background:rgba(255,255,255,.07);
+  color:#f6f1e5;
+  white-space:nowrap;
+}
+
+@media (max-width:620px){
+  .champ-page{
+    padding:0 10px 22px;
+  }
+
+  .champ-shell{
+    padding:12px;
+    border-radius:26px;
+  }
+
+  .champ-head h2{
+    font-size:1.65rem;
+  }
+
+  .champ-status{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+
+  .champ-deadline{
+    width:max-content;
+    margin:0 auto;
+  }
+
+  .champ-grid{
+    grid-template-columns:1fr;
+  }
+
+  .champ-actions{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+<section class="champ-page">
+  <div class="champ-shell">
+
+    <header class="champ-head">
+      <div class="champ-icon">🏆</div>
+      <h2>توقع بطل البطولة</h2>
+      <p>اختر المنتخب الذي تتوقع أن يحقق البطولة. القائمة تظهر فقط المنتخبات المتأهلة إلى دور الـ32.</p>
+    </header>
+
+    <section class="champ-status">
+      <div class="champ-status-main">
+        <span>اختيارك الحالي</span>
+        <strong>{{ current_team if current_team else 'لم يتم الاختيار بعد' }}</strong>
+      </div>
+
+      <div class="champ-deadline">
+        {% if t and t.champion_pick_deadline %}
+          يغلق {{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}
+        {% else %}
+          مفتوح حتى تحديد موعد الإغلاق
+        {% endif %}
+      </div>
+    </section>
+
+    {% if champion_locked %}
+      <section class="champ-closed">
+        <h3>تم إغلاق توقع البطل</h3>
+        <p>اختيارك: <b>{{ current_team if current_team else 'لم يتم الاختيار' }}</b></p>
+      </section>
+    {% elif not teams %}
+      <section class="champ-not-ready">
+        <h3>لم يفتح اختيار البطل بعد</h3>
+        <p>سيتم فتح اختيار بطل البطولة بعد تحديد المنتخبات المتأهلة إلى دور الـ32.</p>
+      </section>
+    {% else %}
+      <form method="post" class="champ-form">
+        <div class="champ-grid">
+          {% for team in teams %}
+            {% set flag = team_flag_code(team) %}
+            <label class="champ-team-card">
+              <input type="radio" name="team_name" value="{{ team }}" {% if current_team == team %}checked{% endif %} required>
+
+              {% if flag %}
+                <img class="champ-flag" src="https://flagcdn.com/w80/{{ flag }}.png" alt="">
+              {% else %}
+                <span class="champ-flag-placeholder">🏳️</span>
+              {% endif %}
+
+              <span class="champ-team-name">{{ team }}</span>
+              <span class="champ-check">✓</span>
+            </label>
+          {% endfor %}
+        </div>
+
+        <div class="champ-actions">
+          <button type="submit" class="champ-save-btn">
+            حفظ توقع البطل
+          </button>
+
+          <a href="{{ url_for('participant_page', token=p.token, filter='open') }}" class="champ-back-link">
+            رجوع للمباريات
+          </a>
+        </div>
+      </form>
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}
