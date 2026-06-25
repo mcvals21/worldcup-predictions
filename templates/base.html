@@ -1,4 +1,5 @@
 
+
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080808">
   <title>{{ t.name if t else 'توقعات المباريات' }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=base-save-modal-3">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=round-builder-ui-1">
 
  <style>
   /* رسالة حفظ التوقعات - بدون دائرة خلف الإيموجي */
@@ -98,6 +99,26 @@
     border-radius:14px !important;
     font-weight:1000 !important;
   }
+
+
+  /* قائمة المدير: نعرض أدوات الإدارة فقط بدون روابط الجمهور */
+  .clean-menu .menu-links .admin-menu-section{
+    background:rgba(255,255,255,.05) !important;
+    border:1px solid rgba(230,211,156,.14) !important;
+    color:#f6f1e5 !important;
+  }
+
+  .clean-menu .menu-links .admin-menu-section.is-featured{
+    background:#e3cf92 !important;
+    color:#17130a !important;
+    border-color:rgba(0,0,0,.08) !important;
+    font-weight:1000 !important;
+  }
+
+  .clean-menu .menu-links .admin-menu-section:hover{
+    border-color:rgba(230,211,156,.32) !important;
+  }
+
 </style>
 </head>
 
@@ -113,12 +134,21 @@
 
       <div class="clean-menu-panel">
         <nav class="menu-links">
-          <a href="/leaderboard">🏅 الترتيب</a>
+          {% if code is defined %}
+            <a href="{{ url_for('admin', code=code) }}#admin-manage" class="admin-menu-section">📋 إدارة المباريات والنتائج</a>
+            <a href="{{ url_for('admin', code=code) }}#admin-add" class="admin-menu-section">＋ إضافة مباراة</a>
+            <a href="{{ url_for('admin', code=code) }}#admin-deadline" class="admin-menu-section">🏆 موعد إغلاق توقع البطل</a>
+            <a href="{{ url_for('admin', code=code) }}#admin-doublelab" class="admin-menu-section">×2 مختبر المضاعفة</a>
+            <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء داشبورد الجولة</a>
+            <a href="{{ url_for('admin', code=code) }}#admin-links" class="admin-menu-section">🔗 روابط المشاركين</a>
+          {% else %}
+            <a href="/leaderboard">🏅 الترتيب</a>
 
-          <a href="{{ url_for('matches_page', filter='open') }}">⚽ المباريات</a>
+            <a href="{{ url_for('matches_page', filter='open') }}">⚽ المباريات</a>
 
-          <a href="/rules">📖 القوانين</a>
-          <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
+            <a href="/rules">📖 القوانين</a>
+            <a href="{{ url_for('stats') }}">📊 الإحصائيات</a>
+          {% endif %}
         </nav>
 
         {% if p is defined %}
