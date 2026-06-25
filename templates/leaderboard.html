@@ -52,20 +52,45 @@
   grid-template-columns:46px minmax(0,1fr) 86px 86px;
   align-items:center;
   gap:12px;
-  padding:0 14px 2px;
-  color:#d8d3c5;
-  font-size:.72rem;
-  line-height:1.25;
+
+  min-height:42px;
+  margin:0 0 4px;
+  padding:8px 14px;
+  border-radius:16px;
+
+  background:linear-gradient(180deg,#3a3c42,#25272c);
+  border:1px solid rgba(230,211,156,.18);
+  box-shadow:0 8px 18px rgba(0,0,0,.10);
+
+  color:#f6f1e5;
+  font-size:.74rem;
+  line-height:1.15;
   font-weight:1000;
 }
 
 .rank-solo-table-head span{
+  min-height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   text-align:center;
+  border-radius:999px;
 }
 
 .rank-solo-table-head .head-name{
+  justify-content:flex-start;
   text-align:right;
   padding-right:6px;
+}
+
+.rank-solo-table-head .head-points{
+  background:rgba(255,255,255,.08);
+  color:#fff;
+}
+
+.rank-solo-table-head .head-correct{
+  background:rgba(47,125,77,.95);
+  color:#fff;
 }
 
 /* القائمة */
@@ -238,9 +263,11 @@
   }
 
   .rank-solo-table-head{
-    padding:0 12px 0;
-    font-size:.58rem;
-    line-height:1.2;
+    min-height:38px;
+    padding:7px 12px;
+    font-size:.6rem;
+    line-height:1.15;
+    border-radius:15px;
   }
 
   .rank-solo-row{
@@ -286,8 +313,8 @@
     <div class="rank-solo-table-head" aria-hidden="true">
       <span></span>
       <span class="head-name">المشارك</span>
-      <span>عدد النقاط</span>
-      <span>عدد التوقعات الصحيحة</span>
+      <span class="head-points">النقاط</span>
+      <span class="head-correct">التوقعات الصحيحة</span>
     </div>
 
     <div class="rank-solo-list">
