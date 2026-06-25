@@ -421,7 +421,7 @@
       <span class="round-builder-counter" id="selectedRoundCount">0 محددة</span>
     </div>
 
-    <h2>إنشاء داشبورد إحصائيات الجولة</h2>
+    <h2>إنشاء إحصائيات الجولة</h2>
     <p>
       اختر مباريات الجولة المنتهية، ثم أنشئ رابطًا جاهزًا للمشاركة. هذه الصفحة تقرأ البيانات فقط ولا تحفظ شيئًا في قاعدة البيانات.
     </p>
@@ -446,12 +446,12 @@
 
     {% if matches %}
       <div class="round-link-box" id="roundLinkBox">
-        <label>رابط داشبورد الجولة</label>
+        <label>رابط إحصائيات الجولة</label>
         <input id="roundLinkInput" readonly value="">
 
         <div class="round-link-actions">
           <button type="button" class="round-builder-btn gold" id="copyRoundLink">نسخ الرابط</button>
-          <a href="#" class="round-builder-link-btn dark" id="openRoundLink" target="_blank" rel="noopener">فتح الداشبورد</a>
+          <a href="#" class="round-builder-link-btn dark" id="openRoundLink" target="_blank" rel="noopener">فتح الإحصائيات</a>
         </div>
       </div>
 
@@ -478,7 +478,7 @@
       </div>
     {% else %}
       <div class="round-empty">
-        لا توجد مباريات منتهية حاليًا لإنشاء داشبورد الجولة.
+        لا توجد مباريات منتهية حاليًا لإنشاء إحصائيات الجولة.
       </div>
     {% endif %}
   </section>
@@ -545,7 +545,7 @@
     linkBox.classList.add('is-visible');
 
     if(helpBox){
-      helpBox.textContent = 'تم إنشاء الرابط. يمكنك نسخه أو فتح الداشبورد.';
+      helpBox.textContent = 'تم إنشاء الرابط. يمكنك نسخه أو فتح الإحصائيات.';
     }
 
     linkBox.scrollIntoView({ behavior:'smooth', block:'nearest' });
