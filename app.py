@@ -860,6 +860,75 @@ def participant_page(token):
         has_open_matches=any(not match_locked(m) for m in matches)
     )
 
+
+@app.route('/p/<token>/champion', methods=['GET', 'POST'])
+def participant_champion_page(token):
+    """Participant champion pick page.
+    Safe implementation: read Round of 32 teams, validate server-side, and only update ChampionPick.
+    """
+    p = participant_by_token(token)
+    session['participant_token'] = p.token
+
+    t = tournament()
+
+    if not t:
+        abort(404)
+
+    champion = ChampionPick.query.filter_by(
+        participant_id=p.id,
+        tournament_id=t.id
+    ).first()
+
+    teams = champion_eligible_teams(t.id)
+    champion_locked = (
+        t.champion_pick_deadline is not None
+        and now_kw() >= t.champion_pick_deadline
+    )
+
+    if request.method == 'POST':
+        if champion_locked:
+            flash('تم إغلاق توقع البطل.')
+        else:
+            team = request.form.get('team_name', '').strip()
+
+            if not teams:
+                flash('سيتم فتح توقع بطل البطولة بعد تحديد المتأهلين لدور الـ32.')
+            elif not team:
+                flash('اختر منتخبًا أولًا.')
+            elif team not in teams:
+                flash('هذا المنتخب غير متاح لتوقع البطل.')
+            else:
+                pick = champion or ChampionPick(
+                    participant_id=p.id,
+                    tournament_id=t.id
+                )
+
+                pick.team_name = team
+
+                db.session.add(pick)
+                db.session.commit()
+
+                flash('تم حفظ توقع البطل.')
+
+                return redirect(url_for(
+                    'participant_champion_page',
+                    token=p.token
+                ))
+
+        return redirect(url_for(
+            'participant_champion_page',
+            token=p.token
+        ))
+
+    return render_template(
+        'champion.html',
+        p=p,
+        t=t,
+        champion=champion,
+        teams=teams,
+        champion_locked=champion_locked
+    )
+
 @app.route('/rules')
 def rules():
     t = tournament()
