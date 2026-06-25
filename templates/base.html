@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080808">
   <title>{{ t.name if t else 'توقعات المباريات' }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=round-builder-ui-1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=admin-menu-builder-modal-v2">
 
  <style>
   /* رسالة حفظ التوقعات - بدون دائرة خلف الإيموجي */
@@ -119,6 +119,70 @@
     border-color:rgba(230,211,156,.32) !important;
   }
 
+
+  /* =====================================================
+     Admin menu + admin messages - refined
+  ===================================================== */
+  .clean-menu.clean-admin-menu .clean-menu-panel{
+    background:linear-gradient(180deg,#f3efe4,#ebe4d6) !important;
+    border:1px solid rgba(226,208,153,.55) !important;
+    box-shadow:0 28px 70px rgba(0,0,0,.44) !important;
+    padding:14px !important;
+  }
+
+  .clean-menu.clean-admin-menu .menu-links{
+    gap:8px !important;
+  }
+
+  .clean-menu.clean-admin-menu .menu-links a.admin-menu-section{
+    min-height:56px !important;
+    border-radius:18px !important;
+    padding:0 16px !important;
+    background:linear-gradient(180deg,#3a3c42,#262930) !important;
+    color:#f7f2e8 !important;
+    border:1px solid rgba(230,211,156,.22) !important;
+    box-shadow:none !important;
+    opacity:1 !important;
+    font-weight:1000 !important;
+  }
+
+  .clean-menu.clean-admin-menu .menu-links a.admin-menu-section.is-featured{
+    background:linear-gradient(180deg,#ead99f,#d8c06f) !important;
+    color:#17130a !important;
+    border-color:rgba(0,0,0,.08) !important;
+  }
+
+  .clean-menu.clean-admin-menu .menu-links a.admin-menu-section:hover{
+    transform:translateY(-1px);
+    border-color:rgba(230,211,156,.42) !important;
+  }
+
+  .admin-flash-card .prediction-warning-icon{
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    width:auto !important;
+    height:auto !important;
+    margin:0 auto 10px !important;
+    padding:0 !important;
+    border-radius:0 !important;
+    font-size:2.8rem !important;
+    line-height:1 !important;
+  }
+
+  .admin-flash-card h3{
+    margin:0 0 20px !important;
+    color:#131313 !important;
+    font-size:1.45rem !important;
+    line-height:1.45 !important;
+    font-weight:1000 !important;
+  }
+
+  .admin-flash-card.is-error .prediction-warning-icon,
+  .admin-flash-card.is-warning .prediction-warning-icon{
+    font-size:2.55rem !important;
+  }
+
 </style>
 </head>
 
@@ -126,7 +190,7 @@
 <header class="wc-header clean-wc-header">
   <div class="clean-header-row">
 
-    <details class="clean-menu" id="siteMenu">
+    <details class="clean-menu{% if code is defined %} clean-admin-menu{% endif %}" id="siteMenu">
       <summary>
         <span class="menu-label">القائمة</span>
         <span class="menu-icon">☰</span>
@@ -241,19 +305,43 @@
             {% set is_error = 'لا يمكن' in message or 'فشل' in message or 'خطأ' in message or 'لم يتم' in message %}
             {% set is_warning = 'مسح' in message or 'حذف' in message or 'تنبيه' in message or 'إغلاق' in message %}
 
-            <div class="premium-toast-simple {% if is_error %}toast-error{% elif is_warning %}toast-warning{% else %}toast-success{% endif %}">
-              <span class="toast-simple-icon">
-                {% if is_error %}
-                  ⚠️
-                {% elif is_warning %}
-                  🟡
-                {% else %}
-                  ✅
-                {% endif %}
-              </span>
+            {% if code is defined %}
+              <div class="prediction-warning-overlay admin-flash-overlay">
+                <div class="prediction-warning-card admin-flash-card {% if is_error %}is-error{% elif is_warning %}is-warning{% else %}is-success{% endif %}">
+                  <div class="prediction-warning-icon">
+                    {% if is_error %}
+                      ⚠️
+                    {% elif is_warning %}
+                      ⚠️
+                    {% else %}
+                      👍
+                    {% endif %}
+                  </div>
 
-              <span class="toast-simple-text">{{ message }}</span>
-            </div>
+                  <h3>{{ message }}</h3>
+
+                  <div class="prediction-warning-actions">
+                    <button type="button" class="prediction-warning-primary" data-close-admin-modal>
+                      حسنًا
+                    </button>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="premium-toast-simple {% if is_error %}toast-error{% elif is_warning %}toast-warning{% else %}toast-success{% endif %}">
+                <span class="toast-simple-icon">
+                  {% if is_error %}
+                    ⚠️
+                  {% elif is_warning %}
+                    🟡
+                  {% else %}
+                    ✅
+                  {% endif %}
+                </span>
+
+                <span class="toast-simple-text">{{ message }}</span>
+              </div>
+            {% endif %}
 
           {% endif %}
 
@@ -292,6 +380,22 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(closeSaveModal, 1800);
   });
 
+  document.querySelectorAll('.admin-flash-overlay').forEach(function (overlay) {
+    function closeAdminModal() {
+      overlay.style.opacity = '0';
+      overlay.style.transition = '.22s ease';
+      setTimeout(function () {
+        overlay.remove();
+      }, 240);
+    }
+
+    overlay.querySelectorAll('[data-close-admin-modal]').forEach(function (button) {
+      button.addEventListener('click', closeAdminModal);
+    });
+
+    setTimeout(closeAdminModal, 2200);
+  });
+
   document.querySelectorAll('.clean-menu').forEach(function(menu){
     document.addEventListener('click', function (event) {
       if (menu.open && !menu.contains(event.target)) {
@@ -312,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
         menu.removeAttribute('open');
       });
 
-      document.querySelectorAll('.prediction-save-overlay').forEach(function(overlay){
+      document.querySelectorAll('.prediction-save-overlay, .admin-flash-overlay').forEach(function(overlay){
         overlay.remove();
       });
     }
