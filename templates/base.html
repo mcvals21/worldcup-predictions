@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080808">
   <title>{{ t.name if t else 'توقعات المباريات' }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=champion-round32-1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=champion-page-safe-1">
 
  <style>
   /* رسالة حفظ التوقعات - بدون دائرة خلف الإيموجي */
@@ -210,6 +210,48 @@
     font-weight:1000 !important;
   }
 
+
+  .clean-menu .menu-champion-shortcut{
+    display:grid !important;
+    grid-template-columns:auto 1fr !important;
+    gap:4px 10px !important;
+    align-items:center !important;
+    min-height:64px !important;
+    padding:12px 14px !important;
+    border-radius:18px !important;
+    background:linear-gradient(180deg,#e7d79d,#cfb760) !important;
+    color:#17130a !important;
+    text-decoration:none !important;
+    border:1px solid rgba(120,88,15,.18) !important;
+    box-shadow:0 8px 18px rgba(0,0,0,.08) !important;
+  }
+
+  .clean-menu .menu-champion-shortcut span{
+    grid-row:1 / span 2 !important;
+    width:38px !important;
+    height:38px !important;
+    border-radius:14px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    background:rgba(255,255,255,.42) !important;
+    font-size:1.25rem !important;
+  }
+
+  .clean-menu .menu-champion-shortcut strong{
+    font-size:1rem !important;
+    line-height:1.15 !important;
+    font-weight:1000 !important;
+    color:#17130a !important;
+  }
+
+  .clean-menu .menu-champion-shortcut small{
+    color:rgba(23,19,10,.72) !important;
+    font-size:.76rem !important;
+    line-height:1.2 !important;
+    font-weight:900 !important;
+  }
+
 </style>
 </head>
 
@@ -244,61 +286,15 @@
 
         {% if p is defined %}
           <div class="menu-divider"></div>
-
-          <div class="menu-champion-box">
-            <div class="menu-champion-title">🏆 توقع بطل البطولة</div>
-            {% if t and t.champion_pick_deadline %}
-  <div class="menu-champion-deadline">
-    <span>آخر موعد للاختيار</span>
-    <b dir="ltr">{{ t.champion_pick_deadline.strftime('%Y-%m-%d %I:%M %p') }}</b>
-  </div>
-{% else %}
-  <div class="menu-champion-deadline is-open">
-    <span>آخر موعد للاختيار</span>
-    <b>لم يتم تحديد موعد الإغلاق</b>
-  </div>
-{% endif %}
-
-            {% if champion_locked %}
-              <div class="menu-champion-note">
-                تم إغلاق توقع البطل<br>
-                اختيارك: <b>{{ champion.team_name if champion else 'لم يتم الاختيار' }}</b>
-              </div>
+          <a href="{{ url_for('participant_champion_page', token=p.token) }}" class="menu-champion-shortcut">
+            <span>🏆</span>
+            <strong>توقع بطل البطولة</strong>
+            {% if champion %}
+              <small>اختيارك: {{ champion.team_name }}</small>
             {% else %}
-              {% if teams %}
-                <div class="menu-champion-note">
-                  {% if champion %}
-                    اختيارك الحالي: <b>{{ champion.team_name }}</b>
-                  {% else %}
-                    لم تختر البطل بعد
-                  {% endif %}
-                </div>
-
-                <div class="menu-champion-count">
-                  {{ teams|length }} منتخب متاح من دور الـ32
-                </div>
-
-                <form method="post" class="menu-champion-form">
-                  <input type="hidden" name="action" value="champion">
-
-                  <select name="team_name" required>
-                    <option value="">اختر البطل</option>
-                    {% for team in teams %}
-                      <option value="{{ team }}" {% if champion and champion.team_name == team %}selected{% endif %}>
-                        {{ team }}
-                      </option>
-                    {% endfor %}
-                  </select>
-
-                  <button type="submit">حفظ البطل</button>
-                </form>
-              {% else %}
-                <div class="menu-champion-note is-disabled">
-                  سيتم فتح توقع بطل البطولة بعد تحديد المتأهلين لدور الـ32.
-                </div>
-              {% endif %}
+              <small>صفحة اختيار مستقلة وآمنة</small>
             {% endif %}
-          </div>
+          </a>
         {% endif %}
       </div>
     </details>
@@ -320,14 +316,14 @@
       <div class="toast-area" id="toastArea">
         {% for message in messages %}
 
-          {% if 'تم حفظ توقعاتك' in message or 'تم حفظ التوقعات' in message %}
+          {% if 'تم حفظ توقعاتك' in message or 'تم حفظ التوقعات' in message or 'تم حفظ توقع البطل' in message %}
             <div class="prediction-warning-overlay prediction-save-overlay">
               <div class="prediction-warning-card prediction-save-card">
                 <div class="prediction-warning-icon prediction-save-icon">
                    👍
                    </div>
 
-                     <h3>تم حفظ التوقعات</h3>
+                     <h3>{% if 'توقع البطل' in message %}تم حفظ توقع البطل{% else %}تم حفظ التوقعات{% endif %}</h3>
 
                 <div class="prediction-warning-actions">
                   <button type="button" class="prediction-warning-primary" data-close-save-modal>
