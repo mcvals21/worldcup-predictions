@@ -1,0 +1,720 @@
+
+{% extends "base.html" %}
+
+{% block body_class %}champion-stats-admin-page{% endblock %}
+
+{% block content %}
+
+<style>
+body.champion-stats-admin-page .site-main{
+  padding-top:10px !important;
+}
+
+.champion-admin-wrap,
+.champion-admin-wrap *{
+  box-sizing:border-box;
+}
+
+.champion-admin-wrap{
+  direction:rtl;
+  width:min(860px,100%);
+  margin:0 auto 28px;
+  padding:0 12px 24px;
+}
+
+.champion-admin-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:0 0 12px;
+  padding:12px;
+  border-radius:22px;
+  background:#f3efe4;
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:0 10px 26px rgba(0,0,0,.08);
+}
+
+.champion-admin-toolbar strong{
+  color:#171717;
+  font-weight:1000;
+  font-size:.96rem;
+}
+
+.champion-admin-toolbar span{
+  color:#6b6458;
+  font-weight:850;
+  font-size:.8rem;
+}
+
+.champion-admin-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.champion-admin-actions a,
+.champion-admin-actions button{
+  min-height:38px;
+  padding:8px 12px;
+  border:0;
+  border-radius:14px;
+  text-decoration:none;
+  cursor:pointer;
+  background:#343840;
+  color:#fff;
+  font-size:.82rem;
+  font-weight:1000;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.champion-admin-actions button{
+  background:#e3cf92;
+  color:#17130a;
+  border:1px solid rgba(0,0,0,.08);
+}
+
+.champion-shot{
+  color:#f6f1e5;
+  border-radius:34px;
+  padding:16px;
+  background:
+    radial-gradient(circle at top right, rgba(226,208,153,.20), transparent 32%),
+    radial-gradient(circle at bottom left, rgba(255,255,255,.08), transparent 34%),
+    linear-gradient(180deg,#24262b,#141519);
+  border:1px solid rgba(226,208,153,.20);
+  box-shadow:0 28px 76px rgba(0,0,0,.38);
+  overflow:hidden;
+}
+
+.cs-header{
+  text-align:center;
+  padding:20px 12px 16px;
+}
+
+.cs-kicker{
+  width:max-content;
+  margin:0 auto 12px;
+  min-height:32px;
+  padding:7px 14px;
+  border-radius:999px;
+  background:#e3cf92;
+  color:#17130a;
+  border:1px solid rgba(0,0,0,.08);
+  font-size:.82rem;
+  font-weight:1000;
+}
+
+.cs-header h1{
+  margin:0;
+  color:#fff;
+  font-size:2rem;
+  line-height:1.18;
+  font-weight:1000;
+  letter-spacing:-.5px;
+}
+
+.cs-header p{
+  margin:10px auto 0;
+  max-width:620px;
+  color:#ded6c4;
+  font-size:.92rem;
+  line-height:1.75;
+  font-weight:850;
+}
+
+.cs-meta{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:0 0 12px;
+}
+
+.cs-meta-card{
+  min-height:72px;
+  padding:10px;
+  border-radius:20px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.08);
+  display:grid;
+  place-items:center;
+  text-align:center;
+}
+
+.cs-meta-card b{
+  color:#fff;
+  font-size:1.35rem;
+  line-height:1;
+  font-weight:1000;
+}
+
+.cs-meta-card span{
+  color:#d8d1c2;
+  font-size:.76rem;
+  line-height:1.35;
+  font-weight:900;
+}
+
+.cs-warning{
+  margin:0 0 12px;
+  padding:11px 13px;
+  border-radius:18px;
+  background:rgba(227,207,146,.14);
+  border:1px solid rgba(227,207,146,.22);
+  color:#f6f1e5;
+  font-size:.82rem;
+  line-height:1.65;
+  font-weight:900;
+  text-align:center;
+}
+
+.cs-section{
+  margin-top:12px;
+  padding:14px;
+  border-radius:26px;
+  background:#f3efe4;
+  color:#171717;
+  border:1px solid rgba(226,208,153,.30);
+}
+
+.cs-section.dark{
+  background:linear-gradient(180deg,#3a3c42,#25272c);
+  color:#f6f1e5;
+  border-color:rgba(226,208,153,.20);
+}
+
+.cs-section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.cs-section-title h2{
+  margin:0;
+  font-size:1.25rem;
+  line-height:1.25;
+  font-weight:1000;
+  color:#171717;
+}
+
+.cs-section.dark .cs-section-title h2{
+  color:#fff;
+}
+
+.cs-section-title span{
+  min-height:30px;
+  padding:6px 11px;
+  border-radius:999px;
+  background:#e3cf92;
+  color:#17130a;
+  font-size:.78rem;
+  font-weight:1000;
+  white-space:nowrap;
+}
+
+.cs-contenders{
+  display:grid;
+  gap:8px;
+}
+
+.cs-contender{
+  min-height:62px;
+  padding:10px;
+  border-radius:18px;
+  display:grid;
+  grid-template-columns:40px 1fr auto;
+  align-items:center;
+  gap:10px;
+  background:#e8e5de;
+  border:1px solid rgba(0,0,0,.06);
+}
+
+.cs-rank{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#343840;
+  color:#fff;
+  font-weight:1000;
+  font-size:.88rem;
+}
+
+.cs-team-line{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.cs-flag{
+  width:30px;
+  height:22px;
+  border-radius:6px;
+  object-fit:cover;
+  box-shadow:0 1px 4px rgba(0,0,0,.18);
+  flex:0 0 auto;
+}
+
+.cs-team-name{
+  min-width:0;
+  color:#171717;
+  font-size:1rem;
+  font-weight:1000;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.cs-team-sub{
+  margin-top:3px;
+  color:#635c50;
+  font-size:.76rem;
+  font-weight:900;
+}
+
+.cs-score-pill{
+  min-width:62px;
+  min-height:36px;
+  padding:7px 11px;
+  border-radius:999px;
+  background:#d7f0dc;
+  color:#245d36;
+  border:1px solid rgba(61,141,83,.18);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.9rem;
+  font-weight:1000;
+  direction:ltr;
+}
+
+.cs-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.cs-mini-card{
+  padding:12px;
+  border-radius:20px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.cs-mini-card h3{
+  margin:0 0 10px;
+  color:#fff;
+  font-size:1.02rem;
+  line-height:1.25;
+  font-weight:1000;
+}
+
+.cs-mini-list{
+  display:grid;
+  gap:7px;
+}
+
+.cs-mini-row{
+  min-height:44px;
+  padding:8px;
+  border-radius:15px;
+  background:rgba(255,255,255,.07);
+  display:grid;
+  grid-template-columns:28px 1fr auto;
+  align-items:center;
+  gap:7px;
+}
+
+.cs-mini-row .cs-rank{
+  width:26px;
+  height:26px;
+  border-radius:9px;
+  background:#e3cf92;
+  color:#17130a;
+  font-size:.75rem;
+}
+
+.cs-mini-row .cs-team-name{
+  color:#f6f1e5;
+  font-size:.84rem;
+}
+
+.cs-mini-row .cs-flag{
+  width:24px;
+  height:18px;
+  border-radius:5px;
+}
+
+.cs-mini-value{
+  min-width:42px;
+  min-height:28px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  font-size:.78rem;
+  font-weight:1000;
+  direction:ltr;
+  text-align:center;
+}
+
+.cs-table{
+  display:grid;
+  gap:7px;
+}
+
+.cs-table-head,
+.cs-table-row{
+  display:grid;
+  grid-template-columns:34px 1.2fr 44px 44px 44px 54px 74px;
+  gap:7px;
+  align-items:center;
+}
+
+.cs-table-head{
+  padding:10px 8px;
+  border-radius:15px;
+  background:#343840;
+  color:#fff;
+  font-size:.76rem;
+  font-weight:1000;
+}
+
+.cs-table-row{
+  min-height:48px;
+  padding:8px;
+  border-radius:15px;
+  background:#e8e5de;
+  border:1px solid rgba(0,0,0,.06);
+  color:#171717;
+  font-size:.8rem;
+  font-weight:950;
+}
+
+.cs-table-row > span,
+.cs-table-head > span{
+  text-align:center;
+}
+
+.cs-table-team{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  text-align:right !important;
+}
+
+.cs-form{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  direction:ltr;
+}
+
+.cs-form-i{
+  width:22px;
+  height:22px;
+  border-radius:8px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:.7rem;
+  font-weight:1000;
+}
+
+.cs-form-i.W{background:#2e8b4d;}
+.cs-form-i.D{background:#a9872e;}
+.cs-form-i.L{background:#9b3434;}
+
+.cs-empty{
+  padding:16px;
+  border-radius:18px;
+  background:#e8e5de;
+  border:1px solid rgba(0,0,0,.06);
+  color:#5f584d;
+  text-align:center;
+  font-size:.9rem;
+  font-weight:900;
+  line-height:1.7;
+}
+
+.cs-footer{
+  padding:14px 12px 4px;
+  text-align:center;
+  color:#d8d1c2;
+  font-size:.76rem;
+  line-height:1.65;
+  font-weight:850;
+}
+
+@media (max-width:700px){
+  .champion-admin-toolbar{
+    display:grid;
+  }
+
+  .champion-admin-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .cs-header h1{
+    font-size:1.55rem;
+  }
+
+  .cs-meta{
+    grid-template-columns:1fr;
+  }
+
+  .cs-grid{
+    grid-template-columns:1fr;
+  }
+
+  .cs-table-head,
+  .cs-table-row{
+    grid-template-columns:30px 1.2fr 36px 36px 42px 44px;
+  }
+
+  .cs-table-head .hide-mobile,
+  .cs-table-row .hide-mobile{
+    display:none;
+  }
+
+  .cs-section{
+    padding:12px;
+  }
+
+  .champion-shot{
+    padding:12px;
+    border-radius:28px;
+  }
+}
+
+@media print{
+  body.champion-stats-admin-page .wc-header,
+  body.champion-stats-admin-page .clean-wc-header,
+  .champion-admin-toolbar{
+    display:none !important;
+  }
+
+  body.champion-stats-admin-page .site-main{
+    padding:0 !important;
+  }
+
+  .champion-shot{
+    box-shadow:none !important;
+    border-radius:0 !important;
+  }
+}
+</style>
+
+<div class="champion-admin-wrap">
+
+  <div class="champion-admin-toolbar">
+    <div>
+      <strong>صفحة إدارة خاصة</strong><br>
+      <span>افتحها قبل دور الـ32، ثم أرسل Screenshot للمتسابقين. لا ترسل رابط الإدارة.</span>
+    </div>
+
+    <div class="champion-admin-actions">
+      <a href="{{ url_for('admin', code=code) }}#admin-championteams">قائمة المنتخبات</a>
+      <button type="button" onclick="window.print()">طباعة / حفظ PDF</button>
+    </div>
+  </div>
+
+  <section class="champion-shot" id="championStatsShot">
+    <div class="cs-header">
+      <div class="cs-kicker">قبل اختيار بطل البطولة</div>
+      <h1>🏆 إحصائية تساعدك على اختيار البطل</h1>
+      <p>
+        ملخص إحصائي مبني على نتائج المباريات المحفوظة في المسابقة.
+        الهدف هو المساعدة فقط، وليس توقعًا رسميًا أو ضمانًا للنتيجة.
+      </p>
+    </div>
+
+    <div class="cs-meta">
+      <div class="cs-meta-card">
+        <b>{{ dashboard.completed_matches_count }}</b>
+        <span>مباراة محتسبة</span>
+      </div>
+
+      <div class="cs-meta-card">
+        <b>{{ dashboard.active_teams_count }}</b>
+        <span>{% if dashboard.using_active_list %}منتخب متاح لاختيار البطل{% else %}منتخب ظهر في النتائج{% endif %}</span>
+      </div>
+
+      <div class="cs-meta-card">
+        <b>{{ generated_at.strftime('%d/%m') }}</b>
+        <span>آخر تحديث</span>
+      </div>
+    </div>
+
+    {% if not dashboard.using_active_list %}
+      <div class="cs-warning">
+        تنبيه للمدير: لم يتم الاعتماد على قائمة منتخبات البطل النشطة بعد.
+        قبل إرسال الصورة النهائية، حدّد المتأهلين لدور الـ32 من قائمة منتخبات البطل.
+      </div>
+    {% endif %}
+
+    <section class="cs-section">
+      <div class="cs-section-title">
+        <h2>⭐ القائمة الإحصائية الأقرب للقب</h2>
+        <span>ترتيب استرشادي</span>
+      </div>
+
+      {% if dashboard.contenders %}
+        <div class="cs-contenders">
+          {% for row in dashboard.contenders %}
+            {% set flag = team_flag_code(row.name) %}
+            <div class="cs-contender">
+              <span class="cs-rank">{{ loop.index }}</span>
+
+              <div>
+                <div class="cs-team-line">
+                  {% if flag %}
+                    <img class="cs-flag" src="https://flagcdn.com/w80/{{ flag }}.png" alt="">
+                  {% endif %}
+                  <span class="cs-team-name">{{ row.name }}</span>
+                </div>
+
+                <div class="cs-team-sub">
+                  {{ row.points }} نقطة · فارق {{ row.gd }} · سجل {{ row.gf }} واستقبل {{ row.ga }}
+                </div>
+              </div>
+
+              <span class="cs-score-pill">{{ row.power_score }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="cs-empty">
+          لا توجد بيانات كافية بعد. أدخل نتائج المباريات أولًا، ثم افتح هذه الصفحة مرة أخرى.
+        </div>
+      {% endif %}
+    </section>
+
+    <section class="cs-section dark">
+      <div class="cs-section-title">
+        <h2>أبرز المؤشرات</h2>
+        <span>Top 5</span>
+      </div>
+
+      <div class="cs-grid">
+        {% set blocks = [
+          ('🔥 أقوى هجوم', dashboard.attack, 'gf', 'هدف'),
+          ('🛡️ أقوى دفاع', dashboard.defense, 'ga', 'عليه'),
+          ('⚖️ أفضل فارق أهداف', dashboard.goal_difference, 'gd', 'فارق'),
+          ('✅ الأكثر فوزًا', dashboard.wins, 'wins', 'فوز'),
+          ('🚫 أكثر شباك نظيفة', dashboard.clean_sheets, 'clean_sheets', 'شباك')
+        ] %}
+
+        {% for title, items, key, label in blocks %}
+          <div class="cs-mini-card">
+            <h3>{{ title }}</h3>
+
+            {% if items %}
+              <div class="cs-mini-list">
+                {% for row in items %}
+                  {% set flag = team_flag_code(row.name) %}
+                  <div class="cs-mini-row">
+                    <span class="cs-rank">{{ loop.index }}</span>
+
+                    <div class="cs-team-line">
+                      {% if flag %}
+                        <img class="cs-flag" src="https://flagcdn.com/w80/{{ flag }}.png" alt="">
+                      {% endif %}
+                      <span class="cs-team-name">{{ row.name }}</span>
+                    </div>
+
+                    <span class="cs-mini-value">
+                      {% if key == 'gf' %}
+                        {{ row.gf }}
+                      {% elif key == 'ga' %}
+                        {{ row.ga }}
+                      {% elif key == 'gd' %}
+                        {{ row.gd }}
+                      {% elif key == 'wins' %}
+                        {{ row.wins }}
+                      {% else %}
+                        {{ row.clean_sheets }}
+                      {% endif %}
+                    </span>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="cs-empty">لا توجد بيانات.</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="cs-section">
+      <div class="cs-section-title">
+        <h2>📋 جدول مختصر للمنتخبات المتاحة</h2>
+        <span>آخر 3 مباريات</span>
+      </div>
+
+      {% if dashboard.rows %}
+        <div class="cs-table">
+          <div class="cs-table-head">
+            <span>#</span>
+            <span>المنتخب</span>
+            <span>لعب</span>
+            <span>نقاط</span>
+            <span>فارق</span>
+            <span class="hide-mobile">أهداف</span>
+            <span>الفورمة</span>
+          </div>
+
+          {% for row in dashboard.rows %}
+            {% set flag = team_flag_code(row.name) %}
+            <div class="cs-table-row">
+              <span>{{ loop.index }}</span>
+
+              <span class="cs-table-team">
+                {% if flag %}
+                  <img class="cs-flag" src="https://flagcdn.com/w80/{{ flag }}.png" alt="">
+                {% endif %}
+                <span class="cs-team-name">{{ row.name }}</span>
+              </span>
+
+              <span>{{ row.played }}</span>
+              <span>{{ row.points }}</span>
+              <span>{{ row.gd }}</span>
+              <span class="hide-mobile">{{ row.gf }}-{{ row.ga }}</span>
+
+              <span class="cs-form">
+                {% for item in row.form_last %}
+                  <span class="cs-form-i {{ item }}">
+                    {% if item == 'W' %}ف{% elif item == 'D' %}ت{% else %}خ{% endif %}
+                  </span>
+                {% endfor %}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="cs-empty">
+          لا توجد منتخبات لعرضها حاليًا. تأكد من وجود نتائج محفوظة ومن تحديث قائمة منتخبات البطل.
+        </div>
+      {% endif %}
+    </section>
+
+    <div class="cs-footer">
+      معيار “الأقرب للقب” يجمع بين النقاط، الانتصارات، فارق الأهداف، قوة الهجوم، قوة الدفاع، الشباك النظيفة، والفورمة الأخيرة.
+      استخدمه كدليل مساعد فقط.
+    </div>
+  </section>
+</div>
+
+{% endblock %}
