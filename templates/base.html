@@ -64,6 +64,19 @@
       border:1px solid rgba(226,208,153,.55) !important;
       box-shadow:0 28px 70px rgba(0,0,0,.44) !important;
       padding:14px !important;
+
+      /* مهم للهاتف: قائمة الإدارة أصبحت طويلة، لذلك نجعلها قابلة للتمرير */
+      max-height:calc(100dvh - 92px) !important;
+      overflow-y:auto !important;
+      overscroll-behavior:contain !important;
+      -webkit-overflow-scrolling:touch !important;
+      z-index:9999 !important;
+    }
+
+    @supports not (height: 100dvh){
+      .clean-menu.clean-admin-menu .clean-menu-panel{
+        max-height:calc(100vh - 92px) !important;
+      }
     }
 
     .clean-menu.clean-admin-menu .menu-links{
@@ -118,6 +131,29 @@
     .admin-flash-card.is-warning .prediction-warning-icon{
       font-size:2.55rem !important;
     }
+
+    @media (max-width:520px){
+      .clean-menu.clean-admin-menu .clean-menu-panel{
+        width:calc(100vw - 20px) !important;
+        max-height:calc(100dvh - 86px) !important;
+        margin-top:10px !important;
+        padding:10px !important;
+        border-radius:22px !important;
+      }
+
+      .clean-menu.clean-admin-menu .menu-links{
+        gap:7px !important;
+        padding-bottom:8px !important;
+      }
+
+      .clean-menu.clean-admin-menu .menu-links a.admin-menu-section{
+        min-height:50px !important;
+        padding:0 12px !important;
+        border-radius:16px !important;
+        font-size:.86rem !important;
+        line-height:1.25 !important;
+      }
+    }
   </style>
 </head>
 
@@ -136,11 +172,8 @@
           {% if code is defined %}
             <a href="{{ url_for('admin', code=code) }}#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
             <a href="{{ url_for('admin', code=code) }}#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
-            <a href="{{ url_for('admin', code=code) }}#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
             <a href="{{ url_for('admin', code=code) }}#admin-championteams" class="admin-menu-section" data-admin-menu-view="championteams">🏆 قائمة منتخبات البطل</a>
             <a href="{{ url_for('admin_champion_stats', code=code) }}" class="admin-menu-section is-featured">📸 صورة اختيار البطل</a>
-            <a href="{{ url_for('admin', code=code) }}#admin-championlab" class="admin-menu-section" data-admin-menu-view="championlab">🏆 مختبر توقع البطل</a>
-            <a href="{{ url_for('admin', code=code) }}#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
             <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
             <a href="{{ url_for('admin', code=code) }}#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
           {% else %}
