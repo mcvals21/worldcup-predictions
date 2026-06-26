@@ -107,6 +107,16 @@ class ChampionPick(db.Model):
     __table_args__ = (db.UniqueConstraint('participant_id', 'tournament_id', name='unique_champion_pick'),)
 
 
+class ChampionTeam(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable=False)
+    name = db.Column(db.String(80), nullable=False)
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    __table_args__ = (db.UniqueConstraint('tournament_id', 'name', name='unique_champion_team'),)
+
+
 KNOCKOUT_STAGES = ['round32', 'round16', 'quarter', 'semi', 'final']
 
 STAGE_LABELS = {
@@ -135,35 +145,12 @@ def is_real_champion_team(team_name):
     )
 
 
-def champion_eligible_teams(tournament_id=None):
-    """Return teams eligible for champion picks: only real teams in Round of 32 matches.
-    This is read-only and does not change the database.
+def scheduled_real_teams(tournament_id=None):
+    """Return all real team names currently present in the match schedule.
+
+    This is only a source for building/updating the champion-pick list.
+    It never deletes or hides anything.
     """
-    query = Match.query
-
-    if tournament_id is not None:
-        query = query.filter(Match.tournament_id == tournament_id)
-
-    round32_matches = query.filter(Match.stage == 'round32').all()
-    teams = set()
-
-    for m in round32_matches:
-        for team in (m.home_team, m.away_team):
-            if is_real_champion_team(team):
-                teams.add(team.strip())
-
-    return sorted(teams)
-
-
-def champion_preview_teams(tournament_id=None):
-    """Teams used only in the admin visual tester.
-    If Round of 32 teams exist, use them. Otherwise use current real teams so the design can be tested safely.
-    """
-    eligible = champion_eligible_teams(tournament_id)
-
-    if eligible:
-        return eligible
-
     query = Match.query
 
     if tournament_id is not None:
@@ -177,6 +164,111 @@ def champion_preview_teams(tournament_id=None):
                 teams.add(team.strip())
 
     return sorted(teams)
+
+
+def champion_team_list_exists(tournament_id):
+    return ChampionTeam.query.filter_by(tournament_id=tournament_id).count() > 0
+
+
+def champion_team_records(tournament_id):
+    return ChampionTeam.query.filter_by(
+        tournament_id=tournament_id
+    ).order_by(
+        ChampionTeam.is_active.desc(),
+        ChampionTeam.name.asc()
+    ).all()
+
+
+def champion_team_counts(tournament_id):
+    source_count = len(scheduled_real_teams(tournament_id))
+    total = ChampionTeam.query.filter_by(tournament_id=tournament_id).count()
+
+    if total == 0:
+        return {
+            'total': 0,
+            'active': source_count,
+            'hidden': 0,
+            'source_teams': source_count
+        }
+
+    active = ChampionTeam.query.filter_by(tournament_id=tournament_id, is_active=True).count()
+    hidden = max(total - active, 0)
+
+    return {
+        'total': total,
+        'active': active,
+        'hidden': hidden,
+        'source_teams': source_count
+    }
+
+
+def sync_champion_teams_from_matches(tournament_id):
+    """Add missing teams from the schedule to the champion list.
+
+    Safety rules:
+    - No delete.
+    - No overwrite of hidden/active status for existing teams.
+    - Newly discovered teams are active by default.
+    """
+    added = 0
+
+    existing_names = {
+        normalize_team_key(row.name)
+        for row in ChampionTeam.query.filter_by(tournament_id=tournament_id).all()
+    }
+
+    for team_name in scheduled_real_teams(tournament_id):
+        key = normalize_team_key(team_name)
+
+        if key in existing_names:
+            continue
+
+        db.session.add(ChampionTeam(
+            tournament_id=tournament_id,
+            name=team_name,
+            is_active=True
+        ))
+        existing_names.add(key)
+        added += 1
+
+    return added
+
+
+def champion_eligible_teams(tournament_id=None):
+    """Return teams eligible for champion picks.
+
+    Main behavior:
+    - If the admin has created a champion-team list, use only teams marked active.
+    - If the list has not been created yet, fall back to real teams in the schedule
+      so the current site keeps working safely until the admin opens the new section.
+
+    Hidden/non-qualified teams stay in the database for safety and audit purposes,
+    but they do not appear as selectable choices.
+    """
+    if tournament_id is None:
+        t = tournament()
+        tournament_id = t.id if t else None
+
+    if tournament_id is None:
+        return []
+
+    if champion_team_list_exists(tournament_id):
+        return [
+            row.name
+            for row in ChampionTeam.query.filter_by(
+                tournament_id=tournament_id,
+                is_active=True
+            ).order_by(ChampionTeam.name.asc()).all()
+        ]
+
+    return scheduled_real_teams(tournament_id)
+
+
+def champion_preview_teams(tournament_id=None):
+    """Teams used only in the admin visual tester.
+    This follows the same list seen by participants, with a schedule fallback before setup.
+    """
+    return champion_eligible_teams(tournament_id)
 
 
 RAW_TEAM_FLAG_CODES = {
@@ -627,6 +719,38 @@ def delete_match_external_refs(match_id):
         )
 
 
+_database_ready = False
+
+
+def ensure_database_ready():
+    """Create only missing tables/seed rows. Never drops or clears live data."""
+    global _database_ready
+
+    if _database_ready:
+        return
+
+    db.create_all()
+
+    if Tournament.query.first() is None:
+        db.session.add(Tournament(name="كأس العالم 2026"))
+        db.session.commit()
+
+    if Participant.query.count() == 0:
+        for name in PARTICIPANT_NAMES:
+            db.session.add(Participant(
+                name=name,
+                token=PARTICIPANT_TOKENS[name]
+            ))
+        db.session.commit()
+
+    _database_ready = True
+
+
+@app.before_request
+def before_request_ensure_database_ready():
+    ensure_database_ready()
+
+
 @app.route('/')
 def index():
     return redirect(url_for('leaderboard'))
@@ -812,7 +936,7 @@ def participant_page(token):
                 team = request.form.get('team_name', '').strip()
 
                 if not eligible_teams:
-                    flash('سيتم فتح توقع بطل البطولة بعد تحديد المتأهلين لدور الـ32.')
+                    flash('سيتم فتح توقع بطل البطولة بعد إضافة المنتخبات إلى قائمة البطل.')
                 elif not team:
                     flash('اختر منتخبًا أولًا.')
                 elif team not in eligible_teams:
@@ -869,7 +993,7 @@ def participant_page(token):
 @app.route('/p/<token>/champion', methods=['GET', 'POST'])
 def participant_champion_page(token):
     """Participant champion pick page.
-    Safe implementation: read Round of 32 teams, validate server-side, and only update ChampionPick.
+    Safe implementation: read eligible tournament teams, validate server-side, and only update ChampionPick.
     """
     p = participant_by_token(token)
     session['participant_token'] = p.token
@@ -901,7 +1025,7 @@ def participant_champion_page(token):
             team = request.form.get('team_name', '').strip()
 
             if not teams:
-                flash('سيتم فتح توقع بطل البطولة بعد تحديد المتأهلين لدور الـ32.')
+                flash('سيتم فتح توقع بطل البطولة بعد إضافة المنتخبات إلى قائمة البطل.')
             elif not team:
                 flash('اختر منتخبًا أولًا.')
             elif team not in teams:
@@ -1644,6 +1768,59 @@ def admin(code):
             db.session.commit()
             flash('تم مسح موعد إغلاق توقع البطل.')
 
+        elif action == 'sync_champion_teams':
+            added_count = sync_champion_teams_from_matches(t.id)
+            db.session.commit()
+
+            if added_count:
+                flash(f'تمت إضافة {added_count} منتخب إلى قائمة اختيار البطل. لم يتم حذف أو تغيير أي منتخب سابق.')
+            else:
+                flash('قائمة اختيار البطل محدثة بالفعل. لم يتم حذف أو تغيير أي بيانات.')
+
+        elif action == 'add_champion_team':
+            team_name = request.form.get('team_name', '').strip()
+
+            if not is_real_champion_team(team_name):
+                flash('اسم المنتخب غير صالح أو يبدو كاسم مؤقت مثل TBD.')
+            else:
+                existing = None
+                requested_key = normalize_team_key(team_name)
+
+                for row in ChampionTeam.query.filter_by(tournament_id=t.id).all():
+                    if normalize_team_key(row.name) == requested_key:
+                        existing = row
+                        break
+
+                if existing:
+                    existing.is_active = True
+                    db.session.commit()
+                    flash('المنتخب موجود مسبقًا وتم جعله متاحًا للاختيار.')
+                else:
+                    db.session.add(ChampionTeam(
+                        tournament_id=t.id,
+                        name=team_name,
+                        is_active=True
+                    ))
+                    db.session.commit()
+                    flash('تمت إضافة المنتخب إلى قائمة اختيار البطل.')
+
+        elif action == 'update_champion_teams':
+            active_ids = set()
+
+            for raw_team_id in request.form.getlist('active_team_ids'):
+                try:
+                    active_ids.add(int(raw_team_id))
+                except (TypeError, ValueError):
+                    continue
+
+            teams_to_update = ChampionTeam.query.filter_by(tournament_id=t.id).all()
+
+            for team_row in teams_to_update:
+                team_row.is_active = team_row.id in active_ids
+
+            db.session.commit()
+            flash('تم حفظ قائمة منتخبات البطل. المنتخبات غير المحددة أصبحت مخفية من الاختيار وليست محذوفة.')
+
         elif action == 'delete_empty_english_matches':
             all_matches = Match.query.filter_by(tournament_id=t.id).all()
 
@@ -1712,7 +1889,10 @@ def admin(code):
         locked=match_locked,
         prediction_counts=prediction_counts,
         champion_test_teams=champion_eligible_teams(t.id),
-        champion_preview_teams=champion_preview_teams(t.id)
+        champion_preview_teams=champion_preview_teams(t.id),
+        champion_team_records=champion_team_records(t.id),
+        champion_team_counts=champion_team_counts(t.id),
+        champion_team_list_exists=champion_team_list_exists(t.id)
     )
 
 @app.cli.command('init-db')
@@ -1722,21 +1902,6 @@ def init_db():
 
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()
-
-        if Tournament.query.first() is None:
-            new_tournament = Tournament(name="كأس العالم 2026")
-            db.session.add(new_tournament)
-            db.session.commit()
-
-        if Participant.query.count() == 0:
-            for name in PARTICIPANT_NAMES:
-                participant = Participant(
-                    name=name,
-                    token=PARTICIPANT_TOKENS[name]
-                )
-                db.session.add(participant)
-
-            db.session.commit()
+        ensure_database_ready()
 
     app.run(host="0.0.0.0", port=5000)
