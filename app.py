@@ -1889,6 +1889,220 @@ def round_stats():
     )
 
 
+
+def _new_team_stat(name):
+    return {
+        'name': name,
+        'played': 0,
+        'wins': 0,
+        'draws': 0,
+        'losses': 0,
+        'gf': 0,
+        'ga': 0,
+        'gd': 0,
+        'points': 0,
+        'clean_sheets': 0,
+        'form': []
+    }
+
+
+def _champion_stats_result_letter(goals_for, goals_against):
+    if goals_for > goals_against:
+        return 'W'
+    if goals_for == goals_against:
+        return 'D'
+    return 'L'
+
+
+def _champion_form_score(form):
+    score_map = {
+        'W': 3,
+        'D': 1,
+        'L': 0
+    }
+
+    return sum(score_map.get(item, 0) for item in form[-3:])
+
+
+def build_champion_stats_dashboard(tournament_id):
+    """Build an admin-only, share-by-screenshot champion selection dashboard.
+
+    Safety notes:
+    - Reads existing completed matches only.
+    - Does not write to the database.
+    - Uses the active ChampionTeam list when available, so after you hide
+      eliminated teams the dashboard focuses on the remaining choices.
+    """
+    champion_rows = ChampionTeam.query.filter_by(
+        tournament_id=tournament_id
+    ).order_by(
+        ChampionTeam.name.asc()
+    ).all()
+
+    active_champion_rows = [
+        row for row in champion_rows
+        if row.is_active and is_real_champion_team(row.name)
+    ]
+
+    list_exists = bool(champion_rows)
+    active_identities = {
+        champion_team_identity(row.name)
+        for row in active_champion_rows
+        if champion_team_identity(row.name)
+    }
+
+    display_names = {}
+
+    for row in active_champion_rows:
+        identity = champion_team_identity(row.name)
+
+        if not identity:
+            continue
+
+        display_names[identity] = preferred_team_display_name(
+            display_names.get(identity),
+            row.name
+        )
+
+    completed_matches = Match.query.filter_by(
+        tournament_id=tournament_id
+    ).filter(
+        Match.home_score.isnot(None),
+        Match.away_score.isnot(None)
+    ).order_by(
+        Match.start_time.asc()
+    ).all()
+
+    stats_by_identity = {}
+
+    def should_include(team_name):
+        if not is_real_champion_team(team_name):
+            return False
+
+        identity = champion_team_identity(team_name)
+
+        if not identity:
+            return False
+
+        # If the admin has built the champion list, focus only on active teams.
+        # If the list is not ready yet, fall back to all real teams with results.
+        if active_identities and identity not in active_identities:
+            return False
+
+        return True
+
+    def ensure_team(team_name):
+        identity = champion_team_identity(team_name)
+
+        if identity not in stats_by_identity:
+            display_name = preferred_team_display_name(
+                display_names.get(identity),
+                team_name
+            )
+            stats_by_identity[identity] = _new_team_stat(display_name)
+
+        return stats_by_identity[identity]
+
+    for match in completed_matches:
+        home_name = match.home_team
+        away_name = match.away_team
+        home_goals = int(match.home_score)
+        away_goals = int(match.away_score)
+
+        if should_include(home_name):
+            home = ensure_team(home_name)
+            home['played'] += 1
+            home['gf'] += home_goals
+            home['ga'] += away_goals
+            home['gd'] = home['gf'] - home['ga']
+            home['points'] += 3 if home_goals > away_goals else 1 if home_goals == away_goals else 0
+            home['wins'] += 1 if home_goals > away_goals else 0
+            home['draws'] += 1 if home_goals == away_goals else 0
+            home['losses'] += 1 if home_goals < away_goals else 0
+            home['clean_sheets'] += 1 if away_goals == 0 else 0
+            home['form'].append(_champion_stats_result_letter(home_goals, away_goals))
+
+        if should_include(away_name):
+            away = ensure_team(away_name)
+            away['played'] += 1
+            away['gf'] += away_goals
+            away['ga'] += home_goals
+            away['gd'] = away['gf'] - away['ga']
+            away['points'] += 3 if away_goals > home_goals else 1 if away_goals == home_goals else 0
+            away['wins'] += 1 if away_goals > home_goals else 0
+            away['draws'] += 1 if away_goals == home_goals else 0
+            away['losses'] += 1 if away_goals < home_goals else 0
+            away['clean_sheets'] += 1 if home_goals == 0 else 0
+            away['form'].append(_champion_stats_result_letter(away_goals, home_goals))
+
+    rows = list(stats_by_identity.values())
+
+    for row in rows:
+        played = row['played'] or 1
+        row['ga_per_match'] = row['ga'] / played
+        row['gf_per_match'] = row['gf'] / played
+        row['form_last'] = row['form'][-3:]
+        row['form_score'] = _champion_form_score(row['form'])
+        row['power_score'] = round(
+            (row['points'] * 10)
+            + (row['wins'] * 4)
+            + (row['gd'] * 3)
+            + (row['gf'] * 1.5)
+            + (row['clean_sheets'] * 3)
+            + (row['form_score'] * 2)
+            - (row['ga'] * 1.5),
+            1
+        )
+
+    def top(limit, key):
+        return sorted(rows, key=key, reverse=True)[:limit]
+
+    attack = top(5, lambda r: (r['gf'], r['gf_per_match'], r['gd'], r['points']))
+    defense = sorted(
+        rows,
+        key=lambda r: (r['ga_per_match'], r['ga'], -r['clean_sheets'], -r['points'], -r['gd'])
+    )[:5]
+    goal_difference = top(5, lambda r: (r['gd'], r['points'], r['gf']))
+    wins = top(5, lambda r: (r['wins'], r['points'], r['gd']))
+    clean_sheets = top(5, lambda r: (r['clean_sheets'], -r['ga'], r['points'], r['gd']))
+    contenders = top(8, lambda r: (r['power_score'], r['points'], r['gd'], r['gf']))
+
+    return {
+        'rows': sorted(rows, key=lambda r: (r['points'], r['gd'], r['gf']), reverse=True),
+        'attack': attack,
+        'defense': defense,
+        'goal_difference': goal_difference,
+        'wins': wins,
+        'clean_sheets': clean_sheets,
+        'contenders': contenders,
+        'completed_matches_count': len(completed_matches),
+        'active_teams_count': len(active_identities) if active_identities else len(rows),
+        'list_exists': list_exists,
+        'using_active_list': bool(active_identities)
+    }
+
+
+@app.route('/admin/<code>/champion-stats')
+def admin_champion_stats(code):
+    if code != ADMIN_CODE:
+        abort(404)
+
+    t = tournament()
+
+    if not t:
+        abort(404)
+
+    dashboard = build_champion_stats_dashboard(t.id)
+
+    return render_template(
+        'champion_stats_admin.html',
+        t=t,
+        code=code,
+        dashboard=dashboard,
+        generated_at=now_kw()
+    )
+
+
 @app.route('/admin/<code>', methods=['GET', 'POST'])
 def admin(code):
     if code != ADMIN_CODE:
