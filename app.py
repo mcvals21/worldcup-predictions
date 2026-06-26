@@ -6,6 +6,7 @@ import secrets
 import os
 from sqlalchemy import text, inspect
 import re
+import unicodedata
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'change-this-secret-key'
@@ -145,8 +146,83 @@ def is_real_champion_team(team_name):
     )
 
 
+def _row_team_identity(row):
+    return champion_team_identity(row.name)
+
+
+def _is_arabic_text(text):
+    return re.search(r'[\u0600-\u06FF]', text or '') is not None
+
+
+def _is_short_code(text):
+    clean = (text or '').strip()
+    return bool(re.fullmatch(r'[A-Za-z]{2,4}', clean))
+
+
+def preferred_team_display_name(current, candidate):
+    """Choose one safe display name when the same team appears in variants.
+
+    Examples: أمريكا/امريكا, أستراليا/استراليا, USA/United States.
+    This only affects display; it does not delete any stored value.
+    """
+    current = (current or '').strip()
+    candidate = (candidate or '').strip()
+
+    if not current:
+        return candidate
+    if not candidate:
+        return current
+
+    current_ar = _is_arabic_text(current)
+    candidate_ar = _is_arabic_text(candidate)
+
+    # Prefer Arabic labels in this Arabic site.
+    if candidate_ar and not current_ar:
+        return candidate
+    if current_ar and not candidate_ar:
+        return current
+
+    # Avoid showing short codes like USA/MEX when a full name exists.
+    if _is_short_code(current) and not _is_short_code(candidate):
+        return candidate
+    if _is_short_code(candidate) and not _is_short_code(current):
+        return current
+
+    # Otherwise keep the existing name to avoid surprising changes.
+    return current
+
+
+def dedupe_team_names(team_names):
+    """Return unique team names using team identity, not exact spelling.
+
+    This prevents duplicates caused by:
+    - أ / ا / إ / آ
+    - Arabic/English variants when they map to the same flag/country
+    - short codes such as USA vs United States
+    """
+    unique = {}
+
+    for raw_name in team_names:
+        name = (raw_name or '').strip()
+
+        if not is_real_champion_team(name):
+            continue
+
+        identity = champion_team_identity(name)
+
+        if not identity:
+            continue
+
+        unique[identity] = preferred_team_display_name(
+            unique.get(identity),
+            name
+        )
+
+    return sorted(unique.values(), key=normalize_team_key)
+
+
 def scheduled_real_teams(tournament_id=None):
-    """Return all real team names currently present in the match schedule.
+    """Return unique real team names currently present in the match schedule.
 
     This is only a source for building/updating the champion-pick list.
     It never deletes or hides anything.
@@ -156,50 +232,151 @@ def scheduled_real_teams(tournament_id=None):
     if tournament_id is not None:
         query = query.filter(Match.tournament_id == tournament_id)
 
-    teams = set()
+    raw_teams = []
 
     for m in query.all():
-        for team in (m.home_team, m.away_team):
-            if is_real_champion_team(team):
-                teams.add(team.strip())
+        raw_teams.extend([m.home_team, m.away_team])
 
-    return sorted(teams)
+    return dedupe_team_names(raw_teams)
 
 
 def champion_team_list_exists(tournament_id):
     return ChampionTeam.query.filter_by(tournament_id=tournament_id).count() > 0
 
 
+def unique_champion_team_rows(rows):
+    """Return one visible management row per real team identity.
+
+    Duplicate rows remain in the database for safety, but the admin and participant
+    lists do not show the same team twice.
+    """
+    unique = {}
+
+    for row in rows:
+        identity = _row_team_identity(row)
+
+        if not identity:
+            continue
+
+        current = unique.get(identity)
+
+        if current is None:
+            unique[identity] = row
+            continue
+
+        # Prefer an active row over a hidden duplicate.
+        if row.is_active and not current.is_active:
+            unique[identity] = row
+            continue
+
+        # If both have the same state, prefer the nicer display name.
+        if row.is_active == current.is_active:
+            preferred = preferred_team_display_name(current.name, row.name)
+            if preferred == row.name:
+                unique[identity] = row
+
+    return sorted(
+        unique.values(),
+        key=lambda r: (not r.is_active, normalize_team_key(r.name))
+    )
+
+
 def champion_team_records(tournament_id):
-    return ChampionTeam.query.filter_by(
-        tournament_id=tournament_id
-    ).order_by(
-        ChampionTeam.is_active.desc(),
-        ChampionTeam.name.asc()
-    ).all()
+    rows = ChampionTeam.query.filter_by(tournament_id=tournament_id).all()
+    return unique_champion_team_rows(rows)
 
 
 def champion_team_counts(tournament_id):
     source_count = len(scheduled_real_teams(tournament_id))
-    total = ChampionTeam.query.filter_by(tournament_id=tournament_id).count()
+    rows = ChampionTeam.query.filter_by(tournament_id=tournament_id).all()
 
-    if total == 0:
+    if not rows:
         return {
             'total': 0,
             'active': source_count,
             'hidden': 0,
-            'source_teams': source_count
+            'source_teams': source_count,
+            'duplicates': 0
         }
 
-    active = ChampionTeam.query.filter_by(tournament_id=tournament_id, is_active=True).count()
-    hidden = max(total - active, 0)
+    all_identities = {champion_team_identity(row.name) for row in rows if champion_team_identity(row.name)}
+    active_identities = {
+        champion_team_identity(row.name)
+        for row in rows
+        if row.is_active and champion_team_identity(row.name)
+    }
+
+    total_unique = len(all_identities)
+    active = len(active_identities)
+    hidden = max(total_unique - active, 0)
+    duplicates = max(len(rows) - total_unique, 0)
 
     return {
-        'total': total,
+        'total': total_unique,
         'active': active,
         'hidden': hidden,
-        'source_teams': source_count
+        'source_teams': source_count,
+        'duplicates': duplicates
     }
+
+
+def _better_champion_team_row(current, candidate):
+    """Choose which duplicate row should stay visible/active."""
+    if current is None:
+        return candidate
+
+    # Active rows are safer to keep than hidden rows.
+    if candidate.is_active and not current.is_active:
+        return candidate
+    if current.is_active and not candidate.is_active:
+        return current
+
+    preferred_name = preferred_team_display_name(current.name, candidate.name)
+
+    if preferred_name == candidate.name and preferred_name != current.name:
+        return candidate
+
+    return current
+
+
+def hide_duplicate_champion_teams(tournament_id):
+    """Safely hide duplicate champion-team rows.
+
+    No rows are deleted. If two rows represent the same team identity, only one stays
+    active. Existing ChampionPick records remain untouched and are compared by
+    identity elsewhere.
+    """
+    rows = ChampionTeam.query.filter_by(tournament_id=tournament_id).order_by(
+        ChampionTeam.id.asc()
+    ).all()
+
+    grouped = {}
+
+    for row in rows:
+        identity = champion_team_identity(row.name)
+
+        if not identity:
+            continue
+
+        grouped.setdefault(identity, []).append(row)
+
+    hidden_count = 0
+
+    for duplicates in grouped.values():
+        if len(duplicates) <= 1:
+            continue
+
+        keeper = None
+
+        for row in duplicates:
+            keeper = _better_champion_team_row(keeper, row)
+
+        for row in duplicates:
+            if row.id != keeper.id and row.is_active:
+                row.is_active = False
+                hidden_count += 1
+
+    return hidden_count
 
 
 def sync_champion_teams_from_matches(tournament_id):
@@ -209,18 +386,19 @@ def sync_champion_teams_from_matches(tournament_id):
     - No delete.
     - No overwrite of hidden/active status for existing teams.
     - Newly discovered teams are active by default.
+    - Duplicate spellings are treated as the same team identity.
     """
     added = 0
 
-    existing_names = {
-        normalize_team_key(row.name)
+    existing_identities = {
+        champion_team_identity(row.name)
         for row in ChampionTeam.query.filter_by(tournament_id=tournament_id).all()
     }
 
     for team_name in scheduled_real_teams(tournament_id):
-        key = normalize_team_key(team_name)
+        identity = champion_team_identity(team_name)
 
-        if key in existing_names:
+        if not identity or identity in existing_identities:
             continue
 
         db.session.add(ChampionTeam(
@@ -228,10 +406,12 @@ def sync_champion_teams_from_matches(tournament_id):
             name=team_name,
             is_active=True
         ))
-        existing_names.add(key)
+        existing_identities.add(identity)
         added += 1
 
-    return added
+    hidden_duplicates = hide_duplicate_champion_teams(tournament_id)
+
+    return added, hidden_duplicates
 
 
 def champion_eligible_teams(tournament_id=None):
@@ -253,15 +433,41 @@ def champion_eligible_teams(tournament_id=None):
         return []
 
     if champion_team_list_exists(tournament_id):
-        return [
-            row.name
-            for row in ChampionTeam.query.filter_by(
-                tournament_id=tournament_id,
-                is_active=True
-            ).order_by(ChampionTeam.name.asc()).all()
-        ]
+        rows = ChampionTeam.query.filter_by(
+            tournament_id=tournament_id,
+            is_active=True
+        ).all()
+
+        return dedupe_team_names(row.name for row in unique_champion_team_rows(rows))
 
     return scheduled_real_teams(tournament_id)
+
+
+def matching_eligible_champion_team(team_name, eligible_teams):
+    """Return the canonical selectable team name matching a submitted variant."""
+    submitted_identity = champion_team_identity(team_name)
+
+    if not submitted_identity:
+        return None
+
+    for eligible_team in eligible_teams:
+        if champion_team_identity(eligible_team) == submitted_identity:
+            return eligible_team
+
+    return None
+
+
+def is_champion_pick_valid(champion_pick, eligible_teams):
+    return bool(
+        champion_pick
+        and matching_eligible_champion_team(champion_pick.team_name, eligible_teams)
+    )
+
+
+def same_champion_team(team_a, team_b):
+    identity_a = champion_team_identity(team_a)
+    identity_b = champion_team_identity(team_b)
+    return bool(identity_a and identity_a == identity_b)
 
 
 def champion_preview_teams(tournament_id=None):
@@ -548,16 +754,26 @@ RAW_TEAM_FLAG_CODES = {
 def normalize_team_key(name):
     text = (name or '').strip().lower()
 
+    # Normalize Arabic hamza/alef variants and Latin accents such as Curaçao/Curacao.
+    text = unicodedata.normalize('NFKD', text)
+    text = ''.join(ch for ch in text if not unicodedata.combining(ch))
+
     replacements = {
         'أ': 'ا',
         'إ': 'ا',
         'آ': 'ا',
+        'ٱ': 'ا',
         'ى': 'ي',
-        'ة': 'ه'
+        'ئ': 'ي',
+        'ؤ': 'و',
+        'ة': 'ه',
+        'ـ': ''
     }
 
     for old, new in replacements.items():
         text = text.replace(old, new)
+
+    text = re.sub(r'[\.،,;:؛\-_/\(\)\[\]{}]+', ' ', text)
 
     return ' '.join(text.split())
 
@@ -566,6 +782,26 @@ TEAM_FLAG_CODES = {
     normalize_team_key(name): code
     for name, code in RAW_TEAM_FLAG_CODES.items()
 }
+
+
+def champion_team_identity(team_name):
+    """Stable identity for comparing team names safely.
+
+    If the name is known in the flag/alias table, all aliases share one identity.
+    Example: أمريكا / امريكا / United States / USA => flag:us.
+    Unknown names fall back to the normalized text.
+    """
+    key = normalize_team_key(team_name)
+
+    if not key:
+        return ''
+
+    flag_code = TEAM_FLAG_CODES.get(key)
+
+    if flag_code:
+        return f'flag:{flag_code}'
+
+    return f'name:{key}'
 
 
 def team_flag_code(team_name):
@@ -939,20 +1175,23 @@ def participant_page(token):
                     flash('سيتم فتح توقع بطل البطولة بعد إضافة المنتخبات إلى قائمة البطل.')
                 elif not team:
                     flash('اختر منتخبًا أولًا.')
-                elif team not in eligible_teams:
-                    flash('هذا المنتخب غير متاح لتوقع البطل.')
                 else:
-                    pick = champion or ChampionPick(
-                        participant_id=p.id,
-                        tournament_id=t.id
-                    )
+                    canonical_team = matching_eligible_champion_team(team, eligible_teams)
 
-                    pick.team_name = team
+                    if not canonical_team:
+                        flash('هذا المنتخب غير متاح لتوقع البطل.')
+                    else:
+                        pick = champion or ChampionPick(
+                            participant_id=p.id,
+                            tournament_id=t.id
+                        )
 
-                    db.session.add(pick)
-                    db.session.commit()
+                        pick.team_name = canonical_team
 
-                    flash('تم حفظ توقع البطل.')
+                        db.session.add(pick)
+                        db.session.commit()
+
+                        flash('تم حفظ توقع البطل.')
 
         return redirect(url_for(
             'participant_page',
@@ -961,10 +1200,7 @@ def participant_page(token):
         ))
 
     teams = champion_eligible_teams(t.id)
-    champion_is_valid = (
-        champion is not None
-        and champion.team_name in teams
-    )
+    champion_is_valid = is_champion_pick_valid(champion, teams)
 
     return render_template(
         'participant.html',
@@ -1013,10 +1249,7 @@ def participant_champion_page(token):
         t.champion_pick_deadline is not None
         and now_kw() >= t.champion_pick_deadline
     )
-    champion_is_valid = (
-        champion is not None
-        and champion.team_name in teams
-    )
+    champion_is_valid = is_champion_pick_valid(champion, teams)
 
     if request.method == 'POST':
         if champion_locked:
@@ -1028,25 +1261,28 @@ def participant_champion_page(token):
                 flash('سيتم فتح توقع بطل البطولة بعد إضافة المنتخبات إلى قائمة البطل.')
             elif not team:
                 flash('اختر منتخبًا أولًا.')
-            elif team not in teams:
-                flash('هذا المنتخب غير متاح لتوقع البطل.')
             else:
-                pick = champion or ChampionPick(
-                    participant_id=p.id,
-                    tournament_id=t.id
-                )
+                canonical_team = matching_eligible_champion_team(team, teams)
 
-                pick.team_name = team
+                if not canonical_team:
+                    flash('هذا المنتخب غير متاح لتوقع البطل.')
+                else:
+                    pick = champion or ChampionPick(
+                        participant_id=p.id,
+                        tournament_id=t.id
+                    )
 
-                db.session.add(pick)
-                db.session.commit()
+                    pick.team_name = canonical_team
 
-                flash('تم حفظ توقع البطل.')
+                    db.session.add(pick)
+                    db.session.commit()
 
-                return redirect(url_for(
-                    'participant_champion_page',
-                    token=p.token
-                ))
+                    flash('تم حفظ توقع البطل.')
+
+                    return redirect(url_for(
+                        'participant_champion_page',
+                        token=p.token
+                    ))
 
         return redirect(url_for(
             'participant_champion_page',
@@ -1141,7 +1377,7 @@ def leaderboard():
             tournament_id=t.id
         ).first()
 
-        if champion_team and champion_pick and champion_pick.team_name == champion_team:
+        if champion_team and champion_pick and same_champion_team(champion_pick.team_name, champion_team):
             champion_bonus = 10
             pts += champion_bonus
 
@@ -1769,11 +2005,19 @@ def admin(code):
             flash('تم مسح موعد إغلاق توقع البطل.')
 
         elif action == 'sync_champion_teams':
-            added_count = sync_champion_teams_from_matches(t.id)
+            added_count, hidden_duplicates = sync_champion_teams_from_matches(t.id)
             db.session.commit()
 
-            if added_count:
-                flash(f'تمت إضافة {added_count} منتخب إلى قائمة اختيار البطل. لم يتم حذف أو تغيير أي منتخب سابق.')
+            if added_count or hidden_duplicates:
+                message_parts = []
+
+                if added_count:
+                    message_parts.append(f'تمت إضافة {added_count} منتخب إلى قائمة اختيار البطل')
+
+                if hidden_duplicates:
+                    message_parts.append(f'تم إخفاء {hidden_duplicates} اسم مكرر بأمان')
+
+                flash('، و'.join(message_parts) + '. لم يتم حذف أي بيانات.')
             else:
                 flash('قائمة اختيار البطل محدثة بالفعل. لم يتم حذف أو تغيير أي بيانات.')
 
@@ -1784,10 +2028,10 @@ def admin(code):
                 flash('اسم المنتخب غير صالح أو يبدو كاسم مؤقت مثل TBD.')
             else:
                 existing = None
-                requested_key = normalize_team_key(team_name)
+                requested_identity = champion_team_identity(team_name)
 
                 for row in ChampionTeam.query.filter_by(tournament_id=t.id).all():
-                    if normalize_team_key(row.name) == requested_key:
+                    if champion_team_identity(row.name) == requested_identity:
                         existing = row
                         break
 
