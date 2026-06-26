@@ -909,6 +909,53 @@
   opacity:.86;
 }
 
+.clean-menu .menu-links .admin-menu-advanced{
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(230,211,156,.16);
+  overflow:hidden;
+}
+
+.clean-menu .menu-links .admin-menu-advanced summary{
+  min-height:50px;
+  padding:0 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:#f7f2e8;
+  cursor:pointer;
+  font-weight:1000;
+  list-style:none;
+}
+
+.clean-menu .menu-links .admin-menu-advanced summary::-webkit-details-marker{
+  display:none;
+}
+
+.clean-menu .menu-links .admin-menu-advanced summary::after{
+  content:'⌄';
+  font-size:1rem;
+  opacity:.78;
+  transition:.16s ease;
+}
+
+.clean-menu .menu-links .admin-menu-advanced[open] summary::after{
+  transform:rotate(180deg);
+}
+
+.clean-menu .menu-links .admin-menu-advanced-links{
+  display:grid;
+  gap:7px;
+  padding:0 8px 8px;
+}
+
+.clean-menu .menu-links .admin-menu-advanced-links .admin-menu-section{
+  min-height:44px;
+  border-radius:14px;
+  font-size:.84rem;
+}
+
 
 
 /* =====================================================
@@ -1863,6 +1910,15 @@
       <a href="#admin-championteams" class="admin-menu-section" data-admin-menu-view="championteams">🏆 قائمة منتخبات البطل</a>
       <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
       <a href="#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
+
+      <details class="admin-menu-advanced">
+        <summary>⚙️ أدوات متقدمة</summary>
+        <div class="admin-menu-advanced-links">
+          <a href="#admin-deadline" class="admin-menu-section admin-menu-secondary" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
+          <a href="#admin-championlab" class="admin-menu-section admin-menu-secondary" data-admin-menu-view="championlab">🏆 مختبر توقع البطل</a>
+          <a href="#admin-doublelab" class="admin-menu-section admin-menu-secondary" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
+        </div>
+      </details>
     `;
 
     links.addEventListener('click', function(event){
