@@ -1,5 +1,6 @@
 
 
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -868,6 +869,7 @@
 .admin-ref-page[data-admin-view="manage"] .admin-ref-admin-section:not([data-admin-section="manage"]),
 .admin-ref-page[data-admin-view="add"] .admin-ref-admin-section:not([data-admin-section="add"]),
 .admin-ref-page[data-admin-view="deadline"] .admin-ref-admin-section:not([data-admin-section="deadline"]),
+.admin-ref-page[data-admin-view="championteams"] .admin-ref-admin-section:not([data-admin-section="championteams"]),
 .admin-ref-page[data-admin-view="championlab"] .admin-ref-admin-section:not([data-admin-section="championlab"]),
 .admin-ref-page[data-admin-view="doublelab"] .admin-ref-admin-section:not([data-admin-section="doublelab"]),
 .admin-ref-page[data-admin-view="links"] .admin-ref-admin-section:not([data-admin-section="links"]){
@@ -907,6 +909,124 @@
 }
 
 
+
+/* =====================================================
+   Admin ref v8 - إدارة قائمة منتخبات البطل
+   إضافة آمنة: إخفاء/إظهار فقط، بلا حذف.
+===================================================== */
+.admin-ref-champion-teams-safe-note{
+  padding:12px;
+  border-radius:18px;
+  background:#fff0cc;
+  border:1px solid rgba(167,131,37,.20);
+  color:#6f4e08;
+  font-weight:950;
+  line-height:1.7;
+}
+
+.admin-ref-champion-teams-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:12px 0;
+}
+
+.admin-ref-champion-team-add{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:end;
+  margin:12px 0;
+}
+
+.admin-ref-champion-team-add button{
+  min-width:150px !important;
+}
+
+.admin-ref-champion-team-list{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:12px;
+}
+
+.admin-ref-champion-team-switch{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  min-height:62px;
+  padding:10px 12px;
+  border-radius:18px;
+  background:#e8e5de;
+  border:1px solid #d6d1c6;
+  color:#171717 !important;
+}
+
+.admin-ref-champion-team-switch.is-hidden{
+  opacity:.70;
+  background:#ddd8cd;
+}
+
+.admin-ref-champion-team-main{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+}
+
+.admin-ref-champion-team-main img{
+  width:34px;
+  height:24px;
+  object-fit:cover;
+  border-radius:7px;
+  box-shadow:0 1px 5px rgba(0,0,0,.14);
+}
+
+.admin-ref-champion-team-main strong{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#171717;
+  font-size:.94rem;
+  font-weight:1000;
+}
+
+.admin-ref-champion-team-state{
+  min-height:28px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#f3efe4;
+  color:#4d473c;
+  font-size:.74rem;
+  font-weight:1000;
+  white-space:nowrap;
+}
+
+.admin-ref-champion-team-switch input{
+  width:24px !important;
+  height:24px !important;
+  min-height:24px !important;
+  flex:0 0 auto !important;
+  accent-color:#d4af37;
+}
+
+.admin-ref-champion-team-save{
+  margin-top:12px !important;
+}
+
+@media (max-width:760px){
+  .admin-ref-champion-teams-actions,
+  .admin-ref-champion-team-add,
+  .admin-ref-champion-team-list{
+    grid-template-columns:1fr;
+  }
+
+  .admin-ref-champion-team-add button{
+    min-width:0 !important;
+  }
+}
 
 /* =====================================================
    Admin ref v7 - مختبر توقع البطل الآمن
@@ -1258,6 +1378,78 @@
   </details>
 
 
+  <details class="admin-ref-card admin-ref-toggle-card admin-ref-admin-section" data-admin-section="championteams">
+    <summary>
+      <div class="admin-ref-card-title">
+        <span class="admin-ref-badge">🏆 قائمة منتخبات البطل</span>
+        <h3>إدارة المنتخبات المتاحة للاختيار</h3>
+        <div class="admin-ref-summary-line">
+          <span class="admin-ref-chip">{{ champion_team_counts.active }} متاح</span>
+          <span class="admin-ref-chip">{{ champion_team_counts.hidden }} مخفي</span>
+          {% if not champion_team_list_exists %}
+            <span class="admin-ref-chip">لم تُنشأ القائمة بعد</span>
+          {% endif %}
+        </div>
+      </div>
+      <span class="admin-ref-toggle-icon" aria-hidden="true"></span>
+    </summary>
+
+    <div class="admin-ref-toggle-body">
+      <div class="admin-ref-champion-teams-safe-note">
+        مبدأ الأمان: هذه الصفحة لا تحذف اختيارات المشاركين ولا تحذف المنتخبات. عند إزالة علامة الصح عن منتخب، يصبح مخفيًا من الاختيار فقط ويمكن إرجاعه لاحقًا.
+      </div>
+
+      <div class="admin-ref-champion-teams-actions">
+        <form method="post" onsubmit="return confirm('سيتم إضافة المنتخبات الناقصة من جدول المباريات فقط، بدون حذف أو تغيير حالة المنتخبات الحالية. هل تريد المتابعة؟')">
+          <input type="hidden" name="action" value="sync_champion_teams">
+          <button type="submit" class="admin-ref-primary">توليد/تحديث من المباريات</button>
+        </form>
+
+        <a href="{{ url_for('participant_champion_page', token=participants[0].token) if participants else '#' }}" class="admin-ref-btn admin-ref-secondary" style="display:flex;align-items:center;justify-content:center">معاينة صفحة الاختيار</a>
+      </div>
+
+      <p>الطريقة المقترحة: قبل إغلاق اختيار البطل، اضغط توليد/تحديث من المباريات لإنشاء القائمة المستقلة. قبل إنشائها سيستخدم الموقع مؤقتًا المنتخبات الموجودة في جدول المباريات. بعد اكتمال المتأهلين إلى دور الـ32، أزل علامة الصح من المنتخبات غير المتأهلة ثم احفظ القائمة.</p>
+
+      <form method="post" class="admin-ref-champion-team-add">
+        <input type="hidden" name="action" value="add_champion_team">
+        <label>
+          <span>إضافة منتخب يدويًا عند الحاجة</span>
+          <input type="text" name="team_name" placeholder="مثال: فرنسا">
+        </label>
+        <button type="submit" class="admin-ref-secondary">إضافة</button>
+      </form>
+
+      {% if champion_team_records %}
+        <form method="post">
+          <input type="hidden" name="action" value="update_champion_teams">
+
+          <div class="admin-ref-champion-team-list">
+            {% for row in champion_team_records %}
+              {% set flag = team_flag_code(row.name) %}
+              <label class="admin-ref-champion-team-switch {% if not row.is_active %}is-hidden{% endif %}">
+                <div class="admin-ref-champion-team-main">
+                  {% if flag %}
+                    <img src="https://flagcdn.com/w80/{{ flag }}.png" alt="">
+                  {% endif %}
+                  <strong>{{ row.name }}</strong>
+                  <span class="admin-ref-champion-team-state">{% if row.is_active %}متاح{% else %}مخفي{% endif %}</span>
+                </div>
+                <input type="checkbox" name="active_team_ids" value="{{ row.id }}" {% if row.is_active %}checked{% endif %}>
+              </label>
+            {% endfor %}
+          </div>
+
+          <button type="submit" class="admin-ref-primary admin-ref-champion-team-save">حفظ قائمة المنتخبات</button>
+        </form>
+      {% else %}
+        <div class="admin-ref-empty" style="margin-top:12px">
+          لا توجد قائمة مستقلة حتى الآن. اضغط زر توليد/تحديث من المباريات لإنشائها بأمان.
+        </div>
+      {% endif %}
+    </div>
+  </details>
+
+
   <details class="admin-ref-card admin-ref-toggle-card admin-ref-admin-section" data-admin-section="championlab">
     <summary>
       <div class="admin-ref-card-title">
@@ -1279,9 +1471,9 @@
         <div class="admin-ref-champion-status">
           <strong>حالة القائمة الحقيقية</strong>
           {% if eligible_count > 0 %}
-            <span class="admin-ref-chip">{{ eligible_count }} منتخب متاح من دور الـ32</span>
+            <span class="admin-ref-chip">{{ eligible_count }} منتخب متاح في قائمة البطل</span>
           {% else %}
-            <span class="admin-ref-chip">لم تُفتح بعد للمتسابقين</span>
+            <span class="admin-ref-chip">لا توجد منتخبات متاحة حاليًا</span>
           {% endif %}
         </div>
 
@@ -1293,7 +1485,7 @@
 
           {% if eligible_count == 0 %}
             <div class="admin-ref-champion-disabled">
-              سيتم فتح توقع بطل البطولة بعد تحديد المتأهلين لدور الـ32.
+              سيتم فتح توقع بطل البطولة بعد إضافة المنتخبات إلى قائمة البطل.
             </div>
           {% endif %}
 
@@ -1610,7 +1802,7 @@
 
 <script>
 (function(){
-  const allowedViews = ['manage', 'add', 'deadline', 'championlab', 'doublelab', 'links'];
+  const allowedViews = ['manage', 'add', 'deadline', 'championteams', 'championlab', 'doublelab', 'links'];
 
   function normalizeAdminView(view){
     return allowedViews.includes(view) ? view : 'manage';
@@ -1662,6 +1854,7 @@
       <a href="#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
       <a href="#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
       <a href="#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
+      <a href="#admin-championteams" class="admin-menu-section" data-admin-menu-view="championteams">🏆 قائمة منتخبات البطل</a>
       <a href="#admin-championlab" class="admin-menu-section" data-admin-menu-view="championlab">🏆 مختبر توقع البطل</a>
       <a href="#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
       <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section">📊 إنشاء إحصائيات الجولة</a>
@@ -1849,7 +2042,7 @@ function showChampionLabModal(type, teamName) {
   if (type === 'closed') {
     icon = '🏆';
     title = 'توقع البطل غير متاح الآن';
-    text = 'سيتم فتح الاختيار بعد تحديد المتأهلين لدور الـ32.';
+    text = 'سيتم فتح الاختيار بعد إضافة المنتخبات إلى قائمة البطل.';
   }
 
   if (type === 'empty') {
