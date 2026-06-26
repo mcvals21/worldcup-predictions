@@ -2,6 +2,7 @@
 
 
 
+
 {% extends 'base.html' %}
 
 {% block body_class %}{% if selected_filter == 'open' and has_open_matches %}has-save-bar{% endif %}{% endblock %}
@@ -172,20 +173,24 @@
     {% if champion_locked %}
       {% if champion and champion_is_valid %}
         <span>تم إغلاق توقع البطل · اختيارك: {{ champion.team_name }}</span>
+      {% elif champion %}
+        <span>تم إغلاق توقع البطل · اختيارك السابق: {{ champion.team_name }}</span>
       {% else %}
         <span>تم إغلاق توقع البطل</span>
       {% endif %}
     {% elif champion and champion_is_valid %}
       <span>اختيارك الحالي: {{ champion.team_name }}</span>
+    {% elif champion and teams %}
+      <span>اختيارك السابق: {{ champion.team_name }} · اختر من القائمة المتاحة</span>
     {% elif teams %}
       <span>اختيار بطل البطولة مفتوح الآن</span>
     {% else %}
-      <span>سيتم فتح الاختيار بعد تحديد المتأهلين لدور الـ32</span>
+      <span>سيتم فتح الاختيار بعد إضافة المنتخبات إلى قائمة البطل</span>
     {% endif %}
   </div>
 
   <a href="{{ url_for('participant_champion_page', token=p.token) }}" class="champion-mini-link">
-    {% if champion and champion_is_valid %}تعديل الاختيار{% else %}اختيار البطل{% endif %}
+    {% if champion and champion_is_valid %}تعديل الاختيار{% elif champion and teams %}اختيار جديد{% else %}اختيار البطل{% endif %}
   </a>
 </section>
 
