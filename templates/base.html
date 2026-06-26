@@ -1,5 +1,6 @@
 
 <!doctype html>
+<!-- base.html admin menu v3 - slim direct links -->
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
@@ -70,7 +71,7 @@
       overflow-y:auto !important;
       overscroll-behavior:contain !important;
       -webkit-overflow-scrolling:touch !important;
-      z-index:9999 !important;
+      z-index:2147483647 !important;
     }
 
     @supports not (height: 100dvh){
@@ -170,15 +171,12 @@
       <div class="clean-menu-panel">
         <nav class="menu-links">
           {% if code is defined %}
-            <a href="{{ url_for('admin', code=code) }}#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
-            <a href="{{ url_for('admin_champion_stats', code=code) }}" class="admin-menu-section is-featured">📸 صورة اختيار البطل</a>
-            <a href="{{ url_for('admin', code=code) }}#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
-            <a href="{{ url_for('admin', code=code) }}#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
-            <a href="{{ url_for('admin', code=code) }}#admin-championteams" class="admin-menu-section" data-admin-menu-view="championteams">🏆 قائمة منتخبات البطل</a>
-            <a href="{{ url_for('admin', code=code) }}#admin-championlab" class="admin-menu-section" data-admin-menu-view="championlab">🏆 مختبر توقع البطل</a>
-            <a href="{{ url_for('admin', code=code) }}#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
-            <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
-            <a href="{{ url_for('admin', code=code) }}#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
+            <a href="/admin/{{ code }}#admin-manage" class="admin-menu-section">📋 إدارة المباريات والنتائج</a>
+            <a href="/admin/{{ code }}/champion-stats" class="admin-menu-section is-featured">📸 صورة اختيار البطل</a>
+            <a href="/admin/{{ code }}#admin-add" class="admin-menu-section">＋ إضافة مباراة</a>
+            <a href="/admin/{{ code }}#admin-championteams" class="admin-menu-section">🏆 قائمة منتخبات البطل</a>
+            <a href="/admin/{{ code }}/round-stats" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
+            <a href="/admin/{{ code }}#admin-links" class="admin-menu-section">🔗 روابط المشاركين</a>
           {% else %}
             <a href="/leaderboard">🏅 الترتيب</a>
 
