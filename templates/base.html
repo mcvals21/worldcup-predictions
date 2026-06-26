@@ -162,7 +162,8 @@
 <header class="wc-header clean-wc-header">
   <div class="clean-header-row">
 
-    <details class="clean-menu{% if code is defined %} clean-admin-menu{% endif %}" id="siteMenu">
+    {% set admin_menu_code = code if code is defined else (request.view_args.get('code') if request.view_args else none) %}
+    <details class="clean-menu{% if admin_menu_code %} clean-admin-menu{% endif %}" id="siteMenu">
       <summary>
         <span class="menu-label">القائمة</span>
         <span class="menu-icon">☰</span>
@@ -170,13 +171,13 @@
 
       <div class="clean-menu-panel">
         <nav class="menu-links">
-          {% if code is defined %}
-            <a href="/admin/{{ code }}#admin-manage" class="admin-menu-section">📋 إدارة المباريات والنتائج</a>
-            <a href="/admin/{{ code }}/champion-stats" class="admin-menu-section is-featured">📸 صورة اختيار البطل</a>
-            <a href="/admin/{{ code }}#admin-add" class="admin-menu-section">＋ إضافة مباراة</a>
-            <a href="/admin/{{ code }}#admin-championteams" class="admin-menu-section">🏆 قائمة منتخبات البطل</a>
-            <a href="/admin/{{ code }}/round-stats" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
-            <a href="/admin/{{ code }}#admin-links" class="admin-menu-section">🔗 روابط المشاركين</a>
+          {% if admin_menu_code %}
+            <a href="/admin/{{ admin_menu_code }}#admin-manage" class="admin-menu-section">📋 إدارة المباريات والنتائج</a>
+            <a href="/admin/{{ admin_menu_code }}/champion-stats" class="admin-menu-section is-featured">📸 صورة اختيار البطل</a>
+            <a href="/admin/{{ admin_menu_code }}#admin-add" class="admin-menu-section">＋ إضافة مباراة</a>
+            <a href="/admin/{{ admin_menu_code }}#admin-championteams" class="admin-menu-section">🏆 قائمة منتخبات البطل</a>
+            <a href="/admin/{{ admin_menu_code }}/round-stats" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
+            <a href="/admin/{{ admin_menu_code }}#admin-links" class="admin-menu-section">🔗 روابط المشاركين</a>
           {% else %}
             <a href="/leaderboard">🏅 الترتيب</a>
 
@@ -228,7 +229,7 @@
             {% set is_error = 'لا يمكن' in message or 'فشل' in message or 'خطأ' in message or 'لم يتم' in message %}
             {% set is_warning = 'مسح' in message or 'حذف' in message or 'تنبيه' in message or 'إغلاق' in message %}
 
-            {% if code is defined %}
+            {% if admin_menu_code %}
               <div class="prediction-warning-overlay admin-flash-overlay">
                 <div class="prediction-warning-card admin-flash-card {% if is_error %}is-error{% elif is_warning %}is-warning{% else %}is-success{% endif %}">
                   <div class="prediction-warning-icon">
