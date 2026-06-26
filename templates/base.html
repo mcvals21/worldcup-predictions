@@ -1,4 +1,5 @@
 
+
 <!doctype html>
 <!-- base.html admin menu v3 - slim direct links -->
 <html lang="ar" dir="rtl">
@@ -107,6 +108,53 @@
       border-color:rgba(230,211,156,.42) !important;
     }
 
+    .clean-menu.clean-admin-menu .admin-menu-advanced{
+      border-radius:18px !important;
+      background:rgba(255,255,255,.045) !important;
+      border:1px solid rgba(230,211,156,.16) !important;
+      overflow:hidden !important;
+    }
+
+    .clean-menu.clean-admin-menu .admin-menu-advanced summary{
+      min-height:50px !important;
+      padding:0 14px !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      gap:10px !important;
+      color:#f7f2e8 !important;
+      cursor:pointer !important;
+      font-weight:1000 !important;
+      list-style:none !important;
+    }
+
+    .clean-menu.clean-admin-menu .admin-menu-advanced summary::-webkit-details-marker{
+      display:none !important;
+    }
+
+    .clean-menu.clean-admin-menu .admin-menu-advanced summary::after{
+      content:'⌄';
+      font-size:1rem;
+      opacity:.78;
+      transition:.16s ease;
+    }
+
+    .clean-menu.clean-admin-menu .admin-menu-advanced[open] summary::after{
+      transform:rotate(180deg);
+    }
+
+    .clean-menu.clean-admin-menu .admin-menu-advanced-links{
+      display:grid !important;
+      gap:7px !important;
+      padding:0 8px 8px !important;
+    }
+
+    .clean-menu.clean-admin-menu .admin-menu-advanced-links a.admin-menu-section{
+      min-height:44px !important;
+      border-radius:14px !important;
+      font-size:.84rem !important;
+    }
+
     .admin-flash-card .prediction-warning-icon{
       background:transparent !important;
       border:none !important;
@@ -178,6 +226,15 @@
             <a href="/admin/{{ admin_menu_code }}#admin-championteams" class="admin-menu-section">🏆 قائمة منتخبات البطل</a>
             <a href="/admin/{{ admin_menu_code }}/round-stats" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
             <a href="/admin/{{ admin_menu_code }}#admin-links" class="admin-menu-section">🔗 روابط المشاركين</a>
+
+            <details class="admin-menu-advanced">
+              <summary>⚙️ أدوات متقدمة</summary>
+              <div class="admin-menu-advanced-links">
+                <a href="/admin/{{ admin_menu_code }}#admin-deadline" class="admin-menu-section">🏆 موعد إغلاق توقع البطل</a>
+                <a href="/admin/{{ admin_menu_code }}#admin-championlab" class="admin-menu-section">🏆 مختبر توقع البطل</a>
+                <a href="/admin/{{ admin_menu_code }}#admin-doublelab" class="admin-menu-section">×2 مختبر المضاعفة</a>
+              </div>
+            </details>
           {% else %}
             <a href="/leaderboard">🏅 الترتيب</a>
 
