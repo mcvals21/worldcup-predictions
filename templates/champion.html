@@ -1,4 +1,5 @@
 
+
 {% extends "base.html" %}
 
 {% block body_class %}champion-pick-page{% endblock %}
@@ -6,6 +7,7 @@
 {% block content %}
 
 {% set current_team = champion.team_name if champion and champion_is_valid else '' %}
+{% set invalid_team = champion.team_name if champion and not champion_is_valid else '' %}
 {% set is_open = teams and not champion_locked %}
 
 <style>
@@ -355,6 +357,8 @@
         <h3>تم إغلاق توقع البطل</h3>
         {% if current_team %}
           <p>اختيارك: <b>{{ current_team }}</b></p>
+        {% elif invalid_team %}
+          <p>اختيارك السابق: <b>{{ invalid_team }}</b><br>هذا المنتخب لم يعد ضمن القائمة المتاحة.</p>
         {% else %}
           <p>لم يتم الاختيار</p>
         {% endif %}
@@ -370,7 +374,7 @@
 
       <section class="champ-message">
         <h3>لم يفتح اختيار البطل بعد</h3>
-        <p>سيتم فتح الاختيار بعد تحديد المتأهلين إلى دور الـ32.</p>
+        <p>سيتم فتح الاختيار بعد إضافة المنتخبات إلى قائمة البطل.</p>
       </section>
 
       <div class="champ-back-only">
@@ -380,6 +384,13 @@
       </div>
 
     {% else %}
+
+      {% if invalid_team %}
+        <section class="champ-message">
+          <h3>اختيارك السابق لم يعد ضمن القائمة</h3>
+          <p>اختيارك السابق: <b>{{ invalid_team }}</b>. اختر منتخبًا آخر من القائمة المتاحة قبل الإغلاق.</p>
+        </section>
+      {% endif %}
 
       <section class="champ-status">
         <div class="champ-status-main">
