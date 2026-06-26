@@ -1,6 +1,7 @@
 
 
 
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -1803,9 +1804,14 @@
 <script>
 (function(){
   const allowedViews = ['manage', 'add', 'deadline', 'championteams', 'championlab', 'doublelab', 'links'];
+  const visibleMenuViews = ['manage', 'add', 'championteams', 'links'];
 
   function normalizeAdminView(view){
     return allowedViews.includes(view) ? view : 'manage';
+  }
+
+  function normalizeInitialAdminView(view){
+    return visibleMenuViews.includes(view) ? view : 'manage';
   }
 
   function setAdminView(view, updateHash){
@@ -1852,12 +1858,10 @@
 
     links.innerHTML = `
       <a href="#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
+      <a href="{{ url_for('admin_champion_stats', code=code) }}" class="admin-menu-section is-featured">📸 صورة اختيار البطل</a>
       <a href="#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
-      <a href="#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
       <a href="#admin-championteams" class="admin-menu-section" data-admin-menu-view="championteams">🏆 قائمة منتخبات البطل</a>
-      <a href="#admin-championlab" class="admin-menu-section" data-admin-menu-view="championlab">🏆 مختبر توقع البطل</a>
-      <a href="#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
-      <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section">📊 إنشاء إحصائيات الجولة</a>
+      <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
       <a href="#admin-links" class="admin-menu-section" data-admin-menu-view="links">🔗 روابط المشاركين</a>
     `;
 
@@ -1883,6 +1887,8 @@
       try {
         initialView = localStorage.getItem('adminSelectedView') || '';
       } catch (error) {}
+
+      initialView = normalizeInitialAdminView(initialView || 'manage');
     }
 
     setAdminView(normalizeAdminView(initialView || 'manage'), false);
