@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -137,6 +138,7 @@
             <a href="{{ url_for('admin', code=code) }}#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
             <a href="{{ url_for('admin', code=code) }}#admin-deadline" class="admin-menu-section" data-admin-menu-view="deadline">🏆 موعد إغلاق توقع البطل</a>
             <a href="{{ url_for('admin', code=code) }}#admin-championteams" class="admin-menu-section" data-admin-menu-view="championteams">🏆 قائمة منتخبات البطل</a>
+            <a href="{{ url_for('admin_champion_stats', code=code) }}" class="admin-menu-section is-featured">📸 صورة اختيار البطل</a>
             <a href="{{ url_for('admin', code=code) }}#admin-championlab" class="admin-menu-section" data-admin-menu-view="championlab">🏆 مختبر توقع البطل</a>
             <a href="{{ url_for('admin', code=code) }}#admin-doublelab" class="admin-menu-section" data-admin-menu-view="doublelab">×2 مختبر المضاعفة</a>
             <a href="{{ url_for('round_stats_builder', code=code) }}" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
@@ -238,7 +240,6 @@
   {% endwith %}
 
   {% block content %}{% endblock %}
-
 </main>
 
 <script>
