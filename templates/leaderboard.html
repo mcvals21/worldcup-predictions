@@ -1,5 +1,4 @@
 
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -201,36 +200,18 @@
   box-shadow:0 4px 12px rgba(185,132,88,.22);
 }
 
-/* الاسم + علم اختيار البطل */
+/* الاسم */
 .rank-solo-name{
-  min-width:0;
-  padding-right:6px;
-
-  display:flex;
-  align-items:center;
-  gap:8px;
-
   color:#171717;
   font-size:1.08rem;
   line-height:1.25;
   font-weight:1000;
-}
 
-.rank-solo-name-text{
-  min-width:0;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-}
 
-.rank-solo-champion-flag{
-  width:28px;
-  height:20px;
-  object-fit:cover;
-  border-radius:6px;
-  border:1px solid rgba(0,0,0,.12);
-  box-shadow:0 2px 7px rgba(0,0,0,.16);
-  flex:0 0 auto;
+  padding-right:6px;
 }
 
 /* النقاط */
@@ -343,13 +324,6 @@
 
   .rank-solo-name{
     font-size:.96rem;
-    gap:7px;
-  }
-
-  .rank-solo-champion-flag{
-    width:24px;
-    height:18px;
-    border-radius:5px;
   }
 
   .rank-solo-points,
@@ -392,17 +366,7 @@
           </div>
 
           <div class="rank-solo-name">
-            <span class="rank-solo-name-text">{{ r.name }}</span>
-
-            {% if champion_picks_visible and r.champion_pick_flag %}
-              <img
-                class="rank-solo-champion-flag"
-                src="https://flagcdn.com/w80/{{ r.champion_pick_flag }}.png"
-                alt=""
-                title="{{ r.champion_pick_team }}"
-                loading="lazy"
-              >
-            {% endif %}
+            {{ r.name }}
           </div>
 
           <div class="rank-solo-points" title="عدد النقاط">
