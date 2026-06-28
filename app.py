@@ -1386,7 +1386,9 @@ def leaderboard():
             'points': pts,
             'exact': exact,
             'champion_bonus': champion_bonus,
-            'starting_bonus': starting_bonus
+            'starting_bonus': starting_bonus,
+            'champion_pick_team': champion_pick.team_name if champion_pick else None,
+            'champion_pick_flag': team_flag_code(champion_pick.team_name) if champion_pick else None
         })
 
     rows.sort(
@@ -1394,7 +1396,17 @@ def leaderboard():
         reverse=True
     )
 
-    return render_template('leaderboard.html', rows=rows, t=t)
+    champion_picks_visible = (
+        t.champion_pick_deadline is not None
+        and now_kw() >= t.champion_pick_deadline
+    )
+
+    return render_template(
+        'leaderboard.html',
+        rows=rows,
+        t=t,
+        champion_picks_visible=champion_picks_visible
+    )
 
 
 @app.route('/stats')
