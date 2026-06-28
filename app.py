@@ -1386,7 +1386,9 @@ def leaderboard():
             'points': pts,
             'exact': exact,
             'champion_bonus': champion_bonus,
-            'starting_bonus': starting_bonus
+            'starting_bonus': starting_bonus,
+            'champion_pick_team': champion_pick.team_name if champion_pick else None,
+            'champion_pick_flag': team_flag_code(champion_pick.team_name) if champion_pick else None
         })
 
     rows.sort(
@@ -1394,7 +1396,17 @@ def leaderboard():
         reverse=True
     )
 
-    return render_template('leaderboard.html', rows=rows, t=t)
+    champion_picks_visible = (
+        t.champion_pick_deadline is not None
+        and now_kw() >= t.champion_pick_deadline
+    )
+
+    return render_template(
+        'leaderboard.html',
+        rows=rows,
+        t=t,
+        champion_picks_visible=champion_picks_visible
+    )
 
 
 @app.route('/stats')
@@ -2099,6 +2111,93 @@ def admin_champion_stats(code):
         t=t,
         code=code,
         dashboard=dashboard,
+        generated_at=now_kw()
+    )
+
+
+@app.route('/admin/<code>/champion-picks')
+def admin_champion_picks(code):
+    if code != ADMIN_CODE:
+        abort(404)
+
+    t = tournament()
+
+    if not t:
+        abort(404)
+
+    participants = Participant.query.order_by(Participant.name).all()
+
+    picks = ChampionPick.query.filter_by(
+        tournament_id=t.id
+    ).all()
+
+    picks_by_participant = {
+        pick.participant_id: pick
+        for pick in picks
+    }
+
+    rows = []
+    team_groups = {}
+
+    for p in participants:
+        pick = picks_by_participant.get(p.id)
+        team_name = pick.team_name.strip() if pick and pick.team_name else None
+        flag_code = team_flag_code(team_name) if team_name else None
+
+        if team_name:
+            identity = champion_team_identity(team_name) or f'name:{team_name}'
+
+            if identity not in team_groups:
+                team_groups[identity] = {
+                    'team_name': team_name,
+                    'flag': flag_code,
+                    'count': 0,
+                    'participants': []
+                }
+            else:
+                team_groups[identity]['team_name'] = preferred_team_display_name(
+                    team_groups[identity]['team_name'],
+                    team_name
+                )
+                team_groups[identity]['flag'] = team_groups[identity]['flag'] or flag_code
+
+            team_groups[identity]['count'] += 1
+            team_groups[identity]['participants'].append(p.name)
+
+        rows.append({
+            'participant': p,
+            'pick': pick,
+            'team_name': team_name,
+            'flag': flag_code
+        })
+
+    picked_count = sum(1 for row in rows if row['team_name'])
+    missing_count = len(rows) - picked_count
+
+    team_groups = sorted(
+        team_groups.values(),
+        key=lambda row: (row['count'], row['team_name']),
+        reverse=True
+    )
+
+    top_group = team_groups[0] if team_groups else None
+
+    champion_picks_closed = (
+        t.champion_pick_deadline is not None
+        and now_kw() >= t.champion_pick_deadline
+    )
+
+    return render_template(
+        'champion_picks_admin.html',
+        t=t,
+        code=code,
+        rows=rows,
+        team_groups=team_groups,
+        top_group=top_group,
+        picked_count=picked_count,
+        missing_count=missing_count,
+        total_participants=len(rows),
+        champion_picks_closed=champion_picks_closed,
         generated_at=now_kw()
     )
 
