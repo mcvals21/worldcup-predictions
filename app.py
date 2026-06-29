@@ -25,7 +25,7 @@ KUWAIT_TZ = ZoneInfo("Asia/Kuwait")
 
 PARTICIPANT_NAMES = [
     'بو براك','بو ضاري','بو صقر','حمني','الحميدي','الخالدي','شافعي','الرشود',
-    'العربيد','العومي','عيسى','الفزيع','فواز','القعود','ناصر','الوهيب'
+    'العربيد','ضاري','عيسى','الفزيع','فواز','القعود','ناصر','الوهيب'
 ]
 
 PARTICIPANT_TOKENS = {
@@ -38,7 +38,7 @@ PARTICIPANT_TOKENS = {
     'شافعي': 'shafie',
     'الرشود': 'rashood',
     'العربيد': 'arbeed',
-    'العومي': 'awmi',
+    'ضاري': 'awmi',
     'عيسى': 'essa',
     'الفزيع': 'fazaie',
     'فواز': 'fawaz',
@@ -53,7 +53,19 @@ STARTING_BONUS = {
     'بو براك': 1,
     'بو صقر': 1,
     'حمني': 1,
-    'العومي': 1
+    'ضاري': 1
+}
+
+# Safe bonus mapping by token. This protects old bonus points if a participant
+# name is changed during the tournament. The participant link/token stays the
+# identity, while the display name can change.
+STARTING_BONUS_BY_TOKEN = {
+    'rashood': 2,
+    'fawaz': 1,
+    'bo-brak': 1,
+    'bo-saqer': 1,
+    'hamni': 1,
+    'awmi': 1
 }
 
 ADMIN_CODE = 'wc-admin-9Kx72LmQp2026-private'
@@ -888,6 +900,24 @@ def now_kw():
     return datetime.now(KUWAIT_TZ).replace(tzinfo=None)
 
 
+def participant_starting_bonus(participant):
+    """Return fixed starting bonus without depending only on display name.
+
+    During the tournament, a participant name may be changed while keeping the
+    same token/link. Using the token first keeps historical bonus points safe.
+    The name fallback keeps backward compatibility with older rows.
+    """
+    if not participant:
+        return 0
+
+    token_bonus = STARTING_BONUS_BY_TOKEN.get(participant.token)
+
+    if token_bonus is not None:
+        return token_bonus
+
+    return STARTING_BONUS.get(participant.name, 0)
+
+
 def match_locked(match):
     return now_kw() >= match.start_time
 
@@ -978,6 +1008,21 @@ def ensure_database_ready():
                 token=PARTICIPANT_TOKENS[name]
             ))
         db.session.commit()
+
+    # Safe one-time display-name migration during the live tournament.
+    # It only renames the participant who owns token 'awmi' from العومي to ضاري.
+    # The token/link, predictions, champion pick, points, and all match data remain unchanged.
+    awmi_participant = Participant.query.filter_by(token='awmi').first()
+
+    if awmi_participant and awmi_participant.name == 'العومي':
+        duplicate_dhari = Participant.query.filter(
+            Participant.id != awmi_participant.id,
+            Participant.name == 'ضاري'
+        ).first()
+
+        if not duplicate_dhari:
+            awmi_participant.name = 'ضاري'
+            db.session.commit()
 
     _database_ready = True
 
@@ -1352,7 +1397,7 @@ def leaderboard():
     for p in participants:
         preds = Prediction.query.filter_by(participant_id=p.id).all()
 
-        starting_bonus = STARTING_BONUS.get(p.name, 0)
+        starting_bonus = participant_starting_bonus(p)
         pts = starting_bonus
         exact = 0
         champion_bonus = 0
@@ -2360,6 +2405,39 @@ def admin(code):
                     ))
                     db.session.commit()
                     flash('تمت إضافة المنتخب إلى قائمة اختيار البطل.')
+
+        elif action == 'rename_participant':
+            participant_id_raw = request.form.get('participant_id', '').strip()
+            new_name = request.form.get('new_name', '').strip()
+
+            try:
+                participant_id = int(participant_id_raw)
+            except (TypeError, ValueError):
+                participant_id = None
+
+            p = Participant.query.get(participant_id) if participant_id else None
+
+            if not p:
+                flash('لم أجد المتسابق المطلوب.')
+            elif not new_name:
+                flash('يرجى كتابة اسم المتسابق الجديد.')
+            elif len(new_name) > 80:
+                flash('اسم المتسابق طويل جدًا.')
+            else:
+                duplicate = Participant.query.filter(
+                    Participant.id != p.id,
+                    Participant.name == new_name
+                ).first()
+
+                if duplicate:
+                    flash('يوجد متسابق آخر بنفس الاسم. لم يتم تغيير الاسم.')
+                elif new_name == p.name:
+                    flash('الاسم الجديد مطابق للاسم الحالي. لم يتم تغيير شيء.')
+                else:
+                    old_name = p.name
+                    p.name = new_name
+                    db.session.commit()
+                    flash(f'تم تغيير اسم المتسابق من {old_name} إلى {new_name}. الرابط والتوقعات والنقاط لم تتغير.')
 
         elif action == 'update_champion_teams':
             active_ids = set()
