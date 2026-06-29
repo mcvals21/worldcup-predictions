@@ -2439,6 +2439,116 @@ def admin(code):
                     db.session.commit()
                     flash(f'تم تغيير اسم المتسابق من {old_name} إلى {new_name}. الرابط والتوقعات والنقاط لم تتغير.')
 
+        elif action == 'manual_prediction':
+            participant_id_raw = request.form.get('participant_id', '').strip()
+            match_id_raw = request.form.get('match_id', '').strip()
+            raw_home_score = request.form.get('home_score', '').strip()
+            raw_away_score = request.form.get('away_score', '').strip()
+
+            try:
+                participant_id = int(participant_id_raw)
+                match_id = int(match_id_raw)
+                home_score = int(raw_home_score)
+                away_score = int(raw_away_score)
+            except (TypeError, ValueError):
+                participant_id = None
+                match_id = None
+                home_score = None
+                away_score = None
+
+            p = Participant.query.get(participant_id) if participant_id else None
+            m = Match.query.filter_by(id=match_id, tournament_id=t.id).first() if match_id else None
+
+            if not p:
+                flash('لم أجد المتسابق المطلوب.')
+            elif not m:
+                flash('لم أجد المباراة المطلوبة.')
+            elif home_score is None or away_score is None:
+                flash('يرجى إدخال أرقام صحيحة للتوقع.')
+            elif home_score < 0 or away_score < 0:
+                flash('لا يمكن إدخال نتيجة سالبة.')
+            elif home_score > 99 or away_score > 99:
+                flash('النتيجة المدخلة كبيرة جدًا. يرجى التأكد منها.')
+            else:
+                is_double = request.form.get('is_double') == 'on'
+
+                if is_double and m.stage not in KNOCKOUT_STAGES:
+                    is_double = False
+
+                if is_double and current_double_used(p.id, t.id, m.stage, m.id):
+                    flash('لا يمكن حفظ ×2 لهذا المتسابق لأنه استخدم المضاعفة في مباراة أخرى من نفس الدور.')
+                else:
+                    pred = Prediction.query.filter_by(
+                        participant_id=p.id,
+                        match_id=m.id
+                    ).first()
+
+                    was_existing = pred is not None
+
+                    if not pred:
+                        pred = Prediction(
+                            participant_id=p.id,
+                            match_id=m.id
+                        )
+
+                    pred.home_score = home_score
+                    pred.away_score = away_score
+                    pred.is_double = is_double
+
+                    db.session.add(pred)
+                    db.session.commit()
+
+                    action_word = 'تعديل' if was_existing else 'إضافة'
+                    double_text = ' مع ×2' if is_double else ''
+                    flash(f'تم {action_word} توقع {p.name}: {m.home_team} {home_score} - {away_score} {m.away_team}{double_text}. لم يتم تغيير وقت المباراة.')
+
+        elif action == 'manual_champion_pick':
+            participant_id_raw = request.form.get('participant_id', '').strip()
+            team_name = request.form.get('team_name', '').strip()
+
+            try:
+                participant_id = int(participant_id_raw)
+            except (TypeError, ValueError):
+                participant_id = None
+
+            p = Participant.query.get(participant_id) if participant_id else None
+
+            if not p:
+                flash('لم أجد المتسابق المطلوب.')
+            elif not team_name:
+                flash('يرجى اختيار المنتخب المرشح للبطل.')
+            else:
+                eligible_teams = champion_eligible_teams(t.id)
+                canonical_team = matching_eligible_champion_team(team_name, eligible_teams)
+
+                if not eligible_teams:
+                    flash('لا توجد قائمة منتخبات متاحة لتوقع البطل. حدّث قائمة منتخبات البطل أولًا.')
+                elif not canonical_team:
+                    flash('هذا المنتخب غير متاح في قائمة توقع البطل.')
+                else:
+                    pick = ChampionPick.query.filter_by(
+                        participant_id=p.id,
+                        tournament_id=t.id
+                    ).first()
+
+                    old_team = pick.team_name if pick else None
+
+                    if not pick:
+                        pick = ChampionPick(
+                            participant_id=p.id,
+                            tournament_id=t.id
+                        )
+
+                    pick.team_name = canonical_team
+
+                    db.session.add(pick)
+                    db.session.commit()
+
+                    if old_team and champion_team_identity(old_team) != champion_team_identity(canonical_team):
+                        flash(f'تم تغيير توقع بطل البطولة لـ {p.name} من {old_team} إلى {canonical_team}.')
+                    else:
+                        flash(f'تم حفظ توقع بطل البطولة لـ {p.name}: {canonical_team}.')
+
         elif action == 'update_champion_teams':
             active_ids = set()
 
@@ -2527,7 +2637,9 @@ def admin(code):
         champion_preview_teams=champion_preview_teams(t.id),
         champion_team_records=champion_team_records(t.id),
         champion_team_counts=champion_team_counts(t.id),
-        champion_team_list_exists=champion_team_list_exists(t.id)
+        champion_team_list_exists=champion_team_list_exists(t.id),
+        manual_matches=all_matches,
+        manual_champion_teams=champion_eligible_teams(t.id)
     )
 
 @app.cli.command('init-db')
