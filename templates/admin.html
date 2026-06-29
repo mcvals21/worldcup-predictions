@@ -1,7 +1,6 @@
 
 
 
-
 {% extends 'base.html' %}
 
 {% block content %}
@@ -863,12 +862,79 @@
 
 
 
+
+.admin-ref-manual-note{
+  margin:0 0 12px;
+  padding:11px 12px;
+  border-radius:16px;
+  background:#e8e5de;
+  border:1px solid #d6d1c6;
+  color:#4f493d;
+  font-size:.88rem;
+  font-weight:900;
+  line-height:1.7;
+}
+
+.admin-ref-manual-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.admin-ref-manual-box{
+  display:grid;
+  gap:12px;
+  padding:14px;
+  border-radius:22px;
+  background:#e8e5de;
+  border:1px solid #d6d1c6;
+}
+
+.admin-ref-manual-box h4{
+  margin:0;
+  color:#171717;
+  font-size:1.02rem;
+  font-weight:1000;
+}
+
+.admin-ref-check{
+  display:flex !important;
+  align-items:center;
+  gap:9px !important;
+  min-height:50px;
+  padding:0 12px;
+  border-radius:16px;
+  background:#fbfaf7;
+  border:1px solid #d6d1c6;
+  color:#222;
+  font-size:.92rem;
+  font-weight:1000;
+}
+
+.admin-ref-check input{
+  width:22px !important;
+  min-width:22px !important;
+  height:22px !important;
+  min-height:22px !important;
+  padding:0 !important;
+  margin:0 !important;
+  border-radius:6px !important;
+  flex:0 0 auto;
+}
+
+@media (max-width:760px){
+  .admin-ref-manual-grid{
+    grid-template-columns:1fr;
+  }
+}
+
 /* =====================================================
    Admin ref v4 - القائمة تختار قسمًا واحدًا فقط
    لا يؤثر على باقي صفحات الموقع.
 ===================================================== */
 .admin-ref-page[data-admin-view="manage"] .admin-ref-admin-section:not([data-admin-section="manage"]),
 .admin-ref-page[data-admin-view="add"] .admin-ref-admin-section:not([data-admin-section="add"]),
+.admin-ref-page[data-admin-view="manual"] .admin-ref-admin-section:not([data-admin-section="manual"]),
 .admin-ref-page[data-admin-view="deadline"] .admin-ref-admin-section:not([data-admin-section="deadline"]),
 .admin-ref-page[data-admin-view="championteams"] .admin-ref-admin-section:not([data-admin-section="championteams"]),
 .admin-ref-page[data-admin-view="championlab"] .admin-ref-admin-section:not([data-admin-section="championlab"]),
@@ -1655,6 +1721,104 @@
     </div>
   </details>
 
+  <details class="admin-ref-card admin-ref-toggle-card admin-ref-admin-section" data-admin-section="manual" open>
+    <summary>
+      <div class="admin-ref-card-title">
+        <span class="admin-ref-badge">🛠️ أداة يدوية آمنة</span>
+        <h3>توقع يدوي وتغيير البطل</h3>
+        <p>استخدمها فقط للحالات الاستثنائية. لا تغيّر وقت المباراة ولا تفتح التوقعات للجميع.</p>
+      </div>
+      <span class="admin-ref-toggle-icon" aria-hidden="true"></span>
+    </summary>
+
+    <div class="admin-ref-toggle-body">
+      <p class="admin-ref-manual-note">
+        هذه الأداة تعدّل بيانات المتسابق المحدد فقط. لا تغيّر نتائج المباريات، ولا تغيّر توقيت المباراة، ولا تفتح التوقع لباقي المشاركين.
+      </p>
+
+      <div class="admin-ref-manual-grid">
+        <div class="admin-ref-manual-box">
+          <h4>إضافة / تعديل توقع مباراة</h4>
+
+          <form method="post" class="admin-ref-form" onsubmit="return confirm('سيتم حفظ توقع يدوي لهذا المتسابق فقط بدون تغيير وقت المباراة. هل تريد المتابعة؟')">
+            <input type="hidden" name="action" value="manual_prediction">
+
+            <label>
+              <span>المتسابق</span>
+              <select name="participant_id" required>
+                {% for p in participants %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+              </select>
+            </label>
+
+            <label>
+              <span>المباراة</span>
+              <select name="match_id" required>
+                {% for m in manual_matches %}
+                  <option value="{{ m.id }}">
+                    {{ m.start_time.strftime('%Y-%m-%d %I:%M %p') }} - {{ stage_labels.get(m.stage, m.stage) }} - {{ m.home_team }} × {{ m.away_team }}
+                  </option>
+                {% endfor %}
+              </select>
+            </label>
+
+            <div class="admin-ref-grid-2">
+              <label>
+                <span>توقع الفريق الأول</span>
+                <input type="number" name="home_score" min="0" max="99" value="0" inputmode="numeric" required>
+              </label>
+
+              <label>
+                <span>توقع الفريق الثاني</span>
+                <input type="number" name="away_score" min="0" max="99" value="0" inputmode="numeric" required>
+              </label>
+            </div>
+
+            <label class="admin-ref-check">
+              <input type="checkbox" name="is_double">
+              <span>احتساب ×2 لهذا التوقع إذا كانت المباراة في دور إقصائي ولم يستخدم المتسابق ×2 في نفس الدور</span>
+            </label>
+
+            <button type="submit" class="admin-ref-primary">حفظ التوقع اليدوي</button>
+          </form>
+        </div>
+
+        <div class="admin-ref-manual-box">
+          <h4>تغيير توقع بطل البطولة</h4>
+
+          <form method="post" class="admin-ref-form" onsubmit="return confirm('سيتم تغيير اختيار بطل البطولة لهذا المتسابق فقط. هل تريد المتابعة؟')">
+            <input type="hidden" name="action" value="manual_champion_pick">
+
+            <label>
+              <span>المتسابق</span>
+              <select name="participant_id" required>
+                {% for p in participants %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+              </select>
+            </label>
+
+            <label>
+              <span>المنتخب المختار كبطل</span>
+              <select name="team_name" required>
+                {% for team in manual_champion_teams %}
+                  <option value="{{ team }}">{{ team }}</option>
+                {% endfor %}
+              </select>
+            </label>
+
+            <p>
+              يتم التغيير من الإدارة حتى لو انتهى وقت اختيار البطل، ويؤثر فقط على المتسابق المختار.
+            </p>
+
+            <button type="submit" class="admin-ref-primary">حفظ اختيار البطل</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </details>
+
   <details class="admin-ref-card admin-ref-add-card admin-ref-admin-section" data-admin-section="add">
     <summary>
       <div class="admin-ref-add-summary-title">
@@ -1863,8 +2027,8 @@
 
 <script>
 (function(){
-  const allowedViews = ['manage', 'add', 'deadline', 'championteams', 'championlab', 'doublelab', 'links'];
-  const visibleMenuViews = ['manage', 'add', 'championteams', 'links'];
+  const allowedViews = ['manage', 'manual', 'add', 'deadline', 'championteams', 'championlab', 'doublelab', 'links'];
+  const visibleMenuViews = ['manage', 'manual', 'add', 'championteams', 'links'];
 
   function normalizeAdminView(view){
     return allowedViews.includes(view) ? view : 'manage';
@@ -1918,6 +2082,7 @@
 
     links.innerHTML = `
       <a href="#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
+      <a href="#admin-manual" class="admin-menu-section" data-admin-menu-view="manual">🛠️ توقع يدوي</a>
       <a href="{{ url_for('admin_champion_stats', code=code) }}" class="admin-menu-section">📸 صورة اختيار البطل</a>
       <a href="{{ url_for('admin_champion_picks', code=code) }}" class="admin-menu-section">🏆 اختيارات البطل</a>
       <a href="#admin-add" class="admin-menu-section" data-admin-menu-view="add">＋ إضافة مباراة</a>
