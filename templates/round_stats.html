@@ -370,7 +370,7 @@ body.round-stats-public .site-main{
 }
 
 .rs-score{
-  direction:ltr;
+  direction:rtl;
   min-width:58px;
   min-height:34px;
   padding:6px 10px;
@@ -378,9 +378,15 @@ body.round-stats-public .site-main{
   display:flex;
   align-items:center;
   justify-content:center;
+  gap:5px;
   background:#343840;
   color:#fff;
   font-weight:1000;
+}
+
+.rs-score b{
+  font-weight:1000;
+  opacity:.9;
 }
 
 .rs-featured-meta{
@@ -608,7 +614,11 @@ body.round-stats-public .site-main{
                   <span>{{ m.home_team }}</span>
                 </div>
 
-                <div class="rs-score">{{ m.home_score }} - {{ m.away_score }}</div>
+                <div class="rs-score" title="{{ m.home_team }} {{ m.home_score }} - {{ m.away_score }} {{ m.away_team }}">
+                  <span>{{ m.home_score }}</span>
+                  <b>-</b>
+                  <span>{{ m.away_score }}</span>
+                </div>
 
                 <div class="rs-featured-team">
                   <span>{{ m.away_team }}</span>
@@ -650,7 +660,11 @@ body.round-stats-public .site-main{
                   <span>{{ m.home_team }}</span>
                 </div>
 
-                <div class="rs-score">{{ m.home_score }} - {{ m.away_score }}</div>
+                <div class="rs-score" title="{{ m.home_team }} {{ m.home_score }} - {{ m.away_score }} {{ m.away_team }}">
+                  <span>{{ m.home_score }}</span>
+                  <b>-</b>
+                  <span>{{ m.away_score }}</span>
+                </div>
 
                 <div class="rs-featured-team">
                   <span>{{ m.away_team }}</span>
