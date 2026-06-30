@@ -918,6 +918,50 @@ def participant_starting_bonus(participant):
     return STARTING_BONUS.get(participant.name, 0)
 
 
+def build_missing_prediction_reports(matches, participants):
+    """Build read-only admin data showing who has not predicted each match.
+
+    This helper does not change any prediction, point, match, or participant data.
+    It only prepares a per-match list for the admin reminder tool.
+    """
+    match_ids = [m.id for m in matches]
+
+    if not match_ids:
+        return []
+
+    predicted_pairs = db.session.query(
+        Prediction.match_id,
+        Prediction.participant_id
+    ).filter(
+        Prediction.match_id.in_(match_ids)
+    ).all()
+
+    predicted_by_match = {}
+
+    for match_id, participant_id in predicted_pairs:
+        predicted_by_match.setdefault(match_id, set()).add(participant_id)
+
+    reports = []
+    total_participants = len(participants)
+
+    for m in matches:
+        predicted_ids = predicted_by_match.get(m.id, set())
+        missing_participants = [
+            p for p in participants
+            if p.id not in predicted_ids
+        ]
+
+        reports.append({
+            'match': m,
+            'missing': missing_participants,
+            'missing_count': len(missing_participants),
+            'predicted_count': total_participants - len(missing_participants),
+            'total_count': total_participants
+        })
+
+    return reports
+
+
 def match_locked(match):
     return now_kw() >= match.start_time
 
@@ -2639,7 +2683,8 @@ def admin(code):
         champion_team_counts=champion_team_counts(t.id),
         champion_team_list_exists=champion_team_list_exists(t.id),
         manual_matches=all_matches,
-        manual_champion_teams=champion_eligible_teams(t.id)
+        manual_champion_teams=champion_eligible_teams(t.id),
+        missing_prediction_reports=build_missing_prediction_reports(all_matches, participants)
     )
 
 @app.cli.command('init-db')
