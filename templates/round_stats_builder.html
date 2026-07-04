@@ -445,7 +445,7 @@
     <div class="round-builder-toolbar">
       <div class="round-builder-toolbar-title">
         <strong>اختيار مباريات الجولة</strong>
-        <span>اختر المباريات ثم أنشئ الرابط</span>
+        <span>اختر دورًا لإنشاء رابط ثابت، أو اختر مباريات محددة يدويًا</span>
       </div>
 
       <div class="round-builder-presets">
@@ -462,12 +462,12 @@
         <button type="button" class="round-builder-btn light" id="clearSelection">مسح الاختيار</button>
       </div>
 
-      <div class="round-builder-help" id="roundBuilderHelp">اختر مرحلة أو حدد المباريات يدويًا</div>
+      <div class="round-builder-help" id="roundBuilderHelp">اختر دورًا لإنشاء رابط ثابت أو حدد مباريات يدويًا</div>
     </div>
 
     {% if matches %}
       <div class="round-link-box" id="roundLinkBox">
-        <label>رابط إحصائيات الجولة</label>
+        <label>رابط إحصائيات الجولة الثابت</label>
         <input id="roundLinkInput" readonly value="">
 
         <div class="round-link-actions">
@@ -543,7 +543,7 @@
     if(helpBox){
       helpBox.textContent = count
         ? 'تم اختيار ' + count + ' مباراة. اضغط إنشاء الرابط.'
-        : 'اختر مرحلة أو حدد المباريات يدويًا';
+        : 'اختر دورًا لإنشاء رابط ثابت أو حدد مباريات يدويًا';
     }
 
     if(!count && linkBox){
@@ -570,7 +570,9 @@
     linkBox.classList.add('is-visible');
 
     if(helpBox){
-      helpBox.textContent = 'تم إنشاء الرابط. يمكنك نسخه أو فتح الإحصائيات.';
+      helpBox.textContent = selectedStage
+        ? 'تم إنشاء رابط ثابت لهذا الدور. يمكنك نسخه أو فتح الإحصائيات.'
+        : 'تم إنشاء رابط مخصص حسب المباريات المحددة. يمكنك نسخه أو فتح الإحصائيات.';
     }
 
     linkBox.scrollIntoView({ behavior:'smooth', block:'nearest' });
@@ -601,7 +603,7 @@
 
       if(helpBox){
         helpBox.textContent = selectedCount
-          ? 'تم اختيار ' + selectedCount + ' مباراة من ' + btn.textContent.trim() + '. اضغط إنشاء الرابط.'
+          ? 'تم اختيار ' + selectedCount + ' مباراة من ' + btn.textContent.trim() + '. سيتم إنشاء رابط ثابت لهذا الدور.'
           : 'لا توجد مباريات من ' + btn.textContent.trim() + ' ضمن القائمة الحالية.';
       }
     });
