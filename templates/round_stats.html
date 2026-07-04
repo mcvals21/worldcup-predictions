@@ -79,6 +79,55 @@ body.round-stats-public .site-main{
   border:1px solid rgba(226,208,153,.30);
 }
 
+.rs-matches-collapsed{
+  margin-top:2px;
+}
+
+.rs-matches-collapsed summary{
+  min-height:54px;
+  padding:12px 16px;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  user-select:none;
+  list-style:none;
+  background:#f3efe4;
+  color:#171717;
+  border:1px solid rgba(226,208,153,.30);
+  font-size:.98rem;
+  font-weight:1000;
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
+}
+
+.rs-matches-collapsed summary::-webkit-details-marker{
+  display:none;
+}
+
+.rs-matches-collapsed summary::before{
+  content:'▾';
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#343840;
+  color:#fff;
+  font-size:.78rem;
+  transition:transform .18s ease;
+}
+
+.rs-matches-collapsed[open] summary::before{
+  transform:rotate(180deg);
+}
+
+.rs-matches-collapsed .rs-matches-flags{
+  margin-top:10px;
+}
+
 .rs-flags-grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
@@ -576,7 +625,8 @@ body.round-stats-public .site-main{
 
     {% if matches %}
 
-      <section class="rs-matches-flags">
+      {% if matches_count <= 4 %}
+        <section class="rs-matches-flags">
         <div class="rs-flags-grid">
           {% for m in matches %}
             {% set home_flag = team_flag_code(m.home_team) %}
@@ -601,7 +651,8 @@ body.round-stats-public .site-main{
             </div>
           {% endfor %}
         </div>
-      </section>
+        </section>
+      {% endif %}
 
       <section class="rs-hero-grid">
         <div class="rs-hero best">
@@ -756,6 +807,38 @@ body.round-stats-public .site-main{
         {% endif %}
 
       </section>
+
+      {% if matches_count > 4 %}
+        <details class="rs-matches-collapsed">
+          <summary>عرض مباريات هذه الجولة - {{ matches_count }} مباراة</summary>
+          <section class="rs-matches-flags">
+        <div class="rs-flags-grid">
+          {% for m in matches %}
+            {% set home_flag = team_flag_code(m.home_team) %}
+            {% set away_flag = team_flag_code(m.away_team) %}
+
+            <div class="rs-flag-match">
+              <div class="rs-mini-team">
+                {% if home_flag %}
+                  <img class="rs-mini-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">
+                {% endif %}
+                <span>{{ m.home_team }}</span>
+              </div>
+
+              <div class="rs-vs">×</div>
+
+              <div class="rs-mini-team">
+                <span>{{ m.away_team }}</span>
+                {% if away_flag %}
+                  <img class="rs-mini-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+          </section>
+        </details>
+      {% endif %}
 
     {% else %}
 
