@@ -1811,9 +1811,16 @@ def build_round_dashboard(matches, participants):
             if pred.home_score == m.home_score and pred.away_score == m.away_score:
                 exact += 1
 
-            if pred.is_double and m.stage in KNOCKOUT_STAGES:
+            # Count ×2 usage independently from success.
+            # If a participant selected ×2 and got the prediction wrong, it must
+            # still appear as used: +0 and 0 من 1, not "لم يستخدم".
+            if pred.is_double:
                 x2_used += 1
-                extra = pts // 2
+
+                if m.stage in KNOCKOUT_STAGES:
+                    extra = pts // 2
+                else:
+                    extra = 0
 
                 if extra > 0:
                     x2_success += 1
