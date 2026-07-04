@@ -117,9 +117,15 @@
   font-weight:850;
 }
 
+.round-builder-presets{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+}
+
 .round-builder-actions{
   display:grid;
-  grid-template-columns:1.2fr 1fr 1fr;
+  grid-template-columns:1.2fr 1fr;
   gap:8px;
 }
 
@@ -383,12 +389,19 @@
     padding:10px;
   }
 
+  .round-builder-presets{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .round-builder-presets .round-builder-btn:last-child{
+    grid-column:1 / -1;
+  }
+
   .round-builder-actions{
     grid-template-columns:1fr 1fr;
   }
 
   .round-builder-actions .gold{
-    grid-column:1 / -1;
     order:-1;
   }
 
@@ -435,13 +448,21 @@
         <span>اختر المباريات ثم أنشئ الرابط</span>
       </div>
 
+      <div class="round-builder-presets">
+        <button type="button" class="round-builder-btn light" data-select-stage="group">دور المجموعات</button>
+        <button type="button" class="round-builder-btn light" data-select-stage="round32">دور الـ32</button>
+        <button type="button" class="round-builder-btn light" data-select-stage="round16">دور الـ16</button>
+        <button type="button" class="round-builder-btn light" data-select-stage="quarter">ربع النهائي</button>
+        <button type="button" class="round-builder-btn light" data-select-stage="semi">نصف النهائي</button>
+        <button type="button" class="round-builder-btn light" data-select-stage="final">النهائي</button>
+      </div>
+
       <div class="round-builder-actions">
         <button type="button" class="round-builder-btn gold" id="buildRoundLink" disabled>إنشاء الرابط</button>
-        <button type="button" class="round-builder-btn light" id="selectLastFour">آخر 4 مباريات</button>
         <button type="button" class="round-builder-btn light" id="clearSelection">مسح الاختيار</button>
       </div>
 
-      <div class="round-builder-help" id="roundBuilderHelp">اختر مباراة واحدة على الأقل</div>
+      <div class="round-builder-help" id="roundBuilderHelp">اختر مرحلة أو حدد المباريات يدويًا</div>
     </div>
 
     {% if matches %}
@@ -458,7 +479,7 @@
       <div class="round-builder-list" id="roundMatchesList">
         {% for m in matches %}
           <label class="round-builder-match">
-            <input type="checkbox" value="{{ m.id }}" class="round-match-checkbox">
+            <input type="checkbox" value="{{ m.id }}" class="round-match-checkbox" data-stage="{{ m.stage }}">
             <span class="round-builder-check"></span>
 
             <div class="round-builder-match-main">
@@ -489,7 +510,7 @@
 (function(){
   const checkboxes = Array.from(document.querySelectorAll('.round-match-checkbox'));
   const buildBtn = document.getElementById('buildRoundLink');
-  const selectLastFourBtn = document.getElementById('selectLastFour');
+  const stageButtons = Array.from(document.querySelectorAll('[data-select-stage]'));
   const clearBtn = document.getElementById('clearSelection');
   const linkBox = document.getElementById('roundLinkBox');
   const linkInput = document.getElementById('roundLinkInput');
@@ -520,7 +541,7 @@
     if(helpBox){
       helpBox.textContent = count
         ? 'تم اختيار ' + count + ' مباراة. اضغط إنشاء الرابط.'
-        : 'اختر مباراة واحدة على الأقل';
+        : 'اختر مرحلة أو حدد المباريات يدويًا';
     }
 
     if(!count && linkBox){
@@ -555,14 +576,28 @@
     cb.addEventListener('change', refreshState);
   });
 
-  if(selectLastFourBtn){
-    selectLastFourBtn.addEventListener('click', function(){
-      checkboxes.forEach((cb, index) => {
-        cb.checked = index < 4;
+  stageButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const stage = btn.dataset.selectStage;
+      let selectedCount = 0;
+
+      checkboxes.forEach(function(cb){
+        const matchStage = cb.dataset.stage;
+        cb.checked = matchStage === stage;
+        if(cb.checked){
+          selectedCount += 1;
+        }
       });
+
       refreshState();
+
+      if(helpBox){
+        helpBox.textContent = selectedCount
+          ? 'تم اختيار ' + selectedCount + ' مباراة من ' + btn.textContent.trim() + '. اضغط إنشاء الرابط.'
+          : 'لا توجد مباريات من ' + btn.textContent.trim() + ' ضمن القائمة الحالية.';
+      }
     });
-  }
+  });
 
   if(clearBtn){
     clearBtn.addEventListener('click', function(){
