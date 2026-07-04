@@ -1,13 +1,11 @@
-
 {% extends "base.html" %}
-
 {% block content %}
 
 <style>
   /* =====================================================
-     Stats page v1 - focused useful statistics only
+     Stats page v2 - consistent cream/gold theme
      Scoped only to stats.html
-  ===================================================== */
+     ===================================================== */
 
   .stats2-page{
     width:min(980px,100%);
@@ -40,27 +38,26 @@
     font-weight:760;
   }
 
-  .stats2-card{
-    background:#f3efe4;
-    border:1px solid rgba(0,0,0,.08);
-    border-radius:24px;
-    box-shadow:0 8px 20px rgba(0,0,0,.07);
-  }
-.stats2-grid{
+  .stats2-grid{
     display:grid;
     grid-template-columns:1fr;
     gap:12px;
   }
 
   .stats2-card{
+    background:#f3efe4;
+    border:1px solid rgba(0,0,0,.08);
+    border-radius:24px;
+    box-shadow:0 8px 20px rgba(0,0,0,.07);
     padding:14px;
     overflow:hidden;
   }
 
-  .stats2-card.dark{
-    background:linear-gradient(180deg,#3a3c42,#25272c);
-    border-color:rgba(230,211,156,.22);
-    color:#f6f1e5;
+  /* قسم ×2 كان غامقًا سابقًا، الآن بنفس ثيم الصفحة */
+  .stats2-x2-card{
+    background:#f3efe4;
+    border-color:rgba(0,0,0,.08);
+    color:#171717;
   }
 
   .stats2-title{
@@ -77,10 +74,6 @@
     font-size:1.12rem;
     font-weight:1000;
     line-height:1.25;
-  }
-
-  .stats2-card.dark .stats2-title h3{
-    color:#fff;
   }
 
   .stats2-badge{
@@ -115,11 +108,6 @@
     padding:10px;
   }
 
-  .stats2-card.dark .stats2-row{
-    background:rgba(255,255,255,.07);
-    border-color:rgba(255,255,255,.08);
-  }
-
   .stats2-rank{
     width:34px;
     height:34px;
@@ -142,10 +130,6 @@
     text-overflow:ellipsis;
   }
 
-  .stats2-card.dark .stats2-name{
-    color:#f6f1e5;
-  }
-
   .stats2-person{
     min-width:0;
     display:grid;
@@ -160,10 +144,6 @@
     overflow:hidden;
     white-space:nowrap;
     text-overflow:ellipsis;
-  }
-
-  .stats2-card.dark .stats2-sub{
-    color:#d8d1c2;
   }
 
   .stats2-value{
@@ -185,6 +165,7 @@
   .stats2-value.gold{
     background:#e7d79d;
     color:#33280f;
+    border:1px solid rgba(0,0,0,.08);
   }
 
   .stats2-value.red{
@@ -338,14 +319,12 @@
 </style>
 
 <section class="stats2-page">
-
   <section class="stats2-hero">
-    <h2>إحصائيات المسابقة 📊</h2>
+    <h2>إحصائيات المسابقة</h2>
     <p>أهم الإحصائيات في التوقعات والمباريات.</p>
   </section>
 
   <section class="stats2-grid">
-
     <section class="stats2-card">
       <div class="stats2-title">
         <h3>✅ عدد التوقعات الصحيحة</h3>
@@ -369,7 +348,7 @@
       {% endif %}
     </section>
 
-    <section class="stats2-card dark">
+    <section class="stats2-card stats2-x2-card">
       <div class="stats2-title">
         <h3>أكثر من استفاد من ×2</h3>
         <span class="stats2-badge">نقاط إضافية</span>
@@ -380,14 +359,17 @@
           {% for r in top_x2 %}
             <div class="stats2-row">
               <div class="stats2-rank">{{ loop.index }}</div>
+
               <div class="stats2-person">
                 <div class="stats2-name">{{ r.name }}</div>
+
                 {% if r.x2_used > 0 %}
                   <div class="stats2-sub">×2 ناجحة: {{ r.x2_success }} من {{ r.x2_used }}</div>
                 {% else %}
                   <div class="stats2-sub">لم يستخدم ×2</div>
                 {% endif %}
               </div>
+
               <div class="stats2-value gold">+{{ r.x2_extra_points }}</div>
             </div>
           {% endfor %}
@@ -399,7 +381,7 @@
 
     <section class="stats2-card wide">
       <div class="stats2-title">
-        <h3>🔥 أسهل مباراة بالتوقع</h3>
+        <h3>أسهل مباراة بالتوقع</h3>
         <span class="stats2-badge">أسهل</span>
       </div>
 
@@ -444,7 +426,7 @@
 
     <section class="stats2-card wide">
       <div class="stats2-title">
-        <h3>🧊 أصعب مباراة بالتوقع</h3>
+        <h3>أصعب مباراة بالتوقع</h3>
         <span class="stats2-badge">أصعب</span>
       </div>
 
@@ -486,9 +468,7 @@
         <div class="stats2-empty">لا توجد مباريات منتهية بتوقعات حتى الآن.</div>
       {% endif %}
     </section>
-
   </section>
-
 </section>
 
 {% endblock %}
