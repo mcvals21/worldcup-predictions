@@ -2081,13 +2081,60 @@ def round_stats_builder(code):
         Match.start_time.desc()
     ).all()
 
+    round_stage_urls = {
+        stage: url_for('round_stats_by_stage', stage=stage, _external=True)
+        for stage in STAGE_LABELS.keys()
+    }
+
     return render_template(
         'round_stats_builder.html',
         t=t,
         code=code,
         matches=completed_matches,
         round_stats_url=url_for('round_stats', _external=True),
+        round_stage_urls=round_stage_urls,
         stage_labels=STAGE_LABELS
+    )
+
+
+@app.route('/stats/round/stage/<stage>')
+def round_stats_by_stage(stage):
+    t = tournament()
+
+    if not t:
+        abort(404)
+
+    if stage not in STAGE_LABELS:
+        abort(404)
+
+    matches = Match.query.filter_by(
+        tournament_id=t.id,
+        stage=stage
+    ).filter(
+        Match.home_score.isnot(None),
+        Match.away_score.isnot(None)
+    ).order_by(
+        Match.start_time.asc()
+    ).all()
+
+    participants = Participant.query.order_by(Participant.name).all()
+    dashboard = build_round_dashboard(matches, participants)
+
+    share_url = url_for(
+        'round_stats_by_stage',
+        stage=stage,
+        _external=True
+    )
+
+    return render_template(
+        'round_stats.html',
+        t=t,
+        matches=matches,
+        dashboard=dashboard,
+        share_url=share_url,
+        stage_labels=STAGE_LABELS,
+        selected_stage=stage,
+        selected_stage_label=STAGE_LABELS.get(stage, stage)
     )
 
 
