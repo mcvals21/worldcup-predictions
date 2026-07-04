@@ -1792,6 +1792,7 @@ def build_round_dashboard(matches, participants):
         predictions_count = 0
         missed = 0
         x2_used = 0
+        x2_success = 0
         x2_extra_points = 0
         x2_total_points = 0
 
@@ -1813,6 +1814,10 @@ def build_round_dashboard(matches, participants):
             if pred.is_double and m.stage in KNOCKOUT_STAGES:
                 x2_used += 1
                 extra = pts // 2
+
+                if extra > 0:
+                    x2_success += 1
+
                 x2_extra_points += extra
                 x2_total_points += pts
 
@@ -1823,6 +1828,7 @@ def build_round_dashboard(matches, participants):
             'predictions_count': predictions_count,
             'missed': missed,
             'x2_used': x2_used,
+            'x2_success': x2_success,
             'x2_extra_points': x2_extra_points,
             'x2_total_points': x2_total_points
         })
