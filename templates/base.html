@@ -1,5 +1,4 @@
 
-
 <!doctype html>
 <!-- base.html admin menu v3 - slim direct links -->
 <html lang="ar" dir="rtl">
@@ -227,11 +226,14 @@
         <nav class="menu-links">
           {% if admin_menu_code %}
             <a href="/admin/{{ admin_menu_code }}#admin-manage" class="admin-menu-section">📋 إدارة المباريات والنتائج</a>
-            <a href="/admin/{{ admin_menu_code }}/champion-stats" class="admin-menu-section is-featured">📸 صورة اختيار البطل</a>
+            <a href="/admin/{{ admin_menu_code }}#admin-missing" class="admin-menu-section">🔔 ناقصين التوقع</a>
+            <a href="/admin/{{ admin_menu_code }}#admin-manual" class="admin-menu-section">🛠️ توقع يدوي</a>
+            <a href="/admin/{{ admin_menu_code }}/champion-stats" class="admin-menu-section">📸 صورة اختيار البطل</a>
             <a href="/admin/{{ admin_menu_code }}/champion-picks" class="admin-menu-section">🏆 اختيارات البطل</a>
+            <a href="/admin/{{ admin_menu_code }}/x2-details" class="admin-menu-section">×2 تفاصيل المضاعفة</a>
             <a href="/admin/{{ admin_menu_code }}#admin-add" class="admin-menu-section">＋ إضافة مباراة</a>
             <a href="/admin/{{ admin_menu_code }}#admin-championteams" class="admin-menu-section">🏆 قائمة منتخبات البطل</a>
-            <a href="/admin/{{ admin_menu_code }}/round-stats" class="admin-menu-section is-featured">📊 إنشاء إحصائيات الجولة</a>
+            <a href="/admin/{{ admin_menu_code }}/round-stats" class="admin-menu-section">📊 إنشاء إحصائيات الجولة</a>
             <a href="/admin/{{ admin_menu_code }}#admin-links" class="admin-menu-section">🔗 روابط المشاركين</a>
 
             <details class="admin-menu-advanced">
