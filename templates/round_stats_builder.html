@@ -519,6 +519,8 @@
   const countBox = document.getElementById('selectedRoundCount');
   const helpBox = document.getElementById('roundBuilderHelp');
   const baseUrl = "{{ round_stats_url }}";
+  const stageUrls = {{ round_stage_urls|default({})|tojson }};
+  let selectedStage = null;
 
   function selectedIds(){
     return checkboxes
@@ -559,7 +561,9 @@
       return;
     }
 
-    const url = baseUrl + '?matches=' + encodeURIComponent(ids.join(','));
+    const url = selectedStage && stageUrls[selectedStage]
+      ? stageUrls[selectedStage]
+      : baseUrl + '?matches=' + encodeURIComponent(ids.join(','));
 
     linkInput.value = url;
     openLink.href = url;
@@ -573,12 +577,16 @@
   }
 
   checkboxes.forEach(function(cb){
-    cb.addEventListener('change', refreshState);
+    cb.addEventListener('change', function(){
+      selectedStage = null;
+      refreshState();
+    });
   });
 
   stageButtons.forEach(function(btn){
     btn.addEventListener('click', function(){
       const stage = btn.dataset.selectStage;
+      selectedStage = stage;
       let selectedCount = 0;
 
       checkboxes.forEach(function(cb){
@@ -601,6 +609,7 @@
 
   if(clearBtn){
     clearBtn.addEventListener('click', function(){
+      selectedStage = null;
       checkboxes.forEach(cb => cb.checked = false);
       refreshState();
     });
