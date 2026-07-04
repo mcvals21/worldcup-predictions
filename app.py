@@ -2082,7 +2082,7 @@ def round_stats_builder(code):
     ).all()
 
     round_stage_urls = {
-        stage: url_for('round_stats_by_stage', stage=stage, _external=True)
+        stage: url_for('round_stats_stage_round', stage=stage, _external=True)
         for stage in STAGE_LABELS.keys()
     }
 
@@ -2097,8 +2097,7 @@ def round_stats_builder(code):
     )
 
 
-@app.route('/stats/round/stage/<stage>')
-def round_stats_by_stage(stage):
+def render_round_stats_by_stage(stage):
     t = tournament()
 
     if not t:
@@ -2120,8 +2119,10 @@ def round_stats_by_stage(stage):
     participants = Participant.query.order_by(Participant.name).all()
     dashboard = build_round_dashboard(matches, participants)
 
+    # Canonical fixed link for each stage.
+    # Example: /stats/round/stage-round/round32
     share_url = url_for(
-        'round_stats_by_stage',
+        'round_stats_stage_round',
         stage=stage,
         _external=True
     )
@@ -2136,6 +2137,17 @@ def round_stats_by_stage(stage):
         selected_stage=stage,
         selected_stage_label=STAGE_LABELS.get(stage, stage)
     )
+
+
+@app.route('/stats/round/stage-round/<stage>')
+def round_stats_stage_round(stage):
+    return render_round_stats_by_stage(stage)
+
+
+# Keep the previous stage URL working so old links do not break.
+@app.route('/stats/round/stage/<stage>')
+def round_stats_by_stage(stage):
+    return render_round_stats_by_stage(stage)
 
 
 @app.route('/stats/round')
