@@ -1866,8 +1866,9 @@ def parse_match_id_list(raw_ids):
         if match_id not in ids:
             ids.append(match_id)
 
-    # Safety limit: this dashboard is for one round, not the full tournament.
-    return ids[:12]
+    # Safety limit: allow a full knockout round such as Round of 32 (16 matches),
+    # while still preventing an accidentally huge URL from loading the whole tournament.
+    return ids[:32]
 
 
 ROUND_STATS_EXCLUDED_NAMES = {'الحميدي', 'العومي'}
