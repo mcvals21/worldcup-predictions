@@ -1560,6 +1560,7 @@ def stats():
         exact = 0
         match_points = 0
         x2_used = 0
+        x2_success = 0
         x2_extra_points = 0
         x2_total_points = 0
 
@@ -1579,6 +1580,10 @@ def stats():
                 x2_used += 1
                 base_points = pts // 2
                 extra_points = pts - base_points
+
+                if extra_points > 0:
+                    x2_success += 1
+
                 x2_extra_points += extra_points
                 x2_total_points += pts
 
@@ -1594,6 +1599,7 @@ def stats():
             'missed_locked': missed_locked,
             'match_points': match_points,
             'x2_used': x2_used,
+            'x2_success': x2_success,
             'x2_extra_points': x2_extra_points,
             'x2_total_points': x2_total_points
         })
@@ -1620,17 +1626,16 @@ def stats():
     )[:5]
 
     top_x2 = sorted(
-        [
-            r for r in player_rows
-            if r['x2_extra_points'] > 0
-        ],
+        player_rows,
         key=lambda r: (
             r['x2_extra_points'],
+            r.get('x2_success', 0),
             r['x2_total_points'],
-            r['x2_used']
+            r['x2_used'],
+            r['match_points']
         ),
         reverse=True
-    )[:5]
+    )
 
     match_rows = []
 
