@@ -962,6 +962,138 @@ def build_missing_prediction_reports(matches, participants):
     return reports
 
 
+def x2_prediction_result_label(pred, match):
+    """Return a simple Arabic status label for an x2 prediction.
+
+    Read-only helper used by the admin x2 details page.
+    It does not change points, predictions, matches, or database rows.
+    """
+    if match.home_score is None or match.away_score is None:
+        return 'بانتظار النتيجة', 'pending'
+
+    if pred.home_score == match.home_score and pred.away_score == match.away_score:
+        return 'صحيح كامل', 'good'
+
+    if winner(pred.home_score, pred.away_score) == winner(match.home_score, match.away_score):
+        return 'قريب', 'mid'
+
+    return 'خاطئ', 'bad'
+
+
+def build_admin_x2_details(tournament_id):
+    """Build admin-only x2 usage details for every participant.
+
+    The identity is the participant row/token. This is a display/report helper only.
+    It does not save, delete, or modify anything in the tournament database.
+    """
+    participants = Participant.query.order_by(Participant.name).all()
+
+    x2_rows = db.session.query(
+        Prediction,
+        Participant,
+        Match
+    ).join(
+        Participant, Prediction.participant_id == Participant.id
+    ).join(
+        Match, Prediction.match_id == Match.id
+    ).filter(
+        Match.tournament_id == tournament_id,
+        Prediction.is_double == True
+    ).order_by(
+        Match.start_time.asc(),
+        Participant.name.asc()
+    ).all()
+
+    details_by_participant = {p.id: [] for p in participants}
+
+    total_used = 0
+    total_success = 0
+    total_extra_points = 0
+    total_pending = 0
+
+    for pred, p, m in x2_rows:
+        has_result = m.home_score is not None and m.away_score is not None
+        label, tone = x2_prediction_result_label(pred, m)
+
+        if has_result:
+            total_points = points_for(pred, m)
+
+            if m.stage in KNOCKOUT_STAGES:
+                base_points = total_points // 2
+                extra_points = total_points - base_points
+            else:
+                base_points = total_points
+                extra_points = 0
+        else:
+            total_points = None
+            base_points = None
+            extra_points = None
+
+        if has_result and total_points and total_points > 0:
+            total_success += 1
+
+        if not has_result:
+            total_pending += 1
+
+        if extra_points is not None:
+            total_extra_points += extra_points
+
+        total_used += 1
+
+        details_by_participant.setdefault(p.id, []).append({
+            'prediction': pred,
+            'match': m,
+            'stage_label': STAGE_LABELS.get(m.stage, m.stage),
+            'prediction_text': f'{pred.home_score} - {pred.away_score}',
+            'result_text': f'{m.home_score} - {m.away_score}' if has_result else 'لم تُسجل',
+            'base_points': base_points,
+            'extra_points': extra_points,
+            'total_points': total_points,
+            'label': label,
+            'tone': tone,
+            'has_result': has_result
+        })
+
+    player_rows = []
+
+    for p in participants:
+        picks = details_by_participant.get(p.id, [])
+        used_count = len(picks)
+        success_count = sum(1 for item in picks if item['has_result'] and (item['total_points'] or 0) > 0)
+        pending_count = sum(1 for item in picks if not item['has_result'])
+        extra_points_sum = sum((item['extra_points'] or 0) for item in picks)
+        total_points_sum = sum((item['total_points'] or 0) for item in picks)
+
+        player_rows.append({
+            'participant': p,
+            'picks': picks,
+            'used_count': used_count,
+            'success_count': success_count,
+            'pending_count': pending_count,
+            'extra_points': extra_points_sum,
+            'total_points': total_points_sum
+        })
+
+    player_rows.sort(
+        key=lambda row: (
+            row['extra_points'],
+            row['success_count'],
+            row['total_points'],
+            row['used_count'],
+            row['participant'].name
+        ),
+        reverse=True
+    )
+
+    return {
+        'player_rows': player_rows,
+        'total_used': total_used,
+        'total_success': total_success,
+        'total_extra_points': total_extra_points,
+        'total_pending': total_pending
+    }
+
+
 def match_locked(match):
     return now_kw() >= match.start_time
 
@@ -2200,6 +2332,28 @@ def build_champion_stats_dashboard(tournament_id):
         'using_active_list': bool(active_identities)
     }
 
+
+
+@app.route('/admin/<code>/x2-details')
+def admin_x2_details(code):
+    if code != ADMIN_CODE:
+        abort(404)
+
+    t = tournament()
+
+    if not t:
+        abort(404)
+
+    x2_details = build_admin_x2_details(t.id)
+
+    return render_template(
+        'x2_details_admin.html',
+        code=code,
+        t=t,
+        x2_details=x2_details,
+        stage_labels=STAGE_LABELS,
+        team_flag_code=team_flag_code
+    )
 
 @app.route('/admin/<code>/champion-stats')
 def admin_champion_stats(code):
