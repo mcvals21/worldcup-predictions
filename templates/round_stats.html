@@ -234,7 +234,7 @@ body.round-stats-public .site-main{
 .rs-table-head,
 .rs-player-row{
   display:grid;
-  grid-template-columns:42px 1fr 72px 72px;
+  grid-template-columns:42px 1fr 70px 56px 82px;
   align-items:center;
   gap:8px;
 }
@@ -310,6 +310,50 @@ body.round-stats-public .site-main{
   background:#dff1df;
   color:#2d7b42;
   border:1px solid rgba(45,123,66,.14);
+}
+
+.rs-x2{
+  direction:rtl;
+  min-height:34px;
+  padding:5px 8px;
+  border-radius:14px;
+  display:grid;
+  align-content:center;
+  justify-items:center;
+  gap:1px;
+  font-weight:1000;
+}
+
+.rs-x2 strong{
+  direction:ltr;
+  font-size:.88rem;
+  line-height:1;
+}
+
+.rs-x2 small{
+  font-size:.64rem;
+  line-height:1;
+  font-weight:1000;
+  opacity:.82;
+  white-space:nowrap;
+}
+
+.rs-x2.hit{
+  background:#e7d79d;
+  color:#33280f;
+  border:1px solid rgba(171,137,44,.18);
+}
+
+.rs-x2.used{
+  background:#efe5be;
+  color:#5a4515;
+  border:1px solid rgba(171,137,44,.14);
+}
+
+.rs-x2.none{
+  background:#ddd8cf;
+  color:#777065;
+  border:1px solid rgba(0,0,0,.04);
 }
 
 /* المباريات البارزة */
@@ -469,7 +513,7 @@ body.round-stats-public .site-main{
 
   .rs-table-head,
   .rs-player-row{
-    grid-template-columns:36px 1fr 58px 58px;
+    grid-template-columns:34px 1fr 52px 44px 66px;
     gap:6px;
   }
 
@@ -485,6 +529,19 @@ body.round-stats-public .site-main{
 
   .rs-name{
     font-size:.93rem;
+  }
+
+  .rs-x2{
+    padding:5px 5px;
+    border-radius:12px;
+  }
+
+  .rs-x2 strong{
+    font-size:.78rem;
+  }
+
+  .rs-x2 small{
+    font-size:.56rem;
   }
 
   .rs-featured-card{
@@ -576,6 +633,7 @@ body.round-stats-public .site-main{
           <div>المشارك</div>
           <div>النقاط</div>
           <div class="rs-head-correct">✓</div>
+          <div>×2</div>
         </div>
 
         {% if dashboard.player_rows %}
@@ -586,6 +644,15 @@ body.round-stats-public .site-main{
                 <div class="rs-name">{{ r.name }}</div>
                 <div class="rs-points">{{ r.points }}</div>
                 <div class="rs-correct">{{ r.exact }}</div>
+                <div class="rs-x2 {% if r.x2_used == 0 %}none{% elif r.x2_extra_points > 0 %}hit{% else %}used{% endif %}">
+                  {% if r.x2_used > 0 %}
+                    <strong>+{{ r.x2_extra_points }}</strong>
+                    <small>{{ r.x2_success }} من {{ r.x2_used }}</small>
+                  {% else %}
+                    <strong>—</strong>
+                    <small>لم يستخدم</small>
+                  {% endif %}
+                </div>
               </div>
             {% endfor %}
           </div>
