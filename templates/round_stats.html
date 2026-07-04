@@ -43,7 +43,7 @@ body.round-stats-public .site-main{
   box-shadow:0 26px 70px rgba(0,0,0,.36);
 }
 
-/* Ø§Ù„Ø¹Ù†ÙˆØ§Ù† */
+/* العنوان */
 .rs-title-box{
   text-align:center;
   padding:20px 14px 10px;
@@ -71,7 +71,7 @@ body.round-stats-public .site-main{
   font-weight:1000;
 }
 
-/* Ø£Ø¹Ù„Ø§Ù… Ø§Ù„Ù…Ø¨Ø§Ø±ÙŠØ§Øª */
+/* أعلام المباريات */
 .rs-matches-flags{
   padding:14px;
   border-radius:24px;
@@ -138,7 +138,7 @@ body.round-stats-public .site-main{
   font-weight:1000;
 }
 
-/* Ù…ØªØµØ¯Ø± Ø§Ù„Ø¬ÙˆÙ„Ø© / Ø£Ù‚Ù„ Ù†Ù‚Ø§Ø· */
+/* متصدر الجولة / أقل نقاط */
 .rs-hero-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -205,7 +205,7 @@ body.round-stats-public .site-main{
   color:#fff;
 }
 
-/* Ø¬Ø¯ÙˆÙ„ ØªØ±ØªÙŠØ¨ Ø§Ù„Ø¬ÙˆÙ„Ø© */
+/* جدول ترتيب الجولة */
 .rs-table-panel{
   border-radius:26px;
   background:#f3efe4;
@@ -356,7 +356,7 @@ body.round-stats-public .site-main{
   border:1px solid rgba(0,0,0,.04);
 }
 
-/* Ø§Ù„Ù…Ø¨Ø§Ø±ÙŠØ§Øª Ø§Ù„Ø¨Ø§Ø±Ø²Ø© */
+/* المباريات البارزة */
 .rs-featured-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -570,8 +570,8 @@ body.round-stats-public .site-main{
   <div class="round-card">
 
     <header class="rs-title-box">
-      <h1>Ù…Ù„Ø®Øµ Ø§Ù„Ø¬ÙˆÙ„Ø©</h1>
-      <div class="rs-count">{{ matches_count }} Ù…Ø¨Ø§Ø±ÙŠØ§Øª</div>
+      <h1>ملخص الجولة</h1>
+      <div class="rs-count">{{ matches_count }} مباريات</div>
     </header>
 
     {% if matches %}
@@ -590,7 +590,7 @@ body.round-stats-public .site-main{
                 <span>{{ m.home_team }}</span>
               </div>
 
-              <div class="rs-vs">Ã—</div>
+              <div class="rs-vs">×</div>
 
               <div class="rs-mini-team">
                 <span>{{ m.away_team }}</span>
@@ -605,35 +605,35 @@ body.round-stats-public .site-main{
 
       <section class="rs-hero-grid">
         <div class="rs-hero best">
-          <div class="rs-hero-label">Ù…ØªØµØ¯Ø± Ø§Ù„Ø¬ÙˆÙ„Ø©</div>
+          <div class="rs-hero-label">متصدر الجولة</div>
           <div class="rs-hero-name">{{ top_player.name if top_player else '-' }}</div>
           <div class="rs-hero-points">
             {{ top_player.points if top_player else 0 }}
-            {{ 'Ù†Ù‚Ø·Ø©' if (top_player and top_player.points == 1) else 'Ù†Ù‚Ø§Ø·' }}
+            {{ 'نقطة' if (top_player and top_player.points == 1) else 'نقاط' }}
           </div>
         </div>
 
         <div class="rs-hero worst">
-          <div class="rs-hero-label">Ø£Ù‚Ù„ Ù†Ù‚Ø§Ø·</div>
+          <div class="rs-hero-label">أقل نقاط</div>
           <div class="rs-hero-name">{{ worst_player.name if worst_player else '-' }}</div>
           <div class="rs-hero-points">
             {{ worst_player.points if worst_player else 0 }}
-            {{ 'Ù†Ù‚Ø·Ø©' if (worst_player and worst_player.points == 1) else 'Ù†Ù‚Ø§Ø·' }}
+            {{ 'نقطة' if (worst_player and worst_player.points == 1) else 'نقاط' }}
           </div>
         </div>
       </section>
 
       <section class="rs-table-panel">
         <div class="rs-section-title">
-          <h2>ØªØ±ØªÙŠØ¨ Ø§Ù„Ø¬ÙˆÙ„Ø©</h2>
+          <h2>ترتيب الجولة</h2>
         </div>
 
         <div class="rs-table-head">
           <div></div>
-          <div>Ø§Ù„Ù…Ø´Ø§Ø±Ùƒ</div>
-          <div>Ø§Ù„Ù†Ù‚Ø§Ø·</div>
-          <div class="rs-head-correct">âœ“</div>
-          <div>Ã—2</div>
+          <div>المشارك</div>
+          <div>النقاط</div>
+          <div class="rs-head-correct">✓</div>
+          <div>×2</div>
         </div>
 
         {% if dashboard.player_rows %}
@@ -647,17 +647,17 @@ body.round-stats-public .site-main{
                 <div class="rs-x2 {% if r.x2_used == 0 %}none{% elif r.x2_extra_points > 0 %}hit{% else %}used{% endif %}">
                   {% if r.x2_used > 0 %}
                     <strong>+{{ r.x2_extra_points }}</strong>
-                    <small>{{ r.x2_success }} Ù…Ù† {{ r.x2_used }}</small>
+                    <small>{{ r.x2_success }} من {{ r.x2_used }}</small>
                   {% else %}
-                    <strong>â€”</strong>
-                    <small>Ù„Ù… ÙŠØ³ØªØ®Ø¯Ù…</small>
+                    <strong>—</strong>
+                    <small>لم يستخدم</small>
                   {% endif %}
                 </div>
               </div>
             {% endfor %}
           </div>
         {% else %}
-          <div class="rs-empty">Ù„Ø§ ØªÙˆØ¬Ø¯ Ø¨ÙŠØ§Ù†Ø§Øª Ù„Ù‡Ø°Ù‡ Ø§Ù„Ø¬ÙˆÙ„Ø©.</div>
+          <div class="rs-empty">لا توجد بيانات لهذه الجولة.</div>
         {% endif %}
       </section>
 
@@ -670,7 +670,7 @@ body.round-stats-public .site-main{
           {% set away_flag = team_flag_code(m.away_team) %}
 
           <div class="rs-featured-card">
-            <h3>Ø£ÙƒØ«Ø± Ù…Ø¨Ø§Ø±Ø§Ø© Ø¨ØªÙˆÙ‚Ø¹Ø§Øª ØµØ­ÙŠØ­Ø©</h3>
+            <h3>أكثر مباراة بتوقعات صحيحة</h3>
 
             <div class="rs-featured-match">
               <div class="rs-featured-main">
@@ -697,12 +697,12 @@ body.round-stats-public .site-main{
 
               <div class="rs-featured-meta">
                 <span class="correct-meta">
-                  âœ“ {{ e.exact_count }}
-                  {{ 'ØªÙˆÙ‚Ø¹ ØµØ­ÙŠØ­' if e.exact_count == 1 else 'ØªÙˆÙ‚Ø¹Ø§Øª ØµØ­ÙŠØ­Ø©' }}
+                  ✓ {{ e.exact_count }}
+                  {{ 'توقع صحيح' if e.exact_count == 1 else 'توقعات صحيحة' }}
                 </span>
                 <span>
                   {{ e.total_points }}
-                  {{ 'Ù†Ù‚Ø·Ø©' if e.total_points == 1 else 'Ù†Ù‚Ø§Ø·' }}
+                  {{ 'نقطة' if e.total_points == 1 else 'نقاط' }}
                 </span>
               </div>
             </div>
@@ -716,7 +716,7 @@ body.round-stats-public .site-main{
           {% set away_flag = team_flag_code(m.away_team) %}
 
           <div class="rs-featured-card">
-            <h3>Ø£Ù‚Ù„ Ù…Ø¨Ø§Ø±Ø§Ø© Ø¨ØªÙˆÙ‚Ø¹Ø§Øª ØµØ­ÙŠØ­Ø©</h3>
+            <h3>أقل مباراة بتوقعات صحيحة</h3>
 
             <div class="rs-featured-match">
               <div class="rs-featured-main">
@@ -743,12 +743,12 @@ body.round-stats-public .site-main{
 
               <div class="rs-featured-meta">
                 <span class="correct-meta">
-                  âœ“ {{ h.exact_count }}
-                  {{ 'ØªÙˆÙ‚Ø¹ ØµØ­ÙŠØ­' if h.exact_count == 1 else 'ØªÙˆÙ‚Ø¹Ø§Øª ØµØ­ÙŠØ­Ø©' }}
+                  ✓ {{ h.exact_count }}
+                  {{ 'توقع صحيح' if h.exact_count == 1 else 'توقعات صحيحة' }}
                 </span>
                 <span>
                   {{ h.total_points }}
-                  {{ 'Ù†Ù‚Ø·Ø©' if h.total_points == 1 else 'Ù†Ù‚Ø§Ø·' }}
+                  {{ 'نقطة' if h.total_points == 1 else 'نقاط' }}
                 </span>
               </div>
             </div>
@@ -760,7 +760,7 @@ body.round-stats-public .site-main{
     {% else %}
 
       <div class="rs-empty">
-        Ø§Ù„Ø±Ø§Ø¨Ø· Ù„Ø§ ÙŠØ­ØªÙˆÙŠ Ø¹Ù„Ù‰ Ù…Ø¨Ø§Ø±ÙŠØ§Øª ØµØ­ÙŠØ­Ø© Ø£Ùˆ Ø£Ù† Ø§Ù„Ù…Ø¨Ø§Ø±ÙŠØ§Øª Ù„Ù… ØªÙØ³Ø¬Ù„ Ù†ØªØ§Ø¦Ø¬Ù‡Ø§ Ø¨Ø¹Ø¯.
+        الرابط لا يحتوي على مباريات صحيحة أو أن المباريات لم تُسجل نتائجها بعد.
       </div>
 
     {% endif %}
