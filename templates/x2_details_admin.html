@@ -1,0 +1,432 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+  .x2-admin-page{
+    width:min(1100px,100%);
+    margin:0 auto;
+    padding:0 0 28px;
+  }
+
+  .x2-admin-hero{
+    background:linear-gradient(180deg,#3a3c42,#25272c);
+    border:1px solid rgba(230,211,156,.22);
+    border-radius:28px;
+    padding:20px 16px;
+    margin-bottom:12px;
+    color:#f6f1e5;
+    box-shadow:0 14px 28px rgba(0,0,0,.14);
+  }
+
+  .x2-admin-hero h2{
+    margin:0;
+    font-size:1.55rem;
+    line-height:1.25;
+    font-weight:1000;
+    color:#fff;
+  }
+
+  .x2-admin-hero p{
+    margin:8px 0 0;
+    color:#d8d1c2;
+    line-height:1.7;
+    font-size:.94rem;
+    font-weight:760;
+  }
+
+  .x2-admin-summary{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:12px;
+  }
+
+  .x2-admin-stat{
+    min-height:90px;
+    padding:14px;
+    border-radius:22px;
+    background:#f3efe4;
+    border:1px solid rgba(0,0,0,.08);
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+    display:grid;
+    align-content:center;
+    gap:5px;
+  }
+
+  .x2-admin-stat span{
+    color:#696154;
+    font-size:.82rem;
+    font-weight:900;
+  }
+
+  .x2-admin-stat strong{
+    direction:ltr;
+    color:#171717;
+    font-size:1.45rem;
+    line-height:1.1;
+    font-weight:1000;
+  }
+
+  .x2-admin-list{
+    display:grid;
+    gap:12px;
+  }
+
+  .x2-player-card{
+    background:#f3efe4;
+    border:1px solid rgba(0,0,0,.08);
+    border-radius:26px;
+    overflow:hidden;
+    box-shadow:0 8px 20px rgba(0,0,0,.07);
+  }
+
+  .x2-player-head{
+    min-height:74px;
+    padding:13px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:10px;
+    align-items:center;
+    background:linear-gradient(180deg,#3a3c42,#25272c);
+    color:#fff;
+  }
+
+  .x2-player-name{
+    min-width:0;
+  }
+
+  .x2-player-name h3{
+    margin:0;
+    color:#fff;
+    font-size:1.18rem;
+    line-height:1.25;
+    font-weight:1000;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .x2-player-name p{
+    margin:5px 0 0;
+    color:#d8d1c2;
+    font-size:.82rem;
+    font-weight:850;
+  }
+
+  .x2-player-points{
+    direction:ltr;
+    min-width:72px;
+    min-height:44px;
+    padding:8px 13px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+    background:linear-gradient(135deg,#e7d79d,#cfb760);
+    color:#17130a;
+    font-size:1.14rem;
+    font-weight:1000;
+  }
+
+  .x2-picks{
+    display:grid;
+    gap:9px;
+    padding:12px;
+  }
+
+  .x2-pick-row{
+    display:grid;
+    gap:9px;
+    padding:11px;
+    border-radius:18px;
+    background:#e8e5de;
+    border:1px solid #d6d1c6;
+  }
+
+  .x2-match-line{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:8px;
+  }
+
+  .x2-team{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    min-width:0;
+    color:#171717;
+    font-size:.9rem;
+    font-weight:1000;
+  }
+
+  .x2-team:last-child{
+    justify-content:flex-end;
+    text-align:left;
+  }
+
+  .x2-team span{
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
+
+  .x2-flag{
+    width:26px;
+    height:18px;
+    border-radius:5px;
+    object-fit:cover;
+    box-shadow:0 1px 4px rgba(0,0,0,.18);
+    flex:0 0 auto;
+  }
+
+  .x2-vs{
+    width:34px;
+    height:34px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#343840;
+    color:#fff;
+    font-size:.78rem;
+    font-weight:1000;
+  }
+
+  .x2-info-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+  }
+
+  .x2-info{
+    min-height:54px;
+    padding:8px 10px;
+    border-radius:14px;
+    background:#f3efe4;
+    border:1px solid rgba(0,0,0,.06);
+    display:grid;
+    align-content:center;
+    gap:3px;
+  }
+
+  .x2-info span{
+    color:#6a6256;
+    font-size:.73rem;
+    font-weight:900;
+  }
+
+  .x2-info strong{
+    direction:ltr;
+    color:#171717;
+    font-size:.92rem;
+    font-weight:1000;
+  }
+
+  .x2-status{
+    min-height:36px;
+    padding:7px 11px;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.82rem;
+    font-weight:1000;
+    width:max-content;
+  }
+
+  .x2-status.good{
+    background:#d7f0dc;
+    color:#245d36;
+  }
+
+  .x2-status.mid{
+    background:#e7d79d;
+    color:#33280f;
+  }
+
+  .x2-status.bad{
+    background:#f1c5c5;
+    color:#7f1d1d;
+  }
+
+  .x2-status.pending{
+    background:#d7dce7;
+    color:#343840;
+  }
+
+  .x2-empty{
+    padding:14px;
+    border-radius:18px;
+    background:#e8e5de;
+    border:1px solid #d6d1c6;
+    color:#5f584d;
+    text-align:center;
+    font-weight:950;
+    line-height:1.7;
+  }
+
+  .x2-admin-note{
+    margin:12px 0 0;
+    padding:12px;
+    border-radius:18px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.08);
+    color:#d8d1c2;
+    font-size:.88rem;
+    font-weight:850;
+    line-height:1.7;
+  }
+
+  @media (min-width:760px){
+    .x2-admin-summary{
+      grid-template-columns:repeat(4,1fr);
+    }
+
+    .x2-admin-hero{
+      padding:24px 20px;
+    }
+  }
+
+  @media (max-width:620px){
+    .x2-player-head{
+      grid-template-columns:1fr;
+    }
+
+    .x2-player-points{
+      width:max-content;
+    }
+
+    .x2-match-line{
+      grid-template-columns:1fr;
+      justify-items:center;
+      text-align:center;
+    }
+
+    .x2-team,
+    .x2-team:last-child{
+      justify-content:center;
+      text-align:center;
+    }
+
+    .x2-info-grid{
+      grid-template-columns:repeat(2,1fr);
+    }
+  }
+</style>
+
+<section class="x2-admin-page">
+
+  <section class="x2-admin-hero">
+    <h2>تفاصيل استخدام ×2</h2>
+    <p>
+      صفحة خاصة بالإدارة لمراجعة كل اختيارات المضاعفة: المباراة، التوقع، النتيجة، والنقاط الإضافية.
+    </p>
+
+    <div class="x2-admin-note">
+      هذه الصفحة للعرض فقط. لا تعدّل التوقعات أو النقاط أو نتائج المباريات.
+    </div>
+  </section>
+
+  <section class="x2-admin-summary">
+    <div class="x2-admin-stat">
+      <span>إجمالي استخدام ×2</span>
+      <strong>{{ x2_details.total_used }}</strong>
+    </div>
+    <div class="x2-admin-stat">
+      <span>اختيارات ناجحة</span>
+      <strong>{{ x2_details.total_success }}</strong>
+    </div>
+    <div class="x2-admin-stat">
+      <span>نقاط إضافية</span>
+      <strong>+{{ x2_details.total_extra_points }}</strong>
+    </div>
+    <div class="x2-admin-stat">
+      <span>بانتظار النتيجة</span>
+      <strong>{{ x2_details.total_pending }}</strong>
+    </div>
+  </section>
+
+  <section class="x2-admin-list">
+    {% for row in x2_details.player_rows %}
+      {% set p = row.participant %}
+
+      <article class="x2-player-card">
+        <header class="x2-player-head">
+          <div class="x2-player-name">
+            <h3>{{ p.name }}</h3>
+            <p>
+              {% if row.used_count %}
+                ×2 ناجحة: {{ row.success_count }} من {{ row.used_count }}
+                {% if row.pending_count %} - بانتظار النتيجة: {{ row.pending_count }}{% endif %}
+              {% else %}
+                لم يستخدم ×2 حتى الآن
+              {% endif %}
+            </p>
+          </div>
+
+          <div class="x2-player-points">+{{ row.extra_points }}</div>
+        </header>
+
+        <div class="x2-picks">
+          {% if row.picks %}
+            {% for item in row.picks %}
+              {% set m = item.match %}
+              {% set home_flag = team_flag_code(m.home_team) %}
+              {% set away_flag = team_flag_code(m.away_team) %}
+
+              <div class="x2-pick-row">
+                <div class="x2-match-line">
+                  <div class="x2-team">
+                    {% if home_flag %}<img class="x2-flag" src="https://flagcdn.com/w40/{{ home_flag }}.png" alt="">{% endif %}
+                    <span>{{ m.home_team }}</span>
+                  </div>
+
+                  <div class="x2-vs">×</div>
+
+                  <div class="x2-team">
+                    <span>{{ m.away_team }}</span>
+                    {% if away_flag %}<img class="x2-flag" src="https://flagcdn.com/w40/{{ away_flag }}.png" alt="">{% endif %}
+                  </div>
+                </div>
+
+                <div class="x2-info-grid">
+                  <div class="x2-info">
+                    <span>الدور</span>
+                    <strong>{{ item.stage_label }}</strong>
+                  </div>
+                  <div class="x2-info">
+                    <span>توقعه</span>
+                    <strong>{{ item.prediction_text }}</strong>
+                  </div>
+                  <div class="x2-info">
+                    <span>النتيجة</span>
+                    <strong>{{ item.result_text }}</strong>
+                  </div>
+                  <div class="x2-info">
+                    <span>نقاطه</span>
+                    <strong>
+                      {% if item.total_points is not none %}
+                        {{ item.total_points }} <small>(+{{ item.extra_points }})</small>
+                      {% else %}
+                        -
+                      {% endif %}
+                    </strong>
+                  </div>
+                </div>
+
+                <span class="x2-status {{ item.tone }}">{{ item.label }}</span>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="x2-empty">لم يستخدم هذا المتسابق خاصية ×2.</div>
+          {% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+
+</section>
+
+{% endblock %}
