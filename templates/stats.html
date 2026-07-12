@@ -280,7 +280,7 @@
 
   .stats2-accuracy-row{
     display:grid;
-    grid-template-columns:42px 1fr 56px 56px 56px;
+    grid-template-columns:42px 1fr 56px 56px 56px 62px;
     align-items:center;
     gap:8px;
     background:#e8e5de;
@@ -327,6 +327,11 @@
   .stats2-mini-stat.wrong{
     background:#f1c5c5;
     color:#7f1d1d;
+  }
+
+  .stats2-mini-stat.missing{
+    background:#dfe3ea;
+    color:#414955;
   }
 
   @media (min-width:780px){
@@ -377,7 +382,7 @@
     }
 
     .stats2-accuracy-row{
-      grid-template-columns:30px 1fr 42px 42px 42px;
+      grid-template-columns:30px 1fr 38px 38px 38px 42px;
       gap:6px;
       padding:9px 7px;
     }
@@ -461,7 +466,7 @@
       </div>
 
       <p class="stats2-note">
-        القريب يعني توقع الفائز أو التعادل الصحيح، لكن بدون مطابقة النتيجة بالكامل.
+        القريب يعني توقع الفائز أو التعادل الصحيح بدون مطابقة النتيجة بالكامل. ولم يتوقع تعني مباريات أُغلقت ولم يسجل لها اللاعب توقعًا.
       </p>
 
       {% if prediction_accuracy_rows %}
@@ -472,6 +477,7 @@
             <div class="stats2-accuracy-head">صحيح</div>
             <div class="stats2-accuracy-head">قريب</div>
             <div class="stats2-accuracy-head">خطأ</div>
+            <div class="stats2-accuracy-head">لم يتوقع</div>
           </div>
 
           {% for r in prediction_accuracy_rows %}
@@ -481,6 +487,7 @@
               <div class="stats2-mini-stat exact">{{ r.exact }}</div>
               <div class="stats2-mini-stat close">{{ r.close }}</div>
               <div class="stats2-mini-stat wrong">{{ r.wrong }}</div>
+              <div class="stats2-mini-stat missing">{{ r.missing }}</div>
             </div>
           {% endfor %}
         </div>
