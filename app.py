@@ -1735,6 +1735,7 @@ def stats():
             'exact': exact,
             'close': close,
             'wrong': wrong,
+            'missing': missed_locked,
             'predictions_count': len(preds_by_match),
             'missed_locked': missed_locked,
             'match_points': match_points,
@@ -1783,6 +1784,7 @@ def stats():
             r['exact'],
             r.get('close', 0),
             -r.get('wrong', 0),
+            -r.get('missing', r.get('missed_locked', 0)),
             r['match_points']
         ),
         reverse=True
