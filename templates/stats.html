@@ -269,6 +269,66 @@
     font-weight:900;
   }
 
+
+  .stats2-note{
+    margin:-4px 0 12px;
+    color:#716b5d;
+    font-size:.82rem;
+    font-weight:900;
+    line-height:1.6;
+  }
+
+  .stats2-accuracy-row{
+    display:grid;
+    grid-template-columns:42px 1fr 56px 56px 56px;
+    align-items:center;
+    gap:8px;
+    background:#e8e5de;
+    border:1px solid #d6d1c6;
+    border-radius:16px;
+    padding:10px;
+  }
+
+  .stats2-accuracy-row.header{
+    background:#2f3239;
+    color:#f6f1e5;
+    border-color:rgba(0,0,0,.08);
+    font-size:.82rem;
+    font-weight:1000;
+  }
+
+  .stats2-accuracy-row.header .stats2-accuracy-head{
+    color:#f6f1e5;
+    text-align:center;
+  }
+
+  .stats2-mini-stat{
+    direction:ltr;
+    min-height:34px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.9rem;
+    font-weight:1000;
+    border:1px solid rgba(0,0,0,.07);
+  }
+
+  .stats2-mini-stat.exact{
+    background:#d7f0dc;
+    color:#245d36;
+  }
+
+  .stats2-mini-stat.close{
+    background:#e7d79d;
+    color:#33280f;
+  }
+
+  .stats2-mini-stat.wrong{
+    background:#f1c5c5;
+    color:#7f1d1d;
+  }
+
   @media (min-width:780px){
     .stats2-grid{
       grid-template-columns:1fr 1fr;
@@ -314,6 +374,21 @@
       min-width:52px;
       height:32px;
       font-size:.86rem;
+    }
+
+    .stats2-accuracy-row{
+      grid-template-columns:30px 1fr 42px 42px 42px;
+      gap:6px;
+      padding:9px 7px;
+    }
+
+    .stats2-accuracy-row.header{
+      font-size:.72rem;
+    }
+
+    .stats2-mini-stat{
+      min-height:31px;
+      font-size:.82rem;
     }
   }
 </style>
@@ -371,6 +446,41 @@
               </div>
 
               <div class="stats2-value gold">+{{ r.x2_extra_points }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="stats2-empty">لا توجد بيانات بعد.</div>
+      {% endif %}
+    </section>
+
+    <section class="stats2-card wide">
+      <div class="stats2-title">
+        <h3>تفصيل التوقعات</h3>
+        <span class="stats2-badge">صحيح / قريب / خطأ</span>
+      </div>
+
+      <p class="stats2-note">
+        القريب يعني توقع الفائز أو التعادل الصحيح، لكن بدون مطابقة النتيجة بالكامل.
+      </p>
+
+      {% if prediction_accuracy_rows %}
+        <div class="stats2-list">
+          <div class="stats2-accuracy-row header">
+            <div></div>
+            <div>المشارك</div>
+            <div class="stats2-accuracy-head">صحيح</div>
+            <div class="stats2-accuracy-head">قريب</div>
+            <div class="stats2-accuracy-head">خطأ</div>
+          </div>
+
+          {% for r in prediction_accuracy_rows %}
+            <div class="stats2-accuracy-row">
+              <div class="stats2-rank">{{ loop.index }}</div>
+              <div class="stats2-name">{{ r.name }}</div>
+              <div class="stats2-mini-stat exact">{{ r.exact }}</div>
+              <div class="stats2-mini-stat close">{{ r.close }}</div>
+              <div class="stats2-mini-stat wrong">{{ r.wrong }}</div>
             </div>
           {% endfor %}
         </div>
