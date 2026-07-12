@@ -1690,6 +1690,8 @@ def stats():
         }
 
         exact = 0
+        close = 0
+        wrong = 0
         match_points = 0
         x2_used = 0
         x2_success = 0
@@ -1707,6 +1709,10 @@ def stats():
 
             if pred.home_score == m.home_score and pred.away_score == m.away_score:
                 exact += 1
+            elif winner(pred.home_score, pred.away_score) == winner(m.home_score, m.away_score):
+                close += 1
+            else:
+                wrong += 1
 
             if pred.is_double and m.stage in KNOCKOUT_STAGES:
                 x2_used += 1
@@ -1727,6 +1733,8 @@ def stats():
         player_rows.append({
             'name': p.name,
             'exact': exact,
+            'close': close,
+            'wrong': wrong,
             'predictions_count': len(preds_by_match),
             'missed_locked': missed_locked,
             'match_points': match_points,
@@ -1764,6 +1772,17 @@ def stats():
             r.get('x2_success', 0),
             r['x2_total_points'],
             r['x2_used'],
+            r['match_points']
+        ),
+        reverse=True
+    )
+
+    prediction_accuracy_rows = sorted(
+        player_rows,
+        key=lambda r: (
+            r['exact'],
+            r.get('close', 0),
+            -r.get('wrong', 0),
             r['match_points']
         ),
         reverse=True
@@ -1825,6 +1844,7 @@ def stats():
         top_participation=top_participation,
         most_missed=most_missed,
         top_x2=top_x2,
+        prediction_accuracy_rows=prediction_accuracy_rows,
         top_point_matches=top_point_matches,
         hardest_matches=hardest_matches,
         stage_labels=STAGE_LABELS
