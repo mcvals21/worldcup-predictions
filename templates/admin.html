@@ -1,6 +1,7 @@
 
 
 
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -517,6 +518,65 @@
   font-weight:850;
 }
 
+.admin-ref-link-row.is-hidden{
+  opacity:.78;
+  border-style:dashed;
+}
+
+.admin-ref-participant-name{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.admin-ref-status-badge{
+  min-height:26px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:.76rem;
+  font-weight:1000;
+  white-space:nowrap;
+}
+
+.admin-ref-status-badge.active{
+  background:#d7f0dc;
+  color:#245d36;
+  border:1px solid rgba(36,93,54,.16);
+}
+
+.admin-ref-status-badge.hidden{
+  background:#fee2e2;
+  color:#991b1b;
+  border:1px solid #fecaca;
+}
+
+.admin-ref-link-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.admin-ref-toggle-form{
+  margin:0;
+}
+
+.admin-ref-toggle-form button{
+  width:100%;
+}
+
+.admin-ref-links-note{
+  margin:0 0 12px;
+  padding:11px 12px;
+  border-radius:16px;
+  background:#e8e5de;
+  border:1px solid #d6d1c6;
+  color:#4f493d;
+  font-size:.88rem;
+  font-weight:900;
+  line-height:1.7;
+}
+
 @media (max-width:760px){
   .admin-ref-page{
     gap:15px;
@@ -542,6 +602,14 @@
 
   .admin-ref-dt-grid{
     grid-template-columns:1fr 1fr;
+  }
+
+  .admin-ref-link-actions{
+    grid-template-columns:1fr;
+  }
+
+  .admin-ref-participant-name{
+    align-items:flex-start;
   }
 
   .admin-ref-tabs{
@@ -2280,12 +2348,44 @@
 
   <details class="admin-ref-card admin-ref-links-card admin-ref-admin-section" data-admin-section="links">
     <summary>روابط المشاركين</summary>
+
+    <p class="admin-ref-links-note">
+      يمكنك إخفاء أي متسابق وتعطيل رابطه بدون حذف بياناته. التوقعات والنقاط القديمة تبقى محفوظة، ويمكن تفعيله مرة أخرى في أي وقت.
+    </p>
+
     <div class="admin-ref-links-list">
       {% for p in participants %}
-        <div class="admin-ref-link-row">
-          <strong>{{ p.name }}</strong>
+        <div class="admin-ref-link-row{% if not p.is_active %} is-hidden{% endif %}">
+          <div class="admin-ref-participant-name">
+            <strong>{{ p.name }}</strong>
+            {% if p.is_active %}
+              <span class="admin-ref-status-badge active">نشط</span>
+            {% else %}
+              <span class="admin-ref-status-badge hidden">مخفي</span>
+            {% endif %}
+          </div>
+
           <code id="link{{ p.id }}">https://worldcup-predictions-isey.onrender.com/p/{{ p.token }}</code>
-          <button type="button" class="admin-ref-secondary" onclick="copyAdminRefLink('link{{ p.id }}')">نسخ الرابط</button>
+
+          <div class="admin-ref-link-actions">
+            <button type="button" class="admin-ref-secondary" onclick="copyAdminRefLink('link{{ p.id }}')">نسخ الرابط</button>
+
+            {% if p.is_active %}
+              <form method="post" class="admin-ref-toggle-form" onsubmit="return confirm('سيتم إخفاء هذا المتسابق وتعطيل رابطه، مع بقاء كل بياناته محفوظة. هل تريد المتابعة؟')">
+                <input type="hidden" name="action" value="toggle_participant_active">
+                <input type="hidden" name="participant_id" value="{{ p.id }}">
+                <input type="hidden" name="is_active" value="0">
+                <button type="submit" class="admin-ref-danger">إخفاء وتعطيل</button>
+              </form>
+            {% else %}
+              <form method="post" class="admin-ref-toggle-form" onsubmit="return confirm('سيتم تفعيل هذا المتسابق وإعادة ظهور رابطه ونتائجه في المسابقة. هل تريد المتابعة؟')">
+                <input type="hidden" name="action" value="toggle_participant_active">
+                <input type="hidden" name="participant_id" value="{{ p.id }}">
+                <input type="hidden" name="is_active" value="1">
+                <button type="submit" class="admin-ref-primary">تفعيل اللاعب</button>
+              </form>
+            {% endif %}
+          </div>
         </div>
       {% endfor %}
     </div>
