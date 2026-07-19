@@ -81,6 +81,7 @@ class Participant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     token = db.Column(db.String(40), unique=True, nullable=False)
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
 
 
 class Team(db.Model):
@@ -918,6 +919,30 @@ def participant_starting_bonus(participant):
     return STARTING_BONUS.get(participant.name, 0)
 
 
+def participant_is_active(participant):
+    """Participants are active by default.
+
+    Hidden participants keep all predictions and old data, but they are excluded
+    from public standings/statistics and their personal link is blocked.
+    """
+    return getattr(participant, 'is_active', True) is not False
+
+
+def active_participants_query():
+    return Participant.query.filter(Participant.is_active.is_(True))
+
+
+def active_participants_ordered():
+    return active_participants_query().order_by(Participant.name).all()
+
+
+def all_participants_ordered():
+    return Participant.query.order_by(
+        Participant.is_active.desc(),
+        Participant.name.asc()
+    ).all()
+
+
 def build_missing_prediction_reports(matches, participants):
     """Build read-only admin data showing who has not predicted each match.
 
@@ -986,7 +1011,7 @@ def build_admin_x2_details(tournament_id):
     The identity is the participant row/token. This is a display/report helper only.
     It does not save, delete, or modify anything in the tournament database.
     """
-    participants = Participant.query.order_by(Participant.name).all()
+    participants = active_participants_ordered()
 
     x2_rows = db.session.query(
         Prediction,
@@ -998,7 +1023,8 @@ def build_admin_x2_details(tournament_id):
         Match, Prediction.match_id == Match.id
     ).filter(
         Match.tournament_id == tournament_id,
-        Prediction.is_double == True
+        Prediction.is_double == True,
+        Participant.is_active.is_(True)
     ).order_by(
         Match.start_time.asc(),
         Participant.name.asc()
@@ -1133,7 +1159,7 @@ def tournament():
 
 def participant_by_token(token):
     p = Participant.query.filter_by(token=token).first()
-    if not p:
+    if not p or not participant_is_active(p):
         abort(404)
     return p
 
@@ -1173,6 +1199,21 @@ def ensure_database_ready():
 
     db.create_all()
 
+    inspector = inspect(db.engine)
+    table_names = inspector.get_table_names()
+
+    if 'participant' in table_names:
+        participant_columns = {
+            column['name']
+            for column in inspector.get_columns('participant')
+        }
+
+        if 'is_active' not in participant_columns:
+            db.session.execute(text(
+                'ALTER TABLE participant ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT TRUE'
+            ))
+            db.session.commit()
+
     if Tournament.query.first() is None:
         db.session.add(Tournament(name="كأس العالم 2026"))
         db.session.commit()
@@ -1181,7 +1222,8 @@ def ensure_database_ready():
         for name in PARTICIPANT_NAMES:
             db.session.add(Participant(
                 name=name,
-                token=PARTICIPANT_TOKENS[name]
+                token=PARTICIPANT_TOKENS[name],
+                is_active=True
             ))
         db.session.commit()
 
@@ -1551,7 +1593,7 @@ def today_page():
 @app.route('/leaderboard')
 def leaderboard():
     t = tournament()
-    participants = Participant.query.order_by(Participant.name).all()
+    participants = active_participants_ordered()
     rows = []
 
     final_match = Match.query.filter_by(
@@ -1637,7 +1679,7 @@ def stats():
     if not t:
         abort(404)
 
-    participants = Participant.query.order_by(Participant.name).all()
+    participants = active_participants_ordered()
 
     all_matches = Match.query.filter_by(
         tournament_id=t.id
@@ -2138,7 +2180,7 @@ def render_round_stats_by_stage(stage):
         Match.start_time.asc()
     ).all()
 
-    participants = Participant.query.order_by(Participant.name).all()
+    participants = active_participants_ordered()
     dashboard = build_round_dashboard(matches, participants)
 
     # Canonical fixed link for each stage.
@@ -2202,7 +2244,7 @@ def round_stats():
             if match_id in match_map
         ]
 
-    participants = Participant.query.order_by(Participant.name).all()
+    participants = active_participants_ordered()
 
     dashboard = build_round_dashboard(matches, participants)
 
@@ -2468,7 +2510,7 @@ def admin_champion_picks(code):
     if not t:
         abort(404)
 
-    participants = Participant.query.order_by(Participant.name).all()
+    participants = active_participants_ordered()
 
     picks = ChampionPick.query.filter_by(
         tournament_id=t.id
@@ -2704,6 +2746,28 @@ def admin(code):
                     db.session.commit()
                     flash('تمت إضافة المنتخب إلى قائمة اختيار البطل.')
 
+        elif action == 'toggle_participant_active':
+            participant_id_raw = request.form.get('participant_id', '').strip()
+            desired_state = request.form.get('is_active', '').strip()
+
+            try:
+                participant_id = int(participant_id_raw)
+            except (TypeError, ValueError):
+                participant_id = None
+
+            p = Participant.query.get(participant_id) if participant_id else None
+
+            if not p:
+                flash('لم أجد المتسابق المطلوب.')
+            else:
+                p.is_active = desired_state == '1'
+                db.session.commit()
+
+                if p.is_active:
+                    flash(f'تم تفعيل المتسابق {p.name}. الرابط عاد للعمل وسيظهر في الترتيب والإحصائيات.')
+                else:
+                    flash(f'تم إخفاء المتسابق {p.name}. بياناته محفوظة، لكن رابطه تعطّل ولن يظهر في الترتيب والإحصائيات.')
+
         elif action == 'rename_participant':
             participant_id_raw = request.form.get('participant_id', '').strip()
             new_name = request.form.get('new_name', '').strip()
@@ -2909,7 +2973,8 @@ def admin(code):
         for key in ADMIN_MATCH_FILTER_LABELS
     }
 
-    participants = Participant.query.order_by(Participant.name).all()
+    participants = all_participants_ordered()
+    active_participants_for_reports = active_participants_ordered()
 
     prediction_counts = {
         match_id: count
@@ -2938,7 +3003,7 @@ def admin(code):
         champion_team_list_exists=champion_team_list_exists(t.id),
         manual_matches=all_matches,
         manual_champion_teams=champion_eligible_teams(t.id),
-        missing_prediction_reports=build_missing_prediction_reports(all_matches, participants)
+        missing_prediction_reports=build_missing_prediction_reports(all_matches, active_participants_for_reports)
     )
 
 @app.cli.command('init-db')
