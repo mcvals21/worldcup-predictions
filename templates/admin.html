@@ -2449,6 +2449,7 @@
     if (!links) return;
 
     links.innerHTML = `
+      <a href="{{ url_for('admin_special_contest', code=code) }}" class="admin-menu-section">🎁 المسابقة الخاصة</a>
       <a href="#admin-manage" class="admin-menu-section" data-admin-menu-view="manage">📋 إدارة المباريات والنتائج</a>
       <a href="#admin-missing" class="admin-menu-section" data-admin-menu-view="missing">🔔 ناقصين التوقع</a>
       <a href="#admin-manual" class="admin-menu-section" data-admin-menu-view="manual">🛠️ توقع يدوي</a>

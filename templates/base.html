@@ -225,6 +225,7 @@
       <div class="clean-menu-panel">
         <nav class="menu-links">
           {% if admin_menu_code %}
+            <a href="{{ url_for('admin_special_contest', code=admin_menu_code) }}" class="admin-menu-section">🎁 المسابقة الخاصة</a>
             <a href="/admin/{{ admin_menu_code }}#admin-manage" class="admin-menu-section">📋 إدارة المباريات والنتائج</a>
             <a href="/admin/{{ admin_menu_code }}#admin-missing" class="admin-menu-section">🔔 ناقصين التوقع</a>
             <a href="/admin/{{ admin_menu_code }}#admin-manual" class="admin-menu-section">🛠️ توقع يدوي</a>

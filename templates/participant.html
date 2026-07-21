@@ -254,6 +254,17 @@
   </a>
 </section>
 
+{% if special_contest %}
+<section class="champion-mini-card special-contest-card">
+  <div class="champion-mini-text">
+    <strong>🎁 {{ special_contest.title }}</strong>
+    <span>{{ special_contest.home_team }} × {{ special_contest.away_team }}</span>
+    {% if special_contest.prize %}<b>الجائزة: {{ special_contest.prize }}</b>{% endif %}
+  </div>
+  <a href="{{ url_for('participant_special_page', token=p.token) }}" class="champion-mini-link">فتح المسابقة</a>
+</section>
+{% endif %}
+
 <section class="wc-section-head">
   <span class="wc-line"></span>
   <h3>⚽ المباريات</h3>
