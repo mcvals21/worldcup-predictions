@@ -131,6 +131,31 @@ class ChampionTeam(db.Model):
     __table_args__ = (db.UniqueConstraint('tournament_id', 'name', name='unique_champion_team'),)
 
 
+class SpecialContest(db.Model):
+    """A standalone one-match contest, deliberately unrelated to Tournament."""
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False, default='مسابقة خاصة')
+    home_team = db.Column(db.String(80), nullable=False)
+    away_team = db.Column(db.String(80), nullable=False)
+    start_time = db.Column(db.DateTime, nullable=False)
+    prize = db.Column(db.String(200), nullable=True)
+    home_score = db.Column(db.Integer, nullable=True)
+    away_score = db.Column(db.Integer, nullable=True)
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
+
+
+class SpecialPrediction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    participant_id = db.Column(db.Integer, db.ForeignKey('participant.id'), nullable=False)
+    contest_id = db.Column(db.Integer, db.ForeignKey('special_contest.id'), nullable=False)
+    home_score = db.Column(db.Integer, nullable=False)
+    away_score = db.Column(db.Integer, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    __table_args__ = (
+        db.UniqueConstraint('participant_id', 'contest_id', name='unique_special_prediction'),
+    )
+
+
 KNOCKOUT_STAGES = ['round32', 'round16', 'quarter', 'semi', 'final']
 
 STAGE_LABELS = {
@@ -1485,8 +1510,116 @@ def participant_page(token):
             t.champion_pick_deadline is not None
             and now_kw() >= t.champion_pick_deadline
         ),
-        has_open_matches=any(not match_locked(m) for m in matches)
+        has_open_matches=any(not match_locked(m) for m in matches),
+        special_contest=SpecialContest.query.filter_by(
+            is_active=True
+        ).order_by(SpecialContest.id.desc()).first()
     )
+
+
+@app.route('/p/<token>/special', methods=['GET', 'POST'])
+def participant_special_page(token):
+    p = participant_by_token(token)
+    session['participant_token'] = p.token
+    contest = SpecialContest.query.filter_by(is_active=True).order_by(SpecialContest.id.desc()).first_or_404()
+    prediction = SpecialPrediction.query.filter_by(
+        participant_id=p.id, contest_id=contest.id
+    ).first()
+    is_locked = now_kw() >= contest.start_time
+
+    if request.method == 'POST':
+        if is_locked:
+            flash('تم إغلاق التوقع لهذه المسابقة الخاصة.')
+        else:
+            try:
+                home_score = int(request.form.get('home_score', ''))
+                away_score = int(request.form.get('away_score', ''))
+            except (TypeError, ValueError):
+                flash('يرجى إدخال أرقام صحيحة للتوقع.')
+            else:
+                if not (0 <= home_score <= 99 and 0 <= away_score <= 99):
+                    flash('يرجى إدخال نتيجة صحيحة بين 0 و99.')
+                else:
+                    prediction = prediction or SpecialPrediction(
+                        participant_id=p.id, contest_id=contest.id
+                    )
+                    prediction.home_score = home_score
+                    prediction.away_score = away_score
+                    db.session.add(prediction)
+                    db.session.commit()
+                    flash('تم حفظ توقع المسابقة الخاصة.')
+        return redirect(url_for('participant_special_page', token=token))
+
+    winners = []
+    all_predictions = []
+    if is_locked:
+        all_predictions = db.session.query(SpecialPrediction, Participant).join(
+            Participant, Participant.id == SpecialPrediction.participant_id
+        ).filter(SpecialPrediction.contest_id == contest.id).order_by(Participant.name).all()
+    if contest.home_score is not None and contest.away_score is not None:
+        winners = [participant for pred, participant in all_predictions
+                   if pred.home_score == contest.home_score and pred.away_score == contest.away_score]
+
+    return render_template('special_contest.html', p=p, t=tournament(), contest=contest,
+                           prediction=prediction, locked=is_locked,
+                           all_predictions=all_predictions, winners=winners)
+
+
+@app.route('/admin/<code>/special', methods=['GET', 'POST'])
+def admin_special_contest(code):
+    if code != ADMIN_CODE:
+        abort(404)
+    contest = SpecialContest.query.filter_by(is_active=True).order_by(SpecialContest.id.desc()).first()
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+        if action == 'save':
+            try:
+                start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
+            except (KeyError, ValueError):
+                flash('موعد المباراة غير صحيح.')
+                return redirect(url_for('admin_special_contest', code=code))
+            contest = contest or SpecialContest()
+            contest.title = request.form.get('title', '').strip() or 'مسابقة خاصة'
+            contest.home_team = request.form.get('home_team', '').strip()
+            contest.away_team = request.form.get('away_team', '').strip()
+            contest.prize = request.form.get('prize', '').strip() or None
+            contest.start_time = start_time
+            contest.is_active = True
+            if not contest.home_team or not contest.away_team:
+                flash('يرجى إدخال اسمي الفريقين.')
+            else:
+                db.session.add(contest)
+                db.session.commit()
+                flash('تم حفظ المسابقة الخاصة.')
+        elif action == 'result' and contest:
+            try:
+                home_score = int(request.form.get('home_score', ''))
+                away_score = int(request.form.get('away_score', ''))
+            except (TypeError, ValueError):
+                flash('يرجى إدخال نتيجة صحيحة.')
+            else:
+                if not (0 <= home_score <= 99 and 0 <= away_score <= 99):
+                    flash('يرجى إدخال نتيجة صحيحة بين 0 و99.')
+                else:
+                    contest.home_score = home_score
+                    contest.away_score = away_score
+                    db.session.commit()
+                    flash('تم إعلان النتيجة والفائزين.')
+        elif action == 'delete' and contest:
+            SpecialPrediction.query.filter_by(contest_id=contest.id).delete()
+            db.session.delete(contest)
+            db.session.commit()
+            flash('تم حذف المسابقة الخاصة وتوقعاتها بالكامل.')
+        return redirect(url_for('admin_special_contest', code=code))
+
+    predictions = []
+    if contest:
+        predictions = db.session.query(SpecialPrediction, Participant).join(
+            Participant, Participant.id == SpecialPrediction.participant_id
+        ).filter(SpecialPrediction.contest_id == contest.id).order_by(Participant.name).all()
+    return render_template('special_admin.html', t=tournament(), code=code,
+                           contest=contest, predictions=predictions)
 
 
 @app.route('/p/<token>/champion', methods=['GET', 'POST'])
